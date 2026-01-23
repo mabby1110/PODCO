@@ -1,0 +1,222 @@
+<script lang="ts">
+	import CardA from './CardA.svelte';
+	import { draggable, dropzone } from '$lib/actions/dnd';
+	import { filtrarConsecutivo } from '$lib/utils/util';
+	import { filterStore } from '$lib/stores/filterStore.svelte';
+	import { appState } from '$lib/stores/appState.svelte';
+	import { invalidate } from '$app/navigation';
+	import {
+		getWeekDates,
+		isSameDay,
+		formatDate,
+		formatDateTime,
+		calculateSlots,
+		calculateDuration
+	} from '$lib/utils/agenda';
+	import { fade } from 'svelte/transition';
+	
+	const { actividades } = $props();
+
+	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
+	const hoursRangePerDay = { start: 8, end: 19 };
+	const SLOT_MINUTES = 10;
+	const CELL_HEIGHT = 40;
+
+	// Generar slots de tiempo
+	const hours = $derived(
+		Array.from(
+			{ length: ((hoursRangePerDay.end - hoursRangePerDay.start) * 60) / SLOT_MINUTES },
+			(_, i) => {
+				const total = hoursRangePerDay.start * 60 + i * SLOT_MINUTES;
+				return {
+					hour: Math.floor(total / 60),
+					minute: total % 60
+				};
+			}
+		)
+	);
+
+	// Filtrar eventos
+	const eventList = $derived(
+		filterStore.atributo !== ''
+			? filtrarConsecutivo(filterStore.atributo, 'id_agente', actividades)
+			: actividades
+	);
+
+	// Fechas de la semana
+	const weekDates = $derived(getWeekDates(filterStore.weekOffset));
+	const currentYear = $derived(weekDates[0].getFullYear());
+
+	// Eventos de la semana
+	const weekEvents = $derived.by(() => {
+		return eventList.filter((event) => {
+			const eventDate = new Date(event.inicio);
+			return weekDates.some(weekDate => isSameDay(eventDate, weekDate));
+		});
+	});
+
+	function getEvent(hour: number, minute: number, targetDate: Date) {
+		return weekEvents.find((event) => {
+			const eventDate = new Date(event.inicio);
+			return isSameDay(eventDate, targetDate) &&
+				eventDate.getHours() === hour &&
+				eventDate.getMinutes() === minute;
+		});
+	}
+
+	function isEventStart(hour: number, minute: number, targetDate: Date, event) {
+		const eventDate = new Date(event.inicio);
+		return isSameDay(eventDate, targetDate) &&
+			eventDate.getHours() === hour &&
+			eventDate.getMinutes() === minute;
+	}
+
+	async function handleDrop(eventId: string, hour: number, minute: number, targetDate: Date) {
+		const event = eventList.find((e) => e.id_oportunidad === eventId);
+		if (!event) return;
+
+		// Calcular duración original en minutos
+		const duration = calculateDuration(event.inicio, event.fin);
+
+		// Nueva fecha de inicio
+		const newStart = new Date(targetDate);
+		newStart.setHours(hour, minute, 0, 0);
+
+		// Nueva fecha de fin
+		const newEnd = new Date(newStart.getTime() + duration * 60 * 1000);
+
+		const formData = new FormData();
+		formData.append('id', eventId);
+		formData.append('inicio', formatDateTime(newStart));
+		formData.append('fin', formatDateTime(newEnd));
+
+		await fetch('?/update', { method: 'POST', body: formData });
+		await invalidate('app:data');
+	}
+</script>
+
+<div class="calendar-container" in:fade>
+	<table>
+		<thead>
+			<tr>
+				<th class="corner">{currentYear}</th>
+				{#each weekDates as date, i}
+					<th>
+						<div class="day-header">
+							<div>{weekdays[i]}</div>
+							<div class="date-label">{formatDate(date)}</div>
+						</div>
+					</th>
+				{/each}
+			</tr>
+		</thead>
+		<tbody>
+			{#each hours as h}
+				<tr>
+					<td class="hour-cell">
+						{String(h.hour).padStart(2, '0')}:{String(h.minute).padStart(2, '0')}
+					</td>
+					{#each weekDates as date}
+						{@const event = getEvent(h.hour, h.minute, date)}
+						<td
+							class="{$appState.calendarCards ? 'max' : ''} event-cell"
+							use:dropzone={{
+								on_dropzone: (eventId: string) => handleDrop(eventId, h.hour, h.minute, date)
+							}}
+						>
+							{#if event && isEventStart(h.hour, h.minute, date, event)}
+								<div
+									class="event-wrapper"
+									style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px`}
+									use:draggable={event.id_oportunidad}
+								>
+									<CardA {event} />
+								</div>
+							{/if}
+						</td>
+					{/each}
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>
+
+<style>
+	.calendar-container {
+		flex-grow: 1;
+		overflow: auto;
+		display: flex;
+		gap: 16px;
+		border: 1px solid var(--color-muted);
+		border-radius: var(--a);
+	}
+
+	.calendar-container table {
+		flex-grow: 1;
+		border-collapse: collapse;
+		border-radius: 8px;
+	}
+
+	.calendar-container th,
+	.calendar-container td {
+		position: sticky;
+		background-color: transparent;
+		gap: 1px;
+	}
+
+	.calendar-container th {
+		padding: 8px;
+		position: sticky;
+		top: 0;
+		z-index: 9;
+		backdrop-filter: blur(16px);
+	}
+
+	.day-header {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		align-items: center;
+	}
+
+	.date-label {
+		font-size: 0.75em;
+		opacity: 0.7;
+		font-weight: normal;
+	}
+
+	.calendar-container .corner {
+		position: sticky;
+		top: 0;
+		left: 0;
+		z-index: 99;
+	}
+
+	.hour-cell {
+		position: sticky;
+		left: 0;
+		z-index: 9;
+		height: var(--d);
+		display: flex;
+		justify-content: center;
+		backdrop-filter: blur(16px);
+	}
+
+	.event-cell {
+		position: relative;
+		min-width: var(--f);
+		border-right: 1px solid var(--color-secondary);
+		border-bottom: 1px solid var(--color-secondary);
+	}
+	.max {
+		min-width: 50vw;
+	}
+	.event-wrapper {
+		position: absolute;
+		min-height: var(--d);
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 2;
+	}
+</style>

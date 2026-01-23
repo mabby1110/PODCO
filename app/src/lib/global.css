@@ -1,0 +1,120 @@
+:root {
+	--color-primary: #e1e5f2aa;
+	--color-secondary: #b8c0d999;
+	--color-background: #ffffffaa;
+	--color-highlight: #ffff0099;
+	--color-contrast: rgba(0, 0, 105, 0.8);
+	--color-title: #000000;
+	--color-text: #000000;
+	--color-error: #ff0000bb;
+	--color-success: #05a941bb;
+	--color-muted: #babababb;
+	--y2k: rgba(0, 0, 105, 0.1);
+
+	/* Paleta ajustada para contraste con TEXTO NEGRO */
+	--color-prospecto: var(--color-secondary);
+	--color-analizar: #5ca8ff99;
+	--color-cotizar: #ffd70099;
+	--color-ganada: #34d76a99;
+	--color-enviar: #6575ff99;
+	--color-finalizar: #000000ee;
+	--color-perdida: #ff444499;
+
+	--a: 8px;
+	--b: 16px;
+	--c: 24px;
+	--d: 40px;
+	--e: 64px;
+	--f: 104px;
+	--g: 168px;
+	--h: 272px;
+	--i: 440px;
+	--j: 912px;
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+}
+h3 {
+	font-weight: 200;
+	font-size: var(--c);
+}
+html,
+body {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: var(--color-background);
+}
+.page-container {
+	width: 100%;
+	height: 100%;
+}
+.page-content {
+	height: 100%;
+	padding: var(--a);
+}
+.panel {
+	border: none;
+	border-radius: var(--a);
+	padding: var(--a);
+	background-color: var(--color-primary);
+	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(16px);
+}
+.butter {
+	color: var(--color-text);
+	border: none;
+	height: var(--d);
+	min-width: fit-content;
+	border-radius: var(--a);
+	padding: 4px var(--a);
+	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
+	background-color: var(--color-background);
+	backdrop-filter: blur(16px);
+	cursor: pointer;
+}
+.lost {
+	background-color: var(--color-error);
+}
+.success {
+	background-color: var(--color-ganada);
+}
+@media (min-width: 500px) {
+	html,
+	body {
+		overflow: hidden;
+	}
+}
+
+/* Para navegadores basados en Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+::-webkit-scrollbar {
+	display: none;
+}
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(136, 136, 136, 0.4);
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(136, 136, 136, 0.6);
+}
+
+/* Para Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(136, 136, 136, 0.4) transparent;
+}
