@@ -4,8 +4,7 @@ import { readFileSync } from 'fs';
 
 import crypto from 'crypto';
 
-// const credentials = JSON.parse(GOOGLE_APPLICATION_CREDENTIALS);
-const credentials = JSON.parse(readFileSync(GOOGLE_APPLICATION_CREDENTIALS, 'utf-8'));
+const credentials = JSON.parse(GOOGLE_APPLICATION_CREDENTIALS);
 
 const auth = new google.auth.GoogleAuth({
 	credentials,
