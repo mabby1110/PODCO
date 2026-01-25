@@ -3,27 +3,42 @@
     import { slide } from 'svelte/transition';
     let {
         children,
-        submitType = $bindable(),
-        buttonText = 'Mostrar',
+        submitUpdate = $bindable(),
+        submitCancel = $bindable(),
     }: {
         children?: Snippet;
-        buttonText?: string;
-        submitType: boolean;
+        submitUpdate: boolean;
+        submitCancel: boolean;
     } = $props();
     let isOpen = $state(false);
-    function toggle() {
-        isOpen = !isOpen;
-        submitType = !submitType;
+    function toggleUpdate() {
+        submitUpdate = true;
+        submitCancel = false;
+        isOpen = true;
     }
+    function toggleCancel() {
+        submitCancel = true;
+        submitUpdate = false;
+        isOpen = true;
+    }
+    function close() {
+        isOpen = false;
+        submitUpdate = false;
+        submitCancel = false;
+    }
+    $effect(()=>console.log(submitCancel, submitUpdate, isOpen))
 </script>
 <div class="optional">
     {#if !isOpen}
-        <button class="butter" type="button" onclick={toggle}>
-            {buttonText}
+        <button class="butter" type="button" onclick={toggleUpdate}>
+            Postergar
+        </button>
+        <button class="butter" type="button" onclick={toggleCancel}>
+            Perder
         </button>
     {:else}
-        <div class="content-wrapper" transition:slide>
-            <button class="close-btn" type="button" onclick={toggle}>✕</button>
+        <div class="content-wrapper">
+            <button class="close-btn" type="button" onclick={close}>✕</button>
             <div class="content">
                 {@render children?.()}
             </div>

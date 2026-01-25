@@ -5,6 +5,7 @@
 	import InputField from './InputField.svelte';
 	import DatePicker from './DatePicker.svelte';
 	import FormOptional from './FormOptional.svelte';
+	import { getStyleForPhase } from '$lib/utils/util';
 
 	let {
 		fase,
@@ -13,11 +14,7 @@
 		cotizaciones,
 		onSuccess = () => {}
 	}: {
-		fase: {
-			id: number;
-			actual: string;
-			accion?: string;
-		};
+		fase;
 		id: string;
 		historia?: string;
 		cotizaciones?: string;
@@ -27,20 +24,11 @@
 	let nextPhase = $derived(Number(fase.id) + 1);
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
-	let nuevoEnvio = $state('');
+
 	let isSubmitting = $state(false);
-	let submitType = $state(true);
-	let style = $derived.by(() => {
-		const colorMap = {
-			'0': 'background-color: var(--color-perdida); color: var(--color-text);',
-			'1': 'background-color: var(--color-analizar); color: var(--color-text);',
-			'2': 'background-color: var(--color-cotizar); color: var(--color-text);',
-			'3': 'background-color: var(--color-ganada); color: var(--color-text);',
-			'4': 'background-color: var(--color-enviar); color: var(--color-text);',
-			'5': 'background-color: var(--color-finalizar); color: white;'
-		};
-		return colorMap[fase.id] || 'background-color: var(--color-prospecto);';
-	});
+	let submitUpdate = $state(false);
+	let submitCancel = $state(false);
+	let style = getStyleForPhase(fase);
 
 	function combinarHistoria(anterior: string, nueva: string): string {
 		if (!anterior || anterior.trim() === '') return nueva;
@@ -77,97 +65,118 @@
 			name="cotizaciones"
 			value={combinarHistoria(cotizaciones, nuevaCotizacion)}
 		/>
-		{#if fase.id > 1}
-			<section class="historia">
-				<h3>Historia</h3>
-				<p>{historia}</p>
-			</section>
-		{/if}
-		{#if fase.id > 2}
-			<section class="cotizaciones">
-				<h3>Cotizaciones</h3>
-				<p>{cotizaciones}</p>
-			</section>
-			{#if fase.id == 2}
-				<FormOptional buttonText="Actualizar" bind:submitType>
-					<InputField
-						label="Nueva Cotizacion"
-						name="nuevaCotizacion"
-						bind:value={nuevaCotizacion}
-						placeholder="Ingresa ID de la cotizacion generada en contpaqi"
-						type="text"
-						required
-					/>
-				</FormOptional>
+		{#if !submitCancel && !submitUpdate}
+			{#if fase.id >= 2}
+				<section class="historia">
+					<h3>Historia</h3>
+					<p>{historia}</p>
+				</section>
+			{:else if fase.id >= 3}
+				<section class="cotizaciones">
+					<h3>Cotizaciones</h3>
+					<p>{cotizaciones}</p>
+				</section>
+			{/if}
+
+			{#if fase.id == 0}
+				<InputField
+					label="Perdida"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Ingresa la acción realizada"
+					type="text"
+					required
+				/>
+			{:else if fase.id == 1}
+				<InputField
+					label="Necesidades"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Ingresa la acción realizada"
+					type="textarea"
+					required
+				/>
+			{:else if fase.id == 2}
+				<InputField
+					label="Análisis"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Ingresa la acción realizada"
+					type="textarea"
+					required
+				/>
+				<InputField
+					label="ID cotizacion"
+					name="nuevaCotizacion"
+					bind:value={nuevaCotizacion}
+					placeholder="Ingresa el ID de la cotizacion genereada en contpaqi"
+					type="textarea"
+					required
+				/>
+			{:else if fase.id == 3}
+				<InputField
+					label="Negociacion"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Ingresa motivo de la negociación"
+					type="textarea"
+					required
+				/>
+			{:else if fase.id == 4}
+				<InputField
+					label="Proceso de envio"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Ingresa la acción realizada"
+					type="textarea"
+					required
+				/>
+			{:else if fase.id == 5}
+				<InputField
+					label="Confirmacion de recibido y cierre de oportunidad"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Ingresa la acción realizada"
+					type="textarea"
+					required
+				/>
 			{/if}
 		{/if}
 
-		<DatePicker duration={30} title={'Fecha de compromiso'} />
-		{#if fase.id == 0}
-			<InputField
-				label="Perdida"
-				name="nuevaHistoria"
-				bind:value={nuevaHistoria}
-				placeholder="Ingresa la acción realizada"
-				type="text"
-				required
-			/>
-		{:else if fase.id == 1}
-			<InputField
-				label="Necesidades"
-				name="nuevaHistoria"
-				bind:value={nuevaHistoria}
-				placeholder="Ingresa la acción realizada"
-				type="text"
-				required
-			/>
-		{:else if fase.id == 2}
-			<InputField
-				label="Análisis"
-				name="nuevaHistoria"
-				bind:value={nuevaHistoria}
-				placeholder="Ingresa la acción realizada"
-				type="text"
-				required
-			/>
-		{:else if fase.id == 3}
-			<InputField
-				label="Negociacion"
-				name="nuevaHistoria"
-				bind:value={nuevaHistoria}
-				placeholder="Ingresa motivo de la negociación"
-				type="text"
-				required
-			/>
-		{:else if fase.id == 4}
-			<InputField
-				label="Proceso de envio"
-				name="nuevaHistoria"
-				bind:value={nuevaHistoria}
-				placeholder="Ingresa la acción realizada"
-				type="text"
-				required
-			/>
-		{:else if fase.id == 5}
-			<InputField
-				label="Confirmacion de recibido y cierre de oportunidad"
-				name="nuevaHistoria"
-				bind:value={nuevaHistoria}
-				placeholder="Ingresa la acción realizada"
-				type="text"
-				required
-			/>
-		{/if}
+		<FormOptional bind:submitUpdate bind:submitCancel>
+			{#if submitUpdate}
+				<InputField
+					label="Postergar"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Ingresa el motivo"
+					type="textarea"
+					required
+				/>
+			{:else if submitCancel}
+				<InputField
+					label="Perdida"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Ingresa el motivo"
+					type="textarea"
+					required
+				/>
+			{/if}
+		</FormOptional>
 
-		{#if submitType}
-			<input type="hidden" name="fase" bind:value={nextPhase} />
-			<button type="submit" class="butter" {style} disabled={isSubmitting || !nuevaHistoria.trim()}>
-				{isSubmitting ? 'Procesando...' : fase.accion}
-			</button>
-		{:else}
+		<DatePicker duration={30} title={'Fecha de compromiso'} />
+
+		{#if submitUpdate}
 			<input type="hidden" name="fase" bind:value={fase.id} />
-			<button type="submit" class="butter" disabled={isSubmitting || !nuevaCotizacion.trim()}>
-				Actualizar
+			<button type="submit" class="butter" disabled={isSubmitting}> Actualizar </button>
+		{:else if submitCancel}
+			<input type="hidden" name="fase" value={7} />
+			<button type="submit" class="butter" disabled={isSubmitting}> Perder </button>
+		{:else}
+			<input type="hidden" name="fase" bind:value={nextPhase} />
+			<button type="submit" class="butter" {style} disabled={isSubmitting}>
+				{isSubmitting ? 'Procesando...' : fase.accion}
 			</button>
 		{/if}
 	</form>

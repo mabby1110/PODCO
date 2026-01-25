@@ -6,11 +6,11 @@
 	// Variable local para el bind - debe ser string para el select
 	let keyword = $state(filterStore.keyword ?? '');
 	let profile = $state(page.data.profile);
-	let selectedAtributo = $state(profile.id);
+	let selected = $state(profile.isAdmin?'':profile.id);
 	// Sincronizar cambios de la variable local al store
 	$effect(() => {
 		// Convierte a número si no está vacío, sino ''
-		filterStore.atributo = selectedAtributo !== '' ? selectedAtributo : '';
+		filterStore.atributo = selected !== '' ? selected : '';
 	});
 
 	$effect(() => {
@@ -20,7 +20,7 @@
 
 <div>
 	{#if profile.isAdmin}
-		<select bind:value={selectedAtributo} class="butter">
+		<select bind:value={selected} class="butter">
 			<option value="">Todos</option>
 			{#each agentes as agente}
 				<option value={String(agente.id)}>{agente.nombre}</option>
