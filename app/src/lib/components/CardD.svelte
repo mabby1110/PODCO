@@ -2,7 +2,6 @@
 	import { page } from '$app/state';
 	import { selectedEvent } from '$lib/stores/selectedEvent';
 	import { slide } from 'svelte/transition';
-	import EditableField from './EditableField.svelte';
 	import PhaseAction from './PhaseAction.svelte';
 	import { invalidateAll } from '$app/navigation';
 	import { getStyleForPhase } from '$lib/utils/util';
@@ -17,7 +16,7 @@
 		return {
 			id: event.id_oportunidad ?? '',
 			razon_social: clientes[event.id_cliente-1]?.razon_social ?? '',
-			agente: agentes.find((e) => e.id_agente == event.id_agente)?.nombre ?? '',
+			agente: agentes.find((e) => e.id == event.id_agente) ?? '',
 			fase: fases_embudo_ventas[event.fase - 1],
 			historia: event.historia || 'Sin historial registrado',
 			cotizaciones: event.cotizaciones || '',
@@ -25,7 +24,7 @@
 			style: getStyleForPhase(event.fase)
 		};
 	});
-	
+	console.log(eventData);
 	function closeCard(e: MouseEvent) {
 		e.stopPropagation();
 		selectedEvent.clear();
@@ -46,7 +45,7 @@
 			<h1>{$selectedEvent.motivo}</h1>
 			<h3>{eventData.razon_social}</h3>
 			<div class="meta">
-				<p>{eventData.agente}</p>
+				<p>{eventData.agente.nombre}</p>
 				<p>-</p>
 				<p>Fase: <strong>{eventData.fase.actual}</strong></p>
 			</div>
