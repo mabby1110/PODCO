@@ -31,7 +31,6 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 		// usuario normal → fuente limitada
 		agentes = await getRange('agentes!A:B');
 	}
-	console.log('agentes', agentes);
 	const fases_embudo_ventas = await getRange('fases_embudo_ventas!A:C');
 	const actividades = await getRange('oportunidades!A:L');
 

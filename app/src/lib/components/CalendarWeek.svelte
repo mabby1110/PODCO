@@ -13,14 +13,13 @@
 		calculateSlots,
 		calculateDuration
 	} from '$lib/utils/agenda';
-	import { fade } from 'svelte/transition';
 	
 	const { actividades } = $props();
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
 	const hoursRangePerDay = { start: 8, end: 19 };
 	const SLOT_MINUTES = 10;
-	const CELL_HEIGHT = 40;
+	const CELL_HEIGHT = 24;
 
 	// Generar slots de tiempo
 	const hours = $derived(
@@ -196,7 +195,7 @@
 		position: sticky;
 		left: 0;
 		z-index: 9;
-		height: var(--d);
+		height: var(--c);
 		display: flex;
 		justify-content: center;
 		backdrop-filter: blur(16px);
@@ -204,7 +203,7 @@
 
 	.event-cell {
 		position: relative;
-		min-width: var(--f);
+		min-width: var(--e);
 		border-right: 1px solid var(--color-secondary);
 		border-bottom: 1px solid var(--color-secondary);
 	}
@@ -213,7 +212,6 @@
 	}
 	.event-wrapper {
 		position: absolute;
-		min-height: var(--d);
 		top: 0;
 		left: 0;
 		right: 0;

@@ -1,13 +1,36 @@
-import type { Database } from './database.types';
+import { writable } from 'svelte/store';
+import { getCookieJSON, setCookieJSON, deleteCookie } from '$lib/utils/cookies';
 
-type Profile = Database['public']['Tables']['profiles']['Row'];
-let profileState = $state<Profile | null>(null);
+export type Profile = {
+	id: string;
+	email: string;
+	nombre: string;
+	rol: string;
+	// agrega campos reales de tu tabla si hay más
+};
+
+const COOKIE_NAME = 'profile';
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 año
+
+const { subscribe, set } = writable<Profile | null>(
+	getCookieJSON<Profile>(COOKIE_NAME)
+);
 
 export const profile = {
-	get value() {
-		return profileState;
+	subscribe,
+
+	set: (value: Profile | null) => {
+		if (value) {
+			setCookieJSON(COOKIE_NAME, value, { maxAge: COOKIE_MAX_AGE });
+			set(value);
+		} else {
+			deleteCookie(COOKIE_NAME);
+			set(null);
+		}
 	},
-	set(newProfile: Profile | null) {
-		profileState = newProfile;
+
+	clear: () => {
+		deleteCookie(COOKIE_NAME);
+		set(null);
 	}
 };

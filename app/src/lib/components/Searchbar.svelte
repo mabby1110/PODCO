@@ -37,6 +37,8 @@
 		selectedDataItem = item;
 		console.log('Item seleccionado:', item);
 	}
+
+	$effect(()=>console.log(selectedDataItem));
 </script>
 
 <div class="container">

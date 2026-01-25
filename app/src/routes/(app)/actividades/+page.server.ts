@@ -32,6 +32,7 @@ export const actions: Actions = {
 			new Date().toISOString(), // K - fecha_creacion (fecha actual)
 			null // L - fecha_cierre (null al crear)
 		];
+		console.log(formData, rowData);
 		await appendRow('oportunidades!A:Z', rowData);
 
 		return { success: true };

@@ -31,7 +31,7 @@
 
 <button
 	style={style}
-	class={$appState.calendarCards ? 'max' : ''}
+	class={$appState.calendarCards ? '' : 'min'}
 	use:draggable={{ data: event.id, enabled: isDndEnabled }}
 	onclick={select}
 >
@@ -39,13 +39,14 @@
 		<header>
 			<b>{razon_social}</b>
 		</header>
-
+		
+		<p class="motivo">{event?.motivo}</p>
+		
 		<div class="meta">
 			<span>{agente}</span>
 			<span>{event?.inicio}</span>
 		</div>
 
-		<p class="motivo">{event?.motivo}</p>
 	{:else}
 		<div class="meta-min">
 			<span class="meta-item">{agente}</span>
@@ -62,12 +63,12 @@
 		width: 100%;
 		border: 1px solid var(--color-muted);
 		border-radius: var(--a);
-		padding: var(--a);
+		padding: 4px var(--a);
 		cursor: pointer;
 		text-align: left;
-		height: 100%;
 		overflow: hidden;
-		backdrop-filter: blur(16px);
+		height: 100%;
+		/* backdrop-filter: blur(16px); */
 	}
 
 	header {
@@ -92,9 +93,5 @@
 	.motivo {
 		font-size: 0.8rem;
 		opacity: 0.9;
-	}
-	.max {
-		overflow: visible;
-		min-height: fit-content;
 	}
 </style>

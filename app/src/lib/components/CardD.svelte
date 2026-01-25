@@ -16,7 +16,7 @@
 
 		return {
 			id: event.id_oportunidad ?? '',
-			razon_social: clientes[event.id_cliente]?.razon_social ?? '',
+			razon_social: clientes[event.id_cliente-1]?.razon_social ?? '',
 			agente: agentes.find((e) => e.id_agente == event.id_agente)?.nombre ?? '',
 			fase: fases_embudo_ventas[event.fase - 1],
 			historia: event.historia || 'Sin historial registrado',

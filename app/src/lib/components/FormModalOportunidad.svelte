@@ -3,9 +3,9 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { slide } from 'svelte/transition';
 	import Searchbar from './Searchbar.svelte';
-	import { addMinutes, formatDateTime } from '$lib/utils/agenda';
+	import { addMinutes } from '$lib/utils/agenda';
 	import FormSelectInput from './FormSelectInput.svelte';
-
+	import { profile } from '$lib/stores/profileStore.svelte';
 	let { data } = $props();
 
 	let selectedDataItem = $state(null);
@@ -47,7 +47,6 @@
 
 		return horas;
 	}
-
 	$effect(() => {
 		if (fecha && hora) {
 			const base = `${fecha} ${hora}`;
@@ -102,7 +101,6 @@
 
 				<label>
 					<span>Inicio de actividad</span>
-
 					<div class="datetime-split">
 						<input type="date" bind:value={fecha} min={getToday()} required />
 
@@ -116,6 +114,7 @@
 					<input type="hidden" name="fase" value={1} />
 					<input type="hidden" name="inicio" bind:value={inicio} />
 					<input type="hidden" name="fin" bind:value={fin} />
+					<input type="hidden" name="id_agente" value={$profile?.id} />
 				</label>
 
 				<div class="actions">
