@@ -7,7 +7,8 @@
 <div class="page-container">
 	<div class="login-wrapper">
 		<div class="login-panel panel">
-			<h1 class="login-title">Iniciar Sesión</h1>
+			<h1 class="login-title">PODCO</h1>
+			<h3 class="login-title">Iniciar Sesión</h3>
 
 			{#if form?.error}
 				<div class="error-message">
@@ -52,7 +53,7 @@
 <style>
 	.login-wrapper {
 		width: 100%;
-		height: 100%;
+		height: 60%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -69,10 +70,7 @@
 
 	.login-title {
 		color: var(--color-title);
-		font-size: 28px;
-		font-weight: bold;
 		text-align: center;
-		margin-bottom: var(--a);
 	}
 
 	.error-message {
