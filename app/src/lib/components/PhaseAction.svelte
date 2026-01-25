@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { invalidate } from '$app/navigation';
-	import { appState } from '$lib/stores/appState.svelte';
 	import InputField from './InputField.svelte';
 	import DatePicker from './DatePicker.svelte';
 	import FormOptional from './FormOptional.svelte';
@@ -39,7 +37,6 @@
 		return async ({ result }: any) => {
 			isSubmitting = false;
 			if (result.type === 'success') {
-				await invalidate('app:data');
 				nuevaHistoria = '';
 				nuevaCotizacion = '';
 				onSuccess();

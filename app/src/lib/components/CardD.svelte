@@ -3,7 +3,7 @@
 	import { selectedEvent } from '$lib/stores/selectedEvent';
 	import { slide } from 'svelte/transition';
 	import PhaseAction from './PhaseAction.svelte';
-	import { invalidateAll } from '$app/navigation';
+	import { invalidate, invalidateAll } from '$app/navigation';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import { fases } from '$lib';
 
@@ -16,9 +16,9 @@
 
 		return {
 			id: event.id_oportunidad ?? '',
-			razon_social: clientes[event.id_cliente-1]?.razon_social ?? '',
+			razon_social: clientes[event.id_cliente - 1]?.razon_social ?? '',
 			agente: agentes.find((e) => e.id == event.id_agente) ?? '',
-			fase: fases.find(f => f.id == event.fase),
+			fase: fases.find((f) => f.id == event.fase),
 			historia: event.historia || '',
 			cotizaciones: event.cotizaciones || '',
 			documentos: event.documentos || 'Sin documentos',
@@ -31,11 +31,10 @@
 		selectedEvent.clear();
 	}
 
-	function handleActionSuccess() {
+	async function handleActionSuccess() {
 		console.log('Acción completada con éxito');
 		selectedEvent.clear();
-		invalidateAll();
-		window.location.reload();
+		await invalidate('app:data');
 	}
 </script>
 

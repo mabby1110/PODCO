@@ -16,6 +16,7 @@ export function filtrarConsecutivo<T extends Evento>(
 export function getStyleForPhase(fase: string | number) {
 	const colorMap = {
 		'0': 'background-color: var(--color-perdida);',
+		'1': 'background-color: var(--color-prospecto);',
 		'2': 'background-color: var(--color-analizar);',
 		'3': 'background-color: var(--color-cotizar);',
 		'4': 'background-color: var(--color-ganada);',
