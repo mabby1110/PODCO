@@ -95,7 +95,7 @@
 	}
 </script>
 
-<div class="calendar-container" in:fade>
+<div class="calendar-container">
 	<table>
 		<thead>
 			<tr>

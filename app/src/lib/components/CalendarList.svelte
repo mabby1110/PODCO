@@ -2,7 +2,6 @@
 	import CardB from '$lib/components/CardB.svelte';
 	import { filtrarConsecutivo } from '$lib/utils/util';
 	import { filterStore } from '$lib/stores/filterStore.svelte';
-	import { fade } from 'svelte/transition';
 
 	let { actividades } = $props();
 
@@ -14,7 +13,7 @@
 	);
 </script>
 
-<div class="calentar-list-container" in:fade>
+<div class="calentar-list-container">
 	<div class="op-list">
 		{#each eventList as event (event.id_oportunidad)}
 			<CardB {event} />

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { selectedEvent } from '$lib/stores/selectedEvent';
+	import { getStyleForPhase } from '$lib/utils/util';
 
 	let { event } = $props();
 
@@ -16,19 +17,9 @@
 			fase: fases_embudo_ventas[event.fase - 1],
 			historia: event.historia || 'Sin historial registrado',
 			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
-			documentos: event.documentos || 'Sin documentos'
+			documentos: event.documentos || 'Sin documentos',
+			style: getStyleForPhase(event.fase)
 		};
-	});
-	const style = $derived.by(() => {
-		const colorMap = {
-			'0': 'background-color: var(--color-perdida);',
-			'2': 'background-color: var(--color-analizar);',
-			'3': 'background-color: var(--color-cotizar);',
-			'4': 'background-color: var(--color-ganada);',
-			'5': 'background-color: var(--color-enviar);',
-			'6': 'background-color: var(--color-finalizar); color: white;'
-		};
-		return colorMap[event?.fase] || 'background-color: var(--color-prospecto);';
 	});
 		
 	function select() {
@@ -38,7 +29,7 @@
 	}
 </script>
 
-<button class="card" {style} onclick={select}>
+<button class="card" style={eventData?.style} onclick={select}>
 	<p class="date">{eventData?.inicio}</p>
 	<div class="title">
 		<h3>{eventData?.motivo}</h3>

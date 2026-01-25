@@ -4,6 +4,8 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import CalendarList from '$lib/components/CalendarList.svelte';
 	import ControlsPanel from '$lib/components/ControlsPanel.svelte';
+	import { selectedEvent } from '$lib/stores/selectedEvent.js';
+	import { fly, slide } from 'svelte/transition';
 
 	let { data } = $props();
 </script>
@@ -13,23 +15,27 @@
 		<h3>{$appState.calendarView ? 'Semana' : 'Lista'}</h3>
 	</section>
 
-	<section class="selected">
-		<CardD />
-	</section>
+	{#if $selectedEvent}
+		<section class="selected" in:slide>
+			<CardD />
+		</section>
+	{:else}
+		<section class="controls" in:fly>
+			{#if $appState.pageActions}
+				<ControlsPanel />
+			{/if}
+		</section>
 
-	<section class="controls">
-		{#if $appState.pageActions}
-			<ControlsPanel />
-		{/if}
-	</section>
-
-	<section class="calendar">
 		{#if $appState.calendarView}
-			<CalendarWeek actividades={data.actividades} />
+			<section class="calendar" in:fly>
+				<CalendarWeek actividades={data.actividades} />
+			</section>
 		{:else}
-			<CalendarList actividades={data.actividades} />
+			<section class="calendar" in:fly>
+				<CalendarList actividades={data.actividades} />
+			</section>
 		{/if}
-	</section>
+	{/if}
 </div>
 
 <style>
@@ -45,6 +51,10 @@
 		justify-content: end;
 		margin-right: var(--a);
 		align-items: center;
+	}
+	.selected {
+		max-height: 90vh;
+		height: 100%;
 	}
 	.controls {
 		margin-bottom: var(--a);

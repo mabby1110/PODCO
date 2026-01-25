@@ -2,9 +2,7 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { filterStore } from '$lib/stores/filterStore.svelte.js';
 	import Filter from '$lib/components/Filter.svelte';
-	import { slide } from 'svelte/transition';
-	let panelToolsElement: HTMLElement;
-	// Navegar semanas
+
 	function previousWeek() {
 		filterStore.weekOffset -= 1;
 	}
@@ -22,8 +20,8 @@
 	}
 </script>
 
-<div class="container" in:slide>
-	<button in:slide onclick={handleView} class="butter primary">
+<div class="container">
+	<button onclick={handleView} class="butter primary">
 		{$appState.calendarView ? '📋 Lista' : '📅 Calendario'}
 	</button>
 	<Filter />

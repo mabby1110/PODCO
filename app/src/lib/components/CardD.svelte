@@ -5,6 +5,7 @@
 	import EditableField from './EditableField.svelte';
 	import PhaseAction from './PhaseAction.svelte';
 	import { invalidateAll } from '$app/navigation';
+	import { getStyleForPhase } from '$lib/utils/util';
 
 	const { clientes, agentes, fases_embudo_ventas } = $derived(page.data);
 
@@ -24,19 +25,7 @@
 			style: getStyleForPhase(event.fase)
 		};
 	});
-	$effect(()=>console.log(eventData));
-	function getStyleForPhase(fase: string | number) {
-		const colorMap = {
-			'0': 'background-color: var(--color-perdida);',
-			'2': 'background-color: var(--color-analizar);',
-			'3': 'background-color: var(--color-cotizar);',
-			'4': 'background-color: var(--color-ganada);',
-			'5': 'background-color: var(--color-enviar);',
-			'6': 'background-color: var(--color-finalizar); color: white;'
-		};
-		return colorMap[String(fase)] || 'background-color: var(--color-prospecto);';
-	}
-
+	
 	function closeCard(e: MouseEvent) {
 		e.stopPropagation();
 		selectedEvent.clear();
@@ -78,7 +67,6 @@
 		border-radius: 12px;
 		border: 1px solid var(--color-secondary);
 		width: 100%;
-		max-height: 70vh;
 		overflow: hidden;
 	}
 	header {
