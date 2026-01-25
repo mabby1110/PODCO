@@ -5,7 +5,7 @@
 	import InputField from './InputField.svelte';
 	import DatePicker from './DatePicker.svelte';
 	import FormOptional from './FormOptional.svelte';
-	import { getStyleForPhase } from '$lib/utils/util';
+	import { getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
 
 	let {
 		fase,
@@ -14,7 +14,7 @@
 		cotizaciones,
 		onSuccess = () => {}
 	}: {
-		fase;
+		fase: any;
 		id: string;
 		historia?: string;
 		cotizaciones?: string;
@@ -29,7 +29,7 @@
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 	let style = getStyleForPhase(fase);
-
+	let duration = getDurationForPhase(fase.id);
 	function combinarHistoria(anterior: string, nueva: string): string {
 		if (!anterior || anterior.trim() === '') return nueva;
 		return `${anterior}, ${nueva}`;
@@ -40,7 +40,6 @@
 			isSubmitting = false;
 			if (result.type === 'success') {
 				await invalidate('app:data');
-				appState.toggleCalendarView();
 				nuevaHistoria = '';
 				nuevaCotizacion = '';
 				onSuccess();
@@ -66,7 +65,7 @@
 			value={combinarHistoria(cotizaciones, nuevaCotizacion)}
 		/>
 		{#if !submitCancel && !submitUpdate}
-			{#if fase.id >= 2}
+			{#if fase.id >= 2 || fase.id == 0}
 				<section class="historia">
 					<h3>Historia</h3>
 					<p>{historia}</p>
@@ -80,7 +79,7 @@
 
 			{#if fase.id == 0}
 				<InputField
-					label="Perdida"
+					label="Recuperar"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
 					placeholder="Ingresa la acción realizada"
@@ -143,29 +142,31 @@
 			{/if}
 		{/if}
 
-		<FormOptional bind:submitUpdate bind:submitCancel>
-			{#if submitUpdate}
-				<InputField
-					label="Postergar"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Ingresa el motivo"
-					type="textarea"
-					required
-				/>
-			{:else if submitCancel}
-				<InputField
-					label="Perdida"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Ingresa el motivo"
-					type="textarea"
-					required
-				/>
-			{/if}
-		</FormOptional>
+		{#if fase.id != 0}
+			<FormOptional bind:submitUpdate bind:submitCancel>
+				{#if submitUpdate}
+					<InputField
+						label="Postergar"
+						name="nuevaHistoria"
+						bind:value={nuevaHistoria}
+						placeholder="Ingresa el motivo"
+						type="textarea"
+						required
+					/>
+				{:else if submitCancel}
+					<InputField
+						label="Perdida"
+						name="nuevaHistoria"
+						bind:value={nuevaHistoria}
+						placeholder="Ingresa el motivo"
+						type="textarea"
+						required
+					/>
+				{/if}
+			</FormOptional>
+		{/if}
 
-		<DatePicker duration={30} title={'Fecha de compromiso'} />
+		<DatePicker {duration} title={'Fecha de compromiso'} />
 
 		{#if submitUpdate}
 			<input type="hidden" name="fase" bind:value={fase.id} />

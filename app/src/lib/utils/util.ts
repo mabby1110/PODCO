@@ -24,3 +24,16 @@ export function getStyleForPhase(fase: string | number) {
 	};
 	return colorMap[String(fase)] || 'background-color: var(--color-prospecto);';
 }
+
+export function getDurationForPhase(fase: string | number) {
+	const durationMap = {
+		'0': 10,
+		'1': 20,
+		'2': 30,
+		'3': 20,
+		'4': 20,
+		'5': 20,
+		'6': 20
+	};
+	return durationMap[String(fase)] || 10;
+}

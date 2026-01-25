@@ -5,8 +5,9 @@
 	import PhaseAction from './PhaseAction.svelte';
 	import { invalidateAll } from '$app/navigation';
 	import { getStyleForPhase } from '$lib/utils/util';
+	import { fases } from '$lib';
 
-	const { clientes, agentes, fases_embudo_ventas } = $derived(page.data);
+	const { clientes, agentes } = $derived(page.data);
 
 	// Agrupa todas las derivaciones en un solo $derived.by para mejor reactividad
 	const eventData = $derived.by(() => {
@@ -17,14 +18,14 @@
 			id: event.id_oportunidad ?? '',
 			razon_social: clientes[event.id_cliente-1]?.razon_social ?? '',
 			agente: agentes.find((e) => e.id == event.id_agente) ?? '',
-			fase: fases_embudo_ventas[event.fase - 1],
-			historia: event.historia || 'Sin historial registrado',
+			fase: fases.find(f => f.id == event.fase),
+			historia: event.historia || '',
 			cotizaciones: event.cotizaciones || '',
 			documentos: event.documentos || 'Sin documentos',
 			style: getStyleForPhase(event.fase)
 		};
 	});
-	console.log(eventData);
+
 	function closeCard(e: MouseEvent) {
 		e.stopPropagation();
 		selectedEvent.clear();
@@ -108,15 +109,6 @@
 		align-items: flex-start;
 		gap: var(--b);
 		overflow: auto;
-	}
-	.grid section {
-		padding: var(--b);
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-	}
-	.grid section h3 {
-		font-size: 20px;
 	}
 	.grid .date {
 		position: absolute;

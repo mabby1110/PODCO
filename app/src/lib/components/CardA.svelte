@@ -3,6 +3,7 @@
 	import { draggable } from '$lib/actions/dnd';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { selectedEvent } from '$lib/stores/selectedEvent';
+	import { getStyleForPhase } from '$lib/utils/util';
 
 	let { event } = $props();
 
@@ -11,17 +12,7 @@
 	const agente = $derived(agentes.find((e) => e.id_agente == event.id_agente)?.nombre ?? '');
 	const isDndEnabled = $derived($appState.dnd);
 
-	const style = $derived.by(() => {
-		const colorMap = {
-			'0': 'background-color: var(--color-perdida);',
-			'2': 'background-color: var(--color-analizar);',
-			'3': 'background-color: var(--color-cotizar);',
-			'4': 'background-color: var(--color-ganada);',
-			'5': 'background-color: var(--color-enviar);',
-			'6': 'background-color: var(--color-finalizar); color: white;'
-		};
-		return colorMap[event?.fase] || 'background-color: var(--color-prospecto);';
-	});
+	const style = getStyleForPhase(event.fase);
 
 	function select() {
 		console.log('selected', event);

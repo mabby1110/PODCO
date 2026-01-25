@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { fases } from '$lib';
 	import { selectedEvent } from '$lib/stores/selectedEvent';
 	import { getStyleForPhase } from '$lib/utils/util';
 
 	let { event } = $props();
 
-	const { clientes, agentes, fases_embudo_ventas } = $derived(page.data);
+	const { clientes, agentes } = $derived(page.data);
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 
@@ -14,7 +15,7 @@
 			agente: agentes.find((e) => e.id_agente == event.id_agente)?.nombre ?? '',
 			motivo: event?.motivo,
 			inicio: event?.inicio,
-			fase: fases_embudo_ventas[event.fase - 1],
+			fase:fases[event.fase - 1],
 			historia: event.historia || 'Sin historial registrado',
 			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
 			documentos: event.documentos || 'Sin documentos',
