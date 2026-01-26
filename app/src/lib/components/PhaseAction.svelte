@@ -26,7 +26,7 @@
 	let isSubmitting = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
-	let style = getStyleForPhase(fase);
+	let style = getStyleForPhase(fase.id+1);
 	let duration = getDurationForPhase(fase.id);
 	function combinarHistoria(anterior: string, nueva: string): string {
 		if (!anterior || anterior.trim() === '') return nueva;
@@ -140,43 +140,44 @@
 		{/if}
 
 		{#if fase.id != 0}
-			<FormOptional bind:submitUpdate bind:submitCancel>
-				{#if submitUpdate}
-					<InputField
-						label="Postergar"
-						name="nuevaHistoria"
-						bind:value={nuevaHistoria}
-						placeholder="Ingresa el motivo"
-						type="textarea"
-						required
-					/>
-				{:else if submitCancel}
-					<InputField
-						label="Perdida"
-						name="nuevaHistoria"
-						bind:value={nuevaHistoria}
-						placeholder="Ingresa el motivo"
-						type="textarea"
-						required
-					/>
-				{/if}
-			</FormOptional>
+			{#if submitUpdate}
+				<InputField
+					label="Postergar"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Ingresa el motivo"
+					type="textarea"
+					required
+				/>
+			{:else if submitCancel}
+				<InputField
+					label="Perdida"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Ingresa el motivo"
+					type="textarea"
+					required
+				/>
+			{/if}
 		{/if}
 
 		<DatePicker {duration} title={'Fecha de compromiso'} />
 
-		{#if submitUpdate}
-			<input type="hidden" name="fase" bind:value={fase.id} />
-			<button type="submit" class="butter" disabled={isSubmitting}> Actualizar </button>
-		{:else if submitCancel}
-			<input type="hidden" name="fase" value={7} />
-			<button type="submit" class="butter" disabled={isSubmitting}> Perder </button>
-		{:else}
-			<input type="hidden" name="fase" bind:value={nextPhase} />
-			<button type="submit" class="butter" {style} disabled={isSubmitting}>
-				{isSubmitting ? 'Procesando...' : fase.accion}
-			</button>
-		{/if}
+		<div class="submit">
+			<FormOptional bind:submitUpdate bind:submitCancel></FormOptional>
+			{#if submitUpdate}
+				<input type="hidden" name="fase" bind:value={fase.id} />
+				<button type="submit" class="butter" disabled={isSubmitting}> Actualizar </button>
+			{:else if submitCancel}
+				<input type="hidden" name="fase" value={7} />
+				<button type="submit" class="butter" disabled={isSubmitting}> Perder </button>
+			{:else}
+				<input type="hidden" name="fase" bind:value={nextPhase} />
+				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					{isSubmitting ? 'Procesando...' : fase.accion}
+				</button>
+			{/if}
+		</div>
 	</form>
 </section>
 
@@ -210,5 +211,9 @@
 	.butter:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
+	}
+	.submit {
+		display: flex;
+		gap: var(--a);
 	}
 </style>

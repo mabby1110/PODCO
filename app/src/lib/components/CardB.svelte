@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { fases } from '$lib';
+	import { profile } from '$lib/stores/profileStore.svelte';
 	import { selectedEvent } from '$lib/stores/selectedEvent';
 	import { getStyleForPhase } from '$lib/utils/util';
 
@@ -12,7 +13,7 @@
 
 		return {
 			razon_social: clientes[event.id_cliente]?.razon_social ?? '',
-			agente: agentes.find((e) => e.id_agente == event.id_agente)?.nombre ?? '',
+			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
 			motivo: event?.motivo,
 			inicio: event?.inicio,
 			fase:fases[event.fase - 1],
@@ -41,7 +42,7 @@
 	</div>
 
 	<div class="meta">
-		<p>{eventData?.agente}, fase: {eventData?.fase?.actual}</p>
+		<p>{eventData?.agente.nombre}, fase: {eventData?.fase?.actual}</p>
 	</div>
 </button>
 

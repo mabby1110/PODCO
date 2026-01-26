@@ -6,6 +6,7 @@
 	import { invalidate, invalidateAll } from '$app/navigation';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import { fases } from '$lib';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	const { clientes, agentes } = $derived(page.data);
 
@@ -17,8 +18,8 @@
 		return {
 			id: event.id_oportunidad ?? '',
 			razon_social: clientes[event.id_cliente - 1]?.razon_social ?? '',
-			agente: agentes.find((e) => e.id == event.id_agente) ?? '',
-			fase: fases.find((f) => f.id == event.fase),
+			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
+			fase: fases?.find((f) => f.id == event.fase),
 			historia: event.historia || '',
 			cotizaciones: event.cotizaciones || '',
 			documentos: event.documentos || 'Sin documentos',
