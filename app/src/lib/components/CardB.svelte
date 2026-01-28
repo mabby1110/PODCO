@@ -12,7 +12,7 @@
 		if (!event) return null;
 
 		return {
-			razon_social: clientes[event.id_cliente]?.razon_social ?? '',
+			razon_social: clientes[event.id_cliente-1]?.razon_social ?? '',
 			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
 			motivo: event?.motivo,
 			inicio: event?.inicio,
