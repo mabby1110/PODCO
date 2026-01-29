@@ -9,7 +9,9 @@ interface AppState {
 	panelMinimized: boolean;
 	calendarCards: boolean;
 	calendarView: boolean;
-	addModal: boolean;
+	ModalOp: boolean;
+	ModalClient: boolean;
+	ModalActivity: boolean;
 	pageActions: boolean;
 }
 
@@ -23,7 +25,9 @@ const defaultState: AppState = {
 	panelMinimized: false,
 	calendarCards: false,
 	calendarView: false,
-	addModal: false,
+	ModalOp: false,
+	ModalClient: false,
+	ModalActivity: false,
 	pageActions: true
 };
 
@@ -95,9 +99,21 @@ function createAppState() {
 				saveToCookie(newState);
 				return newState;
 			}),
-		toggleAddModal: () =>
+		toggleModalOp: () =>
 			update((state) => {
-				const newState = { ...state, addModal: !state.addModal };
+				const newState = { ...state, ModalOp: !state.ModalOp };
+				saveToCookie(newState);
+				return newState;
+			}),
+		toggleModalClient: () =>
+			update((state) => {
+				const newState = { ...state, ModalClient: !state.ModalClient };
+				saveToCookie(newState);
+				return newState;
+			}),
+		toggleModalActivity: () =>
+			update((state) => {
+				const newState = { ...state, ModalActivity: !state.ModalActivity };
 				saveToCookie(newState);
 				return newState;
 			}),

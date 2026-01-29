@@ -1,4 +1,6 @@
 <script lang="ts">
+	import FormModalActividad from '$lib/components/FormModalActividad.svelte';
+	import FormModalCliente from '$lib/components/FormModalCliente.svelte';
 	import FormModalOportunidad from '$lib/components/FormModalOportunidad.svelte';
 	import NavButton from '$lib/components/NavButton.svelte';
 	import { selectedEvent } from '$lib/stores/selectedEvent.js';
@@ -16,6 +18,8 @@
 </div>
 
 <FormModalOportunidad {data}/>
+<FormModalCliente {data}/>
+<FormModalActividad {data}/>
 
 <style>
 	.nav-container {

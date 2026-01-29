@@ -59,25 +59,25 @@
 	});
 </script>
 
-{#if $appState.addModal}
+{#if $appState.ModalOp}
 	<div
 		class="overlay"
-		onclick={() => appState.toggleAddModal()}
+		onclick={() => appState.toggleModalOp()}
 		role="button"
 		tabindex="0"
-		onkeydown={(e) => e.key === 'Escape' && appState.toggleAddModal()}
+		onkeydown={(e) => e.key === 'Escape' && appState.toggleModalOp()}
 	>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" tabindex="-1">
 			<div class="modal-header">
 				<h2>Nueva Oportunidad</h2>
-				<button class="close" onclick={() => appState.toggleAddModal()}>✕</button>
+				<button class="close" onclick={() => appState.toggleModalOp()}>✕</button>
 			</div>
 			<form
 				method="POST"
 				action="?/add"
 				use:enhance={() => {
-					appState.toggleAddModal();
+					appState.toggleModalOp();
 					selectedDataItem = null;
 					alert('creado con exito!');
 				}}

@@ -14,18 +14,20 @@
 	function goToCurrentWeek() {
 		filterStore.weekOffset = 0;
 	}
-	
+
 	function handleView() {
 		appState.toggleCalendarView();
 	}
 </script>
 
 <div class="container">
+	<Filter />
+	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+	<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
+	<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 	<button onclick={handleView} class="butter primary">
 		{$appState.calendarView ? '📋 Lista' : '📅 Calendario'}
 	</button>
-	<Filter />
-	<button onclick={() => appState.toggleAddModal()} class="butter">Agregar Evento</button>
 	<!-- Controles específicos del calendario -->
 	{#if $appState.calendarView}
 		<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
