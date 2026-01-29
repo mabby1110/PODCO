@@ -38,6 +38,23 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
+	addClient: async ({ request}) => {
+		console.log('\nActividades addClient\n');
+		const formData = await request.formData();
+		const rowData = [
+			// id_oportunidad se genera automáticamente en appendRow, no lo incluimos aquí
+			formData.get('id_agente') || 1,
+			formData.get('razon_social') || null,
+			formData.get('ubicacion') || null,
+			formData.get('contactos') || null,
+			new Date().toISOString(),
+		];
+		console.log(formData, rowData);
+		await appendRow('clientes!A:Z', rowData);
+
+		return { success: true };
+	},
+
 	update: async ({ request }) => {
 		console.log('update action');
 		const formData = await request.formData();

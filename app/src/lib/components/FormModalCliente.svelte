@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { slide } from 'svelte/transition';
-	import Searchbar from './Searchbar.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
-	import FormSelectInput from './FormSelectInput.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	let { data } = $props();
-
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
+	let razon_social = $state('');
+	let ubicaciones = $state('');
+	let contact_name = $state('');
+	let contact_type = $state('');
+	let contact_value = $state('');
+	let contacto_compuesto = $derived(`${contact_name} | ${contact_type}: ${contact_value}`);
 	let fecha = $state<string>('');
 	let hora = $state<string>('08:00');
 	let inicio = $state<string>('');
@@ -47,6 +48,9 @@
 
 		return horas;
 	}
+	
+	$effect(() => console.log(razon_social));
+	
 	$effect(() => {
 		if (fecha && hora) {
 			const base = `${fecha} ${hora}`;
@@ -75,42 +79,75 @@
 			</div>
 			<form
 				method="POST"
-				action="?/add"
+				action="?/addClient"
 				use:enhance={() => {
 					appState.toggleModalClient();
 					selectedDataItem = null;
 					alert('creado con exito!');
 				}}
 			>
-				{#if selectedDataItem}
-					<label>
-						<span>Cliente</span>
-						<input type="hidden" name="id_cliente" value={selectedDataItem?.id} />
-					</label>
-					<div class="selected-client" in:slide>
-						<p>{selectedDataItem?.razon_social}</p>
-						<button type="button" class="butter" onclick={() => (selectedDataItem = null)}>✕</button
-						>
-					</div>
-				{:else}
-					<p>Seleccionar Cliente</p>
-					<Searchbar data={data.clientes} keyColumns={['razon_social']} bind:selectedDataItem />
-				{/if}
-
-				<FormSelectInput />
+				<label>
+					<span>Razon social</span>
+					<input
+						name="razon_social"
+						bind:value={razon_social}
+						placeholder="BMS Componentes y Equipos Industriales S.A. de C.V."
+						required
+					/>
+				</label>
+				
+				<label>
+					<span>Ubicacion(es)</span>
+					<textarea
+						name="ubicaciones"
+						id="ubicaciones"
+						bind:value={ubicaciones}
+						required
+						rows="2"
+						placeholder="copiar y pegar de google maps ej. Antonio Bravo 128, Las Liebres, 45623 San Pedro Tlaquepaque, Jal."
+					></textarea>
+				</label>
 
 				<label>
-					<span>Inicio de actividad</span>
-					<div class="datetime-split">
-						<input type="date" bind:value={fecha} min={getToday()} required />
+					<span>Nombre del contacto</span>
+					<input name="contact_name" bind:value={contact_name} required placeholder="Nombre completo" />
+				</label>
 
+				<label>
+					<span>Tipo de contacto</span>
+					<select name="contact_type" bind:value={contact_type} required >
+						<option value="telefono">Teléfono</option>
+						<option value="whatsapp">WhatsApp</option>
+						<option value="email">Correo</option>
+						<option value="linkedin">LinkedIn</option>
+						<option value="otro">Otro</option>
+					</select>
+				</label>
+
+				<label>
+					<span>Contacto</span>
+					<input
+						name="contact_value"
+						bind:value={contact_value}
+						required
+						placeholder="3322558174 o correo@empresa.com"
+					/>
+				</label>
+
+                
+				<label>
+                    <span>Programar contacto inicial</span>
+					<div class="datetime-split">
+                        <input type="date" bind:value={fecha} min={getToday()} required />
+                        
 						<select bind:value={hora} required>
-							{#each generarHoras() as h}
-								<option value={h}>{h}</option>
+                            {#each generarHoras() as h}
+                            <option value={h}>{h}</option>
 							{/each}
 						</select>
 					</div>
-
+                    
+                    <input type="hidden" name="contactos" value={contacto_compuesto} />
 					<input type="hidden" name="fase" value={1} />
 					<input type="hidden" name="inicio" bind:value={inicio} />
 					<input type="hidden" name="fin" bind:value={fin} />
@@ -183,7 +220,8 @@
 	}
 
 	input,
-	textarea {
+	textarea,
+	select {
 		padding: 0.5rem;
 		border: 1px solid #d1d5db;
 		border-radius: 4px;

@@ -11,6 +11,18 @@
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
+	let motivos = [
+		'Refacciones / repuestos',
+		'Mantenimiento correctivo',
+		'Mantenimiento preventivo',
+		'Servicio en sitio',
+		'Visita técnica',
+		'Reclamación / garantía',
+		'Viaje comercial',
+		'Urgencia operativa',
+		'Soporte técnico a ventas',
+		'Coordinación con taller'
+	];
 	let fecha = $state<string>('');
 	let hora = $state<string>('08:00');
 	let inicio = $state<string>('');
@@ -97,7 +109,7 @@
 					<Searchbar data={data.clientes} keyColumns={['razon_social']} bind:selectedDataItem />
 				{/if}
 
-				<FormSelectInput />
+				<FormSelectInput {motivos}/>
 
 				<label>
 					<span>Inicio de actividad</span>
