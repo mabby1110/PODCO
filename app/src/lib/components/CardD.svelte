@@ -16,13 +16,13 @@
 		if (!event) return null;
 
 		return {
-			id: event.id_oportunidad ?? '',
-			razon_social: clientes.find(c=>c.id == event.id_cliente).razon_social ?? '',
+			id: event.id_oportunidad ?? null,
+			razon_social: clientes.find(c=>c.id == event.id_cliente).razon_social ?? null,
 			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
 			fase: fases?.find((f) => f.id == event.fase),
-			historia: event.historia || '',
-			cotizaciones: event.cotizaciones || '',
-			documentos: event.documentos || 'Sin documentos',
+			historia: event.historia || null,
+			cotizaciones: event.cotizaciones || null,
+			requisitos: event.requisitos || null,
 			style: getStyleForPhase(event.fase)
 		};
 	});

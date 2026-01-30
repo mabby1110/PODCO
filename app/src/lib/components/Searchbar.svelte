@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { slide } from "svelte/transition";
+	import { slide } from 'svelte/transition';
 
 	interface DataItem {
 		[key: string]: string | number | null | undefined;
@@ -7,17 +7,16 @@
 
 	let {
 		data = [],
-		selectedDataItem = $bindable(null),
 		keyColumns = ['motivo']
 	}: {
 		data: DataItem[];
 		selectedDataItem?: DataItem | null;
-		keyColumns: [string] | null;
+		keyColumns: string[]; // Cambiado de [string] a string[]
 	} = $props();
 
 	const eventList = $derived(data?.length ? data : []);
 	let keyword = $state('');
-
+	let selectedDataItem = $state(null);
 	let filteredData = $derived.by(() => {
 		const searchTerm = keyword.toLowerCase().trim();
 		if (searchTerm === '') {
@@ -35,37 +34,56 @@
 
 	function selectItem(item: DataItem) {
 		selectedDataItem = item;
-		console.log('Item seleccionado:', item);
+		keyword = ''; // Limpiar búsqueda después de seleccionar
 	}
 
-	$effect(()=>console.log(selectedDataItem));
+	$inspect('Item seleccionado:', selectedDataItem);
 </script>
 
-<div class="container">
-	<div class="search-input butter">
-		<input type="text" bind:value={keyword} placeholder="Buscar..." required/>
-	</div>
-	{#if keyword}
-		<div class="results" transition:slide>
-			{#if filteredData.length > 0}
-				{#each filteredData as item (item.id)}
-					<button type="button" class="search-result" onclick={() => selectItem(item)}>
-						<span class="meta">{item.razon_social}</span>
-					</button>
-				{/each}
-			{:else}
-				<div class="no-results">No se encontraron resultados</div>
-			{/if}
+<div>
+	{#if selectedDataItem}
+		<span>Cliente</span>
+		<input type="hidden" name="id_cliente" value={selectedDataItem?.id} />
+		<div class="selected-client">
+			<p>{selectedDataItem?.razon_social}</p>
+			<button
+				type="button"
+				class="close-btn"
+				onclick={(e) => {
+					e.stopPropagation();
+					selectedDataItem = null;
+				}}>✕</button
+			>
 		</div>
+	{:else}
+		<span>Seleccionar Cliente</span>
+		<div class="search-input butter">
+			<input type="text" bind:value={keyword} placeholder="Buscar..." required />
+		</div>
+		{#if keyword}
+			<div class="results" transition:slide>
+				{#if filteredData.length > 0}
+					{#each filteredData as item (item.id)}
+						<button
+							type="button"
+							class="search-result"
+							onclick={(e) => {
+								e.stopPropagation();
+								selectItem(item);
+							}}
+						>
+							<span class="meta">{item.razon_social}</span>
+						</button>
+					{/each}
+				{:else}
+					<div class="no-results">No se encontraron resultados</div>
+				{/if}
+			</div>
+		{/if}
 	{/if}
 </div>
 
 <style>
-	.container {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-	}
 	.search-input {
 		flex-grow: 1;
 		padding: 0;
@@ -109,5 +127,10 @@
 		padding: var(--a);
 		text-align: center;
 		color: var(--text-secondary, #666);
+	}
+	.selected-client {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 </style>

@@ -7,11 +7,14 @@
 	import FormSelectInput from './FormSelectInput.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { motivosOportunidad } from '$lib';
+	import FormOptionalInput from './FormOptionalInput.svelte';
+	import InputField from './InputField.svelte';
 	let { data } = $props();
 
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
+	let requisitos = $state('');
 	let fecha = $state<string>('');
 	let hora = $state<string>('08:00');
 	let inicio = $state<string>('');
@@ -58,6 +61,8 @@
 			fin = '';
 		}
 	});
+
+	$inspect('Item seleccionado:', selectedDataItem);
 </script>
 
 {#if $appState.ModalOp}
@@ -83,23 +88,19 @@
 					alert('creado con exito!');
 				}}
 			>
-				{#if selectedDataItem}
-					<label>
-						<span>Cliente</span>
-						<input type="hidden" name="id_cliente" value={selectedDataItem?.id} />
-					</label>
-					<div class="selected-client" in:slide>
-						<p>{selectedDataItem?.razon_social}</p>
-						<button type="button" class="butter" onclick={() => (selectedDataItem = null)}>✕</button
-						>
-					</div>
-				{:else}
-					<p>Seleccionar Cliente</p>
-					<Searchbar data={data.clientes} keyColumns={['razon_social']} bind:selectedDataItem />
-				{/if}
-
+				<Searchbar data={data.clientes} keyColumns={['razon_social']} />
 				<FormSelectInput list={motivosOportunidad} />
-				
+				<FormOptionalInput title="+Agregar requisitos">
+					<InputField
+						label="Requisitos"
+						name="requisitos"
+						bind:value={requisitos}
+						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+						type="textarea"
+						required
+					/>
+				</FormOptionalInput>
+
 				<label>
 					<span>Inicio de actividad</span>
 					<div class="datetime-split">
@@ -201,11 +202,5 @@
 		justify-content: flex-end;
 		padding-top: 1rem;
 		border-top: 1px solid #e5e5e5;
-	}
-
-	.selected-client {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
 	}
 </style>

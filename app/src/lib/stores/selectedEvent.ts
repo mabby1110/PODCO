@@ -10,7 +10,7 @@ export type EventItem = {
 	motivo: string;
 	historia: string;
 	cotizaciones: string;
-	documentos: string;
+	requisitos: string;
 	fase: string;
 	fecha_creacion: string;
 	fecha_cierre: string;

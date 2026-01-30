@@ -9,7 +9,6 @@
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
-	let motivos = motivosProspeccion;
 	let razon_social = $state('');
 	let ubicaciones = $state('');
 	let fecha = $state<string>('');
@@ -94,7 +93,7 @@
 					/>
 				</label>
 
-				<FormSelectInput title="Tipo de prospeccion" list={motivosOportunidad} />
+				<FormSelectInput title="Tipo de prospeccion" list={motivosProspeccion} />
 				
 				<label>
 					<span>Ubicacion</span>

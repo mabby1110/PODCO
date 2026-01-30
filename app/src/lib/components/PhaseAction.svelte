@@ -7,12 +7,14 @@
 	import { fases, motivosOportunidad } from '$lib';
 	import FormOptionalInput from './FormOptionalInput.svelte';
 	import FormSelectInput from './FormSelectInput.svelte';
+	import EditableField from './EditableField.svelte';
 
 	let {
 		fase,
 		id,
 		historia = '',
 		cotizaciones,
+		requisitos,
 		onSuccess = () => {}
 	}: {
 		fase: any;
@@ -25,7 +27,6 @@
 	let nextPhase = $derived(Number(fase.id) + 1);
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
-	let requisitos = $state('');
 	let isSubmitting = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
@@ -78,16 +79,17 @@
 					<label>Historia</label>
 					<p>{historia}</p>
 				</section>
-				{#if requisitos}
-					<section class="requisitos">
-						<label>Requisitos</label>
-						<p>{requisitos}</p>
-					</section>
-				{/if}
 			{:else if fase.id >= 3}
 				<section class="cotizaciones">
 					<label>Cotizaciones</label>
 					<p>{cotizaciones}</p>
+				</section>
+			{/if}
+			{#if requisitos}
+				<!-- <EditableField id="requisitos" name="requisitos" type="text" bind:value={requisitos} /> -->
+				<section class="requisitos">
+					<label>Requisitos</label>
+					<p>{requisitos}</p>
 				</section>
 			{/if}
 
@@ -102,17 +104,6 @@
 					type="textarea"
 					required
 				/>
-
-				<FormOptionalInput title="+Agregar requisitos">
-					<InputField
-						label="Requisitos"
-						name="requisitos"
-						bind:value={requisitos}
-						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-						type="textarea"
-						required
-					/>
-				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha de compromiso para presentar propuesta" />
 			{:else if fase.id == 2}
 				<InputField

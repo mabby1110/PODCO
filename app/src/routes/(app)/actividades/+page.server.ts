@@ -37,28 +37,32 @@ export const actions: Actions = {
 		const formData = await request.formData();
 
 		const cliente = [
-			formData.get('id_agente') || 1,
 			null,
-			formData.get('id_agente') || null,
+			formData.get('id_agente') || 1,
 			formData.get('razon_social') || null,
 			formData.get('ubicacion') || null,
 			formData.get('contactos') || null,
+			formData.get('motivo') || null,
 			new Date().toISOString()
 		];
 
+		const newClient = await appendRow('clientes!A:Z', cliente);
+
 		const oportunidad = [
-			formData.get('id_cliente') || formData.get('id_cliente') || null,
+			newClient?.id || null,
 			formData.get('id_agente') || 1,
 			formData.get('fase') || 1,
 			formData.get('motivo') || null,
 			formData.get('inicio') || null,
 			formData.get('fin') || null,
-			formData.get('historia') || null,
+			formData.get('motivo') || null,
 			formData.get('cotizaciones') || null,
 			formData.get('requisitos') || null,
 			new Date().toISOString(),
 			null
 		];
+		
+		await appendRow('oportunidades!A:Z', oportunidad);
 		console.log(formData, oportunidad, cliente);
 
 		return { success: true };
