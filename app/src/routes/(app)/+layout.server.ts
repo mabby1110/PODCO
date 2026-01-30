@@ -18,7 +18,7 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 
 	console.log('\nlayout (app) data loaded\n');
 
-	const clientes = await getRange('clientes!A:B');
+	const clientes = await getRange('clientes!A:Z');
 
 	let agentes;
 	if (locals.profile?.isAdmin === true) {

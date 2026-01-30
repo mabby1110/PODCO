@@ -17,7 +17,7 @@ const auth = new google.auth.GoogleAuth({
 // SHEETS
 const sheets = google.sheets({ version: 'v4', auth });
 
-function generateId(prefix = 'BMS') {
+export function generateId(prefix = 'BMS') {
 	const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 	const hash = crypto.randomBytes(4).toString('hex');
 	return `${prefix}-${date}-${hash}`;

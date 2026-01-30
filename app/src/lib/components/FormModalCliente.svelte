@@ -3,6 +3,7 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import FormInputAddContact from './FormInputAddContact.svelte';
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
@@ -11,7 +12,6 @@
 	let contact_name = $state('');
 	let contact_type = $state('');
 	let contact_value = $state('');
-	let contacto_compuesto = $derived(`${contact_name} | ${contact_type}: ${contact_value}`);
 	let fecha = $state<string>('');
 	let hora = $state<string>('08:00');
 	let inicio = $state<string>('');
@@ -108,35 +108,11 @@
 					></textarea>
 				</label>
 
-				<label>
-					<span>Nombre del contacto</span>
-					<input name="contact_name" bind:value={contact_name} required placeholder="Nombre completo" />
-				</label>
-
-				<label>
-					<span>Tipo de contacto</span>
-					<select name="contact_type" bind:value={contact_type} required >
-						<option value="telefono">Teléfono</option>
-						<option value="whatsapp">WhatsApp</option>
-						<option value="email">Correo</option>
-						<option value="linkedin">LinkedIn</option>
-						<option value="otro">Otro</option>
-					</select>
-				</label>
-
-				<label>
-					<span>Contacto</span>
-					<input
-						name="contact_value"
-						bind:value={contact_value}
-						required
-						placeholder="3322558174 o correo@empresa.com"
-					/>
-				</label>
+				<FormInputAddContact/>
 
                 
 				<label>
-                    <span>Programar contacto inicial</span>
+                    <span>Programar primer contacto</span>
 					<div class="datetime-split">
                         <input type="date" bind:value={fecha} min={getToday()} required />
                         
@@ -147,7 +123,6 @@
 						</select>
 					</div>
                     
-                    <input type="hidden" name="contactos" value={contacto_compuesto} />
 					<input type="hidden" name="fase" value={1} />
 					<input type="hidden" name="inicio" bind:value={inicio} />
 					<input type="hidden" name="fin" bind:value={fin} />
@@ -211,20 +186,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
-	}
-
-	label {
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-	}
-
-	input,
-	textarea,
-	select {
-		padding: 0.5rem;
-		border: 1px solid #d1d5db;
-		border-radius: 4px;
 	}
 
 	.datetime-split {

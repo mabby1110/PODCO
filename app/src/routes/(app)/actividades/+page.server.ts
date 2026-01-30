@@ -1,13 +1,9 @@
 // +page.server.ts
 import type { Actions, PageServerLoad } from './$types';
-import {
-	appendRow,
-	updateRowById,
-	uploadToFolder
-} from '$lib/server/googleApi';
+import { appendRow, generateId, updateRowById, uploadToFolder } from '$lib/server/googleApi';
 import { fail } from '@sveltejs/kit';
 import { Readable } from 'stream';
-    
+
 const RANGE = 'historial_actividades!A:K';
 
 export const load: PageServerLoad = async () => {
@@ -15,7 +11,7 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	add: async ({ request}) => {
+	add: async ({ request }) => {
 		console.log('\nActividades add\n');
 		const formData = await request.formData();
 		const rowData = [
@@ -38,19 +34,35 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	addClient: async ({ request}) => {
+	addClient: async ({ request }) => {
 		console.log('\nActividades addClient\n');
 		const formData = await request.formData();
-		const rowData = [
+		const oportunidad = [
+			// id_oportunidad se genera automáticamente en appendRow, no lo incluimos aquí
+			formData.get('id_cliente') || formData.get('id_cliente') || null, // B - id_cliente
+			formData.get('id_agente') || 1, // C - id_agente
+			formData.get('fase') || 1, // D - fase
+			formData.get('motivo') || null, // E - motivo
+			formData.get('inicio') || null, // F - inicio
+			formData.get('fin') || null, // G - fin
+			formData.get('historia') || null, // H - historia
+			formData.get('cotizaciones') || null, // I - cotizaciones
+			formData.get('documentos') || null, // J - documentos
+			new Date().toISOString(), // K - fecha_creacion (fecha actual)
+			null // L - fecha_cierre (null al crear)
+		];
+
+		const cliente = [
 			// id_oportunidad se genera automáticamente en appendRow, no lo incluimos aquí
 			formData.get('id_agente') || 1,
 			formData.get('razon_social') || null,
 			formData.get('ubicacion') || null,
 			formData.get('contactos') || null,
-			new Date().toISOString(),
+			new Date().toISOString()
 		];
-		console.log(formData, rowData);
-		await appendRow('clientes!A:Z', rowData);
+
+		console.log(formData, oportunidad, cliente);
+		// await appendRow('clientes!A:Z', rowData);
 
 		return { success: true };
 	},
@@ -104,7 +116,7 @@ export const actions: Actions = {
 
 		return { success: true };
 	},
-	
+
 	upload: async ({ request }) => {
 		const data = await request.formData();
 		const file = data.get('cotizacion') as File;
@@ -116,11 +128,7 @@ export const actions: Actions = {
 		const buffer = Buffer.from(await file.arrayBuffer());
 		const stream = Readable.from(buffer);
 
-		const uploaded = await uploadToFolder(
-			file.name,
-			file.type,
-			stream
-		);
+		const uploaded = await uploadToFolder(file.name, file.type, stream);
 
 		return {
 			success: true,
