@@ -1,13 +1,7 @@
 import type { Actions, PageServerLoad } from './$types';
-import { appendRow, generateId, updateRowById, uploadToFolder } from '$lib/server/googleApi';
+import { appendRow, updateRowById, uploadToFolder } from '$lib/server/googleApi';
 import { fail } from '@sveltejs/kit';
 import { Readable } from 'stream';
-
-const RANGE = 'historial_actividades!A:K';
-
-export const load: PageServerLoad = async () => {
-	console.log('\nActividades loaded\n');
-};
 
 export const actions: Actions = {
 	add: async ({ request }) => {
@@ -61,7 +55,7 @@ export const actions: Actions = {
 			new Date().toISOString(),
 			null
 		];
-		
+
 		await appendRow('oportunidades!A:Z', oportunidad);
 		console.log(formData, oportunidad, cliente);
 

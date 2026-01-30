@@ -61,8 +61,6 @@
 			fin = '';
 		}
 	});
-
-	$inspect('Item seleccionado:', selectedDataItem);
 </script>
 
 {#if $appState.ModalOp}

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import FormModalActividad from '$lib/components/FormModalActividad.svelte';
 	import FormModalCliente from '$lib/components/FormModalCliente.svelte';
 	import FormModalOportunidad from '$lib/components/FormModalOportunidad.svelte';
 	import NavButton from '$lib/components/NavButton.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte.js';
 	import { selectedEvent } from '$lib/stores/selectedEvent.js';
 
 	let { children, data } = $props();
-	selectedEvent.clear();
+	profile.set(data.profile);
 </script>
 
 <nav class="nav-container">
@@ -18,7 +18,7 @@
 </div>
 
 <FormModalOportunidad {data}/>
-<FormModalCliente/>
+<FormModalCliente />
 
 <style>
 	.nav-container {

@@ -6,8 +6,9 @@ import { supabaseAdmin } from '$lib/server/supabaseAdmin';
 import { getAllProfilesAdmin } from '$lib/utils/supabase';
 
 export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
+	console.log('\nlayout (app)\n');
+	
 	depends('app:data');
-
 	if (!locals.session) {
 		throw redirect(303, '/auth');
 	}
@@ -16,10 +17,8 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 		throw redirect(307, '/actividades');
 	}
 
-	console.log('\nlayout (app) data loaded\n');
-
 	const clientes = await getRange('clientes!A:Z');
-	
+
 	let agentes;
 	if (locals.profile?.isAdmin === true) {
 		agentes = await getAllProfilesAdmin(supabaseAdmin);
@@ -27,7 +26,7 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 	const actividades = await getRange('oportunidades!A:L');
 
 	return {
-		session: locals.session,
+		profile: locals.profile,
 		clientes,
 		agentes,
 		actividades
