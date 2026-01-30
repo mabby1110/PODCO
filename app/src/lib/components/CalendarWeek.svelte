@@ -13,7 +13,7 @@
 		calculateSlots,
 		calculateDuration
 	} from '$lib/utils/agenda';
-	
+
 	const { actividades } = $props();
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
@@ -50,24 +50,28 @@
 	const weekEvents = $derived.by(() => {
 		return eventList.filter((event) => {
 			const eventDate = new Date(event.inicio);
-			return weekDates.some(weekDate => isSameDay(eventDate, weekDate));
+			return weekDates.some((weekDate) => isSameDay(eventDate, weekDate));
 		});
 	});
 
 	function getEvent(hour: number, minute: number, targetDate: Date) {
 		return weekEvents.find((event) => {
 			const eventDate = new Date(event.inicio);
-			return isSameDay(eventDate, targetDate) &&
+			return (
+				isSameDay(eventDate, targetDate) &&
 				eventDate.getHours() === hour &&
-				eventDate.getMinutes() === minute;
+				eventDate.getMinutes() === minute
+			);
 		});
 	}
 
 	function isEventStart(hour: number, minute: number, targetDate: Date, event) {
 		const eventDate = new Date(event.inicio);
-		return isSameDay(eventDate, targetDate) &&
+		return (
+			isSameDay(eventDate, targetDate) &&
 			eventDate.getHours() === hour &&
-			eventDate.getMinutes() === minute;
+			eventDate.getMinutes() === minute
+		);
 	}
 
 	async function handleDrop(eventId: string, hour: number, minute: number, targetDate: Date) {
@@ -124,7 +128,15 @@
 							}}
 						>
 							{#if event && isEventStart(h.hour, h.minute, date, event)}
-									<CardA {event} style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px`}/>
+								<div
+									class="event-wrapper"
+									style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px`}
+								>
+									<CardA
+										{event}
+										style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px`}
+									/>
+								</div>
 							{/if}
 						</td>
 					{/each}
@@ -200,14 +212,19 @@
 		min-width: var(--e);
 		border-right: 1px solid var(--color-secondary);
 		border-bottom: 1px solid var(--color-secondary);
-	}
-	.max {
-		min-width: 50vw;
+		overflow: visible;
 	}
 	.event-wrapper {
+		z-index: 1;
 		position: absolute;
 		top: 0;
 		left: 0;
 		right: 0;
+		height: fit-content;
+		cursor: pointer;
+		pointer-events: auto; /* La celda NO captura eventos */
+	}
+	.max {
+		min-width: 50vw;
 	}
 </style>

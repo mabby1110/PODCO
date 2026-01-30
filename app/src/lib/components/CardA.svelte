@@ -55,9 +55,12 @@
 		</div>
 	{:else}
 		<div class="meta-min">
-			<span class="meta-item">{eventData?.agente.nombre}</span>
+			{#if $profile.isAdmin}
+				<span class="meta-item">{eventData?.agente.nombre}</span>
+			{:else}
+				<span class="meta-item">{eventData?.razon_social}</span>
+			{/if}
 			<span class="meta-item">{eventData?.motivo}</span>
-			<span class="meta-item">{eventData?.razon_social}</span>
 		</div>
 	{/if}
 </button>
@@ -71,10 +74,8 @@
 		border: 1px solid var(--color-muted);
 		border-radius: var(--a);
 		padding: 4px var(--a);
-		cursor: pointer;
 		text-align: left;
 		align-items: baseline;
-		height: 100%;
 		backdrop-filter: blur(16px);
 	}
 	header {
