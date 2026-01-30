@@ -7,11 +7,11 @@
 	import { selectedEvent } from '$lib/stores/selectedEvent';
 	import { getStyleForPhase } from '$lib/utils/util';
 
-	let { event } = $props();
+	let { event, style } = $props();
 
 	const { clientes, agentes } = $derived(page.data);
 	const isDndEnabled = $derived($appState.dnd);
-	
+
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 
@@ -20,11 +20,11 @@
 			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
 			motivo: event?.motivo,
 			inicio: event?.inicio,
-			fase: fases.find(f => f.id == event.fase),
+			fase: fases.find((f) => f.id == event.fase),
 			historia: event.historia || 'Sin historial registrado',
 			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
 			documentos: event.documentos || 'Sin documentos',
-			style: getStyleForPhase(event.fase)
+			style: getStyleForPhase(event.fase) + style
 		};
 	});
 
@@ -38,6 +38,7 @@
 	style={eventData?.style}
 	class={$appState.calendarCards ? '' : 'min'}
 	use:draggable={{ data: event.id, enabled: isDndEnabled }}
+	use:draggable={event.id_oportunidad}
 	onclick={select}
 >
 	{#if $appState.calendarCards}
@@ -54,8 +55,9 @@
 		</div>
 	{:else}
 		<div class="meta-min">
-			<span class="meta-item">{eventData?.motivo}</span>
 			<span class="meta-item">{eventData?.agente.nombre}</span>
+			<span class="meta-item">{eventData?.motivo}</span>
+			<span class="meta-item">{eventData?.razon_social}</span>
 		</div>
 	{/if}
 </button>
@@ -71,12 +73,10 @@
 		padding: 4px var(--a);
 		cursor: pointer;
 		text-align: left;
-		overflow: hidden;
 		align-items: baseline;
 		height: 100%;
-		/* backdrop-filter: blur(16px); */
+		backdrop-filter: blur(16px);
 	}
-
 	header {
 		flex-grow: 1;
 	}

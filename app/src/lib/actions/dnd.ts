@@ -37,7 +37,7 @@ export function draggable(node: HTMLElement, options: DraggableOptions | any) {
 		const enabled = state.enabled && isDndEnabled;
 
 		node.draggable = enabled;
-		node.style.cursor = enabled ? 'grab' : 'default';
+		node.style.cursor = enabled ? 'grab' : 'pointer';
 	}
 
 	updateDraggable();

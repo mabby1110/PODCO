@@ -124,13 +124,7 @@
 							}}
 						>
 							{#if event && isEventStart(h.hour, h.minute, date, event)}
-								<div
-									class="event-wrapper"
-									style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px`}
-									use:draggable={event.id_oportunidad}
-								>
-									<CardA {event} />
-								</div>
+									<CardA {event} style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px`}/>
 							{/if}
 						</td>
 					{/each}
@@ -215,6 +209,5 @@
 		top: 0;
 		left: 0;
 		right: 0;
-		z-index: 2;
 	}
 </style>
