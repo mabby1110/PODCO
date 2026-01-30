@@ -22,7 +22,6 @@
 		'Correo entrante',
 		'Llamada entrante',
 		'WhatsApp entrante',
-		'Visita técnica previa',
 		'Servicio en sitio',
 		'Emergencia operativa',
 		'Feria / expo',
@@ -114,16 +113,16 @@
 					/>
 				</label>
 
-				<FormSelectInput {motivos} />
+				<FormSelectInput title="Tipo de prospeccion" list={motivos} />
 				
 				<label>
-					<span>Ubicacion(es)</span>
+					<span>Ubicacion</span>
 					<textarea
 						name="ubicaciones"
 						id="ubicaciones"
 						bind:value={ubicaciones}
 						required
-						rows="2"
+						rows="3"
 						placeholder="copiar y pegar de google maps ej. Antonio Bravo 128, Las Liebres, 45623 San Pedro Tlaquepaque, Jal."
 					></textarea>
 				</label>

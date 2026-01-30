@@ -1,7 +1,8 @@
 <script lang="ts">
 	// Motivos base
 	let {
-		motivos = [
+		title = 'Motivo',
+		list = [
 			'Prospección en frío',
 			'Prospección inbound',
 			'Seguimiento de cliente',
@@ -35,13 +36,13 @@
 </script>
 
 <label>
-	<span>Motivo</span>
+	<span>{title}</span>
 
 	<select class="butter" bind:value={selected} required>
 		<option value="" disabled selected>Selecciona un motivo</option>
 
-		{#each motivos as m}
-			<option value={m}>{m}</option>
+		{#each list as item}
+			<option value={item}>{item}</option>
 		{/each}
 
 		<option value="__otro__">Otro…</option>

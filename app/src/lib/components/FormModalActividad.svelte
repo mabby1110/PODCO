@@ -12,7 +12,6 @@
 
 	// --- Pickers separados ---
 	let motivos = [
-		'Refacciones / repuestos',
 		'Mantenimiento correctivo',
 		'Mantenimiento preventivo',
 		'Servicio en sitio',

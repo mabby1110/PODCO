@@ -54,6 +54,7 @@ select {
 	padding: 0.5rem;
 	border: 1px solid #d1d5db;
 	border-radius: 4px;
+	min-height: var(--d);
 }
 html,
 body {
@@ -63,6 +64,10 @@ body {
 	left: 0;
 	right: 0;
 	background-color: var(--color-background);
+}
+label {
+	font-size: 20px;
+	cursor: pointer;
 }
 .page-container {
 	width: 100%;

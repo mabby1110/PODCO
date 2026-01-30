@@ -12,6 +12,15 @@
 
 	// --- Pickers separados ---
 	let motivos = [
+		'Refacciones / repuestos',
+		'Mantenimiento correctivo',
+		'Mantenimiento preventivo',
+		'Servicio en sitio',
+		'Visita técnica',
+		'Reclamación / garantía',
+		'Viaje comercial',
+		'Urgencia operativa',
+		'Soporte técnico a ventas',
 		'Prospección en frío',
 		'Prospección inbound',
 		'Referido',
@@ -114,7 +123,7 @@
 				{/if}
 
 				<FormSelectInput {motivos} />
-
+				
 				<label>
 					<span>Inicio de actividad</span>
 					<div class="datetime-split">

@@ -12,11 +12,11 @@
 		if (!event) return null;
 
 		return {
-			razon_social: clientes[event.id_cliente-1]?.razon_social ?? '',
+			razon_social: clientes?.find((c) => c.id == event.id_cliente)?.razon_social ?? '',
 			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
 			motivo: event?.motivo,
 			inicio: event?.inicio,
-			fase:fases[event.fase - 1],
+			fase: fases.find(f => f.id == event.fase),
 			historia: event.historia || 'Sin historial registrado',
 			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
 			documentos: event.documentos || 'Sin documentos',

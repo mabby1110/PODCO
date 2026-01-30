@@ -2,7 +2,6 @@
 	import type { Snippet } from 'svelte';
 	import { slide } from 'svelte/transition';
 	let {
-		children,
 		submitUpdate = $bindable(),
 		submitCancel = $bindable()
 	}: {

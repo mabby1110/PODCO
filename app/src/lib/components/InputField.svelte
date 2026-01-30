@@ -85,11 +85,6 @@
 		align-items: center;
 	}
 
-	.label {
-		font-size: 20px;
-		cursor: pointer;
-	}
-
 	.hint {
 		font-size: 14px;
 		opacity: 0.7;
