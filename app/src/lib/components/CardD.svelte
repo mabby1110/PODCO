@@ -17,7 +17,7 @@
 
 		return {
 			id: event.id_oportunidad ?? '',
-			razon_social: clientes[event.id_cliente - 1]?.razon_social ?? '',
+			razon_social: clientes.find(c=>c.id == event.id_cliente).razon_social ?? '',
 			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
 			fase: fases?.find((f) => f.id == event.fase),
 			historia: event.historia || '',

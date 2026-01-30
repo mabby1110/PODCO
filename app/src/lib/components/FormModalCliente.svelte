@@ -69,8 +69,6 @@
 		return horas;
 	}
 
-	$effect(() => console.log(razon_social));
-
 	$effect(() => {
 		if (fecha && hora) {
 			const base = `${fecha} ${hora}`;

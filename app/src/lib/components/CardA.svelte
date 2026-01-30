@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { fases } from '$lib';
 	import { draggable } from '$lib/actions/dnd';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
@@ -9,11 +10,23 @@
 	let { event } = $props();
 
 	const { clientes, agentes } = $derived(page.data);
-	const razon_social = $derived(clientes[event.id_cliente]?.razon_social ?? '');
-	const agente = $derived(agentes?.find((e) => e.id == event.id_agente) ?? $profile);
 	const isDndEnabled = $derived($appState.dnd);
+	
+	const eventData = $derived.by(() => {
+		if (!event) return null;
 
-	const style = getStyleForPhase(event.fase);
+		return {
+			razon_social: clientes?.find((c) => c.id == event.id_cliente)?.razon_social ?? '',
+			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
+			motivo: event?.motivo,
+			inicio: event?.inicio,
+			fase: fases.find(f => f.id == event.fase),
+			historia: event.historia || 'Sin historial registrado',
+			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
+			documentos: event.documentos || 'Sin documentos',
+			style: getStyleForPhase(event.fase)
+		};
+	});
 
 	function select() {
 		console.log('selected', event);
@@ -22,27 +35,27 @@
 </script>
 
 <button
-	style={style}
+	style={eventData?.style}
 	class={$appState.calendarCards ? '' : 'min'}
 	use:draggable={{ data: event.id, enabled: isDndEnabled }}
 	onclick={select}
 >
 	{#if $appState.calendarCards}
 		<header>
-			<b>{razon_social}</b>
+			<b>{eventData?.razon_social}</b>
 		</header>
-		
-		<p class="motivo">{event?.motivo}</p>
-		
-		<div class="meta">
-			<span>{agente.nombre}</span>
-			<span>{event?.inicio}</span>
-		</div>
 
+		<p class="motivo">{event?.motivo}</p>
+		<p class="motivo">{event?.fase}</p>
+
+		<div class="meta">
+			<span>{eventData?.agente.nombre}</span>
+			<span>{eventData?.inicio}</span>
+		</div>
 	{:else}
 		<div class="meta-min">
-			<span class="meta-item">{event?.motivo}</span>
-			<span class="meta-item">{agente.nombre}</span>
+			<span class="meta-item">{eventData?.motivo}</span>
+			<span class="meta-item">{eventData?.agente.nombre}</span>
 		</div>
 	{/if}
 </button>
