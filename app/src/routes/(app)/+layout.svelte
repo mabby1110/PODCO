@@ -10,7 +10,7 @@
 </script>
 
 <nav class="nav-container">
-	<NavButton title="LOGO" />
+	<NavButton />
 </nav>
 
 <div class="page-container">
@@ -18,8 +18,7 @@
 </div>
 
 <FormModalOportunidad {data}/>
-<FormModalCliente {data}/>
-<FormModalActividad {data}/>
+<FormModalCliente/>
 
 <style>
 	.nav-container {

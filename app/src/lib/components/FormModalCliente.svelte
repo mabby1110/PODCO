@@ -5,7 +5,7 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import FormInputAddContact from './FormInputAddContact.svelte';
 	import FormSelectInput from './FormSelectInput.svelte';
-	import { motivosOportunidad, motivosProspeccion } from '$lib';
+	import { motivosProspeccion } from '$lib';
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---

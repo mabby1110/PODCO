@@ -11,7 +11,6 @@ interface AppState {
 	calendarView: boolean;
 	ModalOp: boolean;
 	ModalClient: boolean;
-	ModalActivity: boolean;
 	pageActions: boolean;
 }
 
@@ -27,7 +26,6 @@ const defaultState: AppState = {
 	calendarView: false,
 	ModalOp: false,
 	ModalClient: false,
-	ModalActivity: false,
 	pageActions: true
 };
 
@@ -108,12 +106,6 @@ function createAppState() {
 		toggleModalClient: () =>
 			update((state) => {
 				const newState = { ...state, ModalClient: !state.ModalClient };
-				saveToCookie(newState);
-				return newState;
-			}),
-		toggleModalActivity: () =>
-			update((state) => {
-				const newState = { ...state, ModalActivity: !state.ModalActivity };
 				saveToCookie(newState);
 				return newState;
 			}),

@@ -26,7 +26,6 @@
 	<Filter />
 	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 	<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-	<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 	<button onclick={handleView} class="butter primary">
 		{$appState.calendarView ? '📋 Lista' : '📅 Calendario'}
 	</button>
