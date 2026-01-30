@@ -5,30 +5,11 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import FormInputAddContact from './FormInputAddContact.svelte';
 	import FormSelectInput from './FormSelectInput.svelte';
+	import { motivosOportunidad, motivosProspeccion } from '$lib';
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
-	let motivos = [
-		'Llamada en frío',
-		'Visita en frío',
-		'Búsqueda en internet',
-		'LinkedIn',
-		'Redes sociales',
-		'Referido de cliente',
-		'Referido interno',
-		'Referido de proveedor',
-		'Formulario web',
-		'Campaña digital',
-		'Correo entrante',
-		'Llamada entrante',
-		'WhatsApp entrante',
-		'Servicio en sitio',
-		'Emergencia operativa',
-		'Feria / expo',
-		'Evento industrial',
-		'Capacitación / curso',
-		'Reactivación de cliente'
-	];
+	let motivos = motivosProspeccion;
 	let razon_social = $state('');
 	let ubicaciones = $state('');
 	let fecha = $state<string>('');
@@ -113,7 +94,7 @@
 					/>
 				</label>
 
-				<FormSelectInput title="Tipo de prospeccion" list={motivos} />
+				<FormSelectInput title="Tipo de prospeccion" list={motivosOportunidad} />
 				
 				<label>
 					<span>Ubicacion</span>
@@ -172,7 +153,7 @@
 		background: white;
 		border-radius: 8px;
 		max-width: 600px;
-		max-height: 90vh;
+		max-height: 80vh;
 		width: 100%;
 		display: flex;
 		flex-direction: column;

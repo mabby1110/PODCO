@@ -4,8 +4,9 @@
 	import DatePicker from './DatePicker.svelte';
 	import FormOptional from './FormOptional.svelte';
 	import { getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
-	import { fases } from '$lib';
+	import { fases, motivosOportunidad } from '$lib';
 	import FormOptionalInput from './FormOptionalInput.svelte';
+	import FormSelectInput from './FormSelectInput.svelte';
 
 	let {
 		fase,
@@ -25,7 +26,6 @@
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
 	let requisitos = $state('');
-
 	let isSubmitting = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
@@ -92,6 +92,8 @@
 			{/if}
 
 			{#if fase.id == 1}
+				<FormSelectInput title="Cambiar Motivo" list={motivosOportunidad} />
+
 				<InputField
 					label="Necesidades"
 					name="nuevaHistoria"
@@ -101,14 +103,16 @@
 					required
 				/>
 
-				<InputField
-					label="Requisitos"
-					name="requisitos"
-					bind:value={requisitos}
-					placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-					type="textarea"
-					required
-				/>
+				<FormOptionalInput title="+Agregar requisitos">
+					<InputField
+						label="Requisitos"
+						name="requisitos"
+						bind:value={requisitos}
+						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+						type="textarea"
+						required
+					/>
+				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha de compromiso para presentar propuesta" />
 			{:else if fase.id == 2}
 				<InputField
@@ -216,7 +220,6 @@
 	form {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: end;
 		gap: var(--c);
 		width: 100%;
 	}
@@ -238,5 +241,7 @@
 	.submit {
 		display: flex;
 		gap: var(--a);
+		justify-content: flex-end;
+		flex-grow: 1;
 	}
 </style>

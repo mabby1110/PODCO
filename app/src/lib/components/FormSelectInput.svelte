@@ -64,11 +64,3 @@
 
 <!-- Valor final para el formulario -->
 <input type="hidden" name="motivo" value={motivo} />
-
-<style>
-	label {
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-	}
-</style>

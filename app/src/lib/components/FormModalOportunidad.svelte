@@ -6,36 +6,12 @@
 	import { addMinutes } from '$lib/utils/agenda';
 	import FormSelectInput from './FormSelectInput.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import { motivosOportunidad } from '$lib';
 	let { data } = $props();
 
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
-	let motivos = [
-		'Refacciones / repuestos',
-		'Mantenimiento correctivo',
-		'Mantenimiento preventivo',
-		'Servicio en sitio',
-		'Visita técnica',
-		'Reclamación / garantía',
-		'Viaje comercial',
-		'Urgencia operativa',
-		'Soporte técnico a ventas',
-		'Prospección en frío',
-		'Prospección inbound',
-		'Referido',
-		'Seguimiento de cliente',
-		'Diagnóstico de necesidad',
-		'Cotización solicitada',
-		'Proyecto nuevo',
-		'Ampliación de proyecto',
-		'Licitación privada',
-		'Licitación pública',
-		'Negociación activa',
-		'Renovación de contrato',
-		'Recompra',
-		'Postventa con oportunidad'
-	];
 	let fecha = $state<string>('');
 	let hora = $state<string>('08:00');
 	let inicio = $state<string>('');
@@ -122,7 +98,7 @@
 					<Searchbar data={data.clientes} keyColumns={['razon_social']} bind:selectedDataItem />
 				{/if}
 
-				<FormSelectInput {motivos} />
+				<FormSelectInput list={motivosOportunidad} />
 				
 				<label>
 					<span>Inicio de actividad</span>
@@ -167,7 +143,7 @@
 		background: white;
 		border-radius: 8px;
 		max-width: 600px;
-		max-height: 90vh;
+		max-height: 80vh;
 		width: 100%;
 		display: flex;
 		flex-direction: column;

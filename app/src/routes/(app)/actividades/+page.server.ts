@@ -1,4 +1,3 @@
-// +page.server.ts
 import type { Actions, PageServerLoad } from './$types';
 import { appendRow, generateId, updateRowById, uploadToFolder } from '$lib/server/googleApi';
 import { fail } from '@sveltejs/kit';
@@ -15,18 +14,17 @@ export const actions: Actions = {
 		console.log('\nActividades add\n');
 		const formData = await request.formData();
 		const rowData = [
-			// id_oportunidad se genera automáticamente en appendRow, no lo incluimos aquí
-			formData.get('id_cliente') || formData.get('id_cliente') || null, // B - id_cliente
-			formData.get('id_agente') || 1, // C - id_agente
-			formData.get('fase') || 1, // D - fase
-			formData.get('motivo') || null, // E - motivo
-			formData.get('inicio') || null, // F - inicio
-			formData.get('fin') || null, // G - fin
-			formData.get('historia') || null, // H - historia
-			formData.get('cotizaciones') || null, // I - cotizaciones
-			formData.get('documentos') || null, // J - documentos
-			new Date().toISOString(), // K - fecha_creacion (fecha actual)
-			null // L - fecha_cierre (null al crear)
+			formData.get('id_cliente') || formData.get('id_cliente') || null,
+			formData.get('id_agente') || 1,
+			formData.get('fase') || 1,
+			formData.get('motivo') || null,
+			formData.get('inicio') || null,
+			formData.get('fin') || null,
+			formData.get('historia') || null,
+			formData.get('cotizaciones') || null,
+			formData.get('requisitos') || null,
+			new Date().toISOString(),
+			null
 		];
 		console.log(formData, rowData);
 		await appendRow('oportunidades!A:Z', rowData);
@@ -37,30 +35,29 @@ export const actions: Actions = {
 	addClient: async ({ request }) => {
 		console.log('\nActividades addClient\n');
 		const formData = await request.formData();
-		
+
 		const cliente = [
-			// id_oportunidad se genera automáticamente en appendRow, no lo incluimos aquí
 			formData.get('id_agente') || 1,
+			null,
+			formData.get('id_agente') || null,
 			formData.get('razon_social') || null,
 			formData.get('ubicacion') || null,
 			formData.get('contactos') || null,
 			new Date().toISOString()
 		];
-		// await appendRow('clientes!A:Z', rowData);
-		
+
 		const oportunidad = [
-			// id_oportunidad se genera automáticamente en appendRow, no lo incluimos aquí
-			formData.get('id_cliente') || formData.get('id_cliente') || null, // B - id_cliente
-			formData.get('id_agente') || 1, // C - id_agente
-			formData.get('fase') || 1, // D - fase
-			formData.get('motivo') || null, // E - motivo
-			formData.get('inicio') || null, // F - inicio
-			formData.get('fin') || null, // G - fin
-			formData.get('historia') || null, // H - historia
-			formData.get('cotizaciones') || null, // I - cotizaciones
-			formData.get('documentos') || null, // J - documentos
-			new Date().toISOString(), // K - fecha_creacion (fecha actual)
-			null // L - fecha_cierre (null al crear)
+			formData.get('id_cliente') || formData.get('id_cliente') || null,
+			formData.get('id_agente') || 1,
+			formData.get('fase') || 1,
+			formData.get('motivo') || null,
+			formData.get('inicio') || null,
+			formData.get('fin') || null,
+			formData.get('historia') || null,
+			formData.get('cotizaciones') || null,
+			formData.get('requisitos') || null,
+			new Date().toISOString(),
+			null
 		];
 		console.log(formData, oportunidad, cliente);
 
@@ -77,10 +74,8 @@ export const actions: Actions = {
 			return fail(400, { error: 'ID requerido' });
 		}
 
-		// Preparar objeto con las columnas a actualizar
 		const newValues: { [key: string]: any } = {};
 
-		// Solo incluir campos que vengan en el formData
 		if (formData.has('id_cliente')) newValues['B'] = formData.get('id_cliente');
 		if (formData.has('id_agente')) newValues['C'] = formData.get('id_agente');
 		if (formData.has('fase')) newValues['D'] = formData.get('fase');
@@ -89,7 +84,7 @@ export const actions: Actions = {
 		if (formData.has('fin')) newValues['G'] = formData.get('fin');
 		if (formData.has('historia')) newValues['H'] = formData.get('historia');
 		if (formData.has('cotizaciones')) newValues['I'] = formData.get('cotizaciones');
-		if (formData.has('documentos')) newValues['J'] = formData.get('documentos');
+		if (formData.has('requisitos')) newValues['J'] = formData.get('requisitos');
 		if (formData.has('fecha_cierre')) newValues['L'] = formData.get('fecha_cierre');
 
 		await updateRowById(id as string, newValues, 'oportunidades!A:Z');
@@ -105,11 +100,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'ID requerido' });
 		}
 
-		// Marcar como cerrado en lugar de eliminar
 		await updateRowById(
 			id as string,
 			{
-				L: new Date().toISOString() // fecha_cierre
+				L: new Date().toISOString()
 			},
 			'oportunidades!A:Z'
 		);
