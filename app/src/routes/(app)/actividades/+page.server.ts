@@ -37,6 +37,17 @@ export const actions: Actions = {
 	addClient: async ({ request }) => {
 		console.log('\nActividades addClient\n');
 		const formData = await request.formData();
+		
+		const cliente = [
+			// id_oportunidad se genera automáticamente en appendRow, no lo incluimos aquí
+			formData.get('id_agente') || 1,
+			formData.get('razon_social') || null,
+			formData.get('ubicacion') || null,
+			formData.get('contactos') || null,
+			new Date().toISOString()
+		];
+		// await appendRow('clientes!A:Z', rowData);
+		
 		const oportunidad = [
 			// id_oportunidad se genera automáticamente en appendRow, no lo incluimos aquí
 			formData.get('id_cliente') || formData.get('id_cliente') || null, // B - id_cliente
@@ -51,18 +62,7 @@ export const actions: Actions = {
 			new Date().toISOString(), // K - fecha_creacion (fecha actual)
 			null // L - fecha_cierre (null al crear)
 		];
-
-		const cliente = [
-			// id_oportunidad se genera automáticamente en appendRow, no lo incluimos aquí
-			formData.get('id_agente') || 1,
-			formData.get('razon_social') || null,
-			formData.get('ubicacion') || null,
-			formData.get('contactos') || null,
-			new Date().toISOString()
-		];
-
 		console.log(formData, oportunidad, cliente);
-		// await appendRow('clientes!A:Z', rowData);
 
 		return { success: true };
 	},

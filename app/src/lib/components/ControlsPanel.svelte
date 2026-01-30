@@ -2,6 +2,7 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { filterStore } from '$lib/stores/filterStore.svelte.js';
 	import Filter from '$lib/components/Filter.svelte';
+	import { selectedEvent } from '$lib/stores/selectedEvent';
 
 	function previousWeek() {
 		filterStore.weekOffset -= 1;
@@ -17,6 +18,7 @@
 
 	function handleView() {
 		appState.toggleCalendarView();
+		$selectedEvent = null;
 	}
 </script>
 

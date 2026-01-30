@@ -15,17 +15,16 @@
 		<h3>{$appState.calendarView ? 'Semana' : 'Lista'}</h3>
 	</section>
 
+	<section class="controls" in:fly>
+		{#if $appState.pageActions}
+			<ControlsPanel />
+		{/if}
+	</section>
 	{#if $selectedEvent}
 		<section class="selected" in:slide>
 			<CardD />
 		</section>
 	{:else}
-		<section class="controls" in:fly>
-			{#if $appState.pageActions}
-				<ControlsPanel />
-			{/if}
-		</section>
-
 		{#if $appState.calendarView}
 			<section class="calendar" in:fly>
 				<CalendarWeek actividades={data.actividades} />

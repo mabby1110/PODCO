@@ -4,14 +4,34 @@
 	import { addMinutes } from '$lib/utils/agenda';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import FormInputAddContact from './FormInputAddContact.svelte';
+	import FormSelectInput from './FormSelectInput.svelte';
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
+	let motivos = [
+		'Llamada en frío',
+		'Visita en frío',
+		'Búsqueda en internet',
+		'LinkedIn',
+		'Redes sociales',
+		'Referido de cliente',
+		'Referido interno',
+		'Referido de proveedor',
+		'Formulario web',
+		'Campaña digital',
+		'Correo entrante',
+		'Llamada entrante',
+		'WhatsApp entrante',
+		'Visita técnica previa',
+		'Servicio en sitio',
+		'Emergencia operativa',
+		'Feria / expo',
+		'Evento industrial',
+		'Capacitación / curso',
+		'Reactivación de cliente'
+	];
 	let razon_social = $state('');
 	let ubicaciones = $state('');
-	let contact_name = $state('');
-	let contact_type = $state('');
-	let contact_value = $state('');
 	let fecha = $state<string>('');
 	let hora = $state<string>('08:00');
 	let inicio = $state<string>('');
@@ -48,9 +68,9 @@
 
 		return horas;
 	}
-	
+
 	$effect(() => console.log(razon_social));
-	
+
 	$effect(() => {
 		if (fecha && hora) {
 			const base = `${fecha} ${hora}`;
@@ -95,6 +115,8 @@
 						required
 					/>
 				</label>
+
+				<FormSelectInput {motivos} />
 				
 				<label>
 					<span>Ubicacion(es)</span>
@@ -108,21 +130,20 @@
 					></textarea>
 				</label>
 
-				<FormInputAddContact/>
+				<FormInputAddContact />
 
-                
 				<label>
-                    <span>Programar primer contacto</span>
+					<span>Programar primer contacto</span>
 					<div class="datetime-split">
-                        <input type="date" bind:value={fecha} min={getToday()} required />
-                        
+						<input type="date" bind:value={fecha} min={getToday()} required />
+
 						<select bind:value={hora} required>
-                            {#each generarHoras() as h}
-                            <option value={h}>{h}</option>
+							{#each generarHoras() as h}
+								<option value={h}>{h}</option>
 							{/each}
 						</select>
 					</div>
-                    
+
 					<input type="hidden" name="fase" value={1} />
 					<input type="hidden" name="inicio" bind:value={inicio} />
 					<input type="hidden" name="fin" bind:value={fin} />
