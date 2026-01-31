@@ -3,6 +3,7 @@
 	import { filterStore } from '$lib/stores/filterStore.svelte.js';
 	import Filter from '$lib/components/Filter.svelte';
 	import { selectedEvent } from '$lib/stores/selectedEvent';
+	import { slide } from 'svelte/transition';
 
 	function previousWeek() {
 		filterStore.weekOffset -= 1;
@@ -22,7 +23,7 @@
 	}
 </script>
 
-<div class="container">
+<div class="container" transition:slide={{delay:300, duration:300}}>
 	<Filter />
 	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 	<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>

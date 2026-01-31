@@ -1,4 +1,8 @@
-<form method="POST" action="/auth/logout">
+<script>
+	import { fade } from "svelte/transition";
+
+</script>
+<form method="POST" action="/auth/logout" in:fade={{delay:300, duration:300}}>
   <button type="submit" class="butter logout-button">Cerrar sesión</button>
 </form>
 <style>

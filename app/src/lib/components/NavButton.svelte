@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import { appState } from '$lib/stores/appState.svelte';
 	import Logout from './Logout.svelte';
 
@@ -12,7 +12,7 @@
 	let offsetY = $state(0);
 	let storeState = $state({ panelPosition: { x: 0, y: 0 } });
 	let panelElement: HTMLElement;
-	let panelToolsElement: HTMLElement;
+	let panelToolsElement: HTMLElement | null = null;
 
 	$effect(() => {
 		const unsubscribe = appState.subscribe((state) => {
@@ -146,19 +146,22 @@
 			{/if}
 		</div>
 	</button>
-
 	{#if expanded}
 		<button
-			in:slide
+			in:fade={{ delay: 300, duration: 50 }}
 			onclick={() => {
 				appState.togglePageActions();
 				expanded = !expanded;
 			}}
 			class="butter reset-button"
 		>
-			{$appState.calendarView ? 'mostrar acciones' : 'ocultar acciones'}
+			{$appState.pageActions ? 'ocultar acciones' : 'mostrar acciones'}
 		</button>
-		<button in:slide class="butter actions-button" onclick={() => appState.resetPanelPosition()}>
+		<button
+			in:fade={{ delay: 300, duration: 300 }}
+			class="butter actions-button"
+			onclick={() => appState.resetPanelPosition()}
+		>
 			Resetear posición</button
 		>
 		<Logout />
@@ -172,9 +175,9 @@
 		left: var(--a);
 		z-index: 1000;
 		display: flex;
-		flex-direction: column;
 		gap: var(--a);
 		max-width: 96vw;
+		flex-wrap: wrap;
 	}
 
 	button {
@@ -226,7 +229,8 @@
 		margin: 0;
 		font-weight: 600;
 	}
-	.actions-button, .reset-button {
+	.actions-button,
+	.reset-button {
 		background-color: var(--color-highlight);
 	}
 </style>

@@ -21,6 +21,7 @@
 		id: string;
 		historia?: string;
 		cotizaciones?: string;
+		requisitos?: string;
 		onSuccess?: () => void;
 	} = $props();
 
@@ -163,7 +164,7 @@
 					label="Postergar"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
-					placeholder="Motivo de la postergación"
+					placeholder="Motivo de la postergación y acción a realizar"
 					type="textarea"
 					required
 				/>
