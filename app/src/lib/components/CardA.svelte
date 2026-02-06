@@ -29,7 +29,6 @@
 	});
 
 	function select() {
-		console.log('selected', event);
 		selectedEvent.set({ ...event });
 	}
 </script>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { slide } from 'svelte/transition';
 	let {
 		submitUpdate = $bindable(),
 		submitCancel = $bindable()

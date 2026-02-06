@@ -4,45 +4,45 @@
 	import Filter from '$lib/components/Filter.svelte';
 	import { selectedEvent } from '$lib/stores/selectedEvent';
 	import { slide } from 'svelte/transition';
-
-	function previousWeek() {
-		filterStore.weekOffset -= 1;
-	}
-
-	function nextWeek() {
-		filterStore.weekOffset += 1;
-	}
-
-	function goToCurrentWeek() {
-		filterStore.weekOffset = 0;
-	}
-
-	function handleView() {
-		appState.toggleCalendarView();
-		$selectedEvent = null;
-	}
+	import { viewState } from '$lib/stores/ViewState';
 </script>
 
-<div class="container" transition:slide={{delay:300, duration:300}}>
+<div class="container" transition:slide={{ delay: 300, duration: 300 }}>
 	<Filter />
 	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 	<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-	<button onclick={handleView} class="butter primary">
-		{$appState.calendarView ? '📋 Lista' : '📅 Calendario'}
-	</button>
-	<!-- Controles específicos del calendario -->
-	{#if $appState.calendarView}
-		<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
-			✏️ {$appState.dnd ? 'Edición Activada' : 'Activar Edición'}
+	{#if !$viewState.calendar}
+		<button
+			onclick={() => {
+				viewState.setCalendar();
+				$selectedEvent = null;
+			}}
+			class="butter primary"
+		>
+			📅 Calendario
 		</button>
-		<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-			{$appState.calendarCards ? '📏 Minimizar' : '📐 Expandir'}
+	{/if}
+	{#if !$viewState.list}
+		<button
+			onclick={() => {
+				viewState.setList();
+				$selectedEvent = null;
+			}}
+			class="butter primary"
+		>
+			📋 Lista
 		</button>
-		<div class="calendar-navigation">
-			<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
-			<button onclick={goToCurrentWeek} class="butter current-week"> Semana Actual </button>
-			<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
-		</div>
+	{/if}
+	{#if !$viewState.resumen}
+		<button
+			onclick={() => {
+				viewState.setResumen();
+				$selectedEvent = null;
+			}}
+			class="butter primary"
+		>
+			⚡ Resumen
+		</button>
 	{/if}
 </div>
 
@@ -63,23 +63,5 @@
 	.butter {
 		font-weight: 500;
 		white-space: nowrap;
-	}
-	.nav-btn {
-		min-width: 50px;
-	}
-
-	.current-week {
-		text-align: center;
-		flex-grow: 1;
-	}
-
-	.toggle.active {
-		background: var(--color-highlight);
-		color: white;
-	}
-	.calendar-navigation {
-		display: flex;
-		gap: var(--a);
-		flex-grow: 1;
 	}
 </style>

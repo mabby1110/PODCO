@@ -11,7 +11,6 @@
 	let fin = $state<string>('');
 
 	$effect(() => {
-        console.log(inicio, fin);
 		if (fecha && hora) {
 			const base = `${fecha} ${hora}`;
 			inicio = base;

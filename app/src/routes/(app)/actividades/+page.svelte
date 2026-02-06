@@ -6,6 +6,7 @@
 	import ControlsPanel from '$lib/components/ControlsPanel.svelte';
 	import { selectedEvent } from '$lib/stores/selectedEvent.js';
 	import { fly, slide } from 'svelte/transition';
+	import { viewState } from '$lib/stores/ViewState.js';
 
 	let { data } = $props();
 </script>
@@ -15,26 +16,27 @@
 		<h3>{$appState.calendarView ? 'Semana' : 'Lista'}</h3>
 	</section>
 
+	{#if $selectedEvent}
+		<section class="selected" in:slide>
+			<CardD />
+		</section>
+	{:else if $viewState.calendar}
+		<section class="calendar" in:fly>
+			<CalendarWeek actividades={data.actividades} />
+		</section>
+	{:else if $viewState.list}
+		<section class="calendar" in:fly>
+			<CalendarList actividades={data.actividades} />
+		</section>
+	{:else if $viewState.resumen}
+		resume
+	{/if}
+
 	<section class="controls" in:fly>
 		{#if $appState.pageActions}
 			<ControlsPanel />
 		{/if}
 	</section>
-	{#if $selectedEvent}
-		<section class="selected" in:slide>
-			<CardD />
-		</section>
-	{:else}
-		{#if $appState.calendarView}
-			<section class="calendar" in:fly>
-				<CalendarWeek actividades={data.actividades} />
-			</section>
-		{:else}
-			<section class="calendar" in:fly>
-				<CalendarList actividades={data.actividades} />
-			</section>
-		{/if}
-	{/if}
 </div>
 
 <style>
@@ -56,13 +58,14 @@
 		height: 100%;
 	}
 	.controls {
-		margin-bottom: var(--a);
+		margin-top: var(--a);
 	}
 	.calendar {
 		flex-grow: 1;
 		overflow: auto;
 		display: flex;
-
-		min-height: var(--g);
+		flex-direction: column;
+		gap: var(--a);
+		min-height: var(--h);
 	}
 </style>

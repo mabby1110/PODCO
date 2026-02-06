@@ -13,10 +13,24 @@
 		calculateSlots,
 		calculateDuration
 	} from '$lib/utils/agenda';
+	import { selectedEvent } from '$lib/stores/selectedEvent';
 
 	const { actividades } = $props();
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
+	const months = [
+		'Enero',
+		'Febrero',
+		'Marzo',
+		'Abril',
+		'Mayo',
+		'Junio',
+		'Julio',
+		'Agosto',
+		'Septiembre',
+		'Noviembre',
+		'Diciembre'
+	];
 	const hoursRangePerDay = { start: 8, end: 19 };
 	const SLOT_MINUTES = 10;
 	const CELL_HEIGHT = 24;
@@ -44,7 +58,7 @@
 
 	// Fechas de la semana
 	const weekDates = $derived(getWeekDates(filterStore.weekOffset));
-	const currentYear = $derived(weekDates[0].getFullYear());
+	const currentYear = $derived(`${months[weekDates[0].getMonth()]}, ${weekDates[0].getFullYear()}`);
 
 	// Eventos de la semana
 	const weekEvents = $derived.by(() => {
@@ -96,8 +110,38 @@
 		await fetch('?/update', { method: 'POST', body: formData });
 		await invalidate('app:data');
 	}
+
+	function previousWeek() {
+		filterStore.weekOffset -= 1;
+	}
+
+	function nextWeek() {
+		filterStore.weekOffset += 1;
+	}
+
+	function goToCurrentWeek() {
+		filterStore.weekOffset = 0;
+	}
+
+	function handleView() {
+		appState.toggleCalendarView();
+		$selectedEvent = null;
+	}
 </script>
 
+<div class="calendar-controls">
+	<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
+		✏️ Editar
+	</button>
+	<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
+	</button>
+	<div class="calendar-navigation">
+		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
+		<button onclick={goToCurrentWeek} class="butter current-week"> Hoy </button>
+		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
+	</div>
+</div>
 <div class="calendar-container">
 	<table>
 		<thead>
@@ -151,11 +195,17 @@
 		flex-grow: 1;
 		overflow: auto;
 		display: flex;
+		flex-direction: column;
 		gap: 16px;
 		border: 1px solid var(--color-muted);
 		border-radius: var(--a);
 	}
-
+	.calendar-controls {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		padding: 0 var(--a) var(--a);
+	}
 	.calendar-container table {
 		flex-grow: 1;
 		border-collapse: collapse;
@@ -202,6 +252,7 @@
 		left: 0;
 		z-index: 9;
 		height: var(--c);
+		min-width: var(--e);
 		display: flex;
 		justify-content: center;
 		backdrop-filter: blur(16px);
@@ -226,5 +277,18 @@
 	}
 	.max {
 		min-width: 50vw;
+	}
+	.current-week {
+		text-align: center;
+		flex-grow: 1;
+	}
+
+	.toggle.active {
+		background: var(--color-highlight);
+	}
+	.calendar-navigation {
+		display: flex;
+		gap: var(--a);
+		flex-grow: 1;
 	}
 </style>
