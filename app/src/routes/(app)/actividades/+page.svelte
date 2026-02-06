@@ -1,8 +1,8 @@
 <script lang="ts">
 	import CardD from '$lib/components/CardD.svelte';
-	import CalendarWeek from '$lib/components/CalendarWeek.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import CalendarList from '$lib/components/CalendarList.svelte';
+	import CalendarWeek from '$lib/views/CalendarWeek.svelte';
+	import CalendarList from '$lib/views/CalendarList.svelte';
 	import ControlsPanel from '$lib/components/ControlsPanel.svelte';
 	import { selectedEvent } from '$lib/stores/selectedEvent.js';
 	import { fly, slide } from 'svelte/transition';

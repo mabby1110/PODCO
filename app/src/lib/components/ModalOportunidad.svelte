@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { slide } from 'svelte/transition';
-	import Searchbar from './Searchbar.svelte';
+	import Searchbar from '$lib/components/Searchbar.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
-	import FormSelectInput from './FormSelectInput.svelte';
+	import FormSelectInput from '$lib/components/FormSelectInput.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { motivosOportunidad } from '$lib';
-	import FormOptionalInput from './FormOptionalInput.svelte';
-	import InputField from './InputField.svelte';
+	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
+	import FormInput from '$lib/components/FormInput.svelte';
 	let { data } = $props();
 
 	let selectedDataItem = $state(null);
@@ -89,7 +88,7 @@
 				<Searchbar data={data.clientes} keyColumns={['razon_social']} />
 				<FormSelectInput list={motivosOportunidad} />
 				<FormOptionalInput title="+Agregar requisitos">
-					<InputField
+					<FormInput
 						label="Requisitos"
 						name="requisitos"
 						bind:value={requisitos}

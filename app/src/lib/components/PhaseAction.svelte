@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import InputField from './InputField.svelte';
-	import DatePicker from './DatePicker.svelte';
-	import FormOptional from './FormOptional.svelte';
+	import DatePicker from '$lib/components/DatePicker.svelte';
+	import FormOptional from '$lib/components/FormOptional.svelte';
 	import { getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
 	import { fases, motivosOportunidad } from '$lib';
-	import FormOptionalInput from './FormOptionalInput.svelte';
-	import FormSelectInput from './FormSelectInput.svelte';
-	import EditableField from './EditableField.svelte';
+	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
+	import FormSelectInput from '$lib/components/FormSelectInput.svelte';
+	import EditableField from '$lib/components/EditableField.svelte';
+	import FormInput from './FormInput.svelte';
 
 	let {
 		fase,
@@ -97,7 +97,7 @@
 			{#if fase.id == 1}
 				<FormSelectInput title="Cambiar Motivo" list={motivosOportunidad} />
 
-				<InputField
+				<FormInput
 					label="Necesidades"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
@@ -107,7 +107,7 @@
 				/>
 				<DatePicker {duration} title="Fecha de compromiso para presentar propuesta" />
 			{:else if fase.id == 2}
-				<InputField
+				<FormInput
 					label="Análisis"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
@@ -116,7 +116,7 @@
 					required
 				/>
 
-				<InputField
+				<FormInput
 					label="ID cotización"
 					name="nuevaCotizacion"
 					bind:value={nuevaCotizacion}
@@ -126,7 +126,7 @@
 				/>
 				<DatePicker {duration} title="Fecha en que la vigencia de la cotización termina" />
 			{:else if fase.id == 3}
-				<InputField
+				<FormInput
 					label={fase.actual}
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
@@ -135,7 +135,7 @@
 					required
 				/>
 				<FormOptionalInput title="+Nueva cotizacion">
-					<InputField
+					<FormInput
 						label="ID cotización"
 						name="nuevaCotizacion"
 						bind:value={nuevaCotizacion}
@@ -146,7 +146,7 @@
 				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha en que la vigencia de la cotización termina" />
 			{:else if fase.id != 6}
-				<InputField
+				<FormInput
 					label={fase.actual}
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
@@ -160,7 +160,7 @@
 
 		{#if fase.id != 0}
 			{#if submitUpdate}
-				<InputField
+				<FormInput
 					label="Postergar"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
@@ -169,7 +169,7 @@
 					required
 				/>
 			{:else if submitCancel}
-				<InputField
+				<FormInput
 					label="Pérdida"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}

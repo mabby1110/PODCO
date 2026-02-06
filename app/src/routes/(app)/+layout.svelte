@@ -1,6 +1,6 @@
 <script lang="ts">
-	import FormModalCliente from '$lib/components/FormModalCliente.svelte';
-	import FormModalOportunidad from '$lib/components/FormModalOportunidad.svelte';
+	import ModalCliente from '$lib/components/ModalCliente.svelte';
+	import ModalOportunidad from '$lib/components/ModalOportunidad.svelte';
 	import NavButton from '$lib/components/NavButton.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte.js';
 	import { selectedEvent } from '$lib/stores/selectedEvent.js';
@@ -17,8 +17,8 @@
 	{@render children()}
 </div>
 
-<FormModalOportunidad {data}/>
-<FormModalCliente />
+<ModalOportunidad {data}/>
+<ModalCliente />
 
 <style>
 	.nav-container {

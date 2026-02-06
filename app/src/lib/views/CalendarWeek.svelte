@@ -1,6 +1,6 @@
 <script lang="ts">
-	import CardA from './CardA.svelte';
-	import { draggable, dropzone } from '$lib/actions/dnd';
+	import CardA from '$lib/components/CardA.svelte';
+	import { dropzone } from '$lib/actions/dnd';
 	import { filtrarConsecutivo } from '$lib/utils/util';
 	import { filterStore } from '$lib/stores/filterStore.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
