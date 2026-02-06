@@ -19,7 +19,35 @@ export function getWeekDates(offset: number = 0): Date[] {
 		return date;
 	});
 }
-
+/**
+ * En tu archivo $lib/utils/agenda.ts (o donde tengas tus utilidades de fecha)
+ */
+export function formatWeekRange(weekDates: Date[]): string {
+	if (weekDates.length === 0) return '';
+	
+	const firstDate = weekDates[0];
+	const lastDate = weekDates[weekDates.length - 1];
+	
+	const firstDay = firstDate.getDate();
+	const lastDay = lastDate.getDate();
+	
+	const months = [
+		'ene', 'feb', 'mar', 'abr', 'may', 'jun',
+		'jul', 'ago', 'sep', 'oct', 'nov', 'dic'
+	];
+	
+	const firstMonth = months[firstDate.getMonth()];
+	const lastMonth = months[lastDate.getMonth()];
+	const year = lastDate.getFullYear();
+	
+	// Si es el mismo mes
+	if (firstDate.getMonth() === lastDate.getMonth()) {
+		return `${firstDay}-${lastDay} ${firstMonth} ${year}`;
+	}
+	
+	// Si son meses diferentes
+	return `${firstDay} ${firstMonth} - ${lastDay} ${lastMonth} ${year}`;
+}
 /**
  * Compara si dos fechas son del mismo día
  */

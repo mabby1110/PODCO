@@ -27,4 +27,7 @@
 		top: 0;
 		z-index: 999;
 	}
+	/* .page-container {
+		background-image: url('bombas.svg');
+	} */
 </style>

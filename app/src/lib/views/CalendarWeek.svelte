@@ -11,26 +11,13 @@
 		formatDate,
 		formatDateTime,
 		calculateSlots,
-		calculateDuration
+		calculateDuration,
+		formatWeekRange
 	} from '$lib/utils/agenda';
-	import { selectedEvent } from '$lib/stores/selectedEvent';
 
 	const { actividades } = $props();
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
-	const months = [
-		'Enero',
-		'Febrero',
-		'Marzo',
-		'Abril',
-		'Mayo',
-		'Junio',
-		'Julio',
-		'Agosto',
-		'Septiembre',
-		'Noviembre',
-		'Diciembre'
-	];
 	const hoursRangePerDay = { start: 8, end: 19 };
 	const SLOT_MINUTES = 10;
 	const CELL_HEIGHT = 24;
@@ -58,7 +45,7 @@
 
 	// Fechas de la semana
 	const weekDates = $derived(getWeekDates(filterStore.weekOffset));
-	const currentYear = $derived(`${months[weekDates[0].getMonth()]}, ${weekDates[0].getFullYear()}`);
+	const weekRangeText = $derived(formatWeekRange(weekDates)); // 👈 Nueva variable
 
 	// Eventos de la semana
 	const weekEvents = $derived.by(() => {
@@ -67,26 +54,6 @@
 			return weekDates.some((weekDate) => isSameDay(eventDate, weekDate));
 		});
 	});
-
-	function getEvent(hour: number, minute: number, targetDate: Date) {
-		return weekEvents.find((event) => {
-			const eventDate = new Date(event.inicio);
-			return (
-				isSameDay(eventDate, targetDate) &&
-				eventDate.getHours() === hour &&
-				eventDate.getMinutes() === minute
-			);
-		});
-	}
-
-	function isEventStart(hour: number, minute: number, targetDate: Date, event) {
-		const eventDate = new Date(event.inicio);
-		return (
-			isSameDay(eventDate, targetDate) &&
-			eventDate.getHours() === hour &&
-			eventDate.getMinutes() === minute
-		);
-	}
 
 	async function handleDrop(eventId: string, hour: number, minute: number, targetDate: Date) {
 		const event = eventList.find((e) => e.id_oportunidad === eventId);
@@ -111,6 +78,26 @@
 		await invalidate('app:data');
 	}
 
+	function getEvent(hour: number, minute: number, targetDate: Date) {
+		return weekEvents.find((event) => {
+			const eventDate = new Date(event.inicio);
+			return (
+				isSameDay(eventDate, targetDate) &&
+				eventDate.getHours() === hour &&
+				eventDate.getMinutes() === minute
+			);
+		});
+	}
+
+	function isEventStart(hour: number, minute: number, targetDate: Date, event) {
+		const eventDate = new Date(event.inicio);
+		return (
+			isSameDay(eventDate, targetDate) &&
+			eventDate.getHours() === hour &&
+			eventDate.getMinutes() === minute
+		);
+	}
+
 	function previousWeek() {
 		filterStore.weekOffset -= 1;
 	}
@@ -121,11 +108,6 @@
 
 	function goToCurrentWeek() {
 		filterStore.weekOffset = 0;
-	}
-
-	function handleView() {
-		appState.toggleCalendarView();
-		$selectedEvent = null;
 	}
 </script>
 
@@ -138,15 +120,19 @@
 	</button>
 	<div class="calendar-navigation">
 		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
-		<button onclick={goToCurrentWeek} class="butter current-week"> Hoy </button>
+		<button onclick={goToCurrentWeek} class="butter current-week">
+			{weekRangeText}
+			<!-- 👆 Cambiar currentYear por weekRangeText -->
+		</button>
 		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
 	</div>
 </div>
+
 <div class="calendar-container">
 	<table>
 		<thead>
 			<tr>
-				<th class="corner">{currentYear}</th>
+				<th class="corner"></th>
 				{#each weekDates as date, i}
 					<th>
 						<div class="day-header">
@@ -252,7 +238,7 @@
 		left: 0;
 		z-index: 9;
 		height: var(--c);
-		min-width: var(--e);
+		max-width: var(--e);
 		display: flex;
 		justify-content: center;
 		backdrop-filter: blur(16px);
@@ -276,7 +262,8 @@
 		pointer-events: auto; /* La celda NO captura eventos */
 	}
 	.max {
-		min-width: 50vw;
+		min-width: var(--h);
+		max-width: 60vw;
 	}
 	.current-week {
 		text-align: center;
