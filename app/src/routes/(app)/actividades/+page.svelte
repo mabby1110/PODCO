@@ -13,9 +13,20 @@
 
 <div class="page-content">
 	<section class="title">
-		<h3>{$appState.calendarView ? 'Semana' : 'Lista'}</h3>
+		{#if $viewState.calendar}
+			<h3>Calendario</h3>
+		{:else if $viewState.list}
+			<h3>Lista</h3>
+		{:else if $viewState.resumen}
+			<h3>Resumen</h3>
+		{/if}
 	</section>
 
+	<section class="controls" in:fly>
+		{#if $appState.pageActions}
+			<ControlsPanel />
+		{/if}
+	</section>
 	{#if $selectedEvent}
 		<section class="selected" in:slide>
 			<CardD />
@@ -31,12 +42,6 @@
 	{:else if $viewState.resumen}
 		resume
 	{/if}
-
-	<section class="controls" in:fly>
-		{#if $appState.pageActions}
-			<ControlsPanel />
-		{/if}
-	</section>
 </div>
 
 <style>
@@ -47,7 +52,6 @@
 	}
 	.title {
 		min-height: var(--d);
-		margin-bottom: var(--a);
 		display: flex;
 		justify-content: end;
 		margin-right: var(--a);
@@ -59,6 +63,7 @@
 	}
 	.controls {
 		margin-top: var(--a);
+		margin-bottom: var(--a);
 	}
 	.calendar {
 		flex-grow: 1;

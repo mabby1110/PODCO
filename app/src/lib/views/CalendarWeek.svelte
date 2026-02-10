@@ -111,23 +111,6 @@
 	}
 </script>
 
-<div class="calendar-controls">
-	<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
-		✏️ Editar
-	</button>
-	<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
-	</button>
-	<div class="calendar-navigation">
-		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
-		<button onclick={goToCurrentWeek} class="butter current-week">
-			{weekRangeText}
-			<!-- 👆 Cambiar currentYear por weekRangeText -->
-		</button>
-		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
-	</div>
-</div>
-
 <div class="calendar-container">
 	<table>
 		<thead>
@@ -175,6 +158,22 @@
 		</tbody>
 	</table>
 </div>
+<div class="calendar-controls">
+	<div class="calendar-navigation">
+		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
+		<button onclick={goToCurrentWeek} class="butter current-week">
+			{weekRangeText}
+			<!-- 👆 Cambiar currentYear por weekRangeText -->
+		</button>
+		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
+	</div>
+	<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
+		✏️ Editar
+	</button>
+	<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
+	</button>
+</div>
 
 <style>
 	.calendar-container {
@@ -190,7 +189,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		padding: 0 var(--a) var(--a);
+		padding: var(--b) var(--a);
+		justify-content: center;
 	}
 	.calendar-container table {
 		flex-grow: 1;
@@ -215,9 +215,8 @@
 
 	.day-header {
 		display: flex;
-		flex-direction: column;
 		gap: 4px;
-		align-items: center;
+		align-items: baseline;
 	}
 
 	.date-label {
@@ -276,6 +275,6 @@
 	.calendar-navigation {
 		display: flex;
 		gap: var(--a);
-		flex-grow: 1;
+		min-width: var(--h);
 	}
 </style>
