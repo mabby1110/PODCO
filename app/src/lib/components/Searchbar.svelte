@@ -10,7 +10,6 @@
 		keyColumns = ['motivo']
 	}: {
 		data: DataItem[];
-		selectedDataItem?: DataItem | null;
 		keyColumns: string[]; // Cambiado de [string] a string[]
 	} = $props();
 
@@ -42,44 +41,48 @@
 
 <div>
 	{#if selectedDataItem}
-		<span>Cliente</span>
-		<input type="hidden" name="id_cliente" value={selectedDataItem?.id} />
-		<div class="selected-client">
-			<p>{selectedDataItem?.razon_social}</p>
-			<button
-				type="button"
-				class="close-btn"
-				onclick={(e) => {
-					e.stopPropagation();
-					selectedDataItem = null;
-				}}>✕</button
-			>
-		</div>
-	{:else}
-		<span>Seleccionar Cliente</span>
-		<div class="search-input butter">
-			<input type="text" bind:value={keyword} placeholder="Buscar..." required />
-		</div>
-		{#if keyword}
-			<div class="results" transition:slide>
-				{#if filteredData.length > 0}
-					{#each filteredData as item (item.id)}
-						<button
-							type="button"
-							class="search-result"
-							onclick={(e) => {
-								e.stopPropagation();
-								selectItem(item);
-							}}
-						>
-							<span class="meta">{item.razon_social}</span>
-						</button>
-					{/each}
-				{:else}
-					<div class="no-results">No se encontraron resultados</div>
-				{/if}
+		<label for="id_cliente">
+			<span>Cliente</span>
+			<input type="hidden" name="id_cliente" value={selectedDataItem?.id} />
+			<div class="selected-client">
+				<p>{selectedDataItem?.razon_social}</p>
+				<button
+					type="button"
+					class="close-btn"
+					onclick={(e) => {
+						e.stopPropagation();
+						selectedDataItem = null;
+					}}>✕</button
+				>
 			</div>
-		{/if}
+		</label>
+	{:else}
+		<label>
+			<span>Buscar Cliente</span>
+			<div class="search-input butter">
+				<input type="text" bind:value={keyword} placeholder="Buscar..." required />
+			</div>
+			{#if keyword}
+				<div class="results" transition:slide>
+					{#if filteredData.length > 0}
+						{#each filteredData as item (item.id)}
+							<button
+								type="button"
+								class="search-result"
+								onclick={(e) => {
+									e.stopPropagation();
+									selectItem(item);
+								}}
+							>
+								<span class="meta">{item.razon_social}</span>
+							</button>
+						{/each}
+					{:else}
+						<div class="no-results">No se encontraron resultados</div>
+					{/if}
+				</div>
+			{/if}
+		</label>
 	{/if}
 </div>
 

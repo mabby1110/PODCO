@@ -12,7 +12,8 @@
 		formatDateTime,
 		calculateSlots,
 		calculateDuration,
-		formatWeekRange
+		formatWeekRange,
+		getMonth
 	} from '$lib/utils/agenda';
 
 	const { actividades } = $props();
@@ -45,8 +46,8 @@
 
 	// Fechas de la semana
 	const weekDates = $derived(getWeekDates(filterStore.weekOffset));
-	const weekRangeText = $derived(formatWeekRange(weekDates)); // 👈 Nueva variable
-
+	const weekRangeText = $derived(formatWeekRange(weekDates));
+	const currentMonth = $derived(getMonth(weekDates[0], true));
 	// Eventos de la semana
 	const weekEvents = $derived.by(() => {
 		return eventList.filter((event) => {
@@ -159,6 +160,7 @@
 	</table>
 </div>
 <div class="calendar-controls">
+	<h3>{currentMonth}</h3>
 	<div class="calendar-navigation">
 		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
 		<button onclick={goToCurrentWeek} class="butter current-week">
@@ -189,8 +191,11 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		padding: var(--b) var(--a);
+		padding: 0 var(--a) var(--b);
 		justify-content: center;
+	}
+	.calendar-controls h3 {
+		flex-grow: 1;
 	}
 	.calendar-container table {
 		flex-grow: 1;
@@ -237,7 +242,6 @@
 		left: 0;
 		z-index: 9;
 		height: var(--c);
-		max-width: var(--e);
 		display: flex;
 		justify-content: center;
 		backdrop-filter: blur(16px);

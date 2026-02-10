@@ -5,8 +5,7 @@
 	import { getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
 	import { fases, motivosOportunidad } from '$lib';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
-	import FormSelectInput from '$lib/components/FormSelectInput.svelte';
-	import EditableField from '$lib/components/EditableField.svelte';
+	import FormSelectMotivo from '$lib/components/FormSelectMotivo.svelte';
 	import FormInput from './FormInput.svelte';
 
 	let {
@@ -95,7 +94,7 @@
 			{/if}
 
 			{#if fase.id == 1}
-				<FormSelectInput title="Cambiar Motivo" list={motivosOportunidad} />
+				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} />
 
 				<FormInput
 					label="Necesidades"
@@ -168,6 +167,8 @@
 					type="textarea"
 					required
 				/>
+
+				<DatePicker {duration} title="Fecha de compromiso" />
 			{:else if submitCancel}
 				<FormInput
 					label="Pérdida"

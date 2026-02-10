@@ -5,7 +5,7 @@ export type Profile = {
 	id: string;
 	email: string;
 	nombre: string;
-	rol: string;
+	isAdmin: boolean;
 	// agrega campos reales de tu tabla si hay más
 };
 

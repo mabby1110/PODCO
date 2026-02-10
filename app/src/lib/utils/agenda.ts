@@ -1,5 +1,19 @@
 // lib/utils/agenda.ts
-
+const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const fullMonths = [
+	'Enero',
+	'Febrero',
+	'Marzo',
+	'Abril',
+	'Mayo',
+	'Junio',
+	'Julio',
+	'Agosto',
+	'Septiembre',
+	'Octubre',
+	'Noviembre',
+	'Diciembre'
+];
 /**
  * Obtiene las fechas de la semana basándose en un offset
  * @param offset - Número de semanas a desplazar (0 = semana actual, 1 = siguiente, -1 = anterior)
@@ -20,49 +34,71 @@ export function getWeekDates(offset: number = 0): Date[] {
 	});
 }
 /**
- * En tu archivo $lib/utils/agenda.ts (o donde tengas tus utilidades de fecha)
+ * formatea rango de semana
  */
 export function formatWeekRange(weekDates: Date[]): string {
 	if (weekDates.length === 0) return '';
-	
+
 	const firstDate = weekDates[0];
 	const lastDate = weekDates[weekDates.length - 1];
-	
+
 	const firstDay = firstDate.getDate();
 	const lastDay = lastDate.getDate();
-	
+
 	const months = [
-		'ene', 'feb', 'mar', 'abr', 'may', 'jun',
-		'jul', 'ago', 'sep', 'oct', 'nov', 'dic'
+		'ene',
+		'feb',
+		'mar',
+		'abr',
+		'may',
+		'jun',
+		'jul',
+		'ago',
+		'sep',
+		'oct',
+		'nov',
+		'dic'
 	];
-	
+
 	const firstMonth = months[firstDate.getMonth()];
 	const lastMonth = months[lastDate.getMonth()];
 	const year = lastDate.getFullYear();
-	
+
 	// Si es el mismo mes
 	if (firstDate.getMonth() === lastDate.getMonth()) {
 		return `${firstDay}-${lastDay} ${firstMonth} ${year}`;
 	}
-	
+
 	// Si son meses diferentes
 	return `${firstDay} ${firstMonth} - ${lastDay} ${lastMonth} ${year}`;
 }
+
 /**
  * Compara si dos fechas son del mismo día
  */
 export function isSameDay(date1: Date, date2: Date): boolean {
-	return date1.getFullYear() === date2.getFullYear() &&
+	return (
+		date1.getFullYear() === date2.getFullYear() &&
 		date1.getMonth() === date2.getMonth() &&
-		date1.getDate() === date2.getDate();
+		date1.getDate() === date2.getDate()
+	);
 }
 
 /**
- * Formatea una fecha como DD/MM
+ * Formatea una fecha como DD/Mes
  */
 export function formatDate(date: Date): string {
-	return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}`;
+	return `${String(date.getDate()).padStart(2, '0')} ${String(months[date.getMonth()])}`;
 }
+/**
+/**
+ * Formatea una fecha como mes
+ */
+export function getMonth(date: Date, full: boolean = false): string {
+	return `${String(full?fullMonths[date.getMonth()]:months[date.getMonth()])}`;
+}
+/**
+
 
 /**
  * Formatea una fecha completa como DD/MM/YYYY
@@ -108,7 +144,11 @@ export function parseDateTimeLocal(dateTimeStr: string): Date {
  * @param fin - Fecha/string de fin
  * @param slotMinutes - Minutos por slot (default: 15)
  */
-export function calculateSlots(inicio: string | Date, fin: string | Date, slotMinutes: number = 15): number {
+export function calculateSlots(
+	inicio: string | Date,
+	fin: string | Date,
+	slotMinutes: number = 15
+): number {
 	const start = inicio instanceof Date ? inicio : new Date(inicio);
 	const end = fin instanceof Date ? fin : new Date(fin);
 	const durationMinutes = (end.getTime() - start.getTime()) / (1000 * 60);

@@ -30,7 +30,9 @@
 <div class="field-block">
 	<div class="field-header">
 		<label for={name} class="label">
-			{label}{required ? '*' : ''}
+			<span>
+				{label}{required ? '*' : ''}
+			</span>
 		</label>
 	</div>
 
@@ -39,15 +41,7 @@
 	{/if}
 
 	{#if type === 'textarea'}
-		<textarea
-			id={name}
-			{name}
-			bind:value
-			{rows}
-			{placeholder}
-			{required}
-			{disabled}
-		/>
+		<textarea id={name} {name} bind:value {rows} {placeholder} {required} {disabled} />
 	{:else if type === 'file'}
 		<input
 			id={name}
@@ -59,18 +53,9 @@
 			{disabled}
 		/>
 	{:else}
-		<input
-			id={name}
-			{type}
-			{name}
-			bind:value
-			{placeholder}
-			{required}
-			{disabled}
-		/>
+		<input id={name} {type} {name} bind:value {placeholder} {required} {disabled} />
 	{/if}
 </div>
-
 
 <style>
 	.field-block {
@@ -92,10 +77,10 @@
 	}
 
 	textarea,
-	input[type="text"],
-	input[type="email"],
-	input[type="number"],
-	input[type="date"] {
+	input[type='text'],
+	input[type='email'],
+	input[type='number'],
+	input[type='date'] {
 		width: 100%;
 		padding: 8px;
 		border-radius: var(--a);

@@ -18,7 +18,7 @@
 </div>
 
 <ModalOportunidad {data}/>
-<ModalCliente />
+<ModalCliente {data}/>
 
 <style>
 	.nav-container {

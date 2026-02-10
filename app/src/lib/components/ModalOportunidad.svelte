@@ -3,21 +3,23 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import Searchbar from '$lib/components/Searchbar.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
-	import FormSelectInput from '$lib/components/FormSelectInput.svelte';
+	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { motivosOportunidad } from '$lib';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
+	import FormSelectAgente from './FormSelectAgente.svelte';
 	let { data } = $props();
 
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
 	let requisitos = $state('');
-	let fecha = $state<string>('');
-	let hora = $state<string>('08:00');
-	let inicio = $state<string>('');
-	let fin = $state<string>('');
+	let fecha = $state('');
+	let hora = $state('08:00');
+	let inicio = $state('');
+	let fin = $state('');
+	let selectedClient = $state('');
 
 	function getToday() {
 		const t = new Date();
@@ -85,6 +87,7 @@
 					alert('creado con exito!');
 				}}
 			>
+				<FormSelectAgente agentes={data.agentes}/>
 				<Searchbar data={data.clientes} keyColumns={['razon_social']} />
 				<FormSelectInput list={motivosOportunidad} />
 				<FormOptionalInput title="+Agregar requisitos">
@@ -113,7 +116,6 @@
 					<input type="hidden" name="fase" value={1} />
 					<input type="hidden" name="inicio" bind:value={inicio} />
 					<input type="hidden" name="fin" bind:value={fin} />
-					<input type="hidden" name="id_agente" value={$profile?.id} />
 				</label>
 
 				<div class="actions">

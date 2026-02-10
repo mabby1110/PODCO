@@ -4,8 +4,11 @@
 	import { addMinutes } from '$lib/utils/agenda';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import FormInputAddContact from './FormInputAddContact.svelte';
-	import FormSelectInput from './FormSelectInput.svelte';
+	import FormSelectMotivo from './FormSelectMotivo.svelte';
 	import { motivosProspeccion } from '$lib';
+	import FormSelectAgente from './FormSelectAgente.svelte';
+
+	let { data } = $props();
 	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
@@ -93,8 +96,9 @@
 					/>
 				</label>
 
-				<FormSelectInput title="Tipo de prospeccion" list={motivosProspeccion} />
-				
+				<FormSelectMotivo title="Tipo de prospeccion" list={motivosProspeccion} />
+				<FormSelectAgente agentes={data.agentes} />
+
 				<label>
 					<span>Ubicacion</span>
 					<textarea
