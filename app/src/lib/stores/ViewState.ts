@@ -6,6 +6,7 @@ interface ViewState {
     calendar: boolean;
     list: boolean;
     resumen: boolean;
+    clients: boolean;
 }
 
 const COOKIE_NAME = 'viewState';
@@ -14,7 +15,8 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 año
 const defaultState: ViewState = {
     calendar: false,
     list: false,
-    resumen: true
+    resumen: false,
+    clients: true,
 };
 
 function getInitialState(): ViewState {
@@ -37,7 +39,8 @@ function createViewState() {
             const newState: ViewState = {
                 calendar: view === 'calendar',
                 list: view === 'list',
-                resumen: view === 'resumen'
+                resumen: view === 'resumen',
+                clients: view === 'clients'
             };
             saveToCookie(newState);
             return newState;
@@ -48,6 +51,7 @@ function createViewState() {
         subscribe,
         setCalendar: () => setActiveView('calendar'),
         setList: () => setActiveView('list'),
+        setClients: () => setActiveView('clients'),
         setResumen: () => setActiveView('resumen'),
         // Método genérico para toggle
         toggle: (view: keyof ViewState) => setActiveView(view),

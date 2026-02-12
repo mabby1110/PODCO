@@ -44,6 +44,18 @@
 			⚡ Resumen
 		</button>
 	{/if}
+	
+	{#if !$viewState.clients}
+		<button
+			onclick={() => {
+				viewState.setClients();
+				$selectedEvent = null;
+			}}
+			class="butter primary"
+		>
+			🐄 Clientes
+		</button>
+	{/if}
 </div>
 
 <style>

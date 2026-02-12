@@ -7,6 +7,10 @@
 	import { selectedEvent } from '$lib/stores/selectedEvent.js';
 	import { fly, slide } from 'svelte/transition';
 	import { viewState } from '$lib/stores/ViewState.js';
+	import ClientList from '$lib/views/AdminClientList.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
+	import AdminClientList from '$lib/views/AdminClientList.svelte';
+	import UserClientList from '$lib/views/UserClientList.svelte';
 
 	let { data } = $props();
 </script>
@@ -41,6 +45,12 @@
 		</section>
 	{:else if $viewState.resumen}
 		resume
+	{:else if $viewState.clients}
+		{#if $profile.isAdmin}
+			<AdminClientList clients={data.clientes} agentes={data.agentes} />
+		{:else}
+			<UserClientList clients={data.clientes}/>
+		{/if}
 	{/if}
 </div>
 
