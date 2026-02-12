@@ -21,9 +21,7 @@
 		}
 	}
 </script>
-
-<div class="filters">
-	<h3>Clientes</h3>
+<div class="filter-container">
 	<button
 		class="butter"
 		class:active={sortField === 'razon_social'}
@@ -62,15 +60,10 @@
 </div>
 
 <style>
-	.filters {
+	.filter-container {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		padding: 0 0 var(--b);
-		justify-content: flex-end;
-	}
-	.filters h3 {
-		flex-grow: 1;
 	}
 	.butter.active {
 		background-color: var(--color-contrast);

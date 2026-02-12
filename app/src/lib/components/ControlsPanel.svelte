@@ -29,7 +29,7 @@
 		>
 			📋 Lista
 		</button>
-		<button
+		<!-- <button
 			onclick={() => {
 				viewState.setResumen();
 				appState.togglePageActions();
@@ -39,7 +39,7 @@
 			style={$viewState.resumen ? 'background-color: var(--color-highlight);' : ''}
 		>
 			⚡ Resumen
-		</button>
+		</button> -->
 		<button
 			onclick={() => {
 				viewState.setClients();

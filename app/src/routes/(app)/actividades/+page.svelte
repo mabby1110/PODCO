@@ -3,7 +3,7 @@
 	import CalendarWeek from '$lib/views/CalendarWeek.svelte';
 	import CalendarList from '$lib/views/CalendarList.svelte';
 	import { selectedEvent } from '$lib/stores/selectedEvent.js';
-	import { fly, slide } from 'svelte/transition';
+	import {  slide } from 'svelte/transition';
 	import { viewState } from '$lib/stores/ViewState.js';
 	import { selectedClient } from '$lib/stores/selectedClient.js';
 	import CardCliente from '$lib/components/CardCliente.svelte';
@@ -54,12 +54,6 @@
 		display: flex;
 		flex-direction: column;
 		min-height: var(--h);
-	}
-	.title {
-		height: var(--d);
-		display: flex;
-		margin-right: var(--a);
-		justify-content: flex-end;
 	}
 	.selected {
 		max-height: 90vh;

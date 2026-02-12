@@ -65,7 +65,7 @@ body {
 	right: 0;
 	background-color: var(--color-background);
 }
-label span{
+label span {
 	font-size: 20px;
 }
 .page-container {
@@ -111,6 +111,18 @@ label span{
 .close-btn:hover {
 	background: #f3f4f6;
 	color: #000;
+}
+
+.controls {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+	padding: 0 0 var(--b);
+	justify-content: flex-end;
+}
+.controls h2 {
+	flex-grow: 1;
+	align-self: end;
 }
 .lost {
 	background-color: var(--color-error);

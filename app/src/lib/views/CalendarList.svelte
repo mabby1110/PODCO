@@ -6,7 +6,6 @@
 
 	let { actividades } = $props();
 
-	// Lista base SIEMPRE reactiva al cambio de data.actividades
 	const eventList = $derived(
 		filterStore.atributo !== ''
 			? filtrarConsecutivo(filterStore.atributo, 'id_agente', actividades)
@@ -14,8 +13,8 @@
 	);
 </script>
 
-<div class="calendar-controls">
-	<h3>Lista</h3>
+<div class="controls">
+	<h2>Lista</h2>
 	<Filter />
 </div>
 <div class="view-container">
@@ -27,15 +26,12 @@
 </div>
 
 <style>
-	.calendar-controls {
+	.controls {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
 		padding: 0 0 var(--b);
 		justify-content: flex-end;
-	}
-	.calendar-controls h3 {
-		flex-grow: 1;
 	}
 	.view-container {
 		display: flex;

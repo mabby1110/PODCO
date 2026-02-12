@@ -3,7 +3,6 @@
 	import ModalOportunidad from '$lib/components/ModalOportunidad.svelte';
 	import NavButton from '$lib/components/NavButton.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte.js';
-	import { selectedEvent } from '$lib/stores/selectedEvent.js';
 
 	let { children, data } = $props();
 	profile.set(data.profile);
@@ -17,8 +16,8 @@
 	{@render children()}
 </div>
 
-<ModalOportunidad {data}/>
-<ModalCliente {data}/>
+<ModalOportunidad {data} />
+<ModalCliente {data} />
 
 <style>
 	.nav-container {

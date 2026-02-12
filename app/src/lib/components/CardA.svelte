@@ -76,6 +76,7 @@
 		text-align: left;
 		align-items: baseline;
 		backdrop-filter: blur(16px);
+		overflow: hidden;
 	}
 	header {
 		flex-grow: 1;

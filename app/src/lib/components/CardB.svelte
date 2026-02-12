@@ -61,7 +61,7 @@
 		border-style: none;
 		border-width: 0;
 		border-radius: var(--a);
-		
+		overflow: hidden;
 		box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	}
 	.title {

@@ -1,13 +1,14 @@
 <script>
-	import { fade } from "svelte/transition";
-
+	import { fade } from 'svelte/transition';
 </script>
-<form method="POST" action="/auth/logout" in:fade={{delay:300, duration:300}}>
-  <button type="submit" class="butter logout-button">Cerrar sesión</button>
+
+<form method="POST" action="/auth/logout" in:fade={{ delay: 1800, duration: 300 }}>
+	<button type="submit" class="butter logout-button">Cerrar sesión</button>
 </form>
+
 <style>
 	form {
-		display: inline-block;
+		flex-grow: 1;
 	}
 
 	.logout-button {

@@ -28,13 +28,11 @@
 			let aVal = a[sortField] || '';
 			let bVal = b[sortField] || '';
 
-			// Convertir a número si es el campo de oportunidades
 			if (sortField === 'oportunidades') {
 				aVal = parseInt(aVal) || 0;
 				bVal = parseInt(bVal) || 0;
 			}
 
-			// Comparación
 			if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
 			if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
 			return 0;
@@ -42,7 +40,10 @@
 	}
 </script>
 
-<FilterClientList bind:sortField bind:sortOrder />
+<div class="controls">
+	<h2>Clientes</h2>
+	<FilterClientList bind:sortField bind:sortOrder />
+</div>
 
 <div class="view-container">
 	{#if $profile?.isAdmin}

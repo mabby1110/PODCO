@@ -114,8 +114,8 @@
 	}
 </script>
 
-<div class="calendar-controls">
-	<h3>Calendario</h3>
+<div class="controls">
+	<h2>Calendario</h2>
 	<div class="calendar-navigation">
 		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
 		<button onclick={goToCurrentWeek} class="butter current-week">
@@ -191,16 +191,6 @@
 		gap: 16px;
 		border: 1px solid var(--color-muted);
 		border-radius: var(--a);
-	}
-	.calendar-controls {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-		padding: 0 0 var(--b);
-		justify-content: flex-end;
-	}
-	.calendar-controls h3 {
-		flex-grow: 1;
 	}
 	.calendar-container table {
 		flex-grow: 1;
