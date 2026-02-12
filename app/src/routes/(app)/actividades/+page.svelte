@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CardD from '$lib/components/CardD.svelte';
+	import CardOportunidad from '$lib/components/CardOportunidad.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import CalendarWeek from '$lib/views/CalendarWeek.svelte';
 	import CalendarList from '$lib/views/CalendarList.svelte';
@@ -11,6 +11,8 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import AdminClientList from '$lib/views/AdminClientList.svelte';
 	import UserClientList from '$lib/views/UserClientList.svelte';
+	import { selectedClient } from '$lib/stores/selectedClient.js';
+	import CardCliente from '$lib/components/CardCliente.svelte';
 
 	let { data } = $props();
 </script>
@@ -31,14 +33,17 @@
 			<ControlsPanel />
 		{/if}
 	</section>
-	{#if $selectedEvent}
-		<section class="selected" in:slide>
-			<CardD />
-		</section>
-	{:else if $viewState.calendar}
-		<section class="calendar" in:fly>
-			<CalendarWeek actividades={data.actividades} />
-		</section>
+
+	{#if $viewState.calendar}
+		{#if $selectedEvent}
+			<section class="selected" in:slide>
+				<CardOportunidad />
+			</section>
+		{:else}
+			<section class="calendar" in:fly>
+				<CalendarWeek actividades={data.actividades} />
+			</section>
+		{/if}
 	{:else if $viewState.list}
 		<section class="calendar" in:fly>
 			<CalendarList actividades={data.actividades} />
@@ -46,10 +51,14 @@
 	{:else if $viewState.resumen}
 		resume
 	{:else if $viewState.clients}
-		{#if $profile.isAdmin}
+		{#if $selectedClient}
+			<section class="selected" in:slide>
+				<CardCliente />
+			</section>
+		{:else if $profile?.isAdmin}
 			<AdminClientList clients={data.clientes} agentes={data.agentes} />
 		{:else}
-			<UserClientList clients={data.clientes}/>
+			<UserClientList clients={data.clientes} />
 		{/if}
 	{/if}
 </div>
