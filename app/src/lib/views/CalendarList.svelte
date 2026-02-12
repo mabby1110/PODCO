@@ -2,7 +2,7 @@
 	import CardB from '$lib/components/CardB.svelte';
 	import { filtrarConsecutivo } from '$lib/utils/util';
 	import { filterStore } from '$lib/stores/filterStore.svelte';
-	import Filter from '$lib/components/Filter.svelte';
+	import FilterOpList from '$lib/components/FilterOpList.svelte';
 
 	let { actividades } = $props();
 
@@ -15,7 +15,7 @@
 
 <div class="controls">
 	<h2>Lista</h2>
-	<Filter />
+	<FilterOpList />
 </div>
 <div class="view-container">
 	<div class="op-list">

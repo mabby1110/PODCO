@@ -15,7 +15,7 @@
 		formatWeekRange,
 		getMonth
 	} from '$lib/utils/agenda';
-	import Filter from '$lib/components/Filter.svelte';
+	import FilterOpList from '$lib/components/FilterOpList.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
 	const { actividades } = $props();
@@ -131,7 +131,7 @@
 	<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
 		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
 	</button>
-	<Filter />
+	<FilterOpList />
 </div>
 
 <div class="calendar-container">
