@@ -2,8 +2,9 @@
 	import { fade, slide } from 'svelte/transition';
 	import { appState } from '$lib/stores/appState.svelte';
 	import Logout from './Logout.svelte';
+	import ControlsPanel from './ControlsPanel.svelte';
 
-	let expanded = $state(false);
+	let expanded = $derived($appState.pageActions);
 	let isDragging = $state(false);
 	let dragTimeout: ReturnType<typeof setTimeout> | null = null;
 	let startX = $state(0);
@@ -69,8 +70,7 @@
 		} else {
 			const target = e.target as HTMLElement;
 			if (!target.closest('.nav-links')) {
-				expanded = !expanded;
-
+				appState.togglePageActions();
 				if (expanded) {
 					requestAnimationFrame(() => {
 						requestAnimationFrame(clampToViewport);
@@ -127,13 +127,26 @@
 </script>
 
 <div class="nav-container" style="transform: translate({offsetX}px, {offsetY}px);">
+	{#if $appState.pageActions}
+		<ControlsPanel />
+		<div class="page-controls">
+			<Logout />
+			<button
+				in:fade={{ delay: 300, duration: 300 }}
+				class="butter actions-button"
+				onclick={() => appState.resetPanelPosition()}
+			>
+				Resetear posición</button
+			>
+		</div>
+	{/if}
 	<button
 		bind:this={panelElement}
 		onpointerdown={handlePointerDown}
 		onpointermove={handlePointerMove}
 		onpointerup={handlePointerUp}
 		onpointercancel={handlePointerCancel}
-		class="panel"
+		class="butter"
 		class:dragging={isDragging}
 	>
 		<div class="logo">
@@ -146,35 +159,17 @@
 			{/if}
 		</div>
 	</button>
-	{#if expanded}
-		<button
-			in:fade={{ delay: 300, duration: 50 }}
-			onclick={() => {
-				appState.togglePageActions();
-				expanded = !expanded;
-			}}
-			class="butter reset-button"
-		>
-			{$appState.pageActions ? 'ocultar acciones' : 'mostrar acciones'}
-		</button>
-		<button
-			in:fade={{ delay: 300, duration: 300 }}
-			class="butter actions-button"
-			onclick={() => appState.resetPanelPosition()}
-		>
-			Resetear posición</button
-		>
-		<Logout />
-	{/if}
 </div>
 
 <style>
 	.nav-container {
 		position: fixed;
-		top: var(--a);
-		left: var(--a);
+		bottom: var(--a);
+		right: var(--a);
+		align-items: end;
 		z-index: 1000;
 		display: flex;
+		flex-direction: column;
 		gap: var(--a);
 		max-width: 96vw;
 		flex-wrap: wrap;
@@ -192,17 +187,11 @@
 		transition:
 			background-color 0.2s,
 			transform 0.1s;
+		box-shadow: none;
+		width: fit-content;
 	}
 
-	.panel {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		will-change: transform;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-	}
-
-	.panel.dragging {
+	.butter.dragging {
 		cursor: move;
 		background-color: var(--color-highlight);
 		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
@@ -212,6 +201,7 @@
 		display: flex;
 		align-items: center;
 		gap: var(--b);
+		width: fit-content;
 	}
 
 	.logo img {
@@ -232,5 +222,10 @@
 	.actions-button,
 	.reset-button {
 		background-color: var(--color-highlight);
+		width: fit-content;
+	}
+	.page-controls {
+		display: flex;
+		gap: var(--a);
 	}
 </style>

@@ -15,6 +15,8 @@
 		formatWeekRange,
 		getMonth
 	} from '$lib/utils/agenda';
+	import Filter from '$lib/components/Filter.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	const { actividades } = $props();
 
@@ -112,6 +114,26 @@
 	}
 </script>
 
+<div class="calendar-controls">
+	<h3>Calendario</h3>
+	<div class="calendar-navigation">
+		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
+		<button onclick={goToCurrentWeek} class="butter current-week">
+			{weekRangeText}
+		</button>
+		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
+	</div>
+	{#if $profile?.isAdmin}
+		<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
+			✏️ Editar
+		</button>
+	{/if}
+	<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
+	</button>
+	<Filter />
+</div>
+
 <div class="calendar-container">
 	<table>
 		<thead>
@@ -159,23 +181,6 @@
 		</tbody>
 	</table>
 </div>
-<div class="calendar-controls">
-	<h3>{currentMonth}</h3>
-	<div class="calendar-navigation">
-		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
-		<button onclick={goToCurrentWeek} class="butter current-week">
-			{weekRangeText}
-			<!-- 👆 Cambiar currentYear por weekRangeText -->
-		</button>
-		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
-	</div>
-	<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
-		✏️ Editar
-	</button>
-	<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
-	</button>
-</div>
 
 <style>
 	.calendar-container {
@@ -191,8 +196,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		padding: 0 var(--a) var(--b);
-		justify-content: center;
+		padding: 0 0 var(--b);
+		justify-content: flex-end;
 	}
 	.calendar-controls h3 {
 		flex-grow: 1;
@@ -279,6 +284,5 @@
 	.calendar-navigation {
 		display: flex;
 		gap: var(--a);
-		min-width: var(--h);
 	}
 </style>

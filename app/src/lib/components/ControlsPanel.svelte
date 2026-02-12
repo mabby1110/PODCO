@@ -1,65 +1,67 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
-	import { filterStore } from '$lib/stores/filterStore.svelte.js';
-	import Filter from '$lib/components/Filter.svelte';
 	import { selectedEvent } from '$lib/stores/selectedEvent';
 	import { slide } from 'svelte/transition';
 	import { viewState } from '$lib/stores/ViewState';
 </script>
 
-<div class="container" transition:slide={{ delay: 300, duration: 300 }}>
-	<Filter />
-	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-	<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-	{#if !$viewState.calendar}
+<div class="container" in:slide={{ delay: 300, duration: 300 }}>
+	<div class="button-group">
 		<button
 			onclick={() => {
 				viewState.setCalendar();
+				appState.togglePageActions();
 				$selectedEvent = null;
 			}}
-			class="butter primary"
+			class="butter"
+			style={$viewState.calendar ? 'background-color: var(--color-highlight);' : ''}
 		>
 			📅 Calendario
 		</button>
-	{/if}
-	{#if !$viewState.list}
 		<button
 			onclick={() => {
 				viewState.setList();
+				appState.togglePageActions();
 				$selectedEvent = null;
 			}}
-			class="butter primary"
+			class="butter"
+			style={$viewState.list ? 'background-color: var(--color-highlight);' : ''}
 		>
 			📋 Lista
 		</button>
-	{/if}
-	{#if !$viewState.resumen}
 		<button
 			onclick={() => {
 				viewState.setResumen();
+				appState.togglePageActions();
 				$selectedEvent = null;
 			}}
-			class="butter primary"
+			class="butter"
+			style={$viewState.resumen ? 'background-color: var(--color-highlight);' : ''}
 		>
 			⚡ Resumen
 		</button>
-	{/if}
-	
-	{#if !$viewState.clients}
 		<button
 			onclick={() => {
 				viewState.setClients();
+				appState.togglePageActions();
 				$selectedEvent = null;
 			}}
-			class="butter primary"
+			class="butter"
+			style={$viewState.clients ? 'background-color: var(--color-highlight);' : ''}
 		>
 			🐄 Clientes
 		</button>
-	{/if}
+	</div>
+
+	<div class="separator"></div>
+
+	<div class="button-group">
+		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
+	</div>
 </div>
 
 <style>
-	/* Panel de controles */
 	.container {
 		background: var(--color-contrast);
 		backdrop-filter: blur(4px);
@@ -67,13 +69,21 @@
 		border-radius: var(--a);
 		padding: var(--a);
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		gap: var(--a);
-		min-width: 300px;
 	}
 
-	.butter {
-		font-weight: 500;
-		white-space: nowrap;
+	.button-group {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		justify-content: flex-end;
+	}
+
+	.separator {
+		height: 1px;
+		background: var(--color-muted);
+		margin: 0;
+		align-self: stretch;
 	}
 </style>

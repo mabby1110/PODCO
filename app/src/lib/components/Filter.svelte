@@ -19,12 +19,14 @@
 </script>
 
 {#if profile.isAdmin}
-	<select bind:value={selected} class="butter">
-		<option value="">Todos</option>
-		{#each agentes as agente}
-			<option value={String(agente.id)}>{agente.nombre}</option>
-		{/each}
-	</select>
+	<div class="filter-container">
+		<select bind:value={selected} class="butter">
+			<option value="">Todos</option>
+			{#each agentes as agente}
+				<option value={String(agente.id)}>{agente.nombre}</option>
+			{/each}
+		</select>
+	</div>
 {/if}
 
 <!-- <input
@@ -32,3 +34,12 @@
 		bind:value={keyword}
 		placeholder="Buscar oportunidades..."
 	/> -->
+
+<style>
+	.filter-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		justify-content: end;
+	}
+</style>

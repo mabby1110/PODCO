@@ -10,6 +10,7 @@ export type ClientItem = {
     tipo_prospeccion: string;
     fecha_creacion: string;
     fecha_sync: string;
+    oportunidades: string;
 };
 
 const COOKIE_NAME = 'selectedClient';
