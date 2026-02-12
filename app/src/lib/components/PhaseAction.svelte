@@ -13,7 +13,7 @@
 		id,
 		historia = '',
 		cotizaciones,
-		requisitos,
+		requisitos = '',
 		onSuccess = () => {}
 	}: {
 		fase: any;
@@ -24,6 +24,7 @@
 		onSuccess?: () => void;
 	} = $props();
 
+	let nuevoRequisito = $state('');
 	let nextPhase = $derived(Number(fase.id) + 1);
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
@@ -59,7 +60,7 @@
 <section class="actions">
 	<form
 		method="POST"
-		action="?/update"
+		action="?/updateOp"
 		use:enhance={() => {
 			isSubmitting = true;
 			return handleSubmit();
@@ -67,6 +68,7 @@
 	>
 		<input type="hidden" name="id" bind:value={id} />
 		<input type="hidden" name="historia" value={combinarHistoria(historia, nuevaHistoria)} />
+		<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
 		<input
 			type="hidden"
 			name="cotizaciones"
@@ -79,7 +81,8 @@
 					<label>Historia</label>
 					<p>{historia}</p>
 				</section>
-			{:else if fase.id >= 3}
+			{/if}
+			{#if fase.id >= 3}
 				<section class="cotizaciones">
 					<label>Cotizaciones</label>
 					<p>{cotizaciones}</p>
@@ -104,6 +107,16 @@
 					type="textarea"
 					required
 				/>
+				<FormOptionalInput title="+Agregar requisitos">
+					<FormInput
+						label="Requisitos"
+						name="nuevoRequisitos"
+						bind:value={nuevoRequisito}
+						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+						type="textarea"
+						required
+					/>
+				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha de compromiso para presentar propuesta" />
 			{:else if fase.id == 2}
 				<FormInput
@@ -114,7 +127,6 @@
 					type="textarea"
 					required
 				/>
-
 				<FormInput
 					label="ID cotización"
 					name="nuevaCotizacion"
@@ -123,6 +135,16 @@
 					type="text"
 					required
 				/>
+				<FormOptionalInput title="+Agregar requisitos">
+					<FormInput
+						label="Requisitos"
+						name="nuevoRequisitos"
+						bind:value={nuevoRequisito}
+						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+						type="textarea"
+						required
+					/>
+				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha en que la vigencia de la cotización termina" />
 			{:else if fase.id == 3}
 				<FormInput
@@ -139,6 +161,16 @@
 						name="nuevaCotizacion"
 						bind:value={nuevaCotizacion}
 						placeholder="ID Separado(s) por coma y espacio ej. c1, c2, ..."
+						type="textarea"
+						required
+					/>
+				</FormOptionalInput>
+				<FormOptionalInput title="+Agregar requisitos">
+					<FormInput
+						label="Requisitos"
+						name="nuevoRequisitos"
+						bind:value={nuevoRequisito}
+						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
 						type="textarea"
 						required
 					/>
@@ -167,7 +199,16 @@
 					type="textarea"
 					required
 				/>
-
+				<FormOptionalInput title="+Agregar requisitos">
+					<FormInput
+						label="Requisitos"
+						name="nuevoRequisitos"
+						bind:value={nuevoRequisito}
+						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+						type="textarea"
+						required
+					/>
+				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha de compromiso" />
 			{:else if submitCancel}
 				<FormInput

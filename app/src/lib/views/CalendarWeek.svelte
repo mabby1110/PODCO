@@ -77,7 +77,7 @@
 		formData.append('inicio', formatDateTime(newStart));
 		formData.append('fin', formatDateTime(newEnd));
 
-		await fetch('?/update', { method: 'POST', body: formData });
+		await fetch('?/updateOp', { method: 'POST', body: formData });
 		await invalidate('app:data');
 	}
 

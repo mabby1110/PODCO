@@ -31,6 +31,7 @@
 	.optional-input {
 		display: flex;
 		flex-grow: 1;
+		width: 100%;
 		gap: var(--a);
 	}
 </style>

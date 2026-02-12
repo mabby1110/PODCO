@@ -35,7 +35,6 @@
 
 <button
 	style={eventData?.style}
-	class={$appState.calendarCards ? '' : 'min'}
 	use:draggable={{ data: event.id, enabled: isDndEnabled }}
 	use:draggable={event.id_oportunidad}
 	onclick={select}
@@ -77,6 +76,7 @@
 		align-items: baseline;
 		backdrop-filter: blur(16px);
 		overflow: hidden;
+		position: relative;
 	}
 	header {
 		flex-grow: 1;
@@ -92,7 +92,10 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
-		text-align: left;
+		white-space: nowrap;
+		position: absolute;
+		top: 2px;
+		left: 4px;
 	}
 	.meta-item {
 		flex-grow: 1;

@@ -28,12 +28,12 @@ export function getStyleForPhase(fase: string | number) {
 
 export function getDurationForPhase(fase: string | number) {
 	const durationMap = {
-		'0': 10,
+		'0': 20,
 		'1': 20,
 		'2': 30,
-		'3': 20,
+		'3': 40,
 		'4': 20,
-		'5': 20,
+		'5': 40,
 		'6': 20
 	};
 	return durationMap[String(fase)] || 10;

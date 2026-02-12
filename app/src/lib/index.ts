@@ -15,7 +15,7 @@ export const fases = [
 		id: 3,
 		actual: 'Negociacion',
 		accion: 'Documentar',
-		placeholder: 'Ajustar propuesta, resolver objeciones y definir términos'
+		placeholder: 'Cotizacion aceptada, Ajustes, Nuevas propuestas y/o Resolver objeciones'
 	},
 	{
 		id: 4,

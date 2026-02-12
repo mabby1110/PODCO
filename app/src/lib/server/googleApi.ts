@@ -126,7 +126,31 @@ export async function updateRowById(
 
 	return { rowNumber, updated: newValues };
 }
+// Tipo para el mapeo de campos a columnas
+export type FieldColumnMap = {
+  [fieldName: string]: string; // fieldName -> column letter
+};
 
+/**
+ * Convierte FormData a un objeto de valores mapeados por columnas
+ * @param formData - Los datos del formulario
+ * @param fieldColumnMap - Mapeo de nombres de campos a letras de columnas
+ * @returns Objeto con las columnas como keys y los valores del formData
+ */
+export function mapFormDataToColumns(
+  formData: FormData,
+  fieldColumnMap: FieldColumnMap
+): { [key: string]: any } {
+  const values: { [key: string]: any } = {};
+
+  for (const [fieldName, columnLetter] of Object.entries(fieldColumnMap)) {
+    if (formData.has(fieldName)) {
+      values[columnLetter] = formData.get(fieldName);
+    }
+  }
+
+  return values;
+}
 export async function appendRow(range: string = 'historial_actividades!A:C', values: any[]) {
 	const id = generateId();
 

@@ -1,5 +1,5 @@
 import type { Actions, PageServerLoad } from './$types';
-import { appendRow, updateRowById, uploadToFolder } from '$lib/server/googleApi';
+import { appendRow, mapFormDataToColumns, updateRowById, uploadToFolder, type FieldColumnMap } from '$lib/server/googleApi';
 import { fail } from '@sveltejs/kit';
 import { Readable } from 'stream';
 
@@ -7,8 +7,9 @@ export const actions: Actions = {
 	add: async ({ request }) => {
 		console.log('\nActividades add\n');
 		const formData = await request.formData();
+		
 		const rowData = [
-			formData.get('id_cliente') || formData.get('id_cliente') || null,
+			formData.get('id_cliente') || null,
 			formData.get('id_agente') || 1,
 			formData.get('fase') || 1,
 			formData.get('motivo') || null,
@@ -20,6 +21,7 @@ export const actions: Actions = {
 			new Date().toISOString(),
 			null
 		];
+		
 		console.log(formData, rowData);
 		await appendRow('oportunidades!A:Z', rowData);
 
@@ -36,7 +38,7 @@ export const actions: Actions = {
 			formData.get('razon_social') || null,
 			formData.get('ubicacion') || null,
 			formData.get('contactos') || null,
-			formData.get('motivo') || null,
+			formData.get('tipo_prospeccion') || null,
 			new Date().toISOString()
 		];
 
@@ -52,8 +54,7 @@ export const actions: Actions = {
 			formData.get('motivo') || null,
 			formData.get('cotizaciones') || null,
 			formData.get('requisitos') || null,
-			new Date().toISOString(),
-			null
+			new Date().toISOString()
 		];
 
 		await appendRow('oportunidades!A:Z', oportunidad);
@@ -62,7 +63,33 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	update: async ({ request }) => {
+	updateClient: async ({ request }) => {
+		console.log('\nActividades updateClient\n');
+		const formData = await request.formData();
+		const id = formData.get('id');
+
+		if (!id) {
+			return fail(400, { error: 'ID requerido' });
+		}
+
+		const updateFieldMap: FieldColumnMap = {
+			id_agente: 'B',
+			razon_social: 'C',
+			ubicacion: 'D',
+			contactos: 'E',
+		};
+
+		const newValues = mapFormDataToColumns(formData, updateFieldMap);
+		
+		// Agregar fecha de actualización
+		newValues['I'] = new Date().toISOString();
+
+		await updateRowById(id as string, newValues, 'clientes!A:Z');
+
+		return { success: true };
+	},
+
+	updateOp: async ({ request }) => {
 		console.log('update action');
 		const formData = await request.formData();
 		const id = formData.get('id');
@@ -72,18 +99,20 @@ export const actions: Actions = {
 			return fail(400, { error: 'ID requerido' });
 		}
 
-		const newValues: { [key: string]: any } = {};
+		const updateFieldMap: FieldColumnMap = {
+			id_cliente: 'B',
+			id_agente: 'C',
+			fase: 'D',
+			motivo: 'E',
+			inicio: 'F',
+			fin: 'G',
+			historia: 'H',
+			cotizaciones: 'I',
+			requisitos: 'J',
+			fecha_cierre: 'L'
+		};
 
-		if (formData.has('id_cliente')) newValues['B'] = formData.get('id_cliente');
-		if (formData.has('id_agente')) newValues['C'] = formData.get('id_agente');
-		if (formData.has('fase')) newValues['D'] = formData.get('fase');
-		if (formData.has('motivo')) newValues['E'] = formData.get('motivo');
-		if (formData.has('inicio')) newValues['F'] = formData.get('inicio');
-		if (formData.has('fin')) newValues['G'] = formData.get('fin');
-		if (formData.has('historia')) newValues['H'] = formData.get('historia');
-		if (formData.has('cotizaciones')) newValues['I'] = formData.get('cotizaciones');
-		if (formData.has('requisitos')) newValues['J'] = formData.get('requisitos');
-		if (formData.has('fecha_cierre')) newValues['L'] = formData.get('fecha_cierre');
+		const newValues = mapFormDataToColumns(formData, updateFieldMap);
 
 		await updateRowById(id as string, newValues, 'oportunidades!A:Z');
 
