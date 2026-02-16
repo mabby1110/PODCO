@@ -73,10 +73,10 @@ export const actions: Actions = {
 		}
 
 		const updateFieldMap: FieldColumnMap = {
-			id_agente: 'B',
-			razon_social: 'C',
-			ubicacion: 'D',
-			contactos: 'E',
+			id_agente: 'C',
+			razon_social: 'D',
+			ubicacion: 'E',
+			contactos: 'F',
 		};
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);

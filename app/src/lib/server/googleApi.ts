@@ -100,7 +100,7 @@ export async function updateRowById(
 ) {
 	const values = await getRange(range); // Ya devuelve JSON, no array[][]
 	// Buscar la fila por ID en la propiedad id_oportunidad
-	const rowIndex = values.findIndex((row) => row.id_oportunidad === id);
+	const rowIndex = values.findIndex((row) => row.id === id);
 	
 	if (rowIndex === -1) {
 		throw new Error(`No se encontró registro con ID: ${id}`);

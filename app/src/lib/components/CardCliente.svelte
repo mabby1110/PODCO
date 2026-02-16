@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { slide } from 'svelte/transition';
 	import { selectedClient } from '$lib/stores/selectedClient';
 	import EditableField from './EditableField.svelte'; // ajusta la ruta según tu estructura
 
-	let { agentes } = $props();
+	const { agentes } = $derived(page.data);
 
 	function closeCard(e: MouseEvent) {
 		e.stopPropagation();
@@ -50,35 +51,20 @@
 					placeholder="Dirección completa"
 				/>
 
+				<div class="detail-block">
+					<span class="label">Tipo de Prospección:</span>
+					<p class="value">{$selectedClient.tipo_prospeccion || 'N/A'}</p>
+				</div>
+
 				<EditableField
-					label="Tipo de Prospección"
-					name="tipo_prospeccion"
-					bind:value={$selectedClient.tipo_prospeccion}
+					label="Agente"
+					name="id_agente"
+					type="select"
+					bind:value={$selectedClient.id_agente}
 					id={$selectedClient.id}
 					action="?/updateClient"
-					placeholder="Lista base en Contpaqi"
+					options={agentes}
 				/>
-
-				<!-- Campo Agente con Select -->
-				<div class="detail-block">
-					<form method="POST" action="?/updateClient">
-						<input type="hidden" name="id" value={$selectedClient.id} />
-
-						<label for="agente-select">
-							<span class="label">Agente:</span>
-						</label>
-
-						<EditableField
-							label="Agente"
-							name="id_agente"
-							type="select"
-							bind:value={$selectedClient.id_agente}
-							id={$selectedClient.id}
-							action="?/updateClient"
-							options={agentes}
-						/>
-					</form>
-				</div>
 			</section>
 
 			<section class="info-section">
@@ -210,56 +196,9 @@
 		border-radius: 8px;
 	}
 
-	.info-section h3 {
-		margin: 0 0 var(--b) 0;
-		font-size: 18px;
-		color: var(--color-secondary, #fff);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		padding-bottom: var(--b);
-	}
-
 	.detail-block {
 		display: flex;
 		flex-direction: column;
 		gap: 4px;
-	}
-
-	.label {
-		font-size: 14px;
-		opacity: 0.7;
-		margin-bottom: 4px;
-	}
-
-	.value {
-		margin: 0;
-		font-size: 16px;
-	}
-
-	select {
-		width: 100%;
-		padding: 8px;
-		border-radius: 4px;
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		background: rgba(255, 255, 255, 0.1);
-		color: inherit;
-		font-family: inherit;
-		font-size: 14px;
-		cursor: pointer;
-		transition: all 0.2s;
-	}
-
-	select:hover {
-		background: rgba(255, 255, 255, 0.15);
-		border-color: rgba(255, 255, 255, 0.5);
-	}
-
-	select:focus {
-		outline: none;
-		border-color: var(--color-secondary, #fff);
-		background: rgba(255, 255, 255, 0.2);
-	}
-
-	form {
-		width: 100%;
 	}
 </style>
