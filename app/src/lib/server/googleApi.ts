@@ -1,6 +1,5 @@
 import { google } from 'googleapis';
-import { GOOGLE_APPLICATION_CREDENTIALS, GOOGLE_FOLDER_ID, GOOGLE_SHEET_ID } from '$env/static/private';
-import { readFileSync } from 'fs';
+import { GOOGLE_APPLICATION_CREDENTIALS, GOOGLE_SHEET_ID } from '$env/static/private';
 
 import crypto from 'crypto';
 
@@ -241,25 +240,25 @@ export async function updatePhaseAndHistory(
 }
 
 // DRIVE
-const drive = google.drive({ version: 'v3', auth });
+// const drive = google.drive({ version: 'v3', auth });
 
-export async function uploadToFolder(
-	filename: string,
-	mimeType: string,
-	body: NodeJS.ReadableStream
-) {
-	const response = await drive.files.create({
-		requestBody: {
-			name: filename,
-			parents: [GOOGLE_FOLDER_ID] // This should be a folder ID in a shared drive
-		},
-		media: {
-			mimeType,
-			body
-		},
-		fields: 'id, name, webViewLink',
-		supportsAllDrives: true // Add this parameter
-	});
+// export async function uploadToFolder(
+// 	filename: string,
+// 	mimeType: string,
+// 	body: NodeJS.ReadableStream
+// ) {
+// 	const response = await drive.files.create({
+// 		requestBody: {
+// 			name: filename,
+// 			parents: [GOOGLE_FOLDER_ID] // This should be a folder ID in a shared drive
+// 		},
+// 		media: {
+// 			mimeType,
+// 			body
+// 		},
+// 		fields: 'id, name, webViewLink',
+// 		supportsAllDrives: true // Add this parameter
+// 	});
 
-	return response.data;
-}
+// 	return response.data;
+// }
