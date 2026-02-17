@@ -83,9 +83,9 @@
 			{:else if type === 'file'}
 				<input type="file" {name} class="file-input" />
 			{:else if type === 'select'}
-				<select {name} bind:value>
-					<option {value}>
-						{value}
+				<select {name} bind:value class="select">
+					<option value={value??'Sin Agente'}>
+						{value?value:'Sin Agente asignado'}
 					</option>
 					{#each options as option}
 						<option value={option.id}>
@@ -133,21 +133,6 @@
 		margin: 0;
 		white-space: pre-wrap;
 		word-break: break-word;
-	}
-	textarea,
-	input[type='text'],
-	input[type='email'],
-	input[type='number'],
-	input[type='date'],
-	select {
-		width: 100%;
-		padding: 8px;
-		border-radius: 4px;
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		background: rgba(255, 255, 255, 0.1);
-		color: inherit;
-		font-family: inherit;
-		font-size: 14px;
 	}
 
 	select {
@@ -205,7 +190,6 @@
 	}
 	.btn-save-small {
 		background: var(--color-ganada, #4caf50);
-		color: white;
 	}
 	.btn-cancel-small {
 		background: rgba(255, 255, 255, 0.1);
@@ -214,5 +198,8 @@
 	.btn-save-small:hover,
 	.btn-cancel-small:hover {
 		opacity: 0.8;
+	}
+	.select {
+		width: fit-content;
 	}
 </style>

@@ -102,15 +102,14 @@ label span {
 	width: var(--d);
 	height: var(--d);
 	border-radius: 4px;
-	background-color: var(--color-error);
+	background: #f3f4f6;
 	color: #000;
 	transition: all 0.2s;
 	align-self: flex-end;
 }
 
 .close-btn:hover {
-	background: #f3f4f6;
-	color: #000;
+	background-color: var(--color-error);
 }
 
 .controls {

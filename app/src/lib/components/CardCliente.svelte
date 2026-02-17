@@ -67,9 +67,7 @@
 				/>
 			</section>
 
-			<section class="info-section">
-				<h3>Datos del Sistema</h3>
-
+			<section class="system-section">
 				<div class="detail-block">
 					<span class="label">Fecha de creación:</span>
 					<p class="value">
@@ -143,40 +141,11 @@
 		top: 0;
 		z-index: 99;
 	}
-
-	header h1 {
-		width: 100%;
-		margin: 0;
-	}
-
-	.close-btn {
-		position: absolute;
-		right: var(--a);
-		top: var(--a);
-		background: transparent;
-		border: none;
-		font-size: 24px;
-		line-height: 1;
-		padding: 0;
-		cursor: pointer;
-		opacity: 0.6;
-		transition: opacity 0.2s;
-		flex-shrink: 0;
-	}
-
-	.close-btn:hover {
-		opacity: 1;
-	}
-
 	.meta {
 		display: flex;
 		gap: var(--a);
 		flex-wrap: wrap;
 		font-size: 14px;
-	}
-
-	.meta p {
-		margin: 0;
 	}
 
 	.content {
@@ -191,7 +160,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--b, 12px);
-		padding: var(--a);
+		padding: var(--b) var(--a);
 		background: rgba(255, 255, 255, 0.05);
 		border-radius: 8px;
 	}
@@ -200,5 +169,16 @@
 		display: flex;
 		flex-direction: column;
 		gap: 4px;
+	}
+	.system-section{
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: var(--a);
+		border-top: 1px solid var(--color-secondary);
+		padding: var(--a);
+	}
+	.close-btn {
+		position: absolute;
 	}
 </style>

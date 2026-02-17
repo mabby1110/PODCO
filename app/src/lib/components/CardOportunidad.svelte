@@ -3,7 +3,7 @@
 	import { selectedEvent } from '$lib/stores/selectedEvent';
 	import { slide } from 'svelte/transition';
 	import PhaseAction from './PhaseAction.svelte';
-	import { invalidate, invalidateAll } from '$app/navigation';
+	import { invalidate } from '$app/navigation';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
@@ -13,11 +13,12 @@
 	// Agrupa todas las derivaciones en un solo $derived.by para mejor reactividad
 	const eventData = $derived.by(() => {
 		const event = $selectedEvent;
+		console.log(event);
 		if (!event) return null;
 
 		return {
 			id: event.id_oportunidad ?? null,
-			razon_social: clientes.find(c=>c.id == event.id_cliente).razon_social ?? null,
+			razon_social: clientes.find(c=>c.id == event.id_cliente)?.razon_social ?? 'El cliente fue eliminado',
 			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
 			fase: fases?.find((f) => f.id == event.fase),
 			historia: event.historia || null,
