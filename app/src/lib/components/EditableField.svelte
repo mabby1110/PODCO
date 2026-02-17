@@ -67,43 +67,44 @@
 
 	<div class="detail-block">
 		<div class="detail-header">
-			<span class="label">{label}:</span>
+			<h3>{label}:</h3>
 			{#if !isEditing}
 				<button type="button" class="btn-edit-small" onclick={toggleEdit}> ✏️ </button>
 			{/if}
 		</div>
-
-		{#if hint && !isEditing}
-			<p class="hint">{hint}</p>
-		{/if}
-
-		{#if isEditing}
-			{#if type === 'textarea'}
-				<textarea {name} bind:value={editedValue} {rows} {placeholder}></textarea>
-			{:else if type === 'file'}
-				<input type="file" {name} class="file-input" />
-			{:else if type === 'select'}
-				<select {name} bind:value class="select">
-					<option value={value??'Sin Agente'}>
-						{value?value:'Sin Agente asignado'}
-					</option>
-					{#each options as option}
-						<option value={option.id}>
-							{option.nombre}
-						</option>
-					{/each}
-				</select>
-			{:else}
-				<input {type} {name} bind:value={editedValue} {placeholder} />
+		<div class="detail-body">
+			{#if hint && !isEditing}
+				<p class="hint">{hint}</p>
 			{/if}
 
-			<div class="button-group-inline">
-				<button type="submit" class="btn-save-small">Guardar</button>
-				<button type="button" class="btn-cancel-small" onclick={toggleEdit}> Cancelar </button>
-			</div>
-		{:else}
-			<p class="value">{editedValue || 'Sin información'}</p>
-		{/if}
+			{#if isEditing}
+				{#if type === 'textarea'}
+					<textarea {name} bind:value={editedValue} {rows} {placeholder}></textarea>
+				{:else if type === 'file'}
+					<input type="file" {name} class="file-input" />
+				{:else if type === 'select'}
+					<select {name} bind:value class="select">
+						<option value={value ?? 'Sin Agente'}>
+							{value ? value : 'Sin Agente asignado'}
+						</option>
+						{#each options as option}
+							<option value={option.id}>
+								{option.nombre}
+							</option>
+						{/each}
+					</select>
+				{:else}
+					<input {type} {name} bind:value={editedValue} {placeholder} />
+				{/if}
+
+				<div class="button-group-inline">
+					<button type="submit" class="btn-save-small">Guardar</button>
+					<button type="button" class="btn-cancel-small" onclick={toggleEdit}> Cancelar </button>
+				</div>
+			{:else}
+				<p class="value">{editedValue || 'Sin información'}</p>
+			{/if}
+		</div>
 	</div>
 </form>
 
@@ -121,8 +122,8 @@
 		align-items: center;
 		justify-content: space-between;
 	}
-	.label {
-		font-size: 20px;
+	.detail-body {
+		padding-left: var(--b);
 	}
 	.hint {
 		font-size: 14px;

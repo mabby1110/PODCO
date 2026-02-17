@@ -11,6 +11,8 @@ export type ClientItem = {
     fecha_creacion: string;
     fecha_sync: string;
     oportunidades: string;
+    contactos: string;
+    ultima_actualizacion: string;
 };
 
 const COOKIE_NAME = 'selectedClient';

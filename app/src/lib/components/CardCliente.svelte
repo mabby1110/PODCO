@@ -3,6 +3,7 @@
 	import { slide } from 'svelte/transition';
 	import { selectedClient } from '$lib/stores/selectedClient';
 	import EditableField from './EditableField.svelte'; // ajusta la ruta según tu estructura
+	import FormEditableJsonList from './FormEditableJsonList.svelte';
 
 	const { agentes } = $derived(page.data);
 
@@ -29,8 +30,6 @@
 
 		<div class="content">
 			<section class="info-section">
-				<h3>Información General</h3>
-
 				<EditableField
 					label="Razón Social"
 					name="razon_social"
@@ -51,11 +50,6 @@
 					placeholder="Dirección completa"
 				/>
 
-				<div class="detail-block">
-					<span class="label">Tipo de Prospección:</span>
-					<p class="value">{$selectedClient.tipo_prospeccion || 'N/A'}</p>
-				</div>
-
 				<EditableField
 					label="Agente"
 					name="id_agente"
@@ -65,9 +59,20 @@
 					action="?/updateClient"
 					options={agentes}
 				/>
-			</section>
 
+				<FormEditableJsonList
+					label="Contactos"
+					name="contactos"
+					bind:jsonList={$selectedClient.contactos}
+					id={$selectedClient.id}
+					action="?/updateClient"
+				/>
+			</section>
 			<section class="system-section">
+				<div class="detail-block">
+					<span class="label">Tipo de Prospección:</span>
+					<p class="value">{$selectedClient.tipo_prospeccion || 'Cartera de clientes original'}</p>
+				</div>
 				<div class="detail-block">
 					<span class="label">Fecha de creación:</span>
 					<p class="value">
@@ -159,7 +164,7 @@
 	.info-section {
 		display: flex;
 		flex-direction: column;
-		gap: var(--b, 12px);
+		gap: var(--d);
 		padding: var(--b) var(--a);
 		background: rgba(255, 255, 255, 0.05);
 		border-radius: 8px;
@@ -170,11 +175,11 @@
 		flex-direction: column;
 		gap: 4px;
 	}
-	.system-section{
+	.system-section {
 		display: flex;
+		gap: var(--b);
 		flex-direction: row;
 		flex-wrap: wrap;
-		gap: var(--a);
 		border-top: 1px solid var(--color-secondary);
 		padding: var(--a);
 	}
