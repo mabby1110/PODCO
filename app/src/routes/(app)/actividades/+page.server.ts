@@ -1,7 +1,6 @@
 import type { Actions, PageServerLoad } from './$types';
-import { appendRow, mapFormDataToColumns, updateRowById, uploadToFolder, type FieldColumnMap } from '$lib/server/googleApi';
+import { appendRow, mapFormDataToColumns, updateRowById, type FieldColumnMap } from '$lib/server/googleApi';
 import { fail } from '@sveltejs/kit';
-import { Readable } from 'stream';
 
 export const actions: Actions = {
 	add: async ({ request }) => {
@@ -138,22 +137,22 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	upload: async ({ request }) => {
-		const data = await request.formData();
-		const file = data.get('cotizacion') as File;
+	// upload: async ({ request }) => {
+	// 	const data = await request.formData();
+	// 	const file = data.get('cotizacion') as File;
 
-		if (!file || file.size === 0) {
-			throw new Error('Archivo requerido');
-		}
+	// 	if (!file || file.size === 0) {
+	// 		throw new Error('Archivo requerido');
+	// 	}
 
-		const buffer = Buffer.from(await file.arrayBuffer());
-		const stream = Readable.from(buffer);
+	// 	const buffer = Buffer.from(await file.arrayBuffer());
+	// 	const stream = Readable.from(buffer);
 
-		const uploaded = await uploadToFolder(file.name, file.type, stream);
+	// 	const uploaded = await uploadToFolder(file.name, file.type, stream);
 
-		return {
-			success: true,
-			file: uploaded
-		};
-	}
+	// 	return {
+	// 		success: true,
+	// 		file: uploaded
+	// 	};
+	// }
 };
