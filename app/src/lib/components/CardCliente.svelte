@@ -2,8 +2,9 @@
 	import { page } from '$app/state';
 	import { slide } from 'svelte/transition';
 	import { selectedClient } from '$lib/stores/selectedClient';
-	import EditableField from './EditableField.svelte'; // ajusta la ruta según tu estructura
+	import EditableField from './EditableField.svelte';
 	import FormEditableJsonList from './FormEditableJsonList.svelte';
+	import EditableSelectField from './EditableSelectField.svelte';
 
 	const { agentes } = $derived(page.data);
 
@@ -50,14 +51,14 @@
 					placeholder="Dirección completa"
 				/>
 
-				<EditableField
+				<EditableSelectField
 					label="Agente"
 					name="id_agente"
-					type="select"
-					bind:value={$selectedClient.id_agente}
 					id={$selectedClient.id}
-					action="?/updateClient"
+					bind:value={$selectedClient.id_agente}
 					options={agentes}
+					action="?/updateClient"
+					hint="Asignar responsable"
 				/>
 
 				<FormEditableJsonList

@@ -4,7 +4,6 @@
 	import Searchbar from '$lib/components/Searchbar.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
 	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
 	import { motivosOportunidad } from '$lib';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
@@ -19,7 +18,6 @@
 	let hora = $state('08:00');
 	let inicio = $state('');
 	let fin = $state('');
-	let selectedClient = $state('');
 
 	function getToday() {
 		const t = new Date();

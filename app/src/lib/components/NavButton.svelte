@@ -15,6 +15,8 @@
 	let panelElement: HTMLElement;
 	let panelToolsElement: HTMLElement | null = null;
 
+	let blockNextClick = false;
+
 	$effect(() => {
 		const unsubscribe = appState.subscribe((state) => {
 			storeState = state;
@@ -24,7 +26,23 @@
 		return unsubscribe;
 	});
 
+	$effect(() => {
+		const cancel = (e: MouseEvent) => {
+			if (!blockNextClick) return;
+			e.stopPropagation();
+			e.preventDefault();
+			blockNextClick = false;
+		};
+
+		window.addEventListener('click', cancel, true);
+		return () => window.removeEventListener('click', cancel, true);
+	});
+
 	function handlePointerDown(e: PointerEvent) {
+		e.stopPropagation();
+		e.preventDefault();
+		blockNextClick = true;
+
 		const target = e.target as HTMLElement;
 		if (target.closest('.nav-links')) return;
 
@@ -38,6 +56,7 @@
 	}
 
 	function handlePointerMove(e: PointerEvent) {
+		e.stopPropagation();
 		if (!isDragging) return;
 
 		let x = e.clientX - startX;
@@ -60,6 +79,9 @@
 	}
 
 	function handlePointerUp(e: PointerEvent) {
+		e.stopPropagation();
+		e.preventDefault();
+
 		if (dragTimeout) {
 			clearTimeout(dragTimeout);
 			dragTimeout = null;
@@ -83,7 +105,8 @@
 		panelElement?.releasePointerCapture(e.pointerId);
 	}
 
-	function handlePointerCancel() {
+	function handlePointerCancel(e: PointerEvent) {
+		e.stopPropagation();
 		if (dragTimeout) {
 			clearTimeout(dragTimeout);
 			dragTimeout = null;
@@ -100,22 +123,18 @@
 		let x = offsetX;
 		let y = offsetY;
 
-		// derecha
 		if (panelRect.right > window.innerWidth) {
 			x -= panelRect.right - window.innerWidth;
 		}
 
-		// izquierda
 		if (panelRect.left < 0) {
 			x -= panelRect.left;
 		}
 
-		// abajo (panel + menú)
 		if (panelRect.bottom + toolsRect.height > window.innerHeight) {
 			y -= panelRect.bottom + toolsRect.height - window.innerHeight;
 		}
 
-		// arriba
 		if (panelRect.top < 0) {
 			y -= panelRect.top;
 		}
@@ -126,26 +145,45 @@
 	}
 </script>
 
-<div class="nav-container" style="transform: translate({offsetX}px, {offsetY}px);">
+<div
+	class="nav-container"
+	style="transform: translate({offsetX}px, {offsetY}px);"
+	onclick={(e) => {
+		e.stopPropagation();
+		e.preventDefault();
+	}}
+>
 	{#if $appState.pageActions}
-		<ControlsPanel />
+		<div bind:this={panelToolsElement}>
+			<ControlsPanel />
+		</div>
+
 		<div class="page-controls">
 			<Logout />
 			<button
 				in:fade={{ delay: 300, duration: 300 }}
 				class="butter actions-button"
-				onclick={() => appState.resetPanelPosition()}
+				onclick={(e) => {
+					e.stopPropagation();
+					e.preventDefault();
+					appState.resetPanelPosition();
+				}}
 			>
-				Resetear posición</button
-			>
+				Resetear posición
+			</button>
 		</div>
 	{/if}
+
 	<button
 		bind:this={panelElement}
 		onpointerdown={handlePointerDown}
 		onpointermove={handlePointerMove}
 		onpointerup={handlePointerUp}
 		onpointercancel={handlePointerCancel}
+		onclick={(e) => {
+			e.stopPropagation();
+			e.preventDefault();
+		}}
 		class="butter"
 		class:dragging={isDragging}
 	>
@@ -219,11 +257,12 @@
 		margin: 0;
 		font-weight: 600;
 	}
-	.actions-button,
-	.reset-button {
+
+	.actions-button {
 		background-color: var(--color-highlight);
 		width: fit-content;
 	}
+
 	.page-controls {
 		display: flex;
 		gap: var(--a);

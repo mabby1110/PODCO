@@ -80,7 +80,7 @@
 		flex-direction: column;
 		overflow: auto;
 		width: 100%;
-		padding: 0 var(--a) var(--b);
+		padding: 0 var(--d) var(--a) var(--b);
 		gap: var(--b);
 	}
 	.list {
