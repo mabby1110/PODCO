@@ -148,10 +148,7 @@
 <div
 	class="nav-container"
 	style="transform: translate({offsetX}px, {offsetY}px);"
-	onclick={(e) => {
-		e.stopPropagation();
-		e.preventDefault();
-	}}
+
 >
 	{#if $appState.pageActions}
 		<div bind:this={panelToolsElement}>

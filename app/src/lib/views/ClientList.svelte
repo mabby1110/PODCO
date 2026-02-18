@@ -9,15 +9,20 @@
 		| 'razon_social'
 		| 'ubicacion'
 		| 'tipo_prospeccion'
-		| 'fecha_creacion'
+		| 'ultima_actualizacion'
 		| 'oportunidades';
 	type SortOrder = 'asc' | 'desc';
 
 	let sortField = $state<SortField>('razon_social');
 	let sortOrder = $state<SortOrder>('asc');
 
+	// toggle vista
+	let showGlobal = $state(false);
+	let canGlobal = $derived($profile?.isAdmin === true);
+
 	const sinAgente = $derived(clients?.filter((c) => c.id_agente == '') ?? []);
 	const misClientes = $derived(clients?.filter((c) => c.id_agente === $profile?.id) ?? []);
+	const todos = $derived(clients ?? []);
 
 	const clientesPorAgente = $derived(
 		(agenteId: string) => clients?.filter((c) => c.id_agente === agenteId) ?? []
@@ -42,11 +47,27 @@
 
 <div class="controls">
 	<h2>Clientes</h2>
-	<FilterClientList bind:sortField bind:sortOrder />
+
+	<div class="controls-row">
+		<FilterClientList bind:sortField bind:sortOrder />
+
+		{#if canGlobal}
+			<button class="butter" type="button" onclick={() => (showGlobal = !showGlobal)}>
+				{showGlobal ? 'Vista por agente' : 'Vista global'}
+			</button>
+		{/if}
+	</div>
 </div>
 
 <div class="view-container">
-	{#if $profile?.isAdmin}
+	{#if canGlobal && showGlobal}
+		<h3>Todos <span class="count">({todos.length})</span></h3>
+		<div class="list">
+			{#each sortClients(todos) as client (client.id)}
+				<CardC {client} />
+			{/each}
+		</div>
+	{:else if $profile?.isAdmin}
 		<h3>Sin Asignar <span class="count">({sinAgente.length})</span></h3>
 		<div class="list">
 			{#each sortClients(sinAgente) as client (client.id)}
@@ -57,7 +78,6 @@
 		{#each agentes as agente (agente.id)}
 			{@const clientesAgente = clientesPorAgente(agente.id)}
 			<h3>{agente.nombre} <span class="count">({clientesAgente.length})</span></h3>
-			<!-- <p>{agente.id}</p> -->
 			<div class="list">
 				{#each sortClients(clientesAgente) as client (client.id)}
 					<CardC {client} />
@@ -75,25 +95,36 @@
 </div>
 
 <style>
+	.controls-row {
+		display: flex;
+		gap: var(--a);
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
 	.view-container {
 		display: flex;
 		flex-direction: column;
-		overflow: auto;
 		width: 100%;
 		padding: 0 var(--d) var(--a) var(--b);
 		gap: var(--b);
 	}
+
 	.list {
-		min-height: 40vh;
-		max-height: 60vh;
+		min-height: 20vh;
+		max-height: 80vh;
+
 		display: flex;
-		gap: var(--a);
 		flex-direction: column;
+		gap: var(--a);
+
 		overflow: auto;
+
 		border: 1px solid var(--color-secondary);
 		border-radius: var(--a);
 		padding: var(--a) var(--b);
 	}
+
 	.count {
 		font-weight: normal;
 		color: var(--text-secondary, #666);

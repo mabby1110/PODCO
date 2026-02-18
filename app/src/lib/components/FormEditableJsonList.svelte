@@ -13,20 +13,42 @@
 		contactos: ContactItem[];
 	};
 
-	let isEditing = $state(false);
 	let lista = $state<ContactData[]>(jsonList && jsonList !== '' ? JSON.parse(jsonList) : []);
+
+	let isEditing = $state(false);
+	let showPersonForm = $state(false);
 
 	let contact_name = $state('');
 	let contact_type = $state('telefono');
 	let contact_value = $state('');
 	let contactos = $state<ContactItem[]>([]);
+
 	let editIndex = $state<number | null>(null);
 	let editPersonIndex = $state<number | null>(null);
 
 	let contacto_compuesto = $derived(JSON.stringify(lista));
 
-	function toggleEdit() {
-		isEditing = !isEditing;
+	function openNewPerson() {
+		isEditing = true;
+		showPersonForm = true;
+		resetPersonForm();
+	}
+
+	function editPersona(i: number) {
+		const p = lista[i];
+		if (!p) return;
+		isEditing = true;
+		showPersonForm = true;
+		editPersonIndex = i;
+		contact_name = p.nombre;
+		contactos = [...p.contactos];
+	}
+
+	function confirmRemovePersona(i: number) {
+		if (!confirm('Eliminar persona y sus contactos?')) return;
+		lista = lista.filter((_, idx) => idx !== i);
+		jsonList = contacto_compuesto;
+		queueMicrotask(() => formEl?.requestSubmit());
 	}
 
 	function resetForm() {
@@ -40,6 +62,12 @@
 		contactos = [];
 		editPersonIndex = null;
 		resetForm();
+	}
+
+	function cancelAll() {
+		isEditing = false;
+		showPersonForm = false;
+		resetPersonForm();
 	}
 
 	function submitContacto() {
@@ -62,12 +90,13 @@
 		editIndex = i;
 	}
 
-	function removeContacto(index: number) {
-		contactos = contactos.filter((_, i) => i !== index);
-		if (editIndex === index) resetForm();
+	function confirmRemoveContacto(i: number) {
+		if (!confirm('Eliminar contacto?')) return;
+		contactos = contactos.filter((_, idx) => idx !== i);
+		if (editIndex === i) resetForm();
 	}
 
-	function submitPersona() {
+	function submitPersonaLocal() {
 		if (!contact_name) return;
 		const persona = { nombre: contact_name, contactos };
 		if (editPersonIndex !== null) {
@@ -75,32 +104,20 @@
 		} else {
 			lista = [...lista, persona];
 		}
-		resetPersonForm();
+		jsonList = contacto_compuesto;
 	}
 
-	function editPersona(i: number) {
-		const p = lista[i];
-		if (!p) return;
-		contact_name = p.nombre;
-		contactos = p.contactos;
-		editPersonIndex = i;
-	}
-
-	function removePersona(index: number) {
-		lista = lista.filter((_, i) => i !== index);
-		if (editPersonIndex === index) resetPersonForm();
-	}
+	let formEl: HTMLFormElement | null = null;
 
 	function handleSubmit() {
-		jsonList = contacto_compuesto;
 		return async ({ update }: any) => {
-			isEditing = false;
 			await update();
+			cancelAll();
 		};
 	}
 </script>
 
-<form method="POST" {action} use:enhance={handleSubmit}>
+<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
 	<input type="hidden" name="id" value={id} />
 	<input type="hidden" {name} value={contacto_compuesto} />
 
@@ -108,130 +125,181 @@
 		<div class="detail-header">
 			<h3 class="label">{label}:</h3>
 			{#if !isEditing}
-				<button type="button" class="btn-edit-small" onclick={toggleEdit}>✏️</button>
+				<button type="button" class="btn-edit-small" onclick={() => (isEditing = true)}>✏️</button>
 			{/if}
 		</div>
+
 		<div class="detail-body">
-			{#if isEditing}
-				{#each lista as persona, i}
+			{#if isEditing && showPersonForm}
+				<div class="person-form">
+					<label class="field">
+						<span>Nombre</span>
+						<input bind:value={contact_name} />
+					</label>
+
+					<div class="contact-row">
+						<label class="field">
+							<span>Contacto</span>
+							<input bind:value={contact_value} />
+						</label>
+
+						<label class="field">
+							<span>Medio</span>
+							<select bind:value={contact_type}>
+								<option value="telefono">Teléfono</option>
+								<option value="whatsapp">WhatsApp</option>
+								<option value="email">Correo</option>
+								<option value="linkedin">LinkedIn</option>
+								<option value="otro">Otro</option>
+							</select>
+						</label>
+
+						<button type="button" class="butter" onclick={submitContacto}>
+							{editIndex !== null ? 'Actualizar contacto' : 'Agregar contacto'}
+						</button>
+
+						{#if editIndex !== null}
+							<button type="button" class="butter" onclick={resetForm}>Cancelar</button>
+						{/if}
+					</div>
+
 					<div class="contact-list">
-						<div class="contact-row">
-							<strong>{persona.nombre}</strong>
-							<button class="butter edit" type="button" onclick={() => editPersona(i)}>✏️</button>
-							<button class="close" type="button" onclick={() => removePersona(i)}>🗑️</button>
-						</div>
-						{#each persona.contactos as c}
-							<p>{c.type}: {c.value}</p>
+						{#each contactos as c, i}
+							<div class="contact-row">
+								<span>{c.type}: {c.value}</span>
+								<button type="button" class="btn-edit-small" onclick={() => editContacto(i)}>✏️</button>
+								<button type="button" class="btn-del-small" onclick={() => confirmRemoveContacto(i)}>🗑️</button>
+							</div>
 						{/each}
 					</div>
-				{/each}
 
-				<hr />
-
-				<label>
-					<span>{editPersonIndex !== null ? 'Editando persona' : 'Nueva persona'}</span>
-					<input bind:value={contact_name} placeholder="Nombre completo" />
-				</label>
-
-				<div class="contact-row">
-					<label>
-						<span>Contacto</span>
-						<input bind:value={contact_value} placeholder="3322558174 o correo@empresa.com" />
-					</label>
-					<label>
-						<span>Medio</span>
-						<select bind:value={contact_type}>
-							<option value="telefono">Teléfono</option>
-							<option value="whatsapp">WhatsApp</option>
-							<option value="email">Correo</option>
-							<option value="linkedin">LinkedIn</option>
-							<option value="otro">Otro</option>
-						</select>
-					</label>
-					<button class="butter" type="button" onclick={submitContacto}>
-						{editIndex !== null ? 'Actualizar' : 'Agregar'}
-					</button>
-					{#if editIndex !== null}
-						<button class="butter" type="button" onclick={resetForm}>Cancelar</button>
-					{/if}
-				</div>
-
-				<div class="contact-list">
-					{#each contactos as contacto, i}
-						<div class="contact-row">
-							<span>{contacto.type}: {contacto.value}</span>
-							<button class="butter edit" type="button" onclick={() => editContacto(i)}>✏️</button>
-							<button class="close-btn" type="button" onclick={() => removeContacto(i)}>🗑️</button>
-						</div>
-					{/each}
-				</div>
-
-				<button class="butter" type="button" onclick={submitPersona}>
-					{editPersonIndex !== null ? 'Actualizar persona' : 'Agregar persona'}
-				</button>
-				{#if editPersonIndex !== null}
-					<button class="butter" type="button" onclick={resetPersonForm}>Cancelar</button>
-				{/if}
-
-				<hr />
-
-				<button class="butter" type="button" onclick={toggleEdit}>Cerrar</button>
-				<button class="butter" type="submit">Guardar</button>
-			{:else if lista.length > 0}
-				<div class="contact-list">
-					{#each lista as persona}
-						<p><strong>{persona.nombre}</strong></p>
-						{#each persona.contactos as c}
-							<p>{c.type}: {c.value}</p>
-						{/each}
-					{/each}
+					<div class="form-actions">
+						<button
+							type="submit"
+							class="butter"
+							onclick={submitPersonaLocal}>
+							{editPersonIndex !== null ? 'Actualizar persona' : 'Agregar persona'}
+						</button>
+						<button type="button" class="butter" onclick={cancelAll}>Cancelar</button>
+					</div>
 				</div>
 			{:else}
-				<p class="value">Sin información</p>
+				{#if lista.length > 0}
+					<div class="contact-list">
+						{#each lista as persona, i}
+							<div class="person-card">
+								<div class="contact-row">
+									<strong>{persona.nombre}</strong>
+									{#if isEditing}
+										<button type="button" class="btn-edit-small" onclick={() => editPersona(i)}>✏️</button>
+										<button type="button" class="btn-del-small" onclick={() => confirmRemovePersona(i)}>🗑️</button>
+									{/if}
+								</div>
+								{#each persona.contactos as c}
+									<div>{c.type}: {c.value}</div>
+								{/each}
+							</div>
+						{/each}
+
+						{#if isEditing}
+							<button type="button" class="butter" onclick={openNewPerson}>
+								Nueva persona
+							</button>
+							<button type="button" class="butter" onclick={cancelAll}>
+								Cerrar
+							</button>
+						{/if}
+					</div>
+				{:else}
+					{#if isEditing}
+						<button type="button" class="butter" onclick={openNewPerson}>
+							Nueva persona
+						</button>
+						<button type="button" class="butter" onclick={cancelAll}>
+							Cerrar
+						</button>
+					{:else}
+						<p class="value">Sin información</p>
+					{/if}
+				{/if}
 			{/if}
 		</div>
 	</div>
 </form>
 
 <style>
-	.contact-row {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-		align-items: end;
-	}
 	.detail-block {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
 	}
+
 	.detail-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 	}
+
 	.detail-body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--b);
 		padding-left: var(--b);
 	}
+
 	.label {
 		font-size: 20px;
 	}
+
 	.contact-list {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
-		align-items: baseline;
 	}
-	.btn-edit-small {
+
+	.person-card {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+		padding: var(--a);
+		border: 1px solid #ddd;
+	}
+
+	.contact-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		align-items: center;
+	}
+
+	.field {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+	}
+
+	.person-form {
+		display: flex;
+		flex-direction: column;
+		gap: var(--b);
+	}
+
+	.form-actions {
+		display: flex;
+		gap: var(--a);
+	}
+
+	.btn-edit-small,
+	.btn-del-small {
 		background: none;
 		border: none;
 		cursor: pointer;
-		font-size: 18px;
-		padding: 4px;
+		font-size: 16px;
 		opacity: 0.7;
-		transition: opacity 0.2s;
 	}
-	.btn-edit-small:hover {
+
+	.btn-edit-small:hover,
+	.btn-del-small:hover {
 		opacity: 1;
 	}
 </style>

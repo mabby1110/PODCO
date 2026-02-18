@@ -58,6 +58,8 @@ select {
 }
 html,
 body {
+		max-width: 1800px;
+		margin: auto;
 	position: fixed;
 	top: 0;
 	bottom: 0;

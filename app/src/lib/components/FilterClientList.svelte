@@ -3,7 +3,7 @@
 		| 'razon_social'
 		| 'ubicacion'
 		| 'tipo_prospeccion'
-		| 'fecha_creacion'
+		| 'ultima_actualizacion'
 		| 'oportunidades';
 	type SortOrder = 'asc' | 'desc';
 
@@ -45,10 +45,10 @@
 	</button> -->
 	<button
 		class="butter"
-		class:active={sortField === 'fecha_creacion'}
-		onclick={() => toggleSort('fecha_creacion')}
+		class:active={sortField === 'ultima_actualizacion'}
+		onclick={() => toggleSort('ultima_actualizacion')}
 	>
-		Fecha {sortField === 'fecha_creacion' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+		Fecha {sortField === 'ultima_actualizacion' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
 	</button>
 	<button
 		class="butter"
