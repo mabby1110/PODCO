@@ -1,16 +1,42 @@
 {
-  "name": "electron",
+  "name": "podco",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron .",
+    "build": "electron-builder"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
-    "electron": "^40.6.0"
+    "electron": "^40.6.0",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.podco.app",
+    "productName": "podco",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "assets/**/*",
+      {
+        "from": "../app/build",
+        "to": "app/build"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }
