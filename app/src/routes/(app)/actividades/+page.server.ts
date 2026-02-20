@@ -18,7 +18,8 @@ export const actions: Actions = {
 			formData.get('cotizaciones') || null,
 			formData.get('requisitos') || null,
 			new Date().toISOString(),
-			null
+			null,
+			formData.get('motivo') || null
 		];
 		
 		console.log(formData, rowData);

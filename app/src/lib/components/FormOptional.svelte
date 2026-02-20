@@ -24,7 +24,6 @@
 		submitUpdate = false;
 		submitCancel = false;
 	}
-	$effect(() => console.log(submitCancel, submitUpdate, isOpen));
 </script>
 
 {#if !isOpen}

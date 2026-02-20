@@ -13,7 +13,6 @@
 	// Agrupa todas las derivaciones en un solo $derived.by para mejor reactividad
 	const eventData = $derived.by(() => {
 		const event = $selectedEvent;
-		console.log(event);
 		if (!event) return null;
 
 		return {

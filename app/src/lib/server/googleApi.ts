@@ -97,17 +97,17 @@ export async function updateRowById(
 	newValues: { [key: string]: any },
 	range: string = 'oportunidades!A:Z'
 ) {
-	const values = await getRange(range); // Ya devuelve JSON, no array[][]
-	// Buscar la fila por ID en la propiedad id_oportunidad
-	const rowIndex = values.findIndex((row) => row.id === id);
+	const values = await getRange(range);
+	// console.log(values);
+	const rowIndex = values.findIndex((row) => row.id_oportunidad === id);
 	
 	if (rowIndex === -1) {
 		throw new Error(`No se encontró registro con ID: ${id}`);
 	}
-	
+
 	const rowNumber = rowIndex + 2; // +1 por headers, +1 por índice base-0
 	const sheetName = range.split('!')[0];
-	
+
 	// Preparar las actualizaciones para cada columna
 	const data = Object.entries(newValues).map(([column, value]) => ({
 		range: `${sheetName}!${column}${rowNumber}`,
