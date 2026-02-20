@@ -4,7 +4,7 @@
 	import Searchbar from '$lib/components/Searchbar.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
 	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
-	import { motivosOportunidad } from '$lib';
+	import { motivosOportunidad, motivosProspeccion } from '$lib';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import FormSelectAgente from './FormSelectAgente.svelte';
@@ -18,7 +18,6 @@
 	let inicio = $state('');
 	let fin = $state('');
 	let agenteSeleccionado = $state<string>('');
-
 	let clientesFiltrados = $derived(
 		$profile?.isAdmin
 			? agenteSeleccionado
@@ -95,7 +94,7 @@
 				<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
 
 				<Searchbar data={clientesFiltrados} keyColumns={['razon_social']} />
-				<FormSelectInput list={motivosOportunidad} />
+				<FormSelectInput list={motivosProspeccion.concat(motivosOportunidad)} />
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
 						label="Requisitos"
@@ -110,7 +109,8 @@
 				<label>
 					<span>Inicio de actividad</span>
 					<div class="datetime-split">
-						<input type="date" bind:value={fecha} min={getToday()} required />
+						<!-- <input type="date" bind:value={fecha} min={getToday()} required /> -->
+						<input type="date" bind:value={fecha} required />
 
 						<select bind:value={hora} required>
 							{#each generarHoras() as h}

@@ -59,7 +59,8 @@
         <span>{title}</span>
     
         <div class="datetime-split">
-            <input class="butter" type="date" bind:value={fecha} min={getToday()} required />
+            <!-- <input class="butter" type="date" bind:value={fecha} min={getToday()} required /> -->
+            <input class="butter" type="date" bind:value={fecha} required />
     
             <select class="butter" bind:value={hora} required>
                 {#each generarHoras() as h}
