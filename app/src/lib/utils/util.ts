@@ -38,3 +38,16 @@ export function getDurationForPhase(fase: string | number) {
 	};
 	return durationMap[String(fase)] || 10;
 }
+
+export function filtrarPorAgente(
+  lista: [],
+  agenteId: string
+){
+  return lista.filter((item: any) => {
+    return (
+      item.id_agente === agenteId
+    //   item.id_agente === "" ||
+    //   item.id_agente === null
+    );
+  });
+}

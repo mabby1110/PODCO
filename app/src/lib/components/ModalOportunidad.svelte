@@ -8,16 +8,24 @@
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import FormSelectAgente from './FormSelectAgente.svelte';
+	import { filtrarPorAgente } from '$lib/utils/util';
+	import { profile } from '$lib/stores/profileStore.svelte';
 	let { data } = $props();
 
-	let selectedDataItem = $state(null);
-
-	// --- Pickers separados ---
 	let requisitos = $state('');
 	let fecha = $state('');
 	let hora = $state('08:00');
 	let inicio = $state('');
 	let fin = $state('');
+	let agenteSeleccionado = $state<string>('');
+
+	let clientesFiltrados = $derived(
+		$profile?.isAdmin
+			? agenteSeleccionado
+				? filtrarPorAgente(data.clientes, agenteSeleccionado)
+				: data.clientes
+			: filtrarPorAgente(data.clientes, String($profile?.id))
+	);
 
 	function getToday() {
 		const t = new Date();
@@ -81,12 +89,12 @@
 				action="?/add"
 				use:enhance={() => {
 					appState.toggleModalOp();
-					selectedDataItem = null;
 					alert('creado con exito!');
 				}}
 			>
-				<FormSelectAgente agentes={data.agentes}/>
-				<Searchbar data={data.clientes} keyColumns={['razon_social']} />
+				<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
+
+				<Searchbar data={clientesFiltrados} keyColumns={['razon_social']} />
 				<FormSelectInput list={motivosOportunidad} />
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput

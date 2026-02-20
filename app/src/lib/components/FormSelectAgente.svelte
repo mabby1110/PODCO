@@ -6,17 +6,28 @@
 		nombre: string;
 	};
 
-	let { agentes }: { agentes: Agente[] } = $props();
-
-	let selectedClient = $state('');
+	let {
+		agentes,
+		selected = $bindable<string>()
+	}: {
+		agentes: Agente[];
+		selected?: string;
+	} = $props();
 </script>
 
 {#if $profile?.isAdmin}
 	<label>
 		<span>Seleccionar Agente</span>
-		<select name="id_agente" bind:value={selectedClient} class="butter" required>
+		<select
+			name="id_agente"
+			bind:value={selected}
+			class="butter"
+			required
+		>
 			{#each agentes as agente}
-				<option value={String(agente.id)}>{agente.nombre}</option>
+				<option value={String(agente.id)}>
+					{agente.nombre}
+				</option>
 			{/each}
 		</select>
 	</label>
