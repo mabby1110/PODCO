@@ -98,7 +98,7 @@
 	.detail-block {
 		display: flex;
 		flex-direction: column;
-		gap: var(--a, 8px);
+		gap: var(--a);
 	}
 	.detail-header {
 		display: flex;

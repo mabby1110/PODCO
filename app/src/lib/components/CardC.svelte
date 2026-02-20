@@ -2,6 +2,7 @@
 	import { selectedClient } from '$lib/stores/selectedClient';
 
 	let { client } = $props();
+	console.log(client);
 	function select() {
 		selectedClient.set({ ...client });
 	}

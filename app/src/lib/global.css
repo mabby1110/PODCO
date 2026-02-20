@@ -131,6 +131,9 @@ label span {
 .success {
 	background-color: var(--color-ganada);
 }
+.disabled {
+	background-color: var(--color-muted);
+}
 @media (min-width: 500px) {
 	html,
 	body {

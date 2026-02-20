@@ -5,9 +5,9 @@
 	import EditableField from './EditableField.svelte';
 	import FormEditableJsonList from './FormEditableJsonList.svelte';
 	import EditableSelectField from './EditableSelectField.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	const { agentes } = $derived(page.data);
-
 	function closeCard(e: MouseEvent) {
 		e.stopPropagation();
 		selectedClient.clear();
@@ -50,16 +50,24 @@
 					action="?/updateClient"
 					placeholder="Dirección completa"
 				/>
-
-				<EditableSelectField
-					label="Agente"
-					name="id_agente"
-					id={$selectedClient.id}
-					bind:value={$selectedClient.id_agente}
-					options={agentes}
-					action="?/updateClient"
-					hint="Asignar responsable"
-				/>
+				{#if $profile?.isAdmin}
+					<EditableSelectField
+						label="Agente"
+						name="id_agente"
+						id={$selectedClient.id}
+						bind:value={$selectedClient.id_agente}
+						options={agentes}
+						action="?/updateClient"
+						hint="Asignar responsable"
+					/>
+				{:else}
+					<div class="detail-block">
+						<h3 class="label">Agente:</h3>
+						<div class="detail-body">
+							<p class="value">{$profile?.nombre}</p>
+						</div>
+					</div>
+				{/if}
 
 				<FormEditableJsonList
 					label="Contactos"
@@ -174,7 +182,13 @@
 	.detail-block {
 		display: flex;
 		flex-direction: column;
-		gap: 4px;
+		gap: var(--a);
+	}
+	.detail-block .detail-body .value {
+		padding-left: var(--b);
+		display: flex;
+		gap: var(--a);
+		flex-wrap: wrap;
 	}
 	.system-section {
 		display: flex;

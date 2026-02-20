@@ -18,6 +18,15 @@
 	let hora = $state<string>('08:00');
 	let inicio = $state<string>('');
 	let fin = $state<string>('');
+	let matches = $derived(
+		razon_social.trim().length > 0
+			? (data.clientes?.filter((c) =>
+					c.razon_social.toLowerCase().includes(razon_social.toLowerCase().trim())
+				) ?? [])
+			: []
+	);
+
+	let isDuplicate = $derived(razon_social.trim() === '' || matches.length > 0);
 
 	function getToday() {
 		const t = new Date();
@@ -96,6 +105,19 @@
 					/>
 				</label>
 
+				{#if matches.length > 0}
+					<ul class="matches">
+						{#each matches as match}
+							<li
+								class:exact={match.razon_social.toLowerCase().trim() ===
+									razon_social.toLowerCase().trim()}
+							>
+								{match.razon_social}
+							</li>
+						{/each}
+					</ul>
+				{/if}
+
 				<FormSelectMotivo title="Tipo de prospeccion" list={motivosProspeccion} />
 				<FormSelectAgente agentes={data.agentes} />
 
@@ -132,7 +154,11 @@
 				</label>
 
 				<div class="actions">
-					<button class="butter success" type="submit">Agregar</button>
+					<button
+						class="butter {isDuplicate ? 'disabled' : 'success'}"
+						type="submit"
+						disabled={isDuplicate}>Agregar</button
+					>
 				</div>
 			</form>
 		</div>
@@ -203,9 +229,20 @@
 		border-top: 1px solid #e5e5e5;
 	}
 
-	.selected-client {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
+	.matches {
+		list-style: none;
+		margin: -0.5rem 0 0;
+		padding: 0;
+		font-size: 0.85rem;
+	}
+
+	.matches li {
+		padding: 0.2rem 0;
+		color: #555;
+	}
+
+	.matches li.exact {
+		color: #c0392b;
+		font-weight: 600;
 	}
 </style>
