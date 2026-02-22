@@ -5,7 +5,9 @@
 	import { profile } from '$lib/stores/profileStore.svelte.js';
 
 	let { children, data } = $props();
-	profile.set(data.profile);
+	$effect(() => {
+		profile.set(data.profile);
+	});
 </script>
 
 <nav class="nav-container">

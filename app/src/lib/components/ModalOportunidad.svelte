@@ -189,8 +189,7 @@
 		gap: 0.25rem;
 	}
 
-	input,
-	textarea {
+	input {
 		padding: 0.5rem;
 		border: 1px solid #d1d5db;
 		border-radius: 4px;

@@ -5,15 +5,19 @@
 	import Logout from './Logout.svelte';
 
 	let expanded = $derived($appState.pageActions);
+
 	let isDragging = $state(false);
-	let dragTimeout: ReturnType<typeof setTimeout> | null = null;
+	let moved = $state(false);
+
 	let startX = $state(0);
 	let startY = $state(0);
 	let offsetX = $state(0);
 	let offsetY = $state(0);
+
 	let storeState = $state({ panelPosition: { x: 0, y: 0 } });
+
 	let panelElement: HTMLElement;
-	let panelToolsElement: HTMLElement | null = null;
+	let panelToolsElement = $state<HTMLElement | null>(null);
 
 	let blockNextClick = false;
 
@@ -40,59 +44,49 @@
 
 	function handlePointerDown(e: PointerEvent) {
 		e.stopPropagation();
-		e.preventDefault();
-		blockNextClick = true;
 
 		const target = e.target as HTMLElement;
 		if (target.closest('.nav-links')) return;
 
-		startX = e.clientX - offsetX;
-		startY = e.clientY - offsetY;
+		startX = e.clientX;
+		startY = e.clientY;
+		moved = false;
 
-		dragTimeout = setTimeout(() => {
-			isDragging = true;
-			panelElement?.setPointerCapture(e.pointerId);
-		}, 150);
+		panelElement?.setPointerCapture(e.pointerId);
 	}
 
 	function handlePointerMove(e: PointerEvent) {
-		e.stopPropagation();
+		if (!panelElement.hasPointerCapture(e.pointerId)) return;
+
+		const dx = e.clientX - startX;
+		const dy = e.clientY - startY;
+
+		if (!moved && Math.hypot(dx, dy) > 6) {
+			moved = true;
+			isDragging = true;
+		}
+
 		if (!isDragging) return;
 
-		let x = e.clientX - startX;
-		let y = e.clientY - startY;
+		offsetX += dx;
+		offsetY += dy;
 
-		const rect = panelElement.getBoundingClientRect();
-
-		const minX = -rect.left + offsetX;
-		const minY = -rect.top + offsetY;
-		const maxX = window.innerWidth - rect.right + offsetX;
-		const maxY = window.innerHeight - rect.bottom + offsetY;
-
-		if (x < minX) x = minX;
-		if (x > maxX) x = maxX;
-		if (y < minY) y = minY;
-		if (y > maxY) y = maxY;
-
-		offsetX = x;
-		offsetY = y;
+		startX = e.clientX;
+		startY = e.clientY;
 	}
 
 	function handlePointerUp(e: PointerEvent) {
-		e.stopPropagation();
-		e.preventDefault();
-
-		if (dragTimeout) {
-			clearTimeout(dragTimeout);
-			dragTimeout = null;
-		}
+		panelElement?.releasePointerCapture(e.pointerId);
 
 		if (isDragging) {
 			appState.setPanelPosition(offsetX, offsetY);
+			blockNextClick = true;
 		} else {
 			const target = e.target as HTMLElement;
 			if (!target.closest('.nav-links')) {
 				appState.togglePageActions();
+				blockNextClick = true;
+
 				if (expanded) {
 					requestAnimationFrame(() => {
 						requestAnimationFrame(clampToViewport);
@@ -102,15 +96,10 @@
 		}
 
 		isDragging = false;
-		panelElement?.releasePointerCapture(e.pointerId);
 	}
 
 	function handlePointerCancel(e: PointerEvent) {
-		e.stopPropagation();
-		if (dragTimeout) {
-			clearTimeout(dragTimeout);
-			dragTimeout = null;
-		}
+		panelElement?.releasePointerCapture(e.pointerId);
 		isDragging = false;
 	}
 
@@ -148,7 +137,6 @@
 <div
 	class="nav-container"
 	style="transform: translate({offsetX}px, {offsetY}px);"
-
 >
 	{#if $appState.pageActions}
 		<div bind:this={panelToolsElement}>
@@ -162,7 +150,6 @@
 				class="butter actions-button"
 				onclick={(e) => {
 					e.stopPropagation();
-					e.preventDefault();
 					appState.resetPanelPosition();
 				}}
 			>
@@ -177,10 +164,7 @@
 		onpointermove={handlePointerMove}
 		onpointerup={handlePointerUp}
 		onpointercancel={handlePointerCancel}
-		onclick={(e) => {
-			e.stopPropagation();
-			e.preventDefault();
-		}}
+		onclick={(e) => e.stopPropagation()}
 		class="butter"
 		class:dragging={isDragging}
 	>

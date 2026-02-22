@@ -41,14 +41,14 @@
 	{/if}
 
 	{#if type === 'textarea'}
-		<textarea id={name} {name} bind:value {rows} {placeholder} {required} {disabled} />
+		<textarea id={name} {name} bind:value {rows} {placeholder} {required} {disabled}></textarea>
 	{:else if type === 'file'}
 		<input
 			id={name}
 			type="file"
 			{name}
 			class="file-input"
-			on:change={onFileChange}
+			onchange={onFileChange}
 			{required}
 			{disabled}
 		/>

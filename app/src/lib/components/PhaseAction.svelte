@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import DatePicker from '$lib/components/DatePicker.svelte';
-	import FormOptional from '$lib/components/FormOptional.svelte';
+	import FormOptionalSubmit from '$lib/components/FormOptionalSubmit.svelte';
+	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import { getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
 	import { fases, motivosOportunidad } from '$lib';
-	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormSelectMotivo from '$lib/components/FormSelectMotivo.svelte';
 	import FormInput from './FormInput.svelte';
 
@@ -32,8 +32,8 @@
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 
-	let style = getStyleForPhase(fase.id + 1);
-	let duration = getDurationForPhase(fase.id);
+	let style = $derived(getStyleForPhase(fase.id + 1));
+	let duration = $derived(getDurationForPhase(fase.id));
 
 	// Placeholder dinámico por fase
 	let fasePlaceholder = $derived(
@@ -78,20 +78,20 @@
 		{#if !submitCancel && !submitUpdate}
 			{#if fase.id >= 2 || fase.id == 0}
 				<section class="historia">
-					<label>Historia</label>
+					<h3>Historia</h3>
 					<p>{historia}</p>
 				</section>
 			{/if}
 			{#if fase.id >= 3}
 				<section class="cotizaciones">
-					<label>Cotizaciones</label>
+					<h3>Cotizaciones</h3>
 					<p>{cotizaciones}</p>
 				</section>
 			{/if}
 			{#if requisitos}
 				<!-- <EditableField id="requisitos" name="requisitos" type="text" bind:value={requisitos} /> -->
 				<section class="requisitos">
-					<label>Requisitos</label>
+					<h3>Requisitos</h3>
 					<p>{requisitos}</p>
 				</section>
 			{/if}
@@ -223,7 +223,7 @@
 		{/if}
 		{#if fase.id != 6}
 			<div class="submit">
-				<FormOptional bind:submitUpdate bind:submitCancel />
+				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
 
 				{#if submitUpdate}
 					<input type="hidden" name="fase" bind:value={fase.id} />
