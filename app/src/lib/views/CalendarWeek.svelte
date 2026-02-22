@@ -59,7 +59,7 @@
 	});
 
 	async function handleDrop(eventId: string, hour: number, minute: number, targetDate: Date) {
-		const event = eventList.find((e) => e.id_oportunidad === eventId);
+		const event = eventList.find((e) => e.id === eventId);
 		if (!event) return;
 
 		// Calcular duración original en minutos

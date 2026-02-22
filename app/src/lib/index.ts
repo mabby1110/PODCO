@@ -89,3 +89,32 @@ export let motivosProspeccion = [
 	'Capacitación / curso',
 	'Reactivación de cliente'
 ];
+export type Oportunidad = {
+	id: string;
+	id_cliente: string;
+	id_agente: string;
+	fase: number;
+	motivo: string | null;
+	inicio: string | Date;
+	fin: string | Date;
+	historia: string | null;
+	cotizaciones: string | null;
+	requisitos: string;
+	fecha_creacion: string | Date;
+	fecha_cierre: string | Date | null;
+	motivo_inicial: string | null;
+	adjuntos: string | null;
+};
+
+export type Cliente = {
+	id: number;
+	id_contpaqi: string;
+	id_agente: string;
+	razon_social: string;
+	ubicacion: string | null;
+	contactos: string | null;
+	tipo_prospeccion: string;
+	fecha_creacion: string | Date;
+	ultima_actualizacion: string | Date;
+	fecha_sync: string | Date | null;
+};
