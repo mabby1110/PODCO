@@ -36,7 +36,7 @@
 <button
 	style={eventData?.style}
 	use:draggable={{ data: event.id, enabled: isDndEnabled }}
-	use:draggable={event.id_oportunidad}
+	use:draggable={event.id}
 	onclick={select}
 >
 	{#if $appState.calendarCards}

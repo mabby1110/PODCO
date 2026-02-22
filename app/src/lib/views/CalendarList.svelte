@@ -19,7 +19,7 @@
 </div>
 <div class="view-container">
 	<div class="op-list">
-		{#each eventList as event (event.id_oportunidad)}
+		{#each eventList as event (event.id)}
 			<CardB {event} />
 		{/each}
 	</div>

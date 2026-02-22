@@ -35,8 +35,6 @@
 		selectedDataItem = item;
 		keyword = ''; // Limpiar búsqueda después de seleccionar
 	}
-
-	$inspect('Item seleccionado:', selectedDataItem);
 </script>
 
 <div>

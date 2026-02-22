@@ -16,7 +16,7 @@
 		if (!event) return null;
 
 		return {
-			id: event.id_oportunidad ?? null,
+			id: event.id ?? null,
 			razon_social: clientes.find(c=>c.id == event.id_cliente)?.razon_social ?? 'El cliente fue eliminado',
 			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
 			fase: fases?.find((f) => f.id == event.fase),
@@ -33,7 +33,6 @@
 	}
 
 	async function handleActionSuccess() {
-		console.log('Acción completada con éxito');
 		selectedEvent.clear();
 		await invalidate('app:data');
 	}

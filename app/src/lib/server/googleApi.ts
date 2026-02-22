@@ -99,7 +99,7 @@ export async function updateRowById(
 ) {
 	const values = await getRange(range);
 	// console.log(values);
-	const rowIndex = values.findIndex((row) => row.id_oportunidad === id);
+	const rowIndex = values.findIndex((row) => row.id === id);
 	
 	if (rowIndex === -1) {
 		throw new Error(`No se encontró registro con ID: ${id}`);
