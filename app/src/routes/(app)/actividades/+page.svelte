@@ -27,9 +27,7 @@
 		</section>
 	{/if}
 
-	{#if $viewState.resumen}
-		<section>resumen</section>
-	{:else if $viewState.clients}
+	{#if $viewState.clients}
 		{#if $selectedClient}
 			<section class="selected" in:slide>
 				<CardCliente />

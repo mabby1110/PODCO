@@ -7,21 +7,21 @@
 	import { fases, motivosOportunidad } from '$lib';
 	import FormSelectMotivo from '$lib/components/FormSelectMotivo.svelte';
 	import FormInput from './FormInput.svelte';
+	import { selectedOp } from '$lib/stores/selectedOp';
+	import { invalidate } from '$app/navigation';
 
 	let {
 		fase,
 		id,
 		historia = '',
-		cotizaciones,
-		requisitos = '',
-		onSuccess = () => {}
+		cotizaciones = '',
+		requisitos = ''
 	}: {
 		fase: any;
 		id: string;
-		historia?: string;
-		cotizaciones?: string;
-		requisitos?: string;
-		onSuccess?: () => void;
+		historia: string;
+		cotizaciones: string;
+		requisitos: string;
 	} = $props();
 
 	let nuevoRequisito = $state('');
@@ -37,7 +37,7 @@
 
 	// Placeholder dinámico por fase
 	let fasePlaceholder = $derived(
-		fases.find((f) => f.id == fase.id)?.placeholder ?? 'Ingresa la acción realizada'
+		fases.find((f) => f.id_fase == fase.id)?.placeholder ?? 'Ingresa la acción realizada'
 	);
 
 	function combinarHistoria(anterior: string, nueva: string): string {
@@ -47,12 +47,13 @@
 
 	function handleSubmit() {
 		return async ({ result }: any) => {
+			selectedOp.clear();
 			isSubmitting = false;
 			if (result.type === 'success') {
 				nuevaHistoria = '';
 				nuevaCotizacion = '';
-				onSuccess();
 			}
+			await invalidate('app:data');
 		};
 	}
 </script>

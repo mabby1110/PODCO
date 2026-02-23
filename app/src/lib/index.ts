@@ -81,15 +81,16 @@ export type Oportunidad = {
 	id_agente: string;
 	fase: number;
 	motivo: string | null;
-	inicio: string | Date;
-	fin: string | Date;
+	inicio: string;
+	fin: string;
 	historia: string | null;
 	cotizaciones: string | null;
 	requisitos: string;
-	fecha_creacion: string | Date;
-	fecha_cierre: string | Date | null;
+	fecha_creacion: string;
+	fecha_cierre: string | null;
 	motivo_inicial: string | null;
 	adjuntos: string | null;
+	documentos: string | null;
 };
 export type Actividad = {
 	id: string;

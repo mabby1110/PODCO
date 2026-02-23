@@ -17,6 +17,7 @@
 	} from '$lib/utils/agenda';
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import type { Oportunidad } from '$lib';
 
 	const { actividades } = $props();
 
@@ -52,14 +53,14 @@
 	const currentMonth = $derived(getMonth(weekDates[0], true));
 	// Eventos de la semana
 	const weekEvents = $derived.by(() => {
-		return eventList.filter((event) => {
+		return eventList.filter((event: Oportunidad) => {
 			const eventDate = new Date(event.inicio);
 			return weekDates.some((weekDate) => isSameDay(eventDate, weekDate));
 		});
 	});
 
 	async function handleDrop(eventId: string, hour: number, minute: number, targetDate: Date) {
-		const event = eventList.find((e) => e.id === eventId);
+		const event = eventList.find((e: { id: string }) => e.id === eventId);
 		if (!event) return;
 
 		// Calcular duración original en minutos
@@ -82,7 +83,7 @@
 	}
 
 	function getEvent(hour: number, minute: number, targetDate: Date) {
-		return weekEvents.find((event) => {
+		return weekEvents.find((event: Oportunidad) => {
 			const eventDate = new Date(event.inicio);
 			return (
 				isSameDay(eventDate, targetDate) &&
@@ -92,7 +93,7 @@
 		});
 	}
 
-	function isEventStart(hour: number, minute: number, targetDate: Date, event) {
+	function isEventStart(hour: number, minute: number, targetDate: Date, event: Oportunidad) {
 		const eventDate = new Date(event.inicio);
 		return (
 			isSameDay(eventDate, targetDate) &&
@@ -164,15 +165,10 @@
 							}}
 						>
 							{#if event && isEventStart(h.hour, h.minute, date, event)}
-								<div
-									class="event-wrapper"
-									style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px`}
-								>
-									<CardA
-										{event}
-										style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px`}
-									/>
-								</div>
+								<CardA
+									{event}
+									style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px;`}
+								/>
 							{/if}
 						</td>
 					{/each}
@@ -248,16 +244,6 @@
 		border-right: 1px solid var(--color-secondary);
 		border-bottom: 1px solid var(--color-secondary);
 		overflow: visible;
-	}
-	.event-wrapper {
-		z-index: 1;
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		height: fit-content;
-		cursor: pointer;
-		pointer-events: auto; /* La celda NO captura eventos */
 	}
 	.max {
 		min-width: var(--h);

@@ -8,9 +8,9 @@
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
-	let { event } = $props();
 	const { clientes, agentes } = $derived(page.data);
 
+	let event = $derived($selectedOp);
 	// Agrupa todas las derivaciones en un solo $derived.by para mejor reactividad
 	const eventData = $derived.by(() => {
 		if (!event) return null;
@@ -33,11 +33,6 @@
 		e.stopPropagation();
 		selectedOp.clear();
 	}
-
-	async function handleActionSuccess() {
-		selectedOp.clear();
-		await invalidate('app:data');
-	}
 </script>
 
 {#if $selectedOp && eventData}
@@ -55,7 +50,7 @@
 
 		<section class="grid">
 			<p class="date">{eventData.inicio}</p>
-			<PhaseAction {...eventData} onSuccess={handleActionSuccess} />
+			<PhaseAction {...eventData}/>
 		</section>
 	</div>
 {/if}

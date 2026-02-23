@@ -8,7 +8,6 @@
 	import { getStyleForPhase } from '$lib/utils/util';
 
 	let { event, style } = $props();
-
 	const { clientes, agentes } = $derived(page.data);
 	const isDndEnabled = $derived($appState.dnd);
 
@@ -16,15 +15,16 @@
 		if (!event) return null;
 
 		return {
-			razon_social: clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
+			razon_social:
+				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			motivo: event?.motivo,
 			inicio: event?.inicio,
-			fase: fases.find(f => f.id_fase == event.fase),
+			fase: fases.find((f) => f.id_fase == event.fase),
 			historia: event.historia || 'Sin historial registrado',
 			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
 			documentos: event.documentos || 'Sin documentos',
-			style: getStyleForPhase(event.fase)
+			style: getStyleForPhase(event.fase) + style
 		};
 	});
 
@@ -76,7 +76,12 @@
 		align-items: baseline;
 		backdrop-filter: blur(16px);
 		overflow: hidden;
-		position: relative;
+		z-index: 1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		pointer-events: auto;
 	}
 	header {
 		flex-grow: 1;
