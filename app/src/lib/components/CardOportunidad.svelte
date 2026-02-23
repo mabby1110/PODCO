@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { selectedEvent } from '$lib/stores/selectedEvent';
+	import { selectedOp } from '$lib/stores/selectedOp';
 	import { slide } from 'svelte/transition';
 	import PhaseAction from './PhaseAction.svelte';
 	import { invalidate } from '$app/navigation';
@@ -8,51 +8,53 @@
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
+	let { event } = $props();
 	const { clientes, agentes } = $derived(page.data);
 
 	// Agrupa todas las derivaciones en un solo $derived.by para mejor reactividad
 	const eventData = $derived.by(() => {
-		const event = $selectedEvent;
 		if (!event) return null;
 
 		return {
-			id: event.id ?? null,
-			razon_social: clientes.find(c=>c.id == event.id_cliente)?.razon_social ?? 'El cliente fue eliminado',
-			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
-			fase: fases?.find((f) => f.id == event.fase),
-			historia: event.historia || null,
-			cotizaciones: event.cotizaciones || null,
-			requisitos: event.requisitos || null,
+			razon_social:
+				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
+			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
+			motivo: event?.motivo,
+			inicio: event?.inicio,
+			fase: fases.find((f) => f.id_fase == event.fase),
+			historia: event.historia || 'Sin historial registrado',
+			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
+			documentos: event.documentos || 'Sin documentos',
 			style: getStyleForPhase(event.fase)
 		};
 	});
 
 	function closeCard(e: MouseEvent) {
 		e.stopPropagation();
-		selectedEvent.clear();
+		selectedOp.clear();
 	}
 
 	async function handleActionSuccess() {
-		selectedEvent.clear();
+		selectedOp.clear();
 		await invalidate('app:data');
 	}
 </script>
 
-{#if $selectedEvent && eventData}
+{#if $selectedOp && eventData}
 	<div class="card-d" transition:slide>
 		<header style={eventData.style}>
 			<button class="close-btn" onclick={closeCard} aria-label="Cerrar">✕</button>
-			<h1>{$selectedEvent.motivo}</h1>
+			<h1>{eventData.motivo}</h1>
 			<h3>{eventData.razon_social}</h3>
 			<div class="meta">
 				<p>{eventData.agente.nombre}</p>
 				<p>-</p>
-				<p>Fase: <strong>{eventData.fase.actual}</strong></p>
+				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</div>
 		</header>
 
 		<section class="grid">
-			<p class="date">{$selectedEvent.inicio}</p>
+			<p class="date">{eventData.inicio}</p>
 			<PhaseAction {...eventData} onSuccess={handleActionSuccess} />
 		</section>
 	</div>

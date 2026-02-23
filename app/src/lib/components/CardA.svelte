@@ -4,7 +4,7 @@
 	import { draggable } from '$lib/actions/dnd';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import { selectedEvent } from '$lib/stores/selectedEvent';
+	import { selectedOp } from '$lib/stores/selectedOp';
 	import { getStyleForPhase } from '$lib/utils/util';
 
 	let { event, style } = $props();
@@ -16,20 +16,20 @@
 		if (!event) return null;
 
 		return {
-			razon_social: clientes?.find((c) => c.id == event.id_cliente)?.razon_social ?? '',
-			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
+			razon_social: clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
+			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			motivo: event?.motivo,
 			inicio: event?.inicio,
-			fase: fases.find((f) => f.id == event.fase),
+			fase: fases.find(f => f.id_fase == event.fase),
 			historia: event.historia || 'Sin historial registrado',
 			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
 			documentos: event.documentos || 'Sin documentos',
-			style: getStyleForPhase(event.fase) + style
+			style: getStyleForPhase(event.fase)
 		};
 	});
 
 	function select() {
-		selectedEvent.set({ ...event });
+		selectedOp.set({ ...event });
 	}
 </script>
 
@@ -53,7 +53,7 @@
 		</div>
 	{:else}
 		<div class="meta-min">
-			{#if $profile.isAdmin}
+			{#if $profile?.isAdmin}
 				<span class="meta-item">{eventData?.agente.nombre}</span>
 			{:else}
 				<span class="meta-item">{eventData?.razon_social}</span>

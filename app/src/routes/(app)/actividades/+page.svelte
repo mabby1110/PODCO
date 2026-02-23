@@ -2,7 +2,7 @@
 	import CardOportunidad from '$lib/components/CardOportunidad.svelte';
 	import CalendarWeek from '$lib/views/CalendarWeek.svelte';
 	import CalendarList from '$lib/views/CalendarList.svelte';
-	import { selectedEvent } from '$lib/stores/selectedEvent.js';
+	import { selectedOp } from '$lib/stores/selectedOp.js';
 	import {  slide } from 'svelte/transition';
 	import { viewState } from '$lib/stores/ViewState.js';
 	import { selectedClient } from '$lib/stores/selectedClient.js';
@@ -13,7 +13,7 @@
 </script>
 
 <div class="page-content">
-	{#if $selectedEvent}
+	{#if $selectedOp}
 		<section class="selected" in:slide>
 			<CardOportunidad />
 		</section>

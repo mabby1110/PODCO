@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
-	import { selectedEvent } from '$lib/stores/selectedEvent';
+	import { selectedOp } from '$lib/stores/selectedOp';
 	import { slide } from 'svelte/transition';
 	import { viewState } from '$lib/stores/ViewState';
 </script>
@@ -11,7 +11,7 @@
 			onclick={() => {
 				viewState.setCalendar();
 				appState.togglePageActions();
-				$selectedEvent = null;
+				$selectedOp = null;
 			}}
 			class="butter"
 			style={$viewState.calendar ? 'background-color: var(--color-highlight);' : ''}
@@ -22,7 +22,7 @@
 			onclick={() => {
 				viewState.setList();
 				appState.togglePageActions();
-				$selectedEvent = null;
+				$selectedOp = null;
 			}}
 			class="butter"
 			style={$viewState.list ? 'background-color: var(--color-highlight);' : ''}
@@ -33,7 +33,7 @@
 			onclick={() => {
 				viewState.setClients();
 				appState.togglePageActions();
-				$selectedEvent = null;
+				$selectedOp = null;
 			}}
 			class="butter"
 			style={$viewState.clients ? 'background-color: var(--color-highlight);' : ''}

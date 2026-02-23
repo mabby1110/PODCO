@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { selectedEvent } from "$lib/stores/selectedEvent";
+	import { selectedOp } from "$lib/stores/selectedOp";
 	import { invalidate } from '$app/navigation';
 
 	async function eliminar() {
-		if (!$selectedEvent?.id) return;
+		if (!$selectedOp?.id) return;
 
 		const form = new FormData();
-		form.append('id', $selectedEvent.id);
+		form.append('id', $selectedOp.id);
 
 		const res = await fetch('/api/eliminar', {
 			method: 'POST',
@@ -14,7 +14,7 @@
 		});
 
 		if (res.ok) {
-			$selectedEvent = null;
+			$selectedOp = null;
 			await invalidate('app:data');
 		}
 	}

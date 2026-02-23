@@ -2,21 +2,21 @@
 	import { page } from '$app/state';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import { selectedEvent } from '$lib/stores/selectedEvent';
+	import { selectedOp } from '$lib/stores/selectedOp';
 	import { getStyleForPhase } from '$lib/utils/util';
 
 	let { event } = $props();
-
 	const { clientes, agentes } = $derived(page.data);
+
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 
 		return {
-			razon_social: clientes?.find((c) => c.id == event.id_cliente)?.razon_social ?? '',
-			agente: agentes?.find((e) => e.id == event.id_agente) ?? $profile,
+			razon_social: clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
+			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			motivo: event?.motivo,
 			inicio: event?.inicio,
-			fase: fases.find(f => f.id == event.fase),
+			fase: fases.find(f => f.id_fase == event.fase),
 			historia: event.historia || 'Sin historial registrado',
 			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
 			documentos: event.documentos || 'Sin documentos',
@@ -27,7 +27,7 @@
 	function select() {
 		console.log('selected', event);
 		// Crear una copia del evento para evitar problemas de referencia
-		selectedEvent.set({ ...event });
+		selectedOp.set({ ...event });
 	}
 </script>
 
