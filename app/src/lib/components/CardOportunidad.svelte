@@ -3,7 +3,6 @@
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { slide } from 'svelte/transition';
 	import PhaseAction from './PhaseAction.svelte';
-	import { invalidate } from '$app/navigation';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';

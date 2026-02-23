@@ -4,17 +4,17 @@
 	import { filterStore } from '$lib/stores/filterStore.svelte';
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
 
-	let { actividades } = $props();
+	let { oportunidades } = $props();
 
 	const eventList = $derived(
 		filterStore.atributo !== ''
-			? filtrarConsecutivo(filterStore.atributo, 'id_agente', actividades)
-			: actividades
+			? filtrarConsecutivo(filterStore.atributo, 'id_agente', oportunidades)
+			: oportunidades
 	);
 </script>
 
 <div class="controls">
-	<h2>Lista</h2>
+	<h2>Oportunidades</h2>
 	<FilterOpList />
 </div>
 <div class="view-container">

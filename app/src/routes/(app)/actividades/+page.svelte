@@ -8,6 +8,7 @@
 	import { selectedClient } from '$lib/stores/selectedClient.js';
 	import CardCliente from '$lib/components/CardCliente.svelte';
 	import ClientList from '$lib/views/ClientList.svelte';
+	import ActivityList from '$lib/views/ActivityList.svelte';
 
 	let { data } = $props();
 </script>
@@ -30,7 +31,7 @@
 			</section>
 		{:else}
 			<section in:slide>
-				<OpList actividades={data.actividades} />
+				<OpList oportunidades={data.oportunidades} />
 			</section>
 		{/if}
 	{:else if $viewState.clients}
@@ -44,7 +45,7 @@
 			</section>
 		{/if}
 	{:else}
-		actividades
+		<ActivityList actividades={data.actividades}/>
 	{/if}
 </div>
 

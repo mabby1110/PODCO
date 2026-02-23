@@ -25,19 +25,19 @@
 	} = $props();
 
 	let nuevoRequisito = $state('');
-	let nextPhase = $derived(Number(fase.id) + 1);
+	let nextPhase = $derived(Number(fase.id_fase) + 1);
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
 	let isSubmitting = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 
-	let style = $derived(getStyleForPhase(fase.id + 1));
-	let duration = $derived(getDurationForPhase(fase.id));
+	let style = $derived(getStyleForPhase(fase.id_fase + 1));
+	let duration = $derived(getDurationForPhase(fase.id_fase));
 
 	// Placeholder dinámico por fase
 	let fasePlaceholder = $derived(
-		fases.find((f) => f.id_fase == fase.id)?.placeholder ?? 'Ingresa la acción realizada'
+		fases.find((f) => f.id_fase == fase.id_fase)?.placeholder ?? 'Ingresa la acción realizada'
 	);
 
 	function combinarHistoria(anterior: string, nueva: string): string {
@@ -77,13 +77,13 @@
 		/>
 
 		{#if !submitCancel && !submitUpdate}
-			{#if fase.id >= 2 || fase.id == 0}
+			{#if fase.id_fase >= 2 || fase.id_fase == 0}
 				<section class="historia">
 					<h3>Historia</h3>
 					<p>{historia}</p>
 				</section>
 			{/if}
-			{#if fase.id >= 3}
+			{#if fase.id_fase >= 3}
 				<section class="cotizaciones">
 					<h3>Cotizaciones</h3>
 					<p>{cotizaciones}</p>
@@ -97,9 +97,8 @@
 				</section>
 			{/if}
 
-			{#if fase.id == 1}
+			{#if fase.id_fase == 1}
 				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} />
-
 				<FormInput
 					label="Necesidades"
 					name="nuevaHistoria"
@@ -119,7 +118,7 @@
 					/>
 				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha de compromiso para presentar propuesta" />
-			{:else if fase.id == 2}
+			{:else if fase.id_fase == 2}
 				<FormInput
 					label="Análisis"
 					name="nuevaHistoria"
@@ -147,7 +146,7 @@
 					/>
 				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha en que la vigencia de la cotización termina" />
-			{:else if fase.id == 3}
+			{:else if fase.id_fase == 3}
 				<FormInput
 					label={fase.actual}
 					name="nuevaHistoria"
@@ -177,7 +176,7 @@
 					/>
 				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha en que la vigencia de la cotización termina" />
-			{:else if fase.id != 6}
+			{:else if fase.id_fase != 6}
 				<FormInput
 					label={fase.actual}
 					name="nuevaHistoria"
@@ -190,7 +189,7 @@
 			{/if}
 		{/if}
 
-		{#if fase.id != 0}
+		{#if fase.id_fase != 0}
 			{#if submitUpdate}
 				<FormInput
 					label="Postergar"
@@ -222,18 +221,18 @@
 				/>
 			{/if}
 		{/if}
-		{#if fase.id != 6}
+		{#if fase.id_fase != 6}
 			<div class="submit">
 				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
 
 				{#if submitUpdate}
-					<input type="hidden" name="fase" bind:value={fase.id} />
+					<input type="hidden" name="fase" value={fase.id_fase} />
 					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
 				{:else if submitCancel}
 					<input type="hidden" name="fase" value={0} />
 					<button type="submit" class="butter" disabled={isSubmitting}>Perder</button>
 				{:else}
-					<input type="hidden" name="fase" bind:value={nextPhase} />
+					<input type="hidden" name="fase" value={nextPhase} />
 					<button type="submit" class="butter" {style} disabled={isSubmitting}>
 						{isSubmitting ? 'Procesando...' : fase.accion}
 					</button>

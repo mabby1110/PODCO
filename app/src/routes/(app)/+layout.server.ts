@@ -23,12 +23,14 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 	if (locals.profile?.isAdmin === true) {
 		agentes = await getAllProfilesAdmin(supabaseAdmin);
 	}
-	const actividades = await getRange('oportunidades!A:L');
+	const actividades = await getRange('actividades!A:L');
+	const oportunidades = await getRange('oportunidades!A:L');
 
 	return {
 		profile: locals.profile,
 		clientes,
 		agentes,
-		actividades
+		actividades,
+		oportunidades
 	};
 };

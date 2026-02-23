@@ -14,7 +14,7 @@
 </script>
 
 <div class="controls">
-	<h2>Lista</h2>
+	<h2>Actividades</h2>
 	<FilterOpList />
 </div>
 <div class="view-container">
