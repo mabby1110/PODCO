@@ -9,6 +9,7 @@ interface AppState {
 	panelMinimized: boolean;
 	calendarCards: boolean;
 	calendarView: boolean;
+	ModalActivity: boolean;
 	ModalOp: boolean;
 	ModalClient: boolean;
 	pageActions: boolean;
@@ -24,6 +25,7 @@ const defaultState: AppState = {
 	panelMinimized: false,
 	calendarCards: false,
 	calendarView: false,
+	ModalActivity: false,
 	ModalOp: false,
 	ModalClient: false,
 	pageActions: true
@@ -94,6 +96,12 @@ function createAppState() {
 		toggleCalendarView: () =>
 			update((state) => {
 				const newState = { ...state, calendarView: !state.calendarView };
+				saveToCookie(newState);
+				return newState;
+			}),
+		toggleModalActivity: () =>
+			update((state) => {
+				const newState = { ...state, ModalActivity: !state.ModalActivity };
 				saveToCookie(newState);
 				return newState;
 			}),

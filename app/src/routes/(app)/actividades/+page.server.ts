@@ -28,6 +28,27 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
+	addActivity: async ({ request }) => {
+		console.log('update activity');
+		const formData = await request.formData();
+		console.log(formData);
+		const rowData = [
+			formData.get('id_agente') || 1,
+			formData.get('fase') || 1,
+			formData.get('motivo') || null,
+			formData.get('inicio') || null,
+			formData.get('fin') || null,
+			formData.get('historia') || null,
+			formData.get('requisitos') || null,
+			new Date().toISOString(),
+			null
+		];
+
+		await appendRow('actividades!A:Z', rowData);
+
+		return { success: true };
+	},
+
 	addClient: async ({ request }) => {
 		console.log('\nActividades addClient\n');
 		const formData = await request.formData();
@@ -58,7 +79,6 @@ export const actions: Actions = {
 		];
 
 		await appendRow('oportunidades!A:Z', oportunidad);
-		console.log(formData, oportunidad, cliente);
 
 		return { success: true };
 	},

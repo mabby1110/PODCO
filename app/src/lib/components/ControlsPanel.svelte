@@ -29,17 +29,6 @@
 		>
 			📋 Lista
 		</button>
-		<!-- <button
-			onclick={() => {
-				viewState.setResumen();
-				appState.togglePageActions();
-				$selectedEvent = null;
-			}}
-			class="butter"
-			style={$viewState.resumen ? 'background-color: var(--color-highlight);' : ''}
-		>
-			⚡ Resumen
-		</button> -->
 		<button
 			onclick={() => {
 				viewState.setClients();
@@ -56,6 +45,7 @@
 	<div class="separator"></div>
 
 	<div class="button-group">
+		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 	</div>

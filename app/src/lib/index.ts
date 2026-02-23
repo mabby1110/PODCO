@@ -42,51 +42,37 @@ export const fases = [
 		placeholder: 'Registrar motivo de pérdida y lecciones para futuras oportunidades'
 	}
 ];
-export let motivosOportunidad = [
-	'Refacciones / repuestos',
-	'Mantenimiento correctivo',
-	'Mantenimiento preventivo',
+export let actividades = [
+	'Trabajo en taller',
 	'Servicio en sitio',
 	'Visita técnica',
-	'Reclamación / garantía',
-	'Viaje comercial',
-	'Urgencia operativa',
-	'Soporte técnico a ventas',
-	'Prospección en frío',
-	'Prospección inbound',
-	'Referido',
-	'Seguimiento de cliente',
+	'Compras / refacciones',
+	'Recolección de equipo',
+	'Entrega de equipo',
+	'Instalación',
+	'Diagnóstico técnico',
+	'Seguimiento administrativo',
+	'Traslado / logística'
+];
+export let motivosOportunidad = [
 	'Diagnóstico de necesidad',
 	'Cotización solicitada',
 	'Proyecto nuevo',
 	'Ampliación de proyecto',
-	'Licitación privada',
-	'Licitación pública',
 	'Negociación activa',
+	'Licitación',
 	'Renovación de contrato',
 	'Recompra',
 	'Postventa con oportunidad'
 ];
-
 export let motivosProspeccion = [
 	'Llamada en frío',
 	'Visita en frío',
-	'Búsqueda en internet',
-	'LinkedIn',
-	'Redes sociales',
-	'Referido de cliente',
-	'Referido interno',
-	'Referido de proveedor',
+	'Prospección digital',
+	'Referido',
 	'Formulario web',
-	'Campaña digital',
-	'Correo entrante',
-	'Llamada entrante',
-	'WhatsApp entrante',
-	'Servicio en sitio',
-	'Emergencia operativa',
-	'Feria / expo',
-	'Evento industrial',
-	'Capacitación / curso',
+	'Contacto entrante',
+	'Evento / feria',
 	'Reactivación de cliente'
 ];
 export type Oportunidad = {
@@ -105,7 +91,22 @@ export type Oportunidad = {
 	motivo_inicial: string | null;
 	adjuntos: string | null;
 };
-
+export type Actividad = {
+	id: string;
+	id_cliente: string;
+	id_agente: string;
+	fase: number;
+	motivo: string | null;
+	inicio: string | Date;
+	fin: string | Date;
+	historia: string | null;
+	cotizaciones: string | null;
+	requisitos: string;
+	fecha_creacion: string | Date;
+	fecha_cierre: string | Date | null;
+	motivo_inicial: string | null;
+	adjuntos: string | null;
+};
 export type Cliente = {
 	id: number;
 	id_contpaqi: string;
@@ -118,3 +119,4 @@ export type Cliente = {
 	ultima_actualizacion: string | Date;
 	fecha_sync: string | Date | null;
 };
+

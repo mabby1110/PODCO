@@ -1,15 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { appState } from '$lib/stores/appState.svelte';
-	import Searchbar from '$lib/components/Searchbar.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
 	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
 	import { motivosOportunidad, motivosProspeccion } from '$lib';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import FormSelectAgente from './FormSelectAgente.svelte';
-	import { filtrarPorAgente } from '$lib/utils/util';
-	import { profile } from '$lib/stores/profileStore.svelte';
+
 	let { data } = $props();
 
 	let requisitos = $state('');
@@ -18,17 +16,8 @@
 	let inicio = $state('');
 	let fin = $state('');
 	let agenteSeleccionado = $state<string>('');
-	let clientesFiltrados = $derived(
-		$profile?.isAdmin
-			? agenteSeleccionado
-				? filtrarPorAgente(data.clientes, agenteSeleccionado)
-				: data.clientes
-			: filtrarPorAgente(data.clientes, String($profile?.id))
-	);
-
 	function setCustomEnd(fechaCompromiso: Date) {
 		const next = addMinutes(new Date(fechaCompromiso), 10);
-
 		const yyyy = next.getFullYear();
 		const mm = String(next.getMonth() + 1).padStart(2, '0');
 		const dd = String(next.getDate()).padStart(2, '0');
@@ -36,8 +25,7 @@
 		const mi = String(next.getMinutes()).padStart(2, '0');
 
 		return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
-	}
-
+	};
 	function generarHoras() {
 		const horas = [];
 		let actual = 8 * 60; // 08:00
@@ -51,7 +39,7 @@
 		}
 
 		return horas;
-	}
+	};
 	$effect(() => {
 		if (fecha && hora) {
 			const base = `${fecha} ${hora}`;
@@ -64,30 +52,29 @@
 	});
 </script>
 
-{#if $appState.ModalOp}
+{#if $appState.ModalActivity}
 	<div
 		class="overlay"
-		onclick={() => appState.toggleModalOp()}
+		onclick={() => appState.toggleModalActivity()}
 		role="button"
 		tabindex="0"
-		onkeydown={(e) => e.key === 'Escape' && appState.toggleModalOp()}
+		onkeydown={(e) => e.key === 'Escape' && appState.toggleModalActivity()}
 	>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" tabindex="-1">
 			<div class="modal-header">
-				<h2>Nueva Oportunidad</h2>
-				<button class="close" onclick={() => appState.toggleModalOp()}>✕</button>
+				<h2>Nueva Actividad</h2>
+				<button class="close" onclick={() => appState.toggleModalActivity()}>✕</button>
 			</div>
 			<form
 				method="POST"
-				action="?/add"
+				action="?/addActivity"
 				use:enhance={() => {
-					appState.toggleModalOp();
+					appState.toggleModalActivity();
 					alert('creado con exito!');
 				}}
 			>
 				<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
-				<Searchbar data={clientesFiltrados} keyColumns={['razon_social']} />
 				<FormSelectInput list={motivosProspeccion.concat(motivosOportunidad)} />
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
