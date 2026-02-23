@@ -4,9 +4,9 @@ import { browser } from '$app/environment';
 
 interface ViewState {
     calendar: boolean;
-    list: boolean;
-    resumen: boolean;
+    op: boolean;
     clients: boolean;
+    activities: boolean;
 }
 
 const COOKIE_NAME = 'viewState';
@@ -14,8 +14,8 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 año
 
 const defaultState: ViewState = {
     calendar: false,
-    list: false,
-    resumen: false,
+    op: false,
+    activities: false,
     clients: true,
 };
 
@@ -38,8 +38,8 @@ function createViewState() {
         update((state) => {
             const newState: ViewState = {
                 calendar: view === 'calendar',
-                list: view === 'list',
-                resumen: view === 'resumen',
+                op: view === 'op',
+                activities: view === 'activities',
                 clients: view === 'clients'
             };
             saveToCookie(newState);
@@ -50,9 +50,9 @@ function createViewState() {
     return {
         subscribe,
         setCalendar: () => setActiveView('calendar'),
-        setList: () => setActiveView('list'),
+        setOp: () => setActiveView('op'),
         setClients: () => setActiveView('clients'),
-        setResumen: () => setActiveView('resumen'),
+        setActivities: () => setActiveView('activities'),
         // Método genérico para toggle
         toggle: (view: keyof ViewState) => setActiveView(view),
         // Método para obtener el estado actual sin suscribirse

@@ -20,14 +20,14 @@
 		</button>
 		<button
 			onclick={() => {
-				viewState.setList();
+				viewState.setOp();
 				appState.togglePageActions();
 				$selectedOp = null;
 			}}
 			class="butter"
-			style={$viewState.list ? 'background-color: var(--color-highlight);' : ''}
+			style={$viewState.op ? 'background-color: var(--color-highlight);' : ''}
 		>
-			📋 Lista
+			📋 Oportunidades
 		</button>
 		<button
 			onclick={() => {
@@ -39,6 +39,17 @@
 			style={$viewState.clients ? 'background-color: var(--color-highlight);' : ''}
 		>
 			🐄 Clientes
+		</button>
+		<button
+			onclick={() => {
+				viewState.setActivities();
+				appState.togglePageActions();
+				$selectedOp = null;
+			}}
+			class="butter"
+			style={$viewState.activities ? 'background-color: var(--color-highlight);' : ''}
+		>
+		⚡ Actividades
 		</button>
 	</div>
 
