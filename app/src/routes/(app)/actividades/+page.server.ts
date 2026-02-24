@@ -48,7 +48,34 @@ export const actions: Actions = {
 
 		return { success: true };
 	},
+	
+	updateActivity: async ({ request }) => {
+		console.log('update activity');
+		const formData = await request.formData();
+		const id = formData.get('id');
+		console.log(id, formData);
 
+		if (!id) {
+			return fail(400, { error: 'ID requerido' });
+		}
+
+		const updateFieldMap: FieldColumnMap = {
+			id_agente: 'B',
+			fase: 'C',
+			motivo: 'D',
+			inicio: 'E',
+			fin: 'F',
+			historia: 'G',
+			requisitos: 'H',
+			fecha_cierre: 'J'
+		};
+
+		const newValues = mapFormDataToColumns(formData, updateFieldMap);
+
+		await updateRowById(id as string, newValues, 'actividades!A:Z');
+
+		return { success: true };
+	},
 	addClient: async ({ request }) => {
 		console.log('\nActividades addClient\n');
 		const formData = await request.formData();

@@ -2,9 +2,10 @@
 	import { page } from '$app/state';
 	import { slide } from 'svelte/transition';
 	import { getStyleForPhase } from '$lib/utils/util';
-	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { selectedActivity } from '$lib/stores/selectedActivity';
+	import { fases_actividad } from '$lib';
+	import ActivityActions from './ActivityActions.svelte';
 
 	const { agentes } = $derived(page.data);
 
@@ -15,12 +16,13 @@
 		if (!event) return null;
 
 		return {
+			id: event.id,
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
-			fase: fases.find(f => f.id_fase == event.fase),
+			fase: fases_actividad.find(f => f.id_fase == event.fase),
 			motivo: event?.motivo,
 			inicio: event?.inicio,
-			historia: event.historia || 'Sin historial registrado',
-			requisitos: event.requisitos || 'No hay requisitos',
+			historia: event.historia,
+			requisitos: event.requisitos,
 			style: getStyleForPhase(event.fase)
 		};
 	});
@@ -45,6 +47,7 @@
 
 		<section class="grid">
 			<p class="date">{eventData.inicio}</p>
+			<ActivityActions {eventData} />
 		</section>
 	</div>
 {/if}

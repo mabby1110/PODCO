@@ -42,6 +42,26 @@ export const fases = [
 		placeholder: 'Registrar motivo de pérdida y lecciones para futuras oportunidades'
 	}
 ];
+export const fases_actividad = [
+	{
+		id_fase: 1,
+		actual: 'Programada',
+		accion: 'Finalizar',
+		placeholder: 'Actividad agendada'
+	},
+	{
+		id_fase: 2,
+		actual: 'Finalizada',
+		accion: '',
+		placeholder: 'Actividad finalizada y registrada en el historial'
+	},
+	{
+		id_fase: 0,
+		actual: 'Cancelada',
+		accion: 'Activar',
+		placeholder: 'Actividad cancelada, se puede reactivar'
+	}
+];
 export let actividades = [
 	'Trabajo en taller',
 	'Servicio en sitio',
@@ -97,16 +117,16 @@ export type Actividad = {
 	id_cliente: string;
 	id_agente: string;
 	fase: number;
-	motivo: string | null;
+	motivo: string;
 	inicio: string | Date;
 	fin: string | Date;
-	historia: string | null;
-	cotizaciones: string | null;
+	historia: string;
+	cotizaciones: string;
 	requisitos: string;
 	fecha_creacion: string | Date;
-	fecha_cierre: string | Date | null;
-	motivo_inicial: string | null;
-	adjuntos: string | null;
+	fecha_cierre: string | Date;
+	motivo_inicial: string;
+	adjuntos: string;
 };
 export type Cliente = {
 	id: number;

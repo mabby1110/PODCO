@@ -112,7 +112,7 @@
 
 	.list {
 		min-height: 20vh;
-		max-height: 80vh;
+		max-height: 60vh;
 
 		display: flex;
 		flex-direction: column;
