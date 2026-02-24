@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CardC from '$lib/components/CardC.svelte';
+	import CardClienteListPreview from '$lib/components/CardClienteListPreview.svelte';
 	import FilterClientList from '$lib/components/FilterClientList.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
@@ -20,12 +20,12 @@
 	let showGlobal = $state(false);
 	let canGlobal = $derived($profile?.isAdmin === true);
 
-	const sinAgente = $derived(clients?.filter((c) => c.id_agente == '') ?? []);
-	const misClientes = $derived(clients?.filter((c) => c.id_agente === $profile?.id) ?? []);
+	const sinAgente = $derived(clients?.filter((c: { id_agente: string; }) => c.id_agente == '') ?? []);
+	const misClientes = $derived(clients?.filter((c: { id_agente: string | undefined; }) => c.id_agente === $profile?.id) ?? []);
 	const todos = $derived(clients ?? []);
 
 	const clientesPorAgente = $derived(
-		(agenteId: string) => clients?.filter((c) => c.id_agente === agenteId) ?? []
+		(agenteId: string) => clients?.filter((c: { id_agente: string; }) => c.id_agente === agenteId) ?? []
 	);
 
 	function sortClients(clientList: typeof clients) {
@@ -64,14 +64,14 @@
 		<h3>Todos <span class="count">({todos.length})</span></h3>
 		<div class="list">
 			{#each sortClients(todos) as client (client.id)}
-				<CardC {client} />
+				<CardClienteListPreview {client} />
 			{/each}
 		</div>
 	{:else if $profile?.isAdmin}
 		<h3>Sin Asignar <span class="count">({sinAgente.length})</span></h3>
 		<div class="list">
 			{#each sortClients(sinAgente) as client (client.id)}
-				<CardC {client} />
+				<CardClienteListPreview {client} />
 			{/each}
 		</div>
 
@@ -80,7 +80,7 @@
 			<h3>{agente.nombre} <span class="count">({clientesAgente.length})</span></h3>
 			<div class="list">
 				{#each sortClients(clientesAgente) as client (client.id)}
-					<CardC {client} />
+					<CardClienteListPreview {client} />
 				{/each}
 			</div>
 		{/each}
@@ -88,7 +88,7 @@
 		<h3>{$profile?.nombre} <span class="count">({misClientes.length})</span></h3>
 		<div class="list">
 			{#each sortClients(misClientes) as client (client.id)}
-				<CardC {client} />
+				<CardClienteListPreview {client} />
 			{/each}
 		</div>
 	{/if}

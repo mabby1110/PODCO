@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CardB from '$lib/components/CardB.svelte';
+	import CardOpListPreview from '$lib/components/CardOpListPreview.svelte';
 	import { filtrarConsecutivo } from '$lib/utils/util';
 	import { filterStore } from '$lib/stores/filterStore.svelte';
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
@@ -20,7 +20,7 @@
 <div class="view-container">
 	<div class="op-list">
 		{#each eventList as event (event.id)}
-			<CardB {event} />
+			<CardOpListPreview {event} />
 		{/each}
 	</div>
 </div>

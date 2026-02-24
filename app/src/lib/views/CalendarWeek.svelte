@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CardA from '$lib/components/CardA.svelte';
+	import CardOpCalendarPreview from '$lib/components/Oportunidad/CardOpCalendarPreview.svelte';
 	import { dropzone } from '$lib/actions/dnd';
 	import { filtrarConsecutivo } from '$lib/utils/util';
 	import { filterStore } from '$lib/stores/filterStore.svelte';
@@ -165,7 +165,7 @@
 							}}
 						>
 							{#if event && isEventStart(h.hour, h.minute, date, event)}
-								<CardA
+								<CardOpCalendarPreview
 									{event}
 									style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px;`}
 								/>

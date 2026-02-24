@@ -2,9 +2,9 @@
 	import { page } from '$app/state';
 	import { slide } from 'svelte/transition';
 	import { selectedClient } from '$lib/stores/selectedClient';
-	import EditableField from './EditableField.svelte';
-	import FormEditableJsonList from './FormEditableJsonList.svelte';
-	import EditableSelectField from './EditableSelectField.svelte';
+	import EditableField from '../EditableField.svelte';
+	import FormEditableJsonList from '../FormEditableJsonList.svelte';
+	import EditableSelectField from '../EditableSelectField.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
 	const { agentes } = $derived(page.data);
