@@ -1,14 +1,15 @@
 <script lang="ts">
-	import CardOportunidad from '$lib/components/CardOportunidad.svelte';
-	import CalendarWeek from '$lib/views/CalendarWeek.svelte';
-	import OpList from '$lib/views/OpList.svelte';
-	import { selectedOp } from '$lib/stores/selectedOp.js';
 	import { slide } from 'svelte/transition';
 	import { viewState } from '$lib/stores/ViewState.js';
-	import { selectedClient } from '$lib/stores/selectedClient.js';
-	import CardCliente from '$lib/components/CardCliente.svelte';
+	import CalendarWeek from '$lib/views/CalendarWeek.svelte';
+	import OpList from '$lib/views/OpList.svelte';
 	import ClientList from '$lib/views/ClientList.svelte';
 	import ActivityList from '$lib/views/ActivityList.svelte';
+	import CardOportunidad from '$lib/components/CardOportunidad.svelte';
+	import CardCliente from '$lib/components/CardCliente.svelte';
+	import { selectedOp } from '$lib/stores/selectedOp.js';
+	import { selectedClient } from '$lib/stores/selectedClient.js';
+	import { selectedActivity } from '$lib/stores/selectedActivity.js';
 
 	let { data } = $props();
 </script>
@@ -44,8 +45,12 @@
 				<ClientList clients={data.clientes} agentes={data.agentes} />
 			</section>
 		{/if}
-	{:else}
-		<ActivityList actividades={data.actividades}/>
+	{:else if $viewState.activities}
+		{#if $selectedActivity}
+			card actividades
+		{:else}
+			<ActivityList actividades={data.actividades} />
+		{/if}
 	{/if}
 </div>
 

@@ -15,17 +15,12 @@
 		if (!event) return null;
 
 		return {
-			id: event.id,
-			razon_social:
-				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
 			inicio: event?.inicio,
 			fin: event?.fin,
 			historia: event.historia || 'Sin historial registrado',
-			requisitos: event.requisitos || 'Sin historial registrado',
-			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
 			documentos: event.documentos || 'Sin documentos',
 			style: getStyleForPhase(event.fase)
 		};
@@ -52,7 +47,7 @@
 
 		<section class="grid">
 			<p class="date">{eventData.inicio}</p>
-			<PhaseAction {...eventData} />
+			<PhaseAction {...eventData}/>
 		</section>
 	</div>
 {/if}

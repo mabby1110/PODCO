@@ -5,12 +5,12 @@
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
 
 	let { actividades } = $props();
-
 	const eventList = $derived(
 		filterStore.atributo !== ''
 			? filtrarConsecutivo(filterStore.atributo, 'id_agente', actividades)
 			: actividades
 	);
+	console.log('actividades', eventList);
 </script>
 
 <div class="controls">
