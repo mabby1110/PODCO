@@ -1,15 +1,20 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import { viewState } from '$lib/stores/ViewState.js';
-	import CalendarWeek from '$lib/views/CalendarWeek.svelte';
-	import OpList from '$lib/views/OpList.svelte';
-	import ClientList from '$lib/views/ClientList.svelte';
-	import ActivityList from '$lib/views/ActivityList.svelte';
-	import CardOportunidad from '$lib/components/CardOportunidad.svelte';
-	import CardCliente from '$lib/components/Oportunidad/CardCliente.svelte';
+	
+	import CalendarWeek from '$lib/components/views/CalendarWeek.svelte';
+	import OpList from '$lib/components/views/OpList.svelte';
+	import ClientList from '$lib/components/views/ClientList.svelte';
+	import ActivityList from '$lib/components/views/ActivityList.svelte';
+
+	import CardOportunidad from '$lib/components/Oportunidad/CardOportunidad.svelte';
+	import CardCliente from '$lib/components/Cliente/CardCliente.svelte';
+
+
 	import { selectedOp } from '$lib/stores/selectedOp.js';
 	import { selectedClient } from '$lib/stores/selectedClient.js';
 	import { selectedActivity } from '$lib/stores/selectedActivity.js';
+	import CardActividad from '$lib/components/Actividad/CardActividad.svelte';
 
 	let { data } = $props();
 </script>
@@ -47,7 +52,7 @@
 		{/if}
 	{:else if $viewState.activities}
 		{#if $selectedActivity}
-			card actividades
+			<CardActividad />
 		{:else}
 			<ActivityList actividades={data.actividades} />
 		{/if}

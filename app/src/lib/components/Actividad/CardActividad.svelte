@@ -1,43 +1,41 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { selectedOp } from '$lib/stores/selectedOp';
 	import { slide } from 'svelte/transition';
-	import PhaseAction from '../PhaseAction.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import { selectedActivity } from '$lib/stores/selectedActivity';
 
-	const { clientes, agentes } = $derived(page.data);
+	const { agentes } = $derived(page.data);
 
-	let event = $derived($selectedOp);
+	let event = $derived($selectedActivity);
+
 	// Agrupa todas las derivaciones en un solo $derived.by para mejor reactividad
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 
 		return {
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
-			fase: fases.find((f) => f.id_fase == event.fase),
+			fase: fases.find(f => f.id_fase == event.fase),
 			motivo: event?.motivo,
 			inicio: event?.inicio,
-			fin: event?.fin,
 			historia: event.historia || 'Sin historial registrado',
-			documentos: event.documentos || 'Sin documentos',
+			requisitos: event.requisitos || 'No hay requisitos',
 			style: getStyleForPhase(event.fase)
 		};
 	});
 
 	function closeCard(e: MouseEvent) {
 		e.stopPropagation();
-		selectedOp.clear();
+		selectedActivity.clear();
 	}
 </script>
 
-{#if $selectedOp && eventData}
+{#if $selectedActivity && eventData}
 	<div class="card-d" transition:slide>
 		<header style={eventData.style}>
 			<button class="close-btn" onclick={closeCard} aria-label="Cerrar">✕</button>
 			<h1>{eventData.motivo}</h1>
-			<h3>{eventData.razon_social}</h3>
 			<div class="meta">
 				<p>{eventData.agente.nombre}</p>
 				<p>-</p>
@@ -47,7 +45,6 @@
 
 		<section class="grid">
 			<p class="date">{eventData.inicio}</p>
-			<PhaseAction {...eventData}/>
 		</section>
 	</div>
 {/if}

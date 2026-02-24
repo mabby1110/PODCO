@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CardOpListPreview from '$lib/components/CardOpListPreview.svelte';
+	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
 	import { filtrarConsecutivo } from '$lib/utils/util';
 	import { filterStore } from '$lib/stores/filterStore.svelte';
 	import FilterOpList from '$lib/components/FilterOpList.svelte';

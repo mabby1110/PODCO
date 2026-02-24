@@ -6,7 +6,7 @@
 	import { getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
 	import { fases, motivosOportunidad } from '$lib';
 	import FormSelectMotivo from '$lib/components/FormSelectMotivo.svelte';
-	import FormInput from './FormInput.svelte';
+	import FormInput from '../FormInput.svelte';
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { invalidate } from '$app/navigation';
 

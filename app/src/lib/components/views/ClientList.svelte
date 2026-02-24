@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CardClienteListPreview from '$lib/components/CardClienteListPreview.svelte';
+	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import FilterClientList from '$lib/components/FilterClientList.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
