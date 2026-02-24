@@ -2,10 +2,10 @@
 	import { slide } from 'svelte/transition';
 	import { viewState } from '$lib/stores/ViewState.js';
 	
-	import CalendarWeek from '$lib/components/views/CalendarWeek.svelte';
-	import OpList from '$lib/components/views/OpList.svelte';
-	import ClientList from '$lib/components/views/ClientList.svelte';
-	import ActivityList from '$lib/components/views/ActivityList.svelte';
+	import CalendarWeek from '$lib/components/Views/CalendarWeek.svelte';
+	import OpList from '$lib/components/Views/OpList.svelte';
+	import ClientList from '$lib/components/Views/ClientList.svelte';
+	import ActivityList from '$lib/components/Views/ActivityList.svelte';
 
 	import CardOportunidad from '$lib/components/Oportunidad/CardOportunidad.svelte';
 	import CardCliente from '$lib/components/Cliente/CardCliente.svelte';
@@ -27,7 +27,7 @@
 			</section>
 		{:else}
 			<section in:slide>
-				<CalendarWeek actividades={data.actividades} />
+				<CalendarWeek events={data.oportunidades} />
 			</section>
 		{/if}
 	{:else if $viewState.op}

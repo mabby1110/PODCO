@@ -1,7 +1,7 @@
 export const fases = [
 	{
 		id_fase: 1,
-		actual: 'Prospecto',
+		actual: 'Oportunidad',
 		accion: 'Analizar',
 		placeholder: 'Registrar datos iniciales y detectar una necesidad real'
 	},
@@ -15,7 +15,7 @@ export const fases = [
 		id_fase: 3,
 		actual: 'Negociacion',
 		accion: 'Documentar',
-		placeholder: 'Cotizacion aceptada, Ajustes, Nuevas propuestas y/o Resolver objeciones'
+		placeholder: 'Cotizacion aceptada, Orden de compra recibida, Ajustes, Nuevas propuestas y/o Resolver objeciones'
 	},
 	{
 		id_fase: 4,

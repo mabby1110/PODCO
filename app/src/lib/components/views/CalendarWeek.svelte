@@ -19,7 +19,7 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import type { Oportunidad } from '$lib';
 
-	const { actividades } = $props();
+	const { events } = $props();
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
 	const hoursRangePerDay = { start: 8, end: 19 };
@@ -43,8 +43,8 @@
 	// Filtrar eventos
 	const eventList = $derived(
 		filterStore.atributo !== ''
-			? filtrarConsecutivo(filterStore.atributo, 'id_agente', actividades)
-			: actividades
+			? filtrarConsecutivo(filterStore.atributo, 'id_agente', events)
+			: events
 	);
 
 	// Fechas de la semana
