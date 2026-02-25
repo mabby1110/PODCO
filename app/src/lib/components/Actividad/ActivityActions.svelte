@@ -4,26 +4,26 @@
 	import FormOptionalSubmit from '$lib/components/FormOptionalSubmit.svelte';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import { getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
-	import { fases } from '$lib';
+	import { fases_actividad } from '$lib';
 	import FormInput from '../FormInput.svelte';
-	import { selectedOp } from '$lib/stores/selectedOp';
 	import { invalidate } from '$app/navigation';
 	import { selectedActivity } from '$lib/stores/selectedActivity';
 
 	let { eventData } = $props();
 	let nuevoRequisito = $state('');
-	let nextPhase = $derived(Number(eventData.fase.id_fase) + 5);
+	let currentPhase = $derived(Number(eventData.fase.id_fase));
+	let nextPhase = $derived(currentPhase + 5);
 	let nuevaHistoria = $state('');
 	let isSubmitting = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 
-	let style = $derived(getStyleForPhase(eventData.fase.id_fase + 5));
-	let duration = $derived(getDurationForPhase(eventData.fase.id_fase));
+	let style = $derived(getStyleForPhase(currentPhase + 5));
+	let duration = $derived(getDurationForPhase(currentPhase));
 
 	// Placeholder dinámico por fase
 	let fasePlaceholder = $derived(
-		fases.find((f) => f.id_fase == eventData.fase.id_fase)?.placeholder ??
+		fases_actividad.find((f) => f.id_fase == currentPhase)?.placeholder ??
 			'Ingresa la acción realizada'
 	);
 
@@ -66,7 +66,7 @@
 		/>
 
 		{#if !submitCancel && !submitUpdate}
-			{#if eventData.fase.id_fase >= 2 || eventData.fase.id_fase == 0}
+			{#if currentPhase >= 2 || currentPhase == 0}
 				<section class="historia">
 					<h3>Historia</h3>
 					<p>{eventData.historia}</p>
@@ -80,7 +80,7 @@
 				</section>
 			{/if}
 
-			{#if eventData.fase.id_fase == 1}
+			{#if currentPhase == 1}
 				<FormInput
 					label="Acciones"
 					name="nuevaHistoria"
@@ -92,7 +92,7 @@
 			{/if}
 		{/if}
 
-		{#if eventData.fase.id_fase != 0}
+		{#if currentPhase != 0}
 			{#if submitUpdate}
 				<FormInput
 					label="Postergar"
@@ -124,17 +124,12 @@
 				/>
 			{/if}
 		{/if}
-		{#if eventData.fase.id_fase != 6}
+		{#if currentPhase != 6 && currentPhase != 0}
 			<div class="submit">
-				{#if nuevoRequisito}
-					<input type="hidden" name="fase" value={eventData.fase.id_fase} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
-				{/if}
-
 				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
 
 				{#if submitUpdate}
-					<input type="hidden" name="fase" value={eventData.fase.id_fase} />
+					<input type="hidden" name="fase" value={currentPhase} />
 					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
 				{:else if submitCancel}
 					<input type="hidden" name="fase" value={0} />

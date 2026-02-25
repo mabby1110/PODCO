@@ -50,7 +50,7 @@ export const fases_actividad = [
 		placeholder: 'Actividad agendada'
 	},
 	{
-		id_fase: 2,
+		id_fase: 6,
 		actual: 'Finalizada',
 		accion: '',
 		placeholder: 'Actividad finalizada y registrada en el historial'

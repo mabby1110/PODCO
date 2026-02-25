@@ -113,7 +113,7 @@ export async function updateRowById(
 		range: `${sheetName}!${column}${rowNumber}`,
 		values: [[value]]
 	}));
-
+	console.log(data);
 	// Actualizar en un solo batch
 	await sheets.spreadsheets.values.batchUpdate({
 		spreadsheetId: GOOGLE_SHEET_ID,
@@ -169,7 +169,7 @@ export async function updatePhaseAndHistory(
 	id: string,
 	historia: string,
 	action: string,
-	nextPhase?: string,
+	nextPhase?: number,
 	range: string = 'historial_actividades!A:Z'
 ) {
 	console.log('updatePhaseAndHistory llamada con:', { id, historia, action, nextPhase, range });
