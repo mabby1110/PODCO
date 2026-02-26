@@ -1,7 +1,7 @@
 <script lang="ts">
 	let {
 		label,
-		name,
+		name = "file",
 		required = false,
 		disabled = false,
 		hint = ''
@@ -16,7 +16,7 @@
 
 <form
 	method="POST"
-	action="?/upload"
+	action="?/uploadFile"
 	enctype="multipart/form-data"
 	class="field-block"
 >

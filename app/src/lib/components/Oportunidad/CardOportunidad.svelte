@@ -6,6 +6,7 @@
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import PhaseAction from './PhaseAction.svelte';
+	import UploadFile from '../ServerActions/UploadFile.svelte';
 
 	const { clientes, agentes } = $derived(page.data);
 
@@ -53,6 +54,7 @@
 		<section class="grid">
 			<p class="date">{eventData.inicio}</p>
 			<PhaseAction {...eventData} />
+			<UploadFile label="Subir archivo" />
 		</section>
 	</div>
 {/if}
