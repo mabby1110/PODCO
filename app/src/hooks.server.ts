@@ -4,7 +4,6 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 const supabaseHandle: Handle = async ({ event, resolve }) => {
-	console.log('hooks supabaseHandle');
 	event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
 		cookies: {
 			getAll() {
@@ -25,7 +24,6 @@ const supabaseHandle: Handle = async ({ event, resolve }) => {
 	});
 
 	event.locals.safeGetSession = async () => {
-		console.log('hooks safeGetSession');
 		const {
 			data: { session }
 		} = await event.locals.supabase.auth.getSession();
@@ -44,7 +42,6 @@ const supabaseHandle: Handle = async ({ event, resolve }) => {
 };
 
 const authGuard: Handle = async ({ event, resolve }) => {
-	console.log('hooks authGuard');
 	const { session, user } = await event.locals.safeGetSession();
 	event.locals.session = session;
 	event.locals.user = user;
@@ -64,7 +61,6 @@ const authGuard: Handle = async ({ event, resolve }) => {
 };
 
 const profileLoader: Handle = async ({ event, resolve }) => {
-	console.log('hooks profileLoader');
 	// Solo cargar profile si hay sesión Y NO estamos en /auth
 	if (event.locals.session && !event.url.pathname.startsWith('/auth')) {
 		try {

@@ -24,10 +24,10 @@
 			motivo: event?.motivo,
 			inicio: event?.inicio,
 			fin: event?.fin,
-			historia: event.historia || 'Sin historial registrado',
-			requisitos: event.requisitos || 'Sin historial registrado',
-			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
-			documentos: event.documentos || 'Sin documentos',
+			historia: event.historia,
+			requisitos: event.requisitos,
+			cotizaciones: event.cotizaciones,
+			documentos: event.documentos,
 			style: getStyleForPhase(event.fase)
 		};
 	});
@@ -54,7 +54,7 @@
 		<section class="grid">
 			<p class="date">{eventData.inicio}</p>
 			<PhaseAction {...eventData} />
-			<UploadFile label="Subir archivo" />
+			<!-- <UploadFile label="Subir archivo" /> -->
 		</section>
 	</div>
 {/if}

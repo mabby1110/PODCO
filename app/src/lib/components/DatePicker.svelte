@@ -2,13 +2,16 @@
 	import { addMinutes } from '$lib/utils/agenda';
 
 	// props (Svelte 5)
-	const { duration = 10, title='Inicio de actividad' } = $props<{ duration?: number, title: string }>();
+	const { duration = 10, title = 'Inicio de actividad' } = $props<{
+		duration?: number;
+		title: string;
+	}>();
 
 	// --- Pickers separados ---
-	let fecha = $state<string>('');
-	let hora = $state<string>('08:00');
-	let inicio = $state<string>('');
-	let fin = $state<string>('');
+	let fecha = $state('');
+	let hora = $state('10:00');
+	let inicio = $state('');
+	let fin = $state('');
 
 	$effect(() => {
 		if (fecha && hora) {
@@ -52,38 +55,47 @@
 
 		return horas;
 	}
+	$effect(() => {
+		if (fecha && hora) {
+			const base = `${fecha} ${hora}`;
+			inicio = base;
+			fin = setCustomEnd(new Date(`${fecha}T${hora}`));
+		} else {
+			inicio = '';
+			fin = '';
+		}
+	});
 </script>
 
+<label>
+	<span>{title}</span>
 
-    <label>
-        <span>{title}</span>
-    
-        <div class="datetime-split">
-            <!-- <input class="butter" type="date" bind:value={fecha} min={getToday()} required /> -->
-            <input class="butter" type="date" bind:value={fecha} required />
-    
-            <select class="butter" bind:value={hora} required>
-                {#each generarHoras() as h}
-                    <option value={h}>{h}</option>
-                {/each}
-            </select>
-        </div>
-    
-        <input type="hidden" name="inicio" bind:value={inicio} />
-        <input type="hidden" name="fin" bind:value={fin} />
-    </label>
+	<div class="datetime-split">
+		<!-- <input class="butter" type="date" bind:value={fecha} min={getToday()} required /> -->
+		<input class="butter" type="date" bind:value={fecha} required />
+
+		<select class="butter" bind:value={hora} required>
+			{#each generarHoras() as h}
+				<option value={h}>{h}</option>
+			{/each}
+		</select>
+	</div>
+
+	<input type="hidden" name="inicio" bind:value={inicio} />
+	<input type="hidden" name="fin" bind:value={fin} />
+</label>
 
 <style>
-    .butter {
-        background-color: var(--color-secondary);
-    }
-    label {
-        display: flex;
-        flex-direction: column;
-        gap: var(--a);
-        width: 100%;
-    }
-    span {
+	.butter {
+		background-color: var(--color-secondary);
+	}
+	label {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+		width: 100%;
+	}
+	span {
 		font-size: 20px;
 		cursor: pointer;
 	}

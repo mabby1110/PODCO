@@ -41,11 +41,10 @@
 	<select class="butter" bind:value={selected} required>
 		<option value="" disabled selected>Selecciona un motivo</option>
 
+		<option value="__otro__">Otro…</option>
 		{#each list as item}
 			<option value={item}>{item}</option>
 		{/each}
-
-		<option value="__otro__">Otro…</option>
 	</select>
 </label>
 

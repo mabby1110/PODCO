@@ -13,9 +13,9 @@
 	let {
 		fase,
 		id,
-		historia = '',
-		cotizaciones = '',
-		requisitos = ''
+		historia,
+		cotizaciones,
+		requisitos
 	}: {
 		fase: any;
 		id: string;
@@ -24,8 +24,8 @@
 		requisitos: string;
 	} = $props();
 
-	let nuevoRequisito = $state('');
 	let nextPhase = $derived(Number(fase.id_fase) + 1);
+	let nuevoRequisito = $state('');
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
 	let isSubmitting = $state(false);
@@ -41,7 +41,7 @@
 	);
 
 	function combinarHistoria(anterior: string, nueva: string): string {
-		if (!anterior || anterior.trim() === '') return nueva;
+		if (!anterior || nueva.trim() == '') return nueva;
 		return `${anterior}, ${nueva}`;
 	}
 
@@ -56,6 +56,8 @@
 			await invalidate('app:data');
 		};
 	}
+
+	$effect(() => console.log(combinarHistoria(requisitos, nuevoRequisito)));
 </script>
 
 <section class="actions">
@@ -68,13 +70,19 @@
 		}}
 	>
 		<input type="hidden" name="id" bind:value={id} />
-		<input type="hidden" name="historia" value={combinarHistoria(historia, nuevaHistoria)} />
-		<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
-		<input
-			type="hidden"
-			name="cotizaciones"
-			value={combinarHistoria(cotizaciones, nuevaCotizacion)}
-		/>
+		{#if nuevaHistoria}
+			<input type="hidden" name="historia" value={combinarHistoria(historia, nuevaHistoria)} />
+		{/if}
+		{#if nuevoRequisito}
+			<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
+		{/if}
+		{#if nuevaCotizacion}
+			<input
+				type="hidden"
+				name="cotizaciones"
+				value={combinarHistoria(cotizaciones, nuevaCotizacion)}
+			/>
+		{/if}
 
 		{#if !submitCancel && !submitUpdate}
 			{#if fase.id_fase >= 2 || fase.id_fase == 0}
@@ -98,7 +106,9 @@
 			{/if}
 
 			{#if fase.id_fase == 1}
+			<FormOptionalInput title="+Cambiar Motivo">
 				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} />
+			</FormOptionalInput>
 				<FormInput
 					label="Necesidades"
 					name="nuevaHistoria"
@@ -221,6 +231,7 @@
 				/>
 			{/if}
 		{/if}
+
 		{#if fase.id_fase != 6}
 			<div class="submit">
 				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />

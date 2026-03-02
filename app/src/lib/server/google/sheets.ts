@@ -128,7 +128,7 @@ export async function updateRowById(
 	await sheets.spreadsheets.values.batchUpdate({
 		spreadsheetId: GOOGLE_SHEET_ID,
 		requestBody: {
-			valueInputOption: 'RAW',
+			valueInputOption: 'USER_ENTERED',
 			data
 		}
 	});
@@ -136,28 +136,6 @@ export async function updateRowById(
 	return { rowNumber, updated: newValues };
 }
 
-// ======================
-// FORM MAPPING
-// ======================
-
-export type FieldColumnMap = {
-	[fieldName: string]: string;
-};
-
-export function mapFormDataToColumns(
-	formData: FormData,
-	fieldColumnMap: FieldColumnMap
-): { [key: string]: any } {
-	const values: { [key: string]: any } = {};
-
-	for (const [fieldName, columnLetter] of Object.entries(fieldColumnMap)) {
-		if (formData.has(fieldName)) {
-			values[columnLetter] = formData.get(fieldName);
-		}
-	}
-
-	return values;
-}
 
 // ======================
 // APPEND
@@ -179,6 +157,28 @@ export async function appendRow(
 	});
 
 	return { id, response: response.data };
+}
+// ======================
+// FORM MAPPING
+// ======================
+
+export type FieldColumnMap = {
+	[fieldName: string]: string;
+};
+
+export function mapFormDataToColumns(
+	formData: FormData,
+	fieldColumnMap: FieldColumnMap
+): { [key: string]: any } {
+	const values: { [key: string]: any } = {};
+
+	for (const [fieldName, columnLetter] of Object.entries(fieldColumnMap)) {
+		if (formData.has(fieldName)) {
+			values[columnLetter] = formData.get(fieldName);
+		}
+	}
+
+	return values;
 }
 
 // ======================

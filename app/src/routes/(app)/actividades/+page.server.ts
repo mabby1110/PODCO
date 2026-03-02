@@ -30,6 +30,35 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
+	updateOp: async ({ request }) => {
+		console.log('update action');
+		const formData = await request.formData();
+		const id = formData.get('id');
+		console.log(id, formData);
+
+		if (!id) {
+			return fail(400, { error: 'ID requerido' });
+		}
+
+		const updateFieldMap: FieldColumnMap = {
+			id_cliente: 'B',
+			id_agente: 'C',
+			fase: 'D',
+			motivo: 'E',
+			inicio: 'F',
+			fin: 'G',
+			historia: 'H',
+			cotizaciones: 'I',
+			requisitos: 'J',
+			fecha_cierre: 'L'
+		};
+
+		const newValues = mapFormDataToColumns(formData, updateFieldMap);
+		console.log(newValues);
+		await updateRowById(id as string, newValues, 'oportunidades!A:Z');
+
+		return { success: true };
+	},
 	addActivity: async ({ request }) => {
 		console.log('update activity');
 		const formData = await request.formData();
@@ -134,36 +163,6 @@ export const actions: Actions = {
 		newValues['I'] = new Date().toISOString();
 
 		await updateRowById(id as string, newValues, 'clientes!A:Z');
-
-		return { success: true };
-	},
-
-	updateOp: async ({ request }) => {
-		console.log('update action');
-		const formData = await request.formData();
-		const id = formData.get('id');
-		console.log(id, formData);
-
-		if (!id) {
-			return fail(400, { error: 'ID requerido' });
-		}
-
-		const updateFieldMap: FieldColumnMap = {
-			id_cliente: 'B',
-			id_agente: 'C',
-			fase: 'D',
-			motivo: 'E',
-			inicio: 'F',
-			fin: 'G',
-			historia: 'H',
-			cotizaciones: 'I',
-			requisitos: 'J',
-			fecha_cierre: 'L'
-		};
-
-		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-
-		await updateRowById(id as string, newValues, 'oportunidades!A:Z');
 
 		return { success: true };
 	},
