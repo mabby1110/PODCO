@@ -1,6 +1,10 @@
-import type { Actions } from './$types';
-import { appendRow, mapFormDataToColumns, updateRowById, type FieldColumnMap } from '$lib/server/google/sheets';
-import { fail } from '@sveltejs/kit';
+import {
+	appendRow,
+	mapFormDataToColumns,
+	updateRowById,
+	type FieldColumnMap
+} from '$lib/server/google/sheets';
+import { fail, type Actions } from '@sveltejs/kit';
 import { uploadToFolder } from '$lib/server/google/drive';
 import { Readable } from 'stream';
 
@@ -8,7 +12,7 @@ export const actions: Actions = {
 	add: async ({ request }) => {
 		console.log('\nActividades add\n');
 		const formData = await request.formData();
-		
+
 		const rowData = [
 			formData.get('id_cliente') || null,
 			formData.get('id_agente') || 1,
@@ -23,7 +27,7 @@ export const actions: Actions = {
 			null,
 			formData.get('motivo') || null
 		];
-		
+
 		console.log(formData, rowData);
 		await appendRow('oportunidades!A:Z', rowData);
 
@@ -32,14 +36,31 @@ export const actions: Actions = {
 
 	updateOp: async ({ request }) => {
 		console.log('update action');
+
 		const formData = await request.formData();
 		const id = formData.get('id');
-		console.log(id, formData);
 
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
 
+		// nuevos datos necesarios
+		const agenteNombre = formData.get('agente_nombre') as string;
+		const opFolder = `OP${id}`;
+
+		// ---------------- FILE UPLOAD ----------------
+		let uploadedFile = null;
+		const file = formData.get('file') as File;
+
+		if (file && file.size > 0) {
+			const buffer = Buffer.from(await file.arrayBuffer());
+			const stream = Readable.from(buffer);
+
+			uploadedFile = await uploadToFolder(file.name, file.type, stream, 'agenteNombre', opFolder);
+			console.log('file: ', buffer, uploadedFile);
+		}
+
+		// ---------------- COLUMN MAP ----------------
 		const updateFieldMap: FieldColumnMap = {
 			id_cliente: 'B',
 			id_agente: 'C',
@@ -54,11 +75,36 @@ export const actions: Actions = {
 		};
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-		console.log(newValues);
+		console.log('mapped: ', newValues);
+		// ---------------- COTIZACIONES ----------------
+		try {
+			const historialRaw = formData.get('cotizaciones');
+			const nuevaRaw = formData.get('cotizacionNueva');
+
+			const historial = historialRaw ? JSON.parse(historialRaw as string) : [];
+			let cotizacionNueva = nuevaRaw ? JSON.parse(nuevaRaw as string) : null;
+
+			if (cotizacionNueva && uploadedFile) {
+				cotizacionNueva.url = uploadedFile.webViewLink;
+			}
+
+			if (cotizacionNueva && cotizacionNueva.url) {
+				historial.push(cotizacionNueva);
+			}
+
+			newValues['I'] = JSON.stringify(historial);
+		} catch (err) {
+			console.error('Error procesando cotizaciones', err);
+		}
+
 		await updateRowById(id as string, newValues, 'oportunidades!A:Z');
 
-		return { success: true };
+		return {
+			success: true,
+			file: uploadedFile
+		};
 	},
+
 	addActivity: async ({ request }) => {
 		console.log('update activity');
 		const formData = await request.formData();
@@ -79,7 +125,7 @@ export const actions: Actions = {
 
 		return { success: true };
 	},
-	
+
 	updateActivity: async ({ request }) => {
 		console.log('update activity');
 		const formData = await request.formData();
@@ -154,11 +200,11 @@ export const actions: Actions = {
 			id_agente: 'C',
 			razon_social: 'D',
 			ubicacion: 'E',
-			contactos: 'F',
+			contactos: 'F'
 		};
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-		
+
 		// Agregar fecha de actualización
 		newValues['I'] = new Date().toISOString();
 
@@ -184,24 +230,24 @@ export const actions: Actions = {
 		);
 
 		return { success: true };
-	},
-
-	uploadFile: async ({ request }) => {
-		const data = await request.formData();
-		const file = data.get('file') as File;
-
-		if (!file || file.size === 0) {
-			throw new Error('Archivo requerido');
-		}
-
-		const buffer = Buffer.from(await file.arrayBuffer());
-		const stream = Readable.from(buffer);
-
-		const uploaded = await uploadToFolder(file.name, file.type, stream);
-
-		return {
-			success: true,
-			file: uploaded
-		};
 	}
+
+	// uploadFile: async ({ request }) => {
+	// 	const data = await request.formData();
+	// 	const file = data.get('file') as File;
+
+	// 	if (!file || file.size === 0) {
+	// 		throw new Error('Archivo requerido');
+	// 	}
+
+	// 	const buffer = Buffer.from(await file.arrayBuffer());
+	// 	const stream = Readable.from(buffer);
+
+	// 	const uploaded = await uploadToFolder(file.name, file.type, stream);
+
+	// 	return {
+	// 		success: true,
+	// 		file: uploaded
+	// 	};
+	// }
 };

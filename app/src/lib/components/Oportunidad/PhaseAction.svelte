@@ -9,6 +9,7 @@
 	import FormInput from '../FormInput.svelte';
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { invalidate } from '$app/navigation';
+	import UploadFile from '../ServerActions/UploadFile.svelte';
 
 	let {
 		fase,
@@ -64,6 +65,7 @@
 	<form
 		method="POST"
 		action="?/updateOp"
+		enctype="multipart/form-data"
 		use:enhance={() => {
 			isSubmitting = true;
 			return handleSubmit();
@@ -106,9 +108,9 @@
 			{/if}
 
 			{#if fase.id_fase == 1}
-			<FormOptionalInput title="+Cambiar Motivo">
-				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} />
-			</FormOptionalInput>
+				<FormOptionalInput title="+Cambiar Motivo">
+					<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} />
+				</FormOptionalInput>
 				<FormInput
 					label="Necesidades"
 					name="nuevaHistoria"
@@ -137,14 +139,17 @@
 					type="textarea"
 					required
 				/>
-				<FormInput
-					label="ID cotización"
-					name="nuevaCotizacion"
-					bind:value={nuevaCotizacion}
-					placeholder="ID de la cotización generada en CONTPAQi"
-					type="text"
-					required
-				/>
+				<div class="cotizacion">
+					<FormInput
+						label="ID cotización"
+						name="nuevaCotizacion"
+						bind:value={nuevaCotizacion}
+						placeholder="ID de la cotización generada en CONTPAQi"
+						type="number"
+						required
+					/>
+					<UploadFile label="PDF cotización" name="file" required />
+				</div>
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
 						label="Requisitos"
@@ -288,5 +293,11 @@
 		gap: var(--a);
 		justify-content: flex-end;
 		flex-grow: 1;
+	}
+	.cotizacion {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
 	}
 </style>
