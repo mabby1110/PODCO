@@ -102,5 +102,17 @@ export async function uploadToFolder(
 		supportsAllDrives: true
 	});
 
+	const fileId = response.data.id as string;
+
+	// ✅ hacer público como reader
+	await drive.permissions.create({
+		fileId,
+		requestBody: {
+			role: 'reader',
+			type: 'anyone'
+		},
+		supportsAllDrives: true
+	});
+
 	return response.data;
 }

@@ -39,7 +39,7 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 		const id = formData.get('id');
-
+		console.log('form data: ', formData);
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
@@ -56,7 +56,7 @@ export const actions: Actions = {
 			const buffer = Buffer.from(await file.arrayBuffer());
 			const stream = Readable.from(buffer);
 
-			uploadedFile = await uploadToFolder(file.name, file.type, stream, 'agenteNombre', opFolder);
+			uploadedFile = await uploadToFolder(file.name, file.type, stream, 'JBMF', opFolder);
 			console.log('file: ', buffer, uploadedFile);
 		}
 
@@ -76,23 +76,37 @@ export const actions: Actions = {
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
 		console.log('mapped: ', newValues);
+		
 		// ---------------- COTIZACIONES ----------------
 		try {
 			const historialRaw = formData.get('cotizaciones');
-			const nuevaRaw = formData.get('cotizacionNueva');
+			const nuevaCotizacionId = formData.get('nuevaCotizacion') as string | null;
 
-			const historial = historialRaw ? JSON.parse(historialRaw as string) : [];
-			let cotizacionNueva = nuevaRaw ? JSON.parse(nuevaRaw as string) : null;
+			let historial: any[] = [];
 
-			if (cotizacionNueva && uploadedFile) {
-				cotizacionNueva.url = uploadedFile.webViewLink;
+			// crear lista si viene vacía o inválida
+			if (historialRaw && String(historialRaw).trim() !== '') {
+				try {
+					historial = JSON.parse(historialRaw as string);
+					if (!Array.isArray(historial)) historial = [];
+				} catch {
+					historial = [];
+				}
 			}
 
-			if (cotizacionNueva && cotizacionNueva.url) {
-				historial.push(cotizacionNueva);
+			// agregar nueva cotización
+			if (nuevaCotizacionId && uploadedFile?.webViewLink) {
+				historial.push({
+					id: nuevaCotizacionId,
+					url: uploadedFile.webViewLink
+				});
 			}
+
+			console.log('historial: ', historial);
 
 			newValues['I'] = JSON.stringify(historial);
+
+			console.log('new: ', newValues);
 		} catch (err) {
 			console.error('Error procesando cotizaciones', err);
 		}

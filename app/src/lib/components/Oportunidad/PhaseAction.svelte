@@ -32,7 +32,6 @@
 	let isSubmitting = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
-
 	let style = $derived(getStyleForPhase(fase.id_fase + 1));
 	let duration = $derived(getDurationForPhase(fase.id_fase));
 
@@ -45,7 +44,6 @@
 		if (!anterior || nueva.trim() == '') return nueva;
 		return `${anterior}, ${nueva}`;
 	}
-
 	function handleSubmit() {
 		return async ({ result }: any) => {
 			selectedOp.clear();
@@ -58,7 +56,7 @@
 		};
 	}
 
-	$effect(() => console.log(combinarHistoria(requisitos, nuevoRequisito)));
+	// $effect(() => console.log(JSON.parse(cotizaciones)));
 </script>
 
 <section class="actions">
@@ -79,11 +77,7 @@
 			<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
 		{/if}
 		{#if nuevaCotizacion}
-			<input
-				type="hidden"
-				name="cotizaciones"
-				value={combinarHistoria(cotizaciones, nuevaCotizacion)}
-			/>
+			<input type="hidden" name="cotizaciones" bind:value={cotizaciones} />
 		{/if}
 
 		{#if !submitCancel && !submitUpdate}
@@ -94,10 +88,16 @@
 				</section>
 			{/if}
 			{#if fase.id_fase >= 3}
-				<section class="cotizaciones">
-					<h3>Cotizaciones</h3>
-					<p>{cotizaciones}</p>
-				</section>
+				{#if cotizaciones}
+					<section class="cotizaciones">
+						<h3>Cotizaciones</h3>
+						{#each JSON.parse(cotizaciones) as cotizacion}
+							<div class="cotizacion">
+								<a href={cotizacion.url}>{cotizacion.id}</a>
+							</div>
+						{/each}
+					</section>
+				{/if}
 			{/if}
 			{#if requisitos}
 				<!-- <EditableField id="requisitos" name="requisitos" type="text" bind:value={requisitos} /> -->
