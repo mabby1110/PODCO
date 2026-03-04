@@ -44,22 +44,6 @@ export const actions: Actions = {
 			return fail(400, { error: 'ID requerido' });
 		}
 
-		// nuevos datos necesarios
-		const agenteNombre = formData.get('agente_nombre') as string;
-		const opFolder = `OP${id}`;
-
-		// ---------------- FILE UPLOAD ----------------
-		let uploadedFile = null;
-		const file = formData.get('file') as File;
-
-		if (file && file.size > 0) {
-			const buffer = Buffer.from(await file.arrayBuffer());
-			const stream = Readable.from(buffer);
-
-			uploadedFile = await uploadToFolder(file.name, file.type, stream, 'JBMF', opFolder);
-			console.log('file: ', buffer, uploadedFile);
-		}
-
 		// ---------------- COLUMN MAP ----------------
 		const updateFieldMap: FieldColumnMap = {
 			id_cliente: 'B',
@@ -76,7 +60,28 @@ export const actions: Actions = {
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
 		console.log('mapped: ', newValues);
-		
+
+		// ---------------- FILE UPLOAD ----------------
+		const agenteNombre = formData.get('agente') as string;
+		const opFolder = `${id}`;
+
+		let uploadedQuoteFile = null;
+		const quotefile = formData.get('quotefile') as File;
+
+		if (quotefile && quotefile.size > 0) {
+			const buffer = Buffer.from(await quotefile.arrayBuffer());
+			const stream = Readable.from(buffer);
+
+			uploadedQuoteFile = await uploadToFolder(
+				quotefile.name,
+				quotefile.type,
+				stream,
+				agenteNombre,
+				opFolder
+			);
+			console.log('file: ', buffer, uploadedQuoteFile);
+		}
+
 		// ---------------- COTIZACIONES ----------------
 		try {
 			const historialRaw = formData.get('cotizaciones');
@@ -95,14 +100,12 @@ export const actions: Actions = {
 			}
 
 			// agregar nueva cotización
-			if (nuevaCotizacionId && uploadedFile?.webViewLink) {
+			if (nuevaCotizacionId && uploadedQuoteFile?.webViewLink) {
 				historial.push({
 					id: nuevaCotizacionId,
-					url: uploadedFile.webViewLink
+					url: uploadedQuoteFile.webViewLink
 				});
 			}
-
-			console.log('historial: ', historial);
 
 			newValues['I'] = JSON.stringify(historial);
 
@@ -115,7 +118,7 @@ export const actions: Actions = {
 
 		return {
 			success: true,
-			file: uploadedFile
+			file: uploadedOpFile
 		};
 	},
 

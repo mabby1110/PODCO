@@ -10,10 +10,12 @@
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { invalidate } from '$app/navigation';
 	import UploadFile from '../ServerActions/UploadFile.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let {
 		fase,
 		id,
+		agente,
 		historia,
 		cotizaciones,
 		requisitos,
@@ -21,6 +23,7 @@
 	}: {
 		fase: any;
 		id: string;
+		agente: any;
 		historia: string;
 		cotizaciones: string;
 		requisitos: string;
@@ -105,7 +108,6 @@
 					{/each}
 				</section>
 			{/if}
-
 			<!-- Acciones -->
 			{#if fase.id_fase == 1}
 				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} />
@@ -269,6 +271,7 @@
 			</div>
 		{/if}
 
+		<!-- datos compuestos -->
 		<input type="hidden" name="id" bind:value={id} />
 		{#if nuevaHistoria}
 			<input type="hidden" name="historia" value={combinarHistoria(historia, nuevaHistoria)} />
@@ -278,6 +281,9 @@
 		{/if}
 		{#if nuevaCotizacion}
 			<input type="hidden" name="cotizaciones" bind:value={cotizaciones} />
+		{/if}
+		{#if agente}
+			<input type="hidden" name="agente" bind:value={agente.nombre} />
 		{/if}
 	</form>
 </section>
