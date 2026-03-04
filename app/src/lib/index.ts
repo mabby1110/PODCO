@@ -1,3 +1,49 @@
+export type Oportunidad = {
+	id: string;
+	id_cliente: string;
+	id_agente: string;
+	fase: number;
+	motivo: string | null;
+	inicio: string;
+	fin: string;
+	historia: string | null;
+	cotizaciones: string | null;
+	requisitos: string;
+	fecha_creacion: string;
+	fecha_cierre: string | null;
+	motivo_inicial: string | null;
+	adjuntos: string | null;
+	documentos: string | null;
+};
+export type Actividad = {
+	id: string;
+	id_cliente: string;
+	id_agente: string;
+	fase: number;
+	motivo: string;
+	inicio: string | Date;
+	fin: string | Date;
+	historia: string;
+	cotizaciones: string;
+	requisitos: string;
+	fecha_creacion: string | Date;
+	fecha_cierre: string | Date;
+	motivo_inicial: string;
+	adjuntos: string;
+};
+export type Cliente = {
+	id: number;
+	id_contpaqi: string;
+	id_agente: string;
+	razon_social: string;
+	ubicacion: string | null;
+	contactos: string | null;
+	tipo_prospeccion: string;
+	fecha_creacion: string | Date;
+	ultima_actualizacion: string | Date;
+	fecha_sync: string | Date | null;
+};
+
 export const fases = [
 	{
 		id_fase: 1,
@@ -15,13 +61,13 @@ export const fases = [
 		id_fase: 3,
 		actual: 'Negociacion',
 		accion: 'Documentar',
-		placeholder: 'Cotizacion aceptada, Orden de compra recibida, Ajustes, Nuevas propuestas y/o Resolver objeciones'
+		placeholder: 'Motivos de conversión'
 	},
 	{
 		id_fase: 4,
 		actual: 'Ganada',
 		accion: 'Enviar',
-		placeholder: 'Confirmar cierre y preparar documentación de entrega'
+		placeholder: 'Preparar productos y documentación para entrega'
 	},
 	{
 		id_fase: 5,
@@ -95,49 +141,4 @@ export let motivosProspeccion = [
 	'Evento / feria',
 	'Reactivación de cliente'
 ];
-export type Oportunidad = {
-	id: string;
-	id_cliente: string;
-	id_agente: string;
-	fase: number;
-	motivo: string | null;
-	inicio: string;
-	fin: string;
-	historia: string | null;
-	cotizaciones: string | null;
-	requisitos: string;
-	fecha_creacion: string;
-	fecha_cierre: string | null;
-	motivo_inicial: string | null;
-	adjuntos: string | null;
-	documentos: string | null;
-};
-export type Actividad = {
-	id: string;
-	id_cliente: string;
-	id_agente: string;
-	fase: number;
-	motivo: string;
-	inicio: string | Date;
-	fin: string | Date;
-	historia: string;
-	cotizaciones: string;
-	requisitos: string;
-	fecha_creacion: string | Date;
-	fecha_cierre: string | Date;
-	motivo_inicial: string;
-	adjuntos: string;
-};
-export type Cliente = {
-	id: number;
-	id_contpaqi: string;
-	id_agente: string;
-	razon_social: string;
-	ubicacion: string | null;
-	contactos: string | null;
-	tipo_prospeccion: string;
-	fecha_creacion: string | Date;
-	ultima_actualizacion: string | Date;
-	fecha_sync: string | Date | null;
-};
 

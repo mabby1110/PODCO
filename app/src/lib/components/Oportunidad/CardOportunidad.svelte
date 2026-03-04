@@ -6,11 +6,11 @@
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import PhaseAction from './PhaseAction.svelte';
-	import UploadFile from '../ServerActions/UploadFile.svelte';
 
 	const { clientes, agentes } = $derived(page.data);
 
 	let event = $derived($selectedOp);
+	console.log(event);
 	// Agrupa todas las derivaciones en un solo $derived.by para mejor reactividad
 	const eventData = $derived.by(() => {
 		if (!event) return null;
@@ -28,6 +28,7 @@
 			requisitos: event.requisitos,
 			cotizaciones: event.cotizaciones,
 			documentos: event.documentos,
+			adjuntos: event.adjuntos,
 			style: getStyleForPhase(event.fase)
 		};
 	});
@@ -50,11 +51,10 @@
 				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</div>
 		</header>
-
+		
 		<section class="grid">
 			<p class="date">{eventData.inicio}</p>
 			<PhaseAction {...eventData} />
-			<!-- <UploadFile label="Subir archivo" /> -->
 		</section>
 	</div>
 {/if}

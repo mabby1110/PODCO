@@ -16,13 +16,15 @@
 		id,
 		historia,
 		cotizaciones,
-		requisitos
+		requisitos,
+		adjuntos
 	}: {
 		fase: any;
 		id: string;
 		historia: string;
 		cotizaciones: string;
 		requisitos: string;
+		adjuntos: string;
 	} = $props();
 
 	let nextPhase = $derived(Number(fase.id_fase) + 1);
@@ -69,48 +71,44 @@
 			return handleSubmit();
 		}}
 	>
-		<input type="hidden" name="id" bind:value={id} />
-		{#if nuevaHistoria}
-			<input type="hidden" name="historia" value={combinarHistoria(historia, nuevaHistoria)} />
-		{/if}
-		{#if nuevoRequisito}
-			<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
-		{/if}
-		{#if nuevaCotizacion}
-			<input type="hidden" name="cotizaciones" bind:value={cotizaciones} />
-		{/if}
-
 		{#if !submitCancel && !submitUpdate}
-			{#if fase.id_fase >= 2 || fase.id_fase == 0}
+			<!-- informacion -->
+			{#if historia}
 				<section class="historia">
 					<h3>Historia</h3>
 					<p>{historia}</p>
 				</section>
 			{/if}
-			{#if fase.id_fase >= 3}
-				{#if cotizaciones}
-					<section class="cotizaciones">
-						<h3>Cotizaciones</h3>
-						{#each JSON.parse(cotizaciones) as cotizacion}
-							<div class="cotizacion">
-								<a href={cotizacion.url}>{cotizacion.id}</a>
-							</div>
-						{/each}
-					</section>
-				{/if}
+			{#if cotizaciones}
+				<section class="cotizaciones">
+					<h3>Cotizaciones</h3>
+					{#each JSON.parse(cotizaciones) as cotizacion}
+						<div class="cotizacion">
+							<a href={cotizacion.url}>{cotizacion.id}</a>
+						</div>
+					{/each}
+				</section>
 			{/if}
 			{#if requisitos}
-				<!-- <EditableField id="requisitos" name="requisitos" type="text" bind:value={requisitos} /> -->
 				<section class="requisitos">
 					<h3>Requisitos</h3>
 					<p>{requisitos}</p>
 				</section>
 			{/if}
+			{#if adjuntos}
+				<section class="documentos">
+					<h3>Documentos</h3>
+					{#each JSON.parse(adjuntos) as documento}
+						<div class="cotizacion">
+							<a href={documento.url}>{documento.id}</a>
+						</div>
+					{/each}
+				</section>
+			{/if}
 
+			<!-- Acciones -->
 			{#if fase.id_fase == 1}
-				<FormOptionalInput title="+Cambiar Motivo">
-					<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} />
-				</FormOptionalInput>
+				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} />
 				<FormInput
 					label="Necesidades"
 					name="nuevaHistoria"
@@ -119,7 +117,7 @@
 					type="textarea"
 					required
 				/>
-				<FormOptionalInput title="+Agregar requisitos">
+				<FormOptionalInput title="+requisitos">
 					<FormInput
 						label="Requisitos"
 						name="nuevoRequisitos"
@@ -128,6 +126,9 @@
 						type="textarea"
 						required
 					/>
+				</FormOptionalInput>
+				<FormOptionalInput title="+documentos">
+					<UploadFile label="Subir documentos" name="docFile" />
 				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha de compromiso para presentar propuesta" />
 			{:else if fase.id_fase == 2}
@@ -148,7 +149,7 @@
 						type="number"
 						required
 					/>
-					<UploadFile label="PDF cotización" name="file" required />
+					<UploadFile label="" name="quotefile" required />
 				</div>
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
@@ -160,6 +161,9 @@
 						required
 					/>
 				</FormOptionalInput>
+				<FormOptionalInput title="+documentos">
+					<UploadFile label="Subir documentos" name="docFile" />
+				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha en que la vigencia de la cotización termina" />
 			{:else if fase.id_fase == 3}
 				<FormInput
@@ -170,26 +174,18 @@
 					type="textarea"
 					required
 				/>
-				<FormOptionalInput title="+Nueva cotizacion">
+
+				<div class="oc">
 					<FormInput
-						label="ID cotización"
+						label="Orden de compra"
 						name="nuevaCotizacion"
 						bind:value={nuevaCotizacion}
-						placeholder="ID Separado(s) por coma y espacio ej. c1, c2, ..."
-						type="textarea"
+						placeholder="ID de la cotización generada en CONTPAQi"
+						type="text"
 						required
 					/>
-				</FormOptionalInput>
-				<FormOptionalInput title="+Agregar requisitos">
-					<FormInput
-						label="Requisitos"
-						name="nuevoRequisitos"
-						bind:value={nuevoRequisito}
-						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-						type="textarea"
-						required
-					/>
-				</FormOptionalInput>
+					<UploadFile label="" name="quotefile" required />
+				</div>
 				<DatePicker {duration} title="Fecha en que la vigencia de la cotización termina" />
 			{:else if fase.id_fase != 6}
 				<FormInput
@@ -204,6 +200,7 @@
 			{/if}
 		{/if}
 
+		<!-- acciones opcionales -->
 		{#if fase.id_fase != 0}
 			{#if submitUpdate}
 				<FormInput
@@ -214,16 +211,31 @@
 					type="textarea"
 					required
 				/>
-				<FormOptionalInput title="+Agregar requisitos">
-					<FormInput
-						label="Requisitos"
-						name="nuevoRequisitos"
-						bind:value={nuevoRequisito}
-						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-						type="textarea"
-						required
-					/>
-				</FormOptionalInput>
+				{#if fase.id_fase > 2}
+					<FormOptionalInput title="+Nueva cotizacion">
+						<div class="cotizacion">
+							<FormInput
+								label="ID cotización"
+								name="nuevaCotizacion"
+								bind:value={nuevaCotizacion}
+								placeholder="ID de la cotización generada en CONTPAQi"
+								type="number"
+								required
+							/>
+							<UploadFile label="" name="quotefile" required />
+						</div>
+					</FormOptionalInput>
+					<FormOptionalInput title="+Agregar requisitos">
+						<FormInput
+							label="Requisitos"
+							name="nuevoRequisitos"
+							bind:value={nuevoRequisito}
+							placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+				{/if}
 				<DatePicker {duration} title="Fecha de compromiso" />
 			{:else if submitCancel}
 				<FormInput
@@ -237,6 +249,7 @@
 			{/if}
 		{/if}
 
+		<!-- opciones para envio de formulario -->
 		{#if fase.id_fase != 6}
 			<div class="submit">
 				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
@@ -254,6 +267,17 @@
 					</button>
 				{/if}
 			</div>
+		{/if}
+
+		<input type="hidden" name="id" bind:value={id} />
+		{#if nuevaHistoria}
+			<input type="hidden" name="historia" value={combinarHistoria(historia, nuevaHistoria)} />
+		{/if}
+		{#if nuevoRequisito}
+			<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
+		{/if}
+		{#if nuevaCotizacion}
+			<input type="hidden" name="cotizaciones" bind:value={cotizaciones} />
 		{/if}
 	</form>
 </section>
@@ -294,7 +318,8 @@
 		justify-content: flex-end;
 		flex-grow: 1;
 	}
-	.cotizacion {
+	.cotizacion,
+	.oc {
 		width: 100%;
 		display: flex;
 		flex-direction: column;

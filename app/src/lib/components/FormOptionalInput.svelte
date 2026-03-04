@@ -20,16 +20,17 @@
 	</button>
 {:else}
 	<div class="optional-input">
+		<button class="close-btn" type="button" onclick={close}>✕</button>
 		{#if children}
 			{@render children()}
 		{/if}
-		<button class="close-btn" type="button" onclick={close}>✕</button>
 	</div>
 {/if}
 
 <style>
 	.optional-input {
 		display: flex;
+		flex-direction: column;
 		flex-grow: 1;
 		width: 100%;
 		gap: var(--a);

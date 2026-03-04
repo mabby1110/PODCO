@@ -1,12 +1,12 @@
 <script lang="ts">
 	let {
-		label,
+		label = null,
 		name = 'file',
 		required = false,
 		disabled = false,
 		hint = ''
 	}: {
-		label: string;
+		label: string | null;
 		name: string;
 		required?: boolean;
 		disabled?: boolean;
@@ -15,6 +15,9 @@
 </script>
 
 <div class="upload-container">
+	{#if label}
+		<h3>{label}</h3>
+	{/if}
 	{#if hint}
 		<p class="hint">{hint}</p>
 	{/if}
