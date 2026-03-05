@@ -39,12 +39,12 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 		const id = formData.get('id');
-		console.log('form data: ', formData);
+		console.log(formData);
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
 
-		// ---------------- COLUMN MAP ----------------
+		// ---------- MAP FORM ----------
 		const updateFieldMap: FieldColumnMap = {
 			id_cliente: 'B',
 			id_agente: 'C',
@@ -59,37 +59,34 @@ export const actions: Actions = {
 		};
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-		console.log('mapped: ', newValues);
 
-		// ---------------- FILE UPLOAD ----------------
 		const agenteNombre = formData.get('agente') as string;
 		const opFolder = `${id}`;
 
+		// ---------- UPLOAD QUOTE ----------
 		let uploadedQuoteFile = null;
-		const quotefile = formData.get('quotefile') as File;
+		const quoteFile = formData.get('quoteFile') as File;
 
-		if (quotefile && quotefile.size > 0) {
-			const buffer = Buffer.from(await quotefile.arrayBuffer());
+		if (quoteFile && quoteFile.size > 0) {
+			const buffer = Buffer.from(await quoteFile.arrayBuffer());
 			const stream = Readable.from(buffer);
 
 			uploadedQuoteFile = await uploadToFolder(
-				quotefile.name,
-				quotefile.type,
+				quoteFile.name,
+				quoteFile.type,
 				stream,
 				agenteNombre,
 				opFolder
 			);
-			console.log('file: ', buffer, uploadedQuoteFile);
 		}
 
-		// ---------------- COTIZACIONES ----------------
+		// ---------- COTIZACIONES ----------
 		try {
 			const historialRaw = formData.get('cotizaciones');
 			const nuevaCotizacionId = formData.get('nuevaCotizacion') as string | null;
 
 			let historial: any[] = [];
 
-			// crear lista si viene vacía o inválida
 			if (historialRaw && String(historialRaw).trim() !== '') {
 				try {
 					historial = JSON.parse(historialRaw as string);
@@ -99,26 +96,71 @@ export const actions: Actions = {
 				}
 			}
 
-			// agregar nueva cotización
 			if (nuevaCotizacionId && uploadedQuoteFile?.webViewLink) {
 				historial.push({
 					id: nuevaCotizacionId,
-					url: uploadedQuoteFile.webViewLink
+					name: uploadedQuoteFile.name,
+					url: uploadedQuoteFile.webViewLink,
+					preview: `https://drive.google.com/file/d/${uploadedQuoteFile.id}/preview`
 				});
 			}
 
 			newValues['I'] = JSON.stringify(historial);
-
-			console.log('new: ', newValues);
 		} catch (err) {
 			console.error('Error procesando cotizaciones', err);
 		}
 
+		// ---------- UPLOAD DOC ----------
+		let uploadedDocFile = null;
+		const docFile = formData.get('docFile') as File;
+
+		if (docFile && docFile.size > 0) {
+			const buffer = Buffer.from(await docFile.arrayBuffer());
+			const stream = Readable.from(buffer);
+
+			uploadedDocFile = await uploadToFolder(
+				docFile.name,
+				docFile.type,
+				stream,
+				agenteNombre,
+				opFolder
+			);
+		}
+
+		// ---------- DOCUMENTOS ----------
+		try {
+			const docsRaw = formData.get('requisitos');
+
+			let docs: any[] = [];
+
+			if (docsRaw && String(docsRaw).trim() !== '') {
+				try {
+					docs = JSON.parse(docsRaw as string);
+					if (!Array.isArray(docs)) docs = [];
+				} catch {
+					docs = [];
+				}
+			}
+
+			if (uploadedDocFile?.webViewLink) {
+				docs.push({
+					name: uploadedDocFile.name,
+					url: uploadedDocFile.webViewLink,
+					preview: `https://drive.google.com/file/d/${uploadedDocFile.id}/preview`
+				});
+			}
+
+			newValues['O'] = JSON.stringify(docs);
+		} catch (err) {
+			console.error('Error procesando documentos', err);
+		}
+
+		// ---------- UPDATE SHEET ----------
 		await updateRowById(id as string, newValues, 'oportunidades!A:Z');
 
 		return {
 			success: true,
-			file: uploadedOpFile
+			file: uploadedQuoteFile
 		};
 	},
 

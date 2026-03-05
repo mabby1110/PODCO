@@ -87,7 +87,8 @@
 					<h3>Cotizaciones</h3>
 					{#each JSON.parse(cotizaciones) as cotizacion}
 						<div class="cotizacion">
-							<a href={cotizacion.url}>{cotizacion.id}</a>
+						<iframe src={cotizacion.preview} width="500" height="300" title="Descripción"></iframe>
+							<!-- <a href={cotizacion.url}>{cotizacion.id}</a> -->
 						</div>
 					{/each}
 				</section>
@@ -103,7 +104,9 @@
 					<h3>Documentos</h3>
 					{#each JSON.parse(adjuntos) as documento}
 						<div class="cotizacion">
-							<a href={documento.url}>{documento.id}</a>
+						
+						<iframe src={documento.preview} width="500" height="300" title="Descripción"></iframe>
+							<!-- <a href={documento.url}>{documento.id}</a> -->
 						</div>
 					{/each}
 				</section>
@@ -151,7 +154,7 @@
 						type="number"
 						required
 					/>
-					<UploadFile label="" name="quotefile" required />
+					<UploadFile label="" name="quoteFile" required />
 				</div>
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
@@ -186,7 +189,7 @@
 						type="text"
 						required
 					/>
-					<UploadFile label="" name="quotefile" required />
+					<UploadFile label="" name="quoteFile" required />
 				</div>
 				<DatePicker {duration} title="Fecha en que la vigencia de la cotización termina" />
 			{:else if fase.id_fase != 6}
@@ -224,7 +227,7 @@
 								type="number"
 								required
 							/>
-							<UploadFile label="" name="quotefile" required />
+							<UploadFile label="" name="quoteFile" required />
 						</div>
 					</FormOptionalInput>
 					<FormOptionalInput title="+Agregar requisitos">
