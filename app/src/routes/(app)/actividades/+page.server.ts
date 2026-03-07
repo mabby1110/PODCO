@@ -5,7 +5,7 @@ import {
 	type FieldColumnMap
 } from '$lib/server/google/sheets';
 import { fail, type Actions } from '@sveltejs/kit';
-import { uploadToFolder } from '$lib/server/google/drive';
+import { processAttachments, uploadToFolder } from '$lib/server/google/drive';
 import { Readable } from 'stream';
 
 export const actions: Actions = {
@@ -110,45 +110,12 @@ export const actions: Actions = {
 			console.error('Error procesando cotizaciones', err);
 		}
 
-		// ---------- UPLOAD DOC ----------
-		let uploadedDocFile = null;
-		const docFile = formData.get('docFile') as File;
-
-		if (docFile && docFile.size > 0) {
-			const buffer = Buffer.from(await docFile.arrayBuffer());
-			const stream = Readable.from(buffer);
-
-			uploadedDocFile = await uploadToFolder(
-				docFile.name,
-				docFile.type,
-				stream,
-				agenteNombre,
-				opFolder
-			);
-		}
-
 		// ---------- DOCUMENTOS ----------
 		try {
-			const docsRaw = formData.get('requisitos');
+			const docFiles = formData.getAll('docFile') as File[];
 
-			let docs: any[] = [];
-
-			if (docsRaw && String(docsRaw).trim() !== '') {
-				try {
-					docs = JSON.parse(docsRaw as string);
-					if (!Array.isArray(docs)) docs = [];
-				} catch {
-					docs = [];
-				}
-			}
-
-			if (uploadedDocFile?.webViewLink) {
-				docs.push({
-					name: uploadedDocFile.name,
-					url: uploadedDocFile.webViewLink,
-					preview: `https://drive.google.com/file/d/${uploadedDocFile.id}/preview`
-				});
-			}
+			const docsRaw = formData.get('adjuntos');
+			const docs = await processAttachments(docFiles, agenteNombre, opFolder, docsRaw);
 
 			newValues['O'] = JSON.stringify(docs);
 		} catch (err) {

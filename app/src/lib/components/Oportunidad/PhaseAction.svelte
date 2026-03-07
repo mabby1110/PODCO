@@ -10,7 +10,6 @@
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { invalidate } from '$app/navigation';
 	import UploadFile from '../ServerActions/UploadFile.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let {
 		fase,
@@ -75,42 +74,6 @@
 		}}
 	>
 		{#if !submitCancel && !submitUpdate}
-			<!-- informacion -->
-			{#if historia}
-				<section class="historia">
-					<h3>Historia</h3>
-					<p>{historia}</p>
-				</section>
-			{/if}
-			{#if cotizaciones}
-				<section class="cotizaciones">
-					<h3>Cotizaciones</h3>
-					{#each JSON.parse(cotizaciones) as cotizacion}
-						<div class="cotizacion">
-						<iframe src={cotizacion.preview} width="500" height="300" title="Descripción"></iframe>
-							<!-- <a href={cotizacion.url}>{cotizacion.id}</a> -->
-						</div>
-					{/each}
-				</section>
-			{/if}
-			{#if requisitos}
-				<section class="requisitos">
-					<h3>Requisitos</h3>
-					<p>{requisitos}</p>
-				</section>
-			{/if}
-			{#if adjuntos}
-				<section class="documentos">
-					<h3>Documentos</h3>
-					{#each JSON.parse(adjuntos) as documento}
-						<div class="cotizacion">
-						
-						<iframe src={documento.preview} width="500" height="300" title="Descripción"></iframe>
-							<!-- <a href={documento.url}>{documento.id}</a> -->
-						</div>
-					{/each}
-				</section>
-			{/if}
 			<!-- Acciones -->
 			{#if fase.id_fase == 1}
 				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} />
@@ -133,7 +96,7 @@
 					/>
 				</FormOptionalInput>
 				<FormOptionalInput title="+documentos">
-					<UploadFile label="Subir documentos" name="docFile" />
+					<UploadFile label="Subir documentos" name="docFile" multiple />
 				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha de compromiso para presentar propuesta" />
 			{:else if fase.id_fase == 2}
@@ -154,7 +117,7 @@
 						type="number"
 						required
 					/>
-					<UploadFile label="" name="quoteFile" required />
+					<UploadFile label="" name="quoteFile" required multiple={false} />
 				</div>
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
@@ -286,7 +249,7 @@
 			<input type="hidden" name="cotizaciones" bind:value={cotizaciones} />
 		{/if}
 		{#if agente}
-			<input type="hidden" name="agente" bind:value={agente.nombre} />
+			<input type="hidden" name="agente" value={agente.nombre} />
 		{/if}
 	</form>
 </section>
@@ -295,28 +258,21 @@
 	.actions {
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
 		width: 100%;
-		padding: var(--b);
 	}
-
 	form {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--c);
 		width: 100%;
-	}
-	form section {
-		width: 100%;
+		padding: var(--a);
+		gap: var(--b);
 	}
 	.butter:hover:not(:disabled) {
 		transform: translateY(-2px);
 	}
-
 	.butter:active:not(:disabled) {
 		transform: translateY(0);
 	}
-
 	.butter:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;

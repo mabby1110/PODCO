@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import { auth } from './auth';
 import { GOOGLE_FOLDER_ID } from '$env/static/private';
+import { Readable } from 'stream';
 
 export const drive = google.drive({
 	version: 'v3',
@@ -115,4 +116,48 @@ export async function uploadToFolder(
 	});
 
 	return response.data;
+}
+
+export async function processAttachments(
+	files: File[],
+	agenteNombre: string,
+	opFolder: string,
+	existingJson: FormDataEntryValue | null
+) {
+	let docs: any[] = [];
+
+	// parse existing
+	if (existingJson && String(existingJson).trim() !== '') {
+		try {
+			docs = JSON.parse(existingJson as string);
+			if (!Array.isArray(docs)) docs = [];
+		} catch {
+			docs = [];
+		}
+	}
+
+	for (const file of files) {
+		if (!file || file.size === 0) continue;
+
+		const buffer = Buffer.from(await file.arrayBuffer());
+		const stream = Readable.from(buffer);
+
+		const uploaded = await uploadToFolder(
+			file.name,
+			file.type,
+			stream,
+			agenteNombre,
+			opFolder
+		);
+
+		if (uploaded?.webViewLink) {
+			docs.push({
+				name: uploaded.name,
+				url: uploaded.webViewLink,
+				preview: `https://drive.google.com/file/d/${uploaded.id}/preview`
+			});
+		}
+	}
+
+	return docs;
 }

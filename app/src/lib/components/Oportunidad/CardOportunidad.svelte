@@ -50,12 +50,51 @@
 				<p>-</p>
 				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</div>
-		</header>
-		
-		<section class="grid">
 			<p class="date">{eventData.inicio}</p>
-			<PhaseAction {...eventData} />
-		</section>
+		</header>
+		<div class="card-content">
+			<!-- informacion -->
+			{#if eventData.historia}
+				<section class="historia">
+					<h3>Historia</h3>
+					<p>{eventData.historia}</p>
+				</section>
+			{/if}
+			{#if eventData.requisitos}
+				<section class="requisitos">
+					<h3>Requisitos</h3>
+					<p>{eventData.requisitos}</p>
+				</section>
+			{/if}
+			
+			{#if eventData.cotizaciones}
+				<section class="cotizaciones">
+					<h3>Cotizaciones</h3>
+					{#each JSON.parse(eventData.cotizaciones) as cotizacion}
+						<div class="cotizacion">
+							<iframe src={cotizacion.preview} width="500" height="300" title="Descripción"
+							></iframe>
+							<!-- <a href={cotizacion.url}>{cotizacion.id}</a> -->
+						</div>
+					{/each}
+				</section>
+			{/if}
+			{#if eventData.adjuntos}
+				<section class="documentos">
+					<h3>Documentos</h3>
+					{#each JSON.parse(eventData.adjuntos) as documento}
+						<div class="cotizacion">
+							<iframe src={documento.preview} width="500" height="300" title="Descripción"></iframe>
+							<!-- <a href={documento.url}>{documento.id}</a> -->
+						</div>
+					{/each}
+				</section>
+			{/if}
+			
+			<section class="grid">
+				<PhaseAction {...eventData} />
+			</section>
+		</div>
 	</div>
 {/if}
 
@@ -90,6 +129,18 @@
 	header h1 {
 		width: 100%;
 	}
+	header .date {
+		position: fixed;
+		bottom: 4px;
+		right: 4px;
+	}
+	.card-content {
+		overflow: auto;
+		display: flex;
+		flex-direction: column;
+		gap: var(--b);
+		padding: var(--a);
+	}
 	.close-btn {
 		position: absolute;
 		right: var(--a);
@@ -108,13 +159,6 @@
 		flex-direction: column;
 		align-items: flex-start;
 		gap: var(--b);
-		overflow: auto;
-	}
-	.grid .date {
-		position: absolute;
-		right: var(--a);
-		top: 0;
-		font-size: 0.85em;
 	}
 	.meta {
 		display: flex;
