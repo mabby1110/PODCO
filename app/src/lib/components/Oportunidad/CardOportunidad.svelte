@@ -6,6 +6,7 @@
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import PhaseAction from './PhaseAction.svelte';
+	import AdjuntosGrid from '$lib/components/AdjuntosGrid.svelte';
 
 	const { clientes, agentes } = $derived(page.data);
 
@@ -66,31 +67,25 @@
 					<p>{eventData.requisitos}</p>
 				</section>
 			{/if}
-			
+
 			{#if eventData.cotizaciones}
 				<section class="cotizaciones">
 					<h3>Cotizaciones</h3>
-					{#each JSON.parse(eventData.cotizaciones) as cotizacion}
-						<div class="cotizacion">
-							<iframe src={cotizacion.preview} width="500" height="300" title="Descripción"
-							></iframe>
+					<div class="documentos">
+						{#each JSON.parse(eventData.cotizaciones) as cotizacion}
+							<iframe src={cotizacion.preview} class="iframe" title="Descripción"></iframe>
 							<!-- <a href={cotizacion.url}>{cotizacion.id}</a> -->
-						</div>
-					{/each}
+						{/each}
+					</div>
 				</section>
 			{/if}
 			{#if eventData.adjuntos}
-				<section class="documentos">
+				<section>
 					<h3>Documentos</h3>
-					{#each JSON.parse(eventData.adjuntos) as documento}
-						<div class="cotizacion">
-							<iframe src={documento.preview} width="500" height="300" title="Descripción"></iframe>
-							<!-- <a href={documento.url}>{documento.id}</a> -->
-						</div>
-					{/each}
+					<AdjuntosGrid adjuntos={eventData.adjuntos} />
 				</section>
 			{/if}
-			
+
 			<section class="grid">
 				<PhaseAction {...eventData} />
 			</section>
@@ -106,6 +101,7 @@
 		border-radius: 12px;
 		border: 1px solid var(--color-secondary);
 		width: 100%;
+		height: 80vh;
 		overflow: hidden;
 	}
 	header {
@@ -141,6 +137,9 @@
 		gap: var(--b);
 		padding: var(--a);
 	}
+	.card-content {
+		-webkit-overflow-scrolling: touch;
+	}
 	.close-btn {
 		position: absolute;
 		right: var(--a);
@@ -163,5 +162,18 @@
 	.meta {
 		display: flex;
 		gap: var(--a);
+	}
+	.iframe {
+		width: fit-content;
+		max-width: 80vw;
+		height: 40vh;
+		pointer-events: none;
+	}
+	.documentos {
+		width: 80vw;
+		height: fit-content;
+		display: flex;
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 </style>

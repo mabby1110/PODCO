@@ -141,29 +141,39 @@ label span {
 	}
 }
 
-/* Para navegadores basados en Webkit (Chrome, Safari, Edge) */
+/* Webkit (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
-	width: 6px;
-	height: 6px;
+	width: 80px;
+	height: 80px;
 }
-::-webkit-scrollbar {
-	display: none;
-}
+
 ::-webkit-scrollbar-track {
 	background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: rgba(136, 136, 136, 0.4);
-	border-radius: 3px;
+	background: rgba(136, 136, 136, 0.45);
+	border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: rgba(136, 136, 136, 0.6);
+	background: rgba(136, 136, 136, 0.65);
 }
 
-/* Para Firefox */
+/* Más visible en móvil */
+@media (max-width: 768px) {
+	::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: rgba(136, 136, 136, 0.55);
+	}
+}
+
+/* Firefox */
 * {
 	scrollbar-width: thin;
-	scrollbar-color: rgba(136, 136, 136, 0.4) transparent;
+	scrollbar-color: rgba(136, 136, 136, 0.45) transparent;
 }
