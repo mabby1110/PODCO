@@ -18,6 +18,7 @@
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import type { Oportunidad } from '$lib';
+	import CardActividadCalendarPreview from '../Actividad/CardActividadCalendarPreview.svelte';
 
 	const { events } = $props();
 
@@ -50,7 +51,7 @@
 	// Fechas de la semana
 	const weekDates = $derived(getWeekDates(filterStore.weekOffset));
 	const weekRangeText = $derived(formatWeekRange(weekDates));
-	const currentMonth = $derived(getMonth(weekDates[0], true));
+
 	// Eventos de la semana
 	const weekEvents = $derived.by(() => {
 		return eventList.filter((event: Oportunidad) => {
@@ -165,10 +166,17 @@
 							}}
 						>
 							{#if event && isEventStart(h.hour, h.minute, date, event)}
+								{#if event.id_cliente}
 								<CardOpCalendarPreview
-									{event}
-									style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px;`}
-								/>
+										{event}
+										style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px;`}
+									/>
+								{:else}
+								<CardActividadCalendarPreview
+										{event}
+										style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px;`}
+									/>
+								{/if}
 							{/if}
 						</td>
 					{/each}
