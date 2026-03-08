@@ -3,10 +3,10 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
 	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
-	import { motivosOportunidad, motivosProspeccion } from '$lib';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import FormSelectAgente from './FormSelectAgente.svelte';
+	import { motivosActividades } from '$lib';
 
 	let { data } = $props();
 
@@ -75,7 +75,7 @@
 				}}
 			>
 				<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
-				<FormSelectInput list={motivosProspeccion.concat(motivosOportunidad)} />
+				<FormSelectInput list={motivosActividades} />
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
 						label="Requisitos"
