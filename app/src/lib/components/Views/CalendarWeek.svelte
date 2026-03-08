@@ -78,8 +78,12 @@
 		formData.append('id', eventId);
 		formData.append('inicio', formatDateTime(newStart));
 		formData.append('fin', formatDateTime(newEnd));
+		if (event.id_cliente) {
+			await fetch('?/updateOp', { method: 'POST', body: formData });
+		} else {
+			await fetch('?/updateActivity', { method: 'POST', body: formData });
+		}
 
-		await fetch('?/updateOp', { method: 'POST', body: formData });
 		await invalidate('app:data');
 	}
 
@@ -167,12 +171,12 @@
 						>
 							{#if event && isEventStart(h.hour, h.minute, date, event)}
 								{#if event.id_cliente}
-								<CardOpCalendarPreview
+									<CardOpCalendarPreview
 										{event}
 										style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px;`}
 									/>
 								{:else}
-								<CardActividadCalendarPreview
+									<CardActividadCalendarPreview
 										{event}
 										style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px;`}
 									/>
