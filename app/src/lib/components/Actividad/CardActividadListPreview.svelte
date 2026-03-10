@@ -40,7 +40,7 @@
 	</div>
 
 	<div class="meta">
-		<p>{eventData?.agente.nombre}, fase: {eventData?.fase?.actual}</p>
+		<p>{eventData?.agente?.nombre}, fase: {eventData?.fase?.actual}</p>
 	</div>
 </button>
 

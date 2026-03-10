@@ -1,56 +1,62 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
+	import { selectedActivity } from '$lib/stores/selectedActivity';
+	import { selectedClient } from '$lib/stores/selectedClient';
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { slide } from 'svelte/transition';
-	import { viewState } from '$lib/stores/ViewState';
+	function handleNav() {
+		selectedOp.clear();
+		selectedClient.clear();
+		selectedActivity.clear();
+	}
 </script>
 
 <div class="container" in:slide={{ delay: 300, duration: 300 }}>
 	<div class="button-group">
-		<button
+		<a
+		href="/calendario"
 			onclick={() => {
-				viewState.setCalendar();
+				handleNav();
 				appState.togglePageActions();
 				$selectedOp = null;
 			}}
 			class="butter"
-			style={$viewState.calendar ? 'background-color: var(--color-highlight);' : ''}
 		>
 			📅 Calendario
-		</button>
-		<button
+		</a>
+		<a
+		href="/oportunidades"
 			onclick={() => {
-				viewState.setOp();
+				handleNav();
 				appState.togglePageActions();
 				$selectedOp = null;
 			}}
 			class="butter"
-			style={$viewState.op ? 'background-color: var(--color-highlight);' : ''}
 		>
 			📋 Oportunidades
-		</button>
-		<button
+		</a>
+		<a
+		href="/clientes"
 			onclick={() => {
-				viewState.setClients();
+				handleNav();
 				appState.togglePageActions();
 				$selectedOp = null;
 			}}
 			class="butter"
-			style={$viewState.clients ? 'background-color: var(--color-highlight);' : ''}
 		>
 			🐄 Clientes
-		</button>
-		<button
+		</a>
+		<a
+		href="/actividades"
 			onclick={() => {
-				viewState.setActivities();
+				handleNav();
 				appState.togglePageActions();
 				$selectedOp = null;
 			}}
 			class="butter"
-			style={$viewState.activities ? 'background-color: var(--color-highlight);' : ''}
 		>
 		⚡ Actividades
-		</button>
+		</a>
 	</div>
 
 	<div class="separator"></div>

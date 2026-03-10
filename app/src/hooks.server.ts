@@ -4,6 +4,8 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 const supabaseHandle: Handle = async ({ event, resolve }) => {
+	console.log('auth handle', event.url.pathname);
+	
 	event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
 		cookies: {
 			getAll() {
@@ -42,6 +44,7 @@ const supabaseHandle: Handle = async ({ event, resolve }) => {
 };
 
 const authGuard: Handle = async ({ event, resolve }) => {
+	console.log('guard handle', event.url.pathname);
 	const { session, user } = await event.locals.safeGetSession();
 	event.locals.session = session;
 	event.locals.user = user;
@@ -60,32 +63,4 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-const profileLoader: Handle = async ({ event, resolve }) => {
-	// Solo cargar profile si hay sesión Y NO estamos en /auth
-	if (event.locals.session && !event.url.pathname.startsWith('/auth')) {
-		try {
-			const { data: profile, error } = await event.locals.supabase
-				.from('profiles')
-				.select('*')
-				.eq('id', event.locals.user.id)
-				.single();
-
-			if (error) {
-				console.error('❌ Error loading profile:', error);
-				event.locals.profile = null;
-			} else {
-				console.log('✅ Profile loaded:', profile);
-				event.locals.profile = profile;
-			}
-		} catch (err) {
-			console.error('❌ Unexpected error loading profile:', err);
-			event.locals.profile = null;
-		}
-	} else {
-		event.locals.profile = null;
-	}
-
-	return resolve(event);
-};
-
-export const handle = sequence(supabaseHandle, authGuard, profileLoader);
+export const handle = sequence(supabaseHandle, authGuard);

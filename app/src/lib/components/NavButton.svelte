@@ -154,7 +154,6 @@
 		<div bind:this={panelToolsElement}>
 			<ControlsPanel />
 		</div>
-
 		<div class="page-controls">
 			<Logout />
 			<button
