@@ -108,7 +108,7 @@ export const fases_actividad = [
 		placeholder: 'Actividad cancelada, se puede reactivar'
 	}
 ];
-export let actividades = [
+export let motivosActividades = [
 	'Trabajo en taller',
 	'Servicio en sitio',
 	'Visita técnica',

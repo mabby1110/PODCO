@@ -53,18 +53,6 @@
 			return handleSubmit();
 		}}
 	>
-		<input type="hidden" name="id" value={eventData.id} />
-		<input
-			type="hidden"
-			name="historia"
-			value={combinarHistoria(eventData.historia, nuevaHistoria)}
-		/>
-		<input
-			type="hidden"
-			name="requisitos"
-			value={combinarHistoria(eventData.requisitos, nuevoRequisito)}
-		/>
-
 		{#if !submitCancel && !submitUpdate}
 			{#if currentPhase >= 2 || currentPhase == 0}
 				<section class="historia">
@@ -141,6 +129,29 @@
 					</button>
 				{/if}
 			</div>
+		{/if}
+
+		<!-- datos compuestos -->
+		<input type="hidden" name="id" value={eventData.id} />
+		{#if nuevaHistoria}
+			<input
+				type="hidden"
+				name="historia"
+				value={combinarHistoria(eventData.historia, nuevaHistoria)}
+			/>
+		{/if}
+		{#if nuevoRequisito}
+			<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
+		{/if}
+		{#if nuevoRequisito}
+			<input
+				type="hidden"
+				name="requisitos"
+				value={combinarHistoria(eventData.requisitos, nuevoRequisito)}
+			/>
+		{/if}
+		{#if nextPhase == 6}
+			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 		{/if}
 	</form>
 </section>

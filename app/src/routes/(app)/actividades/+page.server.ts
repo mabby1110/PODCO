@@ -257,23 +257,4 @@ export const actions: Actions = {
 
 		return { success: true };
 	}
-
-	// uploadFile: async ({ request }) => {
-	// 	const data = await request.formData();
-	// 	const file = data.get('file') as File;
-
-	// 	if (!file || file.size === 0) {
-	// 		throw new Error('Archivo requerido');
-	// 	}
-
-	// 	const buffer = Buffer.from(await file.arrayBuffer());
-	// 	const stream = Readable.from(buffer);
-
-	// 	const uploaded = await uploadToFolder(file.name, file.type, stream);
-
-	// 	return {
-	// 		success: true,
-	// 		file: uploaded
-	// 	};
-	// }
 };

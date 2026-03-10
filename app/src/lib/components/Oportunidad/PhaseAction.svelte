@@ -251,6 +251,9 @@
 		{#if agente}
 			<input type="hidden" name="agente" value={agente.nombre} />
 		{/if}
+		{#if nextPhase == 6}
+			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
+		{/if}
 	</form>
 </section>
 

@@ -17,6 +17,8 @@
 	import CardActividad from '$lib/components/Actividad/CardActividad.svelte';
 
 	let { data } = $props();
+	let allActivities = $derived(data.oportunidades.concat(data.actividades));
+	console.log(typeof data.oportunidades);
 </script>
 
 <div class="page-content">
@@ -25,9 +27,11 @@
 			<section class="selected" in:slide>
 				<CardOportunidad />
 			</section>
+		{:else if $selectedActivity}
+			<CardActividad />
 		{:else}
 			<section in:slide>
-				<CalendarWeek events={data.oportunidades} />
+				<CalendarWeek events={allActivities} />
 			</section>
 		{/if}
 	{:else if $viewState.op}
