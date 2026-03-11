@@ -5,12 +5,13 @@
 	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
-	import FormSelectAgente from './FormSelectAgente.svelte';
 	import { motivosActividades } from '$lib';
+	import FormSelectAgente from '../FormSelectAgente.svelte';
 
 	let { data } = $props();
 
-	let requisitos = $state('');
+	let objetivo = $state('');
+	let observaciones = $state('');
 	let fecha = $state('');
 	let hora = $state('08:00');
 	let inicio = $state('');
@@ -75,17 +76,29 @@
 				}}
 			>
 				<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
-				<FormSelectInput list={motivosActividades} />
-				<FormOptionalInput title="+Agregar requisitos">
-					<FormInput
-						label="Requisitos"
-						name="requisitos"
-						bind:value={requisitos}
-						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-						type="textarea"
-						required
-					/>
-				</FormOptionalInput>
+				<FormSelectInput list={motivosActividades} disableCustom/>
+				<div class="optional">
+					<FormOptionalInput title="+Objetivo">
+						<FormInput
+							label="Objetivo"
+							name="objetivo"
+							bind:value={objetivo}
+							placeholder="Define requisitos para crear una Oportunidad de venta y/o completar la actividad"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+Observaciones">
+						<FormInput
+							label="Observaciones"
+							name="observaciones"
+							bind:value={observaciones}
+							placeholder="Detalles importantes y pautas a seguir"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+				</div>
 
 				<label>
 					<span>Inicio de actividad</span>

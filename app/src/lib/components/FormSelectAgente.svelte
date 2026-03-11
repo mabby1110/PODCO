@@ -24,6 +24,7 @@
 			class="butter"
 			required
 		>
+		<option value="" disabled selected>Selecciona un agente</option>
 			{#each agentes as agente}
 				<option value={String(agente.id)}>
 					{agente.nombre}

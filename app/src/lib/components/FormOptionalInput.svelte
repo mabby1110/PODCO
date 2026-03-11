@@ -20,10 +20,10 @@
 	</button>
 {:else}
 	<div class="optional-input">
-		<button class="close-btn" type="button" onclick={close}>✕</button>
 		{#if children}
 			{@render children()}
 		{/if}
+		<button class="close-btn" type="button" onclick={close}>✕</button>
 	</div>
 {/if}
 

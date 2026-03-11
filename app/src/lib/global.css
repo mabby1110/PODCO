@@ -38,10 +38,12 @@
 	padding: 0;
 	font-family: Arial, Helvetica, sans-serif;
 }
+
 h3 {
 	font-weight: 200;
 	font-size: 20px;
 }
+
 label {
 	display: flex;
 	flex-direction: column;
@@ -56,10 +58,11 @@ select {
 	border-radius: 4px;
 	min-height: var(--d);
 }
+
 html,
 body {
-		max-width: 1800px;
-		margin: auto;
+	max-width: 1800px;
+	margin: auto;
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -67,17 +70,21 @@ body {
 	right: 0;
 	background-color: var(--color-background);
 }
+
 label span {
 	font-size: 20px;
 }
+
 .page-container {
 	width: 100%;
 	height: 100%;
 }
+
 .page-content {
 	height: 100%;
 	padding: var(--a);
 }
+
 .panel {
 	border: none;
 	border-radius: var(--a);
@@ -86,6 +93,13 @@ label span {
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(16px);
 }
+
+.optional {
+	display: flex;
+	gap: var(--b) var(--a);
+	flex-wrap: wrap;
+}
+
 .butter {
 	color: var(--color-text);
 	height: var(--d);
@@ -98,6 +112,7 @@ label span {
 	backdrop-filter: blur(16px);
 	cursor: pointer;
 }
+
 .close-btn {
 	border: none;
 	cursor: pointer;
@@ -121,20 +136,26 @@ label span {
 	padding: 0 0 var(--b);
 	justify-content: flex-end;
 }
+
 .controls h2 {
 	flex-grow: 1;
 	align-self: end;
 }
+
 .lost {
 	background-color: var(--color-error);
 }
+
 .success {
 	background-color: var(--color-ganada);
 }
+
 .disabled {
 	background-color: var(--color-muted);
 }
+
 @media (min-width: 500px) {
+
 	html,
 	body {
 		overflow: hidden;

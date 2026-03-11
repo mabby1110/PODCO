@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import DatePicker from '$lib/components/DatePicker.svelte';
-	import FormOptionalSubmit from '$lib/components/FormOptionalSubmit.svelte';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import { getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
 	import { fases_actividad } from '$lib';
 	import FormInput from '../FormInput.svelte';
 	import { invalidate } from '$app/navigation';
 	import { selectedActivity } from '$lib/stores/selectedActivity';
+	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
 
 	let { eventData } = $props();
 	let nuevoRequisito = $state('');
@@ -54,29 +54,33 @@
 		}}
 	>
 		{#if !submitCancel && !submitUpdate}
-			{#if currentPhase >= 2 || currentPhase == 0}
-				<section class="historia">
-					<h3>Historia</h3>
-					<p>{eventData.historia}</p>
-				</section>
-			{/if}
-			{#if eventData.requisitos}
-				<!-- <EditableField id="requisitos" name="requisitos" type="text" bind:value={requisitos} /> -->
-				<section class="requisitos">
-					<h3>Requisitos</h3>
-					<p>{eventData.requisitos}</p>
-				</section>
-			{/if}
-
 			{#if currentPhase == 1}
 				<FormInput
 					label="Acciones"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
-					placeholder={fasePlaceholder}
+					placeholder="Acciones realizadas para el seguimiento de la actividad"
 					type="textarea"
 					required
 				/>
+				<FormInput
+					label="Potencial de venta"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Motivo de la postergación y acción a realizar"
+					type="textarea"
+					required
+				/>
+				<FormOptionalInput title="+Observaciones">
+					<FormInput
+						label="Observaciones"
+						name="nuevaHistoria"
+						bind:value={nuevaHistoria}
+						placeholder="Motivo de la postergación y acción a realizar"
+						type="textarea"
+						required
+					/>
+				</FormOptionalInput>
 			{/if}
 		{/if}
 
@@ -103,10 +107,10 @@
 				<DatePicker {duration} title="Fecha de compromiso" />
 			{:else if submitCancel}
 				<FormInput
-					label="Pérdida"
+					label="Motivo"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
-					placeholder="Motivo de la pérdida"
+					placeholder="Justificacion por lo que se descartó la actividad"
 					type="textarea"
 					required
 				/>
@@ -114,7 +118,7 @@
 		{/if}
 		{#if currentPhase != 6 && currentPhase != 0}
 			<div class="submit">
-				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
+				<ActivityOptionalSubmit bind:submitUpdate bind:submitCancel />
 
 				{#if submitUpdate}
 					<input type="hidden" name="fase" value={currentPhase} />
@@ -139,9 +143,6 @@
 				name="historia"
 				value={combinarHistoria(eventData.historia, nuevaHistoria)}
 			/>
-		{/if}
-		{#if nuevoRequisito}
-			<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
 		{/if}
 		{#if nuevoRequisito}
 			<input

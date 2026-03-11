@@ -3,6 +3,7 @@
 	import { filtrarConsecutivo } from '$lib/utils/util';
 	import { filterStore } from '$lib/stores/filterStore.svelte';
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
+	import { appState } from '$lib/stores/appState.svelte';
 
 	let { actividades } = $props();
 	const eventList = $derived(
@@ -14,6 +15,7 @@
 
 <div class="controls">
 	<h2>Actividades</h2>
+	<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 	<FilterOpList />
 </div>
 <div class="view-container">

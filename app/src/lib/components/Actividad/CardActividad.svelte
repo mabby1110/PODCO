@@ -44,9 +44,23 @@
 				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</div>
 		</header>
-
+			{#if eventData.historia}
+				<section class="historia">
+					<h3>Historia</h3>
+					<p>{eventData.historia}</p>
+				</section>
+			{/if}
+			{#if eventData.requisitos}
+				<!-- <EditableField id="requisitos" name="requisitos" type="text" bind:value={requisitos} /> -->
+				<section class="requisitos">
+					<h3>Requisitos</h3>
+					<p>{eventData.requisitos}</p>
+				</section>
+			{/if}
 		<section class="grid">
 			<p class="date">{eventData.inicio}</p>
+			Objetivo
+			viaticos asignados
 			<ActivityActions {eventData} />
 		</section>
 	</div>
@@ -76,9 +90,6 @@
 		position: sticky;
 		top: 0;
 		z-index: 99;
-	}
-	header h3 {
-		margin-bottom: var(--b);
 	}
 	header h1 {
 		width: 100%;

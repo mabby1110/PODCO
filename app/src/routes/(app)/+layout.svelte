@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ModalActividad from '$lib/components/ModalActividad.svelte';
+	import ModalActividad from '$lib/components/Actividad/ModalActividad.svelte';
 	import ModalCliente from '$lib/components/ModalCliente.svelte';
 	import ModalOportunidad from '$lib/components/ModalOportunidad.svelte';
 	import NavButton from '$lib/components/NavButton.svelte';

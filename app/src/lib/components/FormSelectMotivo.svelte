@@ -2,6 +2,7 @@
 	// Motivos base
 	let {
 		title = 'Motivo',
+		disableCustom = true,
 		list = [
 			'Prospección en frío',
 			'Prospección inbound',
@@ -40,8 +41,10 @@
 
 	<select class="butter" bind:value={selected} required>
 		<option value="" disabled selected>Selecciona un motivo</option>
+		{#if !disableCustom}
+			<option value="__otro__">Otro…</option>
+		{/if}
 
-		<option value="__otro__">Otro…</option>
 		{#each list as item}
 			<option value={item}>{item}</option>
 		{/each}
