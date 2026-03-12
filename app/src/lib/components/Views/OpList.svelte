@@ -3,6 +3,7 @@
 	import { filtrarConsecutivo } from '$lib/utils/util';
 	import { filterStore } from '$lib/stores/filterStore.svelte';
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
+	import { appState } from '$lib/stores/appState.svelte';
 
 	let { oportunidades } = $props();
 
@@ -15,6 +16,7 @@
 
 <div class="controls">
 	<h2>Oportunidades</h2>
+	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 	<FilterOpList />
 </div>
 <div class="view-container">

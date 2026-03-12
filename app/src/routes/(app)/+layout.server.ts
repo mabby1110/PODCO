@@ -1,13 +1,14 @@
 import type { LayoutServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
-import { getRange } from '$lib/server/google/sheets';
+import { generateId, getRange } from '$lib/server/google/sheets';
 import { supabaseAdmin } from '$lib/server/supabaseAdmin';
 import { getAllProfilesAdmin } from '$lib/utils/supabase';
 
 export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
-	depends('app:data');
 	console.log('layout data');
+	depends('app:data');
+
 	if (!locals.session) {
 		throw redirect(303, '/auth');
 	}

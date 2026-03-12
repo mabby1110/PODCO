@@ -58,13 +58,6 @@
 		⚡ Actividades
 		</a>
 	</div>
-
-	<div class="separator"></div>
-
-	<div class="button-group">
-		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-	</div>
 </div>
 
 <style>

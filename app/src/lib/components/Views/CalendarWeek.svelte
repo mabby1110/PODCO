@@ -122,6 +122,10 @@
 
 <div class="controls">
 	<h2>Calendario</h2>
+
+	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+	<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+	
 	<div class="calendar-navigation">
 		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
 		<button onclick={goToCurrentWeek} class="butter current-week">

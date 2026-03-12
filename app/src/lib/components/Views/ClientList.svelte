@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import FilterClientList from '$lib/components/FilterClientList.svelte';
+	import { appState } from '$lib/stores/appState.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let { agentes, clients } = $props();
@@ -20,12 +21,17 @@
 	let showGlobal = $state(false);
 	let canGlobal = $derived($profile?.isAdmin === true);
 
-	const sinAgente = $derived(clients?.filter((c: { id_agente: string; }) => c.id_agente == '') ?? []);
-	const misClientes = $derived(clients?.filter((c: { id_agente: string | undefined; }) => c.id_agente === $profile?.id) ?? []);
+	const sinAgente = $derived(
+		clients?.filter((c: { id_agente: string }) => c.id_agente == '') ?? []
+	);
+	const misClientes = $derived(
+		clients?.filter((c: { id_agente: string | undefined }) => c.id_agente === $profile?.id) ?? []
+	);
 	const todos = $derived(clients ?? []);
 
 	const clientesPorAgente = $derived(
-		(agenteId: string) => clients?.filter((c: { id_agente: string; }) => c.id_agente === agenteId) ?? []
+		(agenteId: string) =>
+			clients?.filter((c: { id_agente: string }) => c.id_agente === agenteId) ?? []
 	);
 
 	function sortClients(clientList: typeof clients) {
@@ -48,6 +54,7 @@
 <div class="controls">
 	<h2>Clientes</h2>
 
+	<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 	<div class="controls-row">
 		<FilterClientList bind:sortField bind:sortOrder />
 
