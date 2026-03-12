@@ -83,8 +83,7 @@
 		} else {
 			await fetch('?/updateActivity', { method: 'POST', body: formData });
 		}
-
-		await invalidate('app:data');
+		await invalidate('app:calendar');
 	}
 
 	function getEvent(hour: number, minute: number, targetDate: Date) {
@@ -125,7 +124,7 @@
 
 	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 	<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-	
+
 	<div class="calendar-navigation">
 		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
 		<button onclick={goToCurrentWeek} class="butter current-week">

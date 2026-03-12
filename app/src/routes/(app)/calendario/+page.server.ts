@@ -7,23 +7,24 @@ import {
 import { fail, type Actions } from '@sveltejs/kit';
 import { processAttachments, uploadToFolder } from '$lib/server/google/drive';
 import { Readable } from 'stream';
-import { getActividades, getOportunidades } from '$lib/server/google/cachedQueries';
+import {
+	getActividades,
+	getOportunidades,
+	invalidateCache
+} from '$lib/server/google/cachedQueries';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ depends }) => {
-    // Esto permite que invalidemos los datos manualmente si es necesario
-    depends('app:calendar');
+	// Esto permite que invalidemos los datos manualmente si es necesario
+	depends('app:calendar');
 
-    // Ejecución en paralelo para máxima velocidad
-    const [actividades, oportunidades] = await Promise.all([
-        getActividades(),
-        getOportunidades()
-    ]);
+	// Ejecución en paralelo para máxima velocidad
+	const [actividades, oportunidades] = await Promise.all([getActividades(), getOportunidades()]);
 
-    return {
-        actividades: actividades ?? [],
-        oportunidades: oportunidades ?? []
-    };
+	return {
+		actividades: actividades ?? [],
+		oportunidades: oportunidades ?? []
+	};
 };
 export const actions: Actions = {
 	add: async ({ request }) => {
@@ -47,7 +48,7 @@ export const actions: Actions = {
 
 		console.log(formData, rowData);
 		await appendRow('oportunidades!A:Z', rowData);
-
+		invalidateCache('oportunidades');
 		return { success: true };
 	},
 
@@ -141,7 +142,7 @@ export const actions: Actions = {
 
 		// ---------- UPDATE SHEET ----------
 		await updateRowById(id as string, newValues, 'oportunidades!A:Z');
-
+		invalidateCache('oportunidades');
 		return {
 			success: true,
 			file: uploadedQuoteFile
@@ -165,7 +166,7 @@ export const actions: Actions = {
 		];
 
 		await appendRow('actividades!A:Z', rowData);
-
+		invalidateCache('actividades');
 		return { success: true };
 	},
 
@@ -193,65 +194,7 @@ export const actions: Actions = {
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
 
 		await updateRowById(id as string, newValues, 'actividades!A:Z');
-
-		return { success: true };
-	},
-	addClient: async ({ request }) => {
-		console.log('\nActividades addClient\n');
-		const formData = await request.formData();
-
-		const cliente = [
-			null,
-			formData.get('id_agente') || 1,
-			formData.get('razon_social') || null,
-			formData.get('ubicacion') || null,
-			formData.get('contactos') || null,
-			formData.get('tipo_prospeccion') || null,
-			new Date().toISOString()
-		];
-
-		const newClient = await appendRow('clientes!A:Z', cliente);
-
-		const oportunidad = [
-			newClient?.id || null,
-			formData.get('id_agente') || 1,
-			formData.get('fase') || 1,
-			formData.get('motivo') || null,
-			formData.get('inicio') || null,
-			formData.get('fin') || null,
-			formData.get('motivo') || null,
-			formData.get('cotizaciones') || null,
-			formData.get('requisitos') || null,
-			new Date().toISOString()
-		];
-
-		await appendRow('oportunidades!A:Z', oportunidad);
-
-		return { success: true };
-	},
-
-	updateClient: async ({ request }) => {
-		console.log('\nActividades updateClient\n');
-		const formData = await request.formData();
-		const id = formData.get('id');
-
-		if (!id) {
-			return fail(400, { error: 'ID requerido' });
-		}
-
-		const updateFieldMap: FieldColumnMap = {
-			id_agente: 'C',
-			razon_social: 'D',
-			ubicacion: 'E',
-			contactos: 'F'
-		};
-
-		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-
-		// Agregar fecha de actualización
-		newValues['I'] = new Date().toISOString();
-
-		await updateRowById(id as string, newValues, 'clientes!A:Z');
+		invalidateCache('actividades');
 
 		return { success: true };
 	},

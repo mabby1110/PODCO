@@ -6,7 +6,6 @@
 	import { selectedClient } from '$lib/stores/selectedClient.js';
 
 	let { data } = $props();
-	console.log(typeof data.oportunidades);
 </script>
 
 <div class="page-content">

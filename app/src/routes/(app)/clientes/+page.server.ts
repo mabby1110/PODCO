@@ -7,6 +7,7 @@ import {
 import { fail, type Actions } from '@sveltejs/kit';
 import { processAttachments, uploadToFolder } from '$lib/server/google/drive';
 import { Readable } from 'stream';
+import { invalidateCache } from '$lib/server/google/cachedQueries';
 
 export const actions: Actions = {
 	add: async ({ request }) => {
@@ -213,6 +214,7 @@ export const actions: Actions = {
 		];
 
 		await appendRow('oportunidades!A:Z', oportunidad);
+		invalidateCache('clientes');
 
 		return { success: true };
 	},
@@ -239,6 +241,7 @@ export const actions: Actions = {
 		newValues['I'] = new Date().toISOString();
 
 		await updateRowById(id as string, newValues, 'clientes!A:Z');
+		invalidateCache('clientes');
 
 		return { success: true };
 	},
