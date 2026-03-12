@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	
-	import CalendarWeek from '$lib/components/Views/CalendarWeek.svelte';
+	import CalendarWeek from '$lib/components/CalendarWeek.svelte';
 
 	import CardOportunidad from '$lib/components/Oportunidad/CardOportunidad.svelte';
 
@@ -10,6 +10,7 @@
 	import CardActividad from '$lib/components/Actividad/CardActividad.svelte';
 
 	let { data } = $props();
+	
 	let allActivities = $derived(data.oportunidades.concat(data.actividades));
 </script>
 

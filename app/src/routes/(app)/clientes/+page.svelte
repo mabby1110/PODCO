@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import ClientList from '$lib/components/Views/ClientList.svelte';
+	import ClientList from '$lib/components/Cliente/ClientList.svelte';
 	import CardCliente from '$lib/components/Cliente/CardCliente.svelte';
 
 	import { selectedClient } from '$lib/stores/selectedClient.js';

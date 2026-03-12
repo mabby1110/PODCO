@@ -7,7 +7,24 @@ import {
 import { fail, type Actions } from '@sveltejs/kit';
 import { processAttachments, uploadToFolder } from '$lib/server/google/drive';
 import { Readable } from 'stream';
+import { getActividades, getOportunidades } from '$lib/server/google/cachedQueries';
+import type { PageServerLoad } from './$types';
 
+export const load: PageServerLoad = async ({ depends }) => {
+    // Esto permite que invalidemos los datos manualmente si es necesario
+    depends('app:calendar');
+
+    // Ejecución en paralelo para máxima velocidad
+    const [actividades, oportunidades] = await Promise.all([
+        getActividades(),
+        getOportunidades()
+    ]);
+
+    return {
+        actividades: actividades ?? [],
+        oportunidades: oportunidades ?? []
+    };
+};
 export const actions: Actions = {
 	add: async ({ request }) => {
 		console.log('\nActividades add\n');

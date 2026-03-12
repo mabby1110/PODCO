@@ -7,7 +7,14 @@ import {
 import { fail, type Actions } from '@sveltejs/kit';
 import { processAttachments, uploadToFolder } from '$lib/server/google/drive';
 import { Readable } from 'stream';
+import type { PageServerLoad } from './$types';
+import { getRange } from '$lib/server/google/sheets';
 
+export const load: PageServerLoad = async ({ depends }) => {
+    depends('app:data');
+    const actividades = await getRange('actividades!A:Z');
+    return { actividades };
+};
 export const actions: Actions = {
 	addActivity: async ({ request }) => {
 		console.log('add activity');

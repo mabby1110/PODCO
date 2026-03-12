@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import OpList from '$lib/components/Views/OpList.svelte';
+	import OpList from '$lib/components/Oportunidad/OpList.svelte';
 
 	import CardOportunidad from '$lib/components/Oportunidad/CardOportunidad.svelte';
 

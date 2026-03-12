@@ -7,10 +7,11 @@
 	import { motivosOportunidad, motivosProspeccion } from '$lib';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
-	import FormSelectAgente from './FormSelectAgente.svelte';
+	import FormSelectAgente from '../FormSelectAgente.svelte';
 	import { filtrarPorAgente } from '$lib/utils/util';
-	import { profile } from '$lib/stores/profileStore.svelte';
 	let { data } = $props();
+
+	let clientes = $derived(data.clientes ?? []);
 
 	let requisitos = $state('');
 	let fecha = $state('');
@@ -18,12 +19,14 @@
 	let inicio = $state('');
 	let fin = $state('');
 	let agenteSeleccionado = $state<string>('');
+
+	// 2. Usamos data.profile (que viene del layout) para la lógica de Admin
 	let clientesFiltrados = $derived(
-		$profile?.isAdmin
+		data.profile?.isAdmin
 			? agenteSeleccionado
-				? filtrarPorAgente(data.clientes, agenteSeleccionado)
-				: data.clientes
-			: filtrarPorAgente(data.clientes, String($profile?.id))
+				? filtrarPorAgente(clientes, agenteSeleccionado)
+				: clientes
+			: filtrarPorAgente(clientes, String(data.profile?.id))
 	);
 
 	function setCustomEnd(fechaCompromiso: Date) {

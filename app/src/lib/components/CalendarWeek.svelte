@@ -18,7 +18,7 @@
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import type { Oportunidad } from '$lib';
-	import CardActividadCalendarPreview from '../Actividad/CardActividadCalendarPreview.svelte';
+	import CardActividadCalendarPreview from './Actividad/CardActividadCalendarPreview.svelte';
 
 	const { events } = $props();
 

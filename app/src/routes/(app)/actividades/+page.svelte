@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ActivityList from '$lib/components/Views/ActivityList.svelte';
+	import ActivityList from '$lib/components/Actividad/ActivityList.svelte';
 	import { selectedActivity } from '$lib/stores/selectedActivity.js';
 	import CardActividad from '$lib/components/Actividad/CardActividad.svelte';
 

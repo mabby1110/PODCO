@@ -9,7 +9,7 @@
 	import FormInput from '../FormInput.svelte';
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { invalidate } from '$app/navigation';
-	import UploadFile from '../ServerActions/UploadFile.svelte';
+	import UploadFile from '$lib/components/UploadFile.svelte';
 
 	let {
 		fase,

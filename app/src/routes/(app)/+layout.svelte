@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ModalActividad from '$lib/components/Actividad/ModalActividad.svelte';
-	import ModalCliente from '$lib/components/ModalCliente.svelte';
-	import ModalOportunidad from '$lib/components/ModalOportunidad.svelte';
+	import ModalCliente from '$lib/components/Cliente/ModalCliente.svelte';
+	import ModalOportunidad from '$lib/components/Oportunidad/ModalOportunidad.svelte';
 	import NavButton from '$lib/components/NavButton.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte.js';
 

@@ -3,14 +3,16 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import FormInputAddContact from './FormInputAddContact.svelte';
-	import FormSelectMotivo from './FormSelectMotivo.svelte';
+	import FormInputAddContact from '../FormInputAddContact.svelte';
+	import FormSelectMotivo from '../FormSelectMotivo.svelte';
 	import { motivosProspeccion } from '$lib';
-	import FormSelectAgente from './FormSelectAgente.svelte';
+	import FormSelectAgente from '../FormSelectAgente.svelte';
 
 	let { data } = $props();
-	let selectedDataItem = $state(null);
 
+	let clientes = $derived(data.clientes ?? []);
+
+	let selectedDataItem = $state(null);
 	// --- Pickers separados ---
 	let razon_social = $state('');
 	let ubicaciones = $state('');
@@ -20,7 +22,7 @@
 	let fin = $state<string>('');
 	let matches = $derived(
 		razon_social.trim().length > 0
-			? (data.clientes?.filter((c) =>
+			? (clientes?.filter((c: any) =>
 					c.razon_social.toLowerCase().includes(razon_social.toLowerCase().trim())
 				) ?? [])
 			: []
