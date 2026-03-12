@@ -13,7 +13,7 @@ export const actions: Actions = {
 		console.log('add activity');
 		const formData = await request.formData();
 		console.log(formData);
-		const rowData = [
+		const activityData = [
 			formData.get('id_agente') || 1,
 			formData.get('fase') || 1,
 			formData.get('motivo') || null,
@@ -28,15 +28,15 @@ export const actions: Actions = {
 			formData.get('potencial_venta') || null,
 			formData.get('objetivo') || null
 		];
-
-		await appendRow('actividades!A:Z', rowData);
+		await appendRow('actividades!A:Z', activityData);
 
 		return { success: true };
 	},
 
 	updateActivity: async ({ request }) => {
-		console.log('update activity');
+		console.log('update activity :)');
 		const formData = await request.formData();
+
 		const id = formData.get('id');
 		console.log(id, formData);
 
@@ -44,6 +44,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'ID requerido' });
 		}
 
+		// Actualizar actividad
 		const updateFieldMap: FieldColumnMap = {
 			id_agente: 'B',
 			fase: 'C',
@@ -52,12 +53,46 @@ export const actions: Actions = {
 			fin: 'F',
 			historia: 'G',
 			requisitos: 'H',
-			fecha_cierre: 'J'
+			fecha_cierre: 'J',
+			obsevaciones: 'L',
+			potencial_venta: 'M',
+			objetivos: 'N'
 		};
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
+		// await updateRowById(id as string, newValues, 'actividades!A:Z');
 
-		await updateRowById(id as string, newValues, 'actividades!A:Z');
+		// crear cliente si el formulario contiene razon social
+		if(formData.get('razon_social')){
+
+			const cliente = [
+				null,
+				formData.get('id_agente') || 1,
+				formData.get('razon_social') || null,
+				formData.get('ubicacion') || null,
+				formData.get('contactos') || null,
+				formData.get('tipo_prospeccion') || null,
+				new Date().toISOString()
+			];
+	
+			// const newClient = await appendRow('clientes!A:Z', cliente);
+	
+			// crear oportunidad si se ha creado el cliente nuevo
+			// const oportunidad = [
+			// 	newClient?.id || null,
+			// 	formData.get('id_agente') || 1,
+			// 	formData.get('fase') || 1,
+			// 	formData.get('motivo') || null,
+			// 	formData.get('inicio') || null,
+			// 	formData.get('fin') || null,
+			// 	formData.get('motivo') || null,
+			// 	formData.get('cotizaciones') || null,
+			// 	formData.get('requisitos') || null,
+			// 	new Date().toISOString()
+			// ];
+	
+			// await appendRow('oportunidades!A:Z', oportunidad);
+		}
 
 		return { success: true };
 	},

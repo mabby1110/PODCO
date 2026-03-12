@@ -71,10 +71,6 @@ body {
 	background-color: var(--color-background);
 }
 
-label span {
-	font-size: 20px;
-}
-
 .page-container {
 	width: 100%;
 	height: 100%;
@@ -94,6 +90,35 @@ label span {
 	backdrop-filter: blur(16px);
 }
 
+/* ESTILOS PARA TARJETAS */
+.card-full {
+	display: flex;
+	flex-direction: column;
+	gap: var(--a);
+	border-radius: 12px;
+	border: 1px solid var(--color-secondary);
+	width: 100%;
+	height: 80vh;
+	overflow: hidden;
+}
+
+.card-content {
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	gap: var(--b);
+	padding: var(--a);
+}
+
+.card-actions {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--b);
+}
+
+/* ESTILOS PARA MODALES */
 .optional {
 	display: flex;
 	gap: var(--b) var(--a);

@@ -41,17 +41,17 @@
 </script>
 
 {#if $selectedOp && eventData}
-	<div class="card-d" transition:slide>
+	<div class="card-full" transition:slide>
 		<header style={eventData.style}>
 			<button class="close-btn" onclick={closeCard} aria-label="Cerrar">✕</button>
 			<h1>{eventData.motivo}</h1>
 			<h3>{eventData.razon_social}</h3>
 			<div class="meta">
+				<p class="date">{eventData.inicio}</p>
 				<p>{eventData.agente.nombre}</p>
 				<p>-</p>
 				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</div>
-			<p class="date">{eventData.inicio}</p>
 		</header>
 		<div class="card-content">
 			<!-- informacion -->
@@ -86,7 +86,7 @@
 				</section>
 			{/if}
 
-			<section class="grid">
+			<section class="card-actions">
 				<PhaseAction {...eventData} />
 			</section>
 		</div>
@@ -94,16 +94,6 @@
 {/if}
 
 <style>
-	.card-d {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-		border-radius: 12px;
-		border: 1px solid var(--color-secondary);
-		width: 100%;
-		height: 80vh;
-		overflow: hidden;
-	}
 	header {
 		display: flex;
 		gap: var(--a);
@@ -130,16 +120,6 @@
 		bottom: 4px;
 		right: 4px;
 	}
-	.card-content {
-		overflow: auto;
-		display: flex;
-		flex-direction: column;
-		gap: var(--b);
-		padding: var(--a);
-	}
-	.card-content {
-		-webkit-overflow-scrolling: touch;
-	}
 	.close-btn {
 		position: absolute;
 		right: var(--a);
@@ -151,13 +131,6 @@
 		opacity: 0.6;
 		transition: opacity 0.2s;
 		flex-shrink: 0;
-	}
-	.grid {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: var(--b);
 	}
 	.meta {
 		display: flex;

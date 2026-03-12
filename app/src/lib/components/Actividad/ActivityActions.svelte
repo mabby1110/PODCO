@@ -8,12 +8,17 @@
 	import { invalidate } from '$app/navigation';
 	import { selectedActivity } from '$lib/stores/selectedActivity';
 	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
+	import FormNewClient from '../FormNewClient.svelte';
 
 	let { eventData } = $props();
-	let nuevoRequisito = $state('');
+	let potencial_venta = $state('');
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
 	let nextPhase = $derived(currentPhase + 5);
+
+	let nuevoRequisito = $state('');
 	let nuevaHistoria = $state('');
+	let nuevaObservacion = $state('');
+
 	let isSubmitting = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
@@ -27,7 +32,7 @@
 			'Ingresa la acción realizada'
 	);
 
-	function combinarHistoria(anterior: string, nueva: string): string {
+	function concatStrings(anterior: string, nueva: string): string {
 		if (!anterior || anterior.trim() === '') return nueva;
 		return `${anterior}, ${nueva}`;
 	}
@@ -56,27 +61,30 @@
 		{#if !submitCancel && !submitUpdate}
 			{#if currentPhase == 1}
 				<FormInput
-					label="Acciones"
+					label="Seguimiento"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
-					placeholder="Acciones realizadas para el seguimiento de la actividad"
+					placeholder="Actividades realizadas"
 					type="textarea"
 					required
 				/>
-				<FormInput
-					label="Potencial de venta"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Motivo de la postergación y acción a realizar"
-					type="textarea"
-					required
-				/>
+				{#if eventData.tipo_actividad == 2}
+					<FormInput
+						label="Potencial de venta"
+						name="potencial_venta"
+						bind:value={potencial_venta}
+						placeholder="Areas de oportunidad, equipo actual, producto que maneja, etc."
+						type="textarea"
+						required
+					/>
+					<FormNewClient />
+				{/if}
 				<FormOptionalInput title="+Observaciones">
 					<FormInput
 						label="Observaciones"
-						name="nuevaHistoria"
-						bind:value={nuevaHistoria}
-						placeholder="Motivo de la postergación y acción a realizar"
+						name="nuevaObservacion"
+						bind:value={nuevaObservacion}
+						placeholder="Documenta novedades, detalles importantes y pautas a seguir"
 						type="textarea"
 						required
 					/>
@@ -87,30 +95,20 @@
 		{#if currentPhase != 0}
 			{#if submitUpdate}
 				<FormInput
-					label="Postergar"
+					label="Justificación"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
 					placeholder="Motivo de la postergación y acción a realizar"
 					type="textarea"
 					required
 				/>
-				<FormOptionalInput title="+Agregar requisitos">
-					<FormInput
-						label="Requisitos"
-						name="nuevoRequisitos"
-						bind:value={nuevoRequisito}
-						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-						type="textarea"
-						required
-					/>
-				</FormOptionalInput>
 				<DatePicker {duration} title="Fecha de compromiso" />
 			{:else if submitCancel}
 				<FormInput
-					label="Motivo"
+					label="Justificación"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
-					placeholder="Justificacion por lo que se descartó la actividad"
+					placeholder="Motivo de la cancelación"
 					type="textarea"
 					required
 				/>
@@ -129,7 +127,7 @@
 				{:else}
 					<input type="hidden" name="fase" value={nextPhase} />
 					<button type="submit" class="butter" {style} disabled={isSubmitting}>
-						{isSubmitting ? 'Procesando...' : eventData.fase.accion}
+						{isSubmitting ? 'Procesando...' : '+Oportunidad'}
 					</button>
 				{/if}
 			</div>
@@ -141,14 +139,21 @@
 			<input
 				type="hidden"
 				name="historia"
-				value={combinarHistoria(eventData.historia, nuevaHistoria)}
+				value={concatStrings(eventData.historia, nuevaHistoria)}
 			/>
 		{/if}
 		{#if nuevoRequisito}
 			<input
 				type="hidden"
 				name="requisitos"
-				value={combinarHistoria(eventData.requisitos, nuevoRequisito)}
+				value={concatStrings(eventData.requisitos, nuevoRequisito)}
+			/>
+		{/if}
+		{#if nuevaObservacion}
+			<input
+				type="hidden"
+				name="observaciones"
+				value={concatStrings(eventData.observaciones, nuevaObservacion)}
 			/>
 		{/if}
 		{#if nextPhase == 6}

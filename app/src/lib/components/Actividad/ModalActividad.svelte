@@ -12,6 +12,7 @@
 
 	let objetivo = $state('');
 	let observaciones = $state('');
+	let requisitos = $state('');
 	let fecha = $state('');
 	let hora = $state('08:00');
 	let inicio = $state('');
@@ -83,7 +84,7 @@
 							label="Objetivo"
 							name="objetivo"
 							bind:value={objetivo}
-							placeholder="Define requisitos para crear una Oportunidad de venta y/o completar la actividad"
+							placeholder="Define objetivos clave para crear una Oportunidad de venta y/o completar la actividad"
 							type="textarea"
 							required
 						/>
@@ -94,6 +95,16 @@
 							name="observaciones"
 							bind:value={observaciones}
 							placeholder="Detalles importantes y pautas a seguir"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+Requisitos">
+						<FormInput
+							label="Requisitos"
+							name="requisitos"
+							bind:value={requisitos}
+							placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
 							type="textarea"
 							required
 						/>

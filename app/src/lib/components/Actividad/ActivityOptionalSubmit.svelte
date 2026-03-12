@@ -27,7 +27,7 @@
 </script>
 
 {#if !isOpen}
-	<button class="butter" type="button" onclick={toggleUpdate}>Oportunidad</button>
+	<button class="butter" type="button" onclick={toggleUpdate}>Postergar</button>
 	<button class="butter" type="button" onclick={toggleCancel}>Descartar</button>
 {:else}
 	<button class="close-btn" type="button" onclick={close}>✕</button>

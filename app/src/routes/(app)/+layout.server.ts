@@ -7,7 +7,7 @@ import { getAllProfilesAdmin } from '$lib/utils/supabase';
 
 export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 	depends('app:data');
-
+	console.log('layout data');
 	if (!locals.session) {
 		throw redirect(303, '/auth');
 	}

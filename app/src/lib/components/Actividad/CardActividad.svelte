@@ -11,7 +11,6 @@
 
 	let event = $derived($selectedActivity);
 
-	// Agrupa todas las derivaciones en un solo $derived.by para mejor reactividad
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 
@@ -23,6 +22,9 @@
 			inicio: event?.inicio,
 			historia: event.historia,
 			requisitos: event.requisitos,
+			objetivo: event.objetivo,
+			observaciones: event.observaciones,
+			tipo_actividad: event.tipo_actividad,
 			style: getStyleForPhase(event.fase)
 		};
 	});
@@ -34,40 +36,51 @@
 </script>
 
 {#if $selectedActivity && eventData}
-	<div class="card-d" transition:slide>
+	<div class="card-full" transition:slide>
 		<header style={eventData.style}>
 			<button class="close-btn" onclick={closeCard} aria-label="Cerrar">✕</button>
 			<h1>{eventData.motivo}</h1>
 			<div class="meta">
+				<p class="date">{eventData.inicio}</p>
 				<p>{eventData.agente.nombre}</p>
 				<p>-</p>
 				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</div>
 		</header>
+		<div class="card-content">
 			{#if eventData.historia}
-				<section class="historia">
+				<section>
 					<h3>Historia</h3>
 					<p>{eventData.historia}</p>
 				</section>
 			{/if}
 			{#if eventData.requisitos}
-				<!-- <EditableField id="requisitos" name="requisitos" type="text" bind:value={requisitos} /> -->
-				<section class="requisitos">
+				<section>
 					<h3>Requisitos</h3>
 					<p>{eventData.requisitos}</p>
 				</section>
 			{/if}
-		<section class="grid">
-			<p class="date">{eventData.inicio}</p>
-			Objetivo
-			viaticos asignados
-			<ActivityActions {eventData} />
-		</section>
+			{#if eventData.objetivo}
+				<section>
+					<h3>Objetivos</h3>
+					<p>{eventData.objetivo}</p>
+				</section>
+			{/if}
+			{#if eventData.observaciones}
+				<section>
+					<h3>Observaciones</h3>
+					<p>{eventData.observaciones}</p>
+				</section>
+			{/if}
+			<section class="card-actions">
+				<ActivityActions {eventData} />
+			</section>
+		</div>
 	</div>
 {/if}
 
 <style>
-	.card-d {
+	.card-full {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
@@ -106,19 +119,12 @@
 		transition: opacity 0.2s;
 		flex-shrink: 0;
 	}
-	.grid {
+	.card-actions {
 		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
 		gap: var(--b);
-		overflow: auto;
-	}
-	.grid .date {
-		position: absolute;
-		right: var(--a);
-		top: 0;
-		font-size: 0.85em;
 	}
 	.meta {
 		display: flex;

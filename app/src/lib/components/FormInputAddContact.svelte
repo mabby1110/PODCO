@@ -33,7 +33,7 @@
 <input type="hidden" name="contactos" value={contacto_compuesto} required />
 
 <label>
-	<span>Nombre del contacto</span>
+	<span>Primer contacto</span>
 	<input bind:value={contact_name} required placeholder="Nombre completo" />
 </label>
 <div class="contact-row">

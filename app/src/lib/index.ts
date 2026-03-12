@@ -30,6 +30,10 @@ export type Actividad = {
 	fecha_cierre: string | Date;
 	motivo_inicial: string;
 	adjuntos: string;
+	objetivo: string;
+	observaciones: string;
+	tipo_actividad: string;
+
 };
 export type Cliente = {
 	id: number;
@@ -108,6 +112,7 @@ export const fases_actividad = [
 		placeholder: 'Actividad cancelada, se puede reactivar'
 	}
 ];
+
 export let motivosActividades = [
 	'Trabajo en taller',
 	'Servicio en sitio',
