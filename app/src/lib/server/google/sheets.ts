@@ -143,9 +143,10 @@ export async function updateRowById(
 
 export async function appendRow(
 	range: string = 'historial_actividades!A:C',
-	values: any[]
+	values: any[],
+	prefix: string = 'BMS'
 ) {
-	const id = generateId();
+	const id = generateId(prefix);
 
 	const response = await sheets.spreadsheets.values.append({
 		spreadsheetId: GOOGLE_SHEET_ID,

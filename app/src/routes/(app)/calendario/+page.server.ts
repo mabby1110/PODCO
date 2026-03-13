@@ -47,7 +47,7 @@ export const actions: Actions = {
 		];
 
 		console.log(formData, rowData);
-		await appendRow('oportunidades!A:Z', rowData);
+		await appendRow('oportunidades!A:Z', rowData, 'BMS-OP');
 		invalidateCache('oportunidades');
 		return { success: true };
 	},
@@ -165,7 +165,7 @@ export const actions: Actions = {
 			null
 		];
 
-		await appendRow('actividades!A:Z', rowData);
+		await appendRow('actividades!A:Z', rowData, 'BMS-ACT');
 		invalidateCache('actividades');
 		return { success: true };
 	},

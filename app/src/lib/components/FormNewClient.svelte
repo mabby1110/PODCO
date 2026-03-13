@@ -112,19 +112,6 @@
 	</label>
 
 	<FormInputAddContact />
-
-	<label>
-		<span>Programar primer contacto</span>
-		<div class="datetime-split">
-			<input type="date" bind:value={fecha} min={getToday()} required />
-
-			<select bind:value={hora} required>
-				{#each generarHoras() as h}
-					<option value={h}>{h}</option>
-				{/each}
-			</select>
-		</div>
-	</label>
 </div>
 
 <style>
@@ -136,10 +123,6 @@
 		border-radius: 12px;
 		border: 1px solid var(--color-contrast);
 		padding: var(--b);
-	}
-	.datetime-split {
-		display: flex;
-		gap: 0.5rem;
 	}
 	.matches {
 		list-style: none;

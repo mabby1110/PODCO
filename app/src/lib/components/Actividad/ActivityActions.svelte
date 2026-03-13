@@ -2,15 +2,21 @@
 	import { enhance } from '$app/forms';
 	import DatePicker from '$lib/components/DatePicker.svelte';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
-	import { getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
-	import { fases_actividad } from '$lib';
+	import { filtrarPorAgente, getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
+	import { motivosOportunidad } from '$lib';
 	import FormInput from '../FormInput.svelte';
 	import { invalidate } from '$app/navigation';
 	import { selectedActivity } from '$lib/stores/selectedActivity';
 	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
 	import FormNewClient from '../FormNewClient.svelte';
+	import FormSelectMotivo from '../FormSelectMotivo.svelte';
+	import Searchbar from '../Searchbar.svelte';
+	import { page } from '$app/state';
+	import FormConditionalInput from '../FormConditionalInput.svelte';
 
 	let { eventData } = $props();
+	let clientes = $derived(page.data.clientes ?? []);
+	let profile = $derived(page.data.profile ?? []);
 	let potencial_venta = $state('');
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
 	let nextPhase = $derived(currentPhase + 5);
@@ -20,16 +26,21 @@
 	let nuevaObservacion = $state('');
 
 	let isSubmitting = $state(false);
+	let submitOp = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
+	let addNewClient = $state(false);
 
 	let style = $derived(getStyleForPhase(currentPhase + 5));
 	let duration = $derived(getDurationForPhase(currentPhase));
+	let agenteSeleccionado = $state<string>('');
 
-	// Placeholder dinámico por fase
-	let fasePlaceholder = $derived(
-		fases_actividad.find((f) => f.id_fase == currentPhase)?.placeholder ??
-			'Ingresa la acción realizada'
+	let clientesFiltrados = $derived(
+		profile?.isAdmin
+			? agenteSeleccionado
+				? filtrarPorAgente(clientes, agenteSeleccionado)
+				: clientes
+			: filtrarPorAgente(clientes, String(profile?.id))
 	);
 
 	function concatStrings(anterior: string, nueva: string): string {
@@ -58,7 +69,7 @@
 			return handleSubmit();
 		}}
 	>
-		{#if !submitCancel && !submitUpdate}
+		{#if !submitCancel && !submitUpdate && !submitOp}
 			{#if currentPhase == 1}
 				<FormInput
 					label="Seguimiento"
@@ -103,6 +114,31 @@
 					required
 				/>
 				<DatePicker {duration} title="Fecha de compromiso" />
+			{:else if submitOp}
+				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} disableCustom={false} />
+				<div class="action-input">
+					{#if addNewClient}
+						<FormNewClient />
+					{:else}
+						<Searchbar data={clientesFiltrados} keyColumns={['razon_social']} />
+					{/if}
+					<FormConditionalInput
+						titleOpen="+cliente"
+						titleClose="Cliente existente"
+						bind:isOpen={addNewClient}
+					/>
+				</div>
+				<DatePicker {duration} title="Fecha de compromiso" />
+				<FormOptionalInput title="+Observaciones">
+					<FormInput
+						label="Observaciones"
+						name="nuevaObservacion"
+						bind:value={nuevaObservacion}
+						placeholder="Documenta novedades, detalles importantes y pautas a seguir"
+						type="textarea"
+						required
+					/>
+				</FormOptionalInput>
 			{:else if submitCancel}
 				<FormInput
 					label="Justificación"
@@ -113,24 +149,6 @@
 					required
 				/>
 			{/if}
-		{/if}
-		{#if currentPhase != 6 && currentPhase != 0}
-			<div class="submit">
-				<ActivityOptionalSubmit bind:submitUpdate bind:submitCancel />
-
-				{#if submitUpdate}
-					<input type="hidden" name="fase" value={currentPhase} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
-				{:else if submitCancel}
-					<input type="hidden" name="fase" value={0} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
-				{:else}
-					<input type="hidden" name="fase" value={nextPhase} />
-					<button type="submit" class="butter" {style} disabled={isSubmitting}>
-						{isSubmitting ? 'Procesando...' : '+Oportunidad'}
-					</button>
-				{/if}
-			</div>
 		{/if}
 
 		<!-- datos compuestos -->
@@ -159,6 +177,32 @@
 		{#if nextPhase == 6}
 			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 		{/if}
+		{#if eventData.agente}
+			<input type="hidden" name="id_agente" value={eventData.agente.id} />
+		{/if}
+		{#if currentPhase != 6 && currentPhase != 0}
+			<div class="submit">
+				<ActivityOptionalSubmit bind:submitUpdate bind:submitCancel bind:submitOp />
+
+				{#if submitUpdate}
+					<input type="hidden" name="fase" value={currentPhase} />
+					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
+				{:else if submitOp}
+					<input type="hidden" name="fase" value={nextPhase} />
+					<button type="submit" class="butter" {style} disabled={isSubmitting}>
+						{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
+					</button>
+				{:else if submitCancel}
+					<input type="hidden" name="fase" value={0} />
+					<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
+				{:else}
+					<input type="hidden" name="fase" value={nextPhase} />
+					<button type="submit" class="butter" {style} disabled={isSubmitting}>
+						{isSubmitting ? 'Procesando...' : 'Finzalizar'}
+					</button>
+				{/if}
+			</div>
+		{/if}
 	</form>
 </section>
 
@@ -177,8 +221,11 @@
 		gap: var(--c);
 		width: 100%;
 	}
-	form section {
+	.action-input {
 		width: 100%;
+		display: flex;
+		align-items: flex-end;
+		gap: var(--a);
 	}
 	.butter:hover:not(:disabled) {
 		transform: translateY(-2px);

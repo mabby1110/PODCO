@@ -76,7 +76,7 @@
 		{#if !submitCancel && !submitUpdate}
 			<!-- Acciones -->
 			{#if fase.id_fase == 1}
-				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} disableCustom={false}/>
+				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} disableCustom={false} />
 				<FormInput
 					label="Necesidades"
 					name="nuevaHistoria"
@@ -217,6 +217,24 @@
 			{/if}
 		{/if}
 
+		<!-- datos compuestos -->
+		<input type="hidden" name="id" bind:value={id} />
+		{#if nuevaHistoria}
+			<input type="hidden" name="historia" value={combinarHistoria(historia, nuevaHistoria)} />
+		{/if}
+		{#if nuevoRequisito}
+			<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
+		{/if}
+		{#if nuevaCotizacion}
+			<input type="hidden" name="cotizaciones" bind:value={cotizaciones} />
+		{/if}
+		{#if agente}
+			<input type="hidden" name="agente" value={agente.nombre} />
+		{/if}
+		{#if nextPhase == 6}
+			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
+		{/if}
+		
 		<!-- opciones para envio de formulario -->
 		{#if fase.id_fase != 6}
 			<div class="submit">
@@ -235,24 +253,6 @@
 					</button>
 				{/if}
 			</div>
-		{/if}
-
-		<!-- datos compuestos -->
-		<input type="hidden" name="id" bind:value={id} />
-		{#if nuevaHistoria}
-			<input type="hidden" name="historia" value={combinarHistoria(historia, nuevaHistoria)} />
-		{/if}
-		{#if nuevoRequisito}
-			<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
-		{/if}
-		{#if nuevaCotizacion}
-			<input type="hidden" name="cotizaciones" bind:value={cotizaciones} />
-		{/if}
-		{#if agente}
-			<input type="hidden" name="agente" value={agente.nombre} />
-		{/if}
-		{#if nextPhase == 6}
-			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 		{/if}
 	</form>
 </section>

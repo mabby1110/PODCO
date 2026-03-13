@@ -35,7 +35,7 @@ export const actions: Actions = {
 			formData.get('potencial_venta') || null,
 			formData.get('objetivo') || null
 		];
-		await appendRow('actividades!A:Z', activityData);
+		await appendRow('actividades!A:Z', activityData, 'BMS-ACT');
 
 		return { success: true };
 	},
@@ -61,44 +61,51 @@ export const actions: Actions = {
 			historia: 'G',
 			requisitos: 'H',
 			fecha_cierre: 'J',
-			obsevaciones: 'L',
+			observaciones: 'L',
 			potencial_venta: 'M',
 			objetivos: 'N'
 		};
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-		// await updateRowById(id as string, newValues, 'actividades!A:Z');
+		await updateRowById(id as string, newValues, 'actividades!A:Z');
 
 		// crear cliente si el formulario contiene razon social
-		if(formData.get('razon_social')){
-
+		if(formData.get('id_cliente') || formData.get('razon_social')){
+			console.log('con razon social');
 			const cliente = [
 				null,
 				formData.get('id_agente') || 1,
 				formData.get('razon_social') || null,
+				null,
+				null,
+				null,
+				null,
 				formData.get('ubicacion') || null,
 				formData.get('contactos') || null,
 				formData.get('tipo_prospeccion') || null,
 				new Date().toISOString()
 			];
 	
-			// const newClient = await appendRow('clientes!A:Z', cliente);
+			const newClient = await appendRow('clientes!A:Z', cliente, 'BMS-CLI');
 	
 			// crear oportunidad si se ha creado el cliente nuevo
-			// const oportunidad = [
-			// 	newClient?.id || null,
-			// 	formData.get('id_agente') || 1,
-			// 	formData.get('fase') || 1,
-			// 	formData.get('motivo') || null,
-			// 	formData.get('inicio') || null,
-			// 	formData.get('fin') || null,
-			// 	formData.get('motivo') || null,
-			// 	formData.get('cotizaciones') || null,
-			// 	formData.get('requisitos') || null,
-			// 	new Date().toISOString()
-			// ];
-	
-			// await appendRow('oportunidades!A:Z', oportunidad);
+			const oportunidad = [
+				newClient?.id || null,
+				formData.get('id_agente') || 1,
+				1,
+				formData.get('motivo') || null,
+				formData.get('inicio') || null,
+				formData.get('fin') || null,
+				null,
+				null,
+				null,
+				new Date().toISOString(),
+				null,
+				formData.get('motivo') || null,
+				null,
+				
+			]; 
+			await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
 		}
 
 		return { success: true };
