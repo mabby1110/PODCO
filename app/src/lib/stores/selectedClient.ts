@@ -1,31 +1,19 @@
 import { writable } from 'svelte/store';
 import { getCookieJSON, setCookieJSON, deleteCookie } from '$lib/utils/cookies';
+import type { Cliente } from '$lib';
 
-export type ClientItem = {
-    id: string;
-    id_contpaqi: string;
-    id_agente: string;
-    razon_social: string;
-    ubicacion: string;
-    tipo_prospeccion: string;
-    fecha_creacion: string;
-    fecha_sync: string;
-    oportunidades: string;
-    contactos: string;
-    ultima_actualizacion: string;
-};
 
 const COOKIE_NAME = 'selectedClient';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 días
 
-const { subscribe, set, update } = writable<ClientItem | null>(
-    getCookieJSON<ClientItem>(COOKIE_NAME)
+const { subscribe, set, update } = writable<Cliente | null>(
+    getCookieJSON<Cliente>(COOKIE_NAME)
 );
 
 export const selectedClient = {
     subscribe,
     
-    set: (event: ClientItem | null) => {
+    set: (event: Cliente | null) => {
         if (event) {
             setCookieJSON(COOKIE_NAME, event, { maxAge: COOKIE_MAX_AGE });
             set(event);

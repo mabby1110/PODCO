@@ -41,14 +41,31 @@
 				/>
 
 				<EditableField
-					label="Ubicación"
-					name="ubicacion"
-					type="textarea"
-					rows={2}
-					bind:value={$selectedClient.ubicacion}
+					label="Estado"
+					name="estado"
+					type="text"
+					bind:value={$selectedClient.estado}
 					id={$selectedClient.id}
 					action="?/updateClient"
-					placeholder="Dirección completa"
+					placeholder="Estado de la republica"
+				/>
+				<EditableField
+					label="Ciudad"
+					name="ciudad"
+					type="text"
+					bind:value={$selectedClient.ciudad}
+					id={$selectedClient.id}
+					action="?/updateClient"
+					placeholder="Ciudad"
+				/>
+				<EditableField
+					label="Sector"
+					name="sector"
+					type="text"
+					bind:value={$selectedClient.sector}
+					id={$selectedClient.id}
+					action="?/updateClient"
+					placeholder="Sector economico"
 				/>
 				{#if $profile?.isAdmin}
 					<EditableSelectField

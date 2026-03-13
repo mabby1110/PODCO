@@ -76,7 +76,7 @@
 		{#if !submitCancel && !submitUpdate}
 			<!-- Acciones -->
 			{#if fase.id_fase == 1}
-				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} />
+				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} disableCustom={false}/>
 				<FormInput
 					label="Necesidades"
 					name="nuevaHistoria"

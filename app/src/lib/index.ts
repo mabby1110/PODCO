@@ -36,16 +36,20 @@ export type Actividad = {
 
 };
 export type Cliente = {
-	id: number;
+	id: string;
 	id_contpaqi: string;
 	id_agente: string;
 	razon_social: string;
-	ubicacion: string | null;
-	contactos: string | null;
+	nombre_comercial: string;
+	ubicacion: string;
+	estado: string;
+	ciudad: string;
+	sector: string;
+	contactos: string;
 	tipo_prospeccion: string;
 	fecha_creacion: string | Date;
 	ultima_actualizacion: string | Date;
-	fecha_sync: string | Date | null;
+	fecha_sync: string | Date;
 };
 
 export const fases = [
@@ -114,9 +118,10 @@ export const fases_actividad = [
 ];
 
 export let motivosActividades = [
-	'Trabajo en taller',
-	'Servicio en sitio',
+	'Trabajo en centro de servicio',
+	'Servicio especializado en sitio',
 	'Visita técnica',
+	'Trabajo en bodega',
 	'Compras / refacciones',
 	'Recolección de equipo',
 	'Entrega de equipo',
@@ -126,24 +131,25 @@ export let motivosActividades = [
 	'Traslado / logística'
 ];
 export let motivosOportunidad = [
-	'Diagnóstico de necesidad',
-	'Cotización solicitada',
+	'Diagnóstico',
+	'Detección de necesidades',
+	'Cotización',
 	'Proyecto nuevo',
 	'Ampliación de proyecto',
 	'Negociación activa',
 	'Licitación',
 	'Renovación de contrato',
-	'Recompra',
-	'Postventa con oportunidad'
+	'Compras / Refacciones',
+  	'Servicio de mantenimiento'
 ];
 export let motivosProspeccion = [
-	'Llamada en frío',
-	'Visita en frío',
+	'Prospección telefónica',
+	'Visita sin cita',
 	'Prospección digital',
 	'Referido',
-	'Formulario web',
-	'Contacto entrante',
-	'Evento / feria',
+	'Formulario Web',
+	'Ventas / Información entrante',
+	'Evento / Feria / Exposición',
 	'Reactivación de cliente'
 ];
 
