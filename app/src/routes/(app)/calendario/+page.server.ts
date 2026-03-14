@@ -171,8 +171,9 @@ export const actions: Actions = {
 	},
 
 	updateActivity: async ({ request }) => {
-		console.log('update activity');
+		console.log('update activity :)');
 		const formData = await request.formData();
+
 		const id = formData.get('id');
 		console.log(id, formData);
 
@@ -180,6 +181,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'ID requerido' });
 		}
 
+		// Actualizar actividad
 		const updateFieldMap: FieldColumnMap = {
 			id_agente: 'B',
 			fase: 'C',
@@ -188,13 +190,53 @@ export const actions: Actions = {
 			fin: 'F',
 			historia: 'G',
 			requisitos: 'H',
-			fecha_cierre: 'J'
+			fecha_cierre: 'J',
+			observaciones: 'L',
+			potencial_venta: 'M',
+			objetivos: 'N'
 		};
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-
 		await updateRowById(id as string, newValues, 'actividades!A:Z');
-		invalidateCache('actividades');
+
+		// crear cliente si el formulario contiene razon social
+		if(formData.get('id_cliente') || formData.get('razon_social')){
+			console.log('con razon social');
+			const cliente = [
+				null,
+				formData.get('id_agente') || 1,
+				formData.get('razon_social') || null,
+				null,
+				null,
+				null,
+				null,
+				formData.get('ubicacion') || null,
+				formData.get('contactos') || null,
+				formData.get('tipo_prospeccion') || null,
+				new Date().toISOString()
+			];
+	
+			const newClient = await appendRow('clientes!A:Z', cliente, 'BMS-CLI');
+	
+			// crear oportunidad si se ha creado el cliente nuevo
+			const oportunidad = [
+				newClient?.id || null,
+				formData.get('id_agente') || 1,
+				1,
+				formData.get('motivo') || null,
+				formData.get('inicio') || null,
+				formData.get('fin') || null,
+				null,
+				null,
+				null,
+				new Date().toISOString(),
+				null,
+				formData.get('motivo') || null,
+				null,
+				
+			]; 
+			await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
+		}
 
 		return { success: true };
 	},

@@ -213,7 +213,7 @@ export const actions: Actions = {
 			new Date().toISOString()
 		];
 
-		await appendRow('oportunidades!A:Z', oportunidad);
+		await appendRow('oportunidades!A:Z', oportunidad, 'BMS_CLI');
 		invalidateCache('clientes');
 
 		return { success: true };
