@@ -119,6 +119,7 @@ export const fases_actividad = [
 ];
 
 export let motivosActividades = [
+	'Prospeccion',
 	'Trabajo en centro de servicio',
 	'Servicio especializado en sitio',
 	'Visita técnica',
@@ -132,6 +133,7 @@ export let motivosActividades = [
 	'Traslado / logística'
 ];
 export let motivosOportunidad = [
+	'Visita técnica',
 	'Diagnóstico',
 	'Detección de necesidades',
 	'Cotización',
@@ -145,6 +147,7 @@ export let motivosOportunidad = [
 ];
 export let motivosProspeccion = [
 	'Prospección telefónica',
+	'Visita con cita',
 	'Visita sin cita',
 	'Prospección digital',
 	'Referido',

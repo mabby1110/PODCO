@@ -5,7 +5,7 @@
 	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
-	import { motivosActividades } from '$lib';
+	import { motivosActividades, motivosProspeccion } from '$lib';
 	import FormSelectAgente from '../FormSelectAgente.svelte';
 
 	let { data } = $props();
@@ -77,7 +77,7 @@
 				}}
 			>
 				<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
-				<FormSelectInput list={motivosActividades} disableCustom/>
+				<FormSelectInput list={motivosActividades.concat(motivosProspeccion)} disableCustom/>
 				<div class="optional">
 					<FormOptionalInput title="+Objetivo">
 						<FormInput
