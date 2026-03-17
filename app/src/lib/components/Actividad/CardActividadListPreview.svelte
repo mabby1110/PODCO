@@ -13,15 +13,16 @@
 
 		return {
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
-			fase: fases.find(f => f.id_fase == event.fase),
+			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
 			inicio: event?.inicio,
 			historia: event.historia || 'Sin historial registrado',
 			requisitos: event.requisitos || 'No hay requisitos',
+			objetivo: event.objetivo,
 			style: getStyleForPhase(event.fase)
 		};
 	});
-		
+
 	function select() {
 		console.log('selected', event);
 		// Crear una copia del evento para evitar problemas de referencia
@@ -35,9 +36,11 @@
 		<h3>{eventData?.motivo}</h3>
 	</div>
 
-	<div class="brief">
-		<p>brief</p>
-	</div>
+	{#if eventData?.objetivo}
+		<div class="brief">
+			<p>{eventData?.objetivo}</p>
+		</div>
+	{/if}
 
 	<div class="meta">
 		<p>{eventData?.agente?.nombre}, fase: {eventData?.fase?.actual}</p>

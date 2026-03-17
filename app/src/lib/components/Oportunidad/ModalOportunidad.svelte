@@ -13,6 +13,7 @@
 
 	let clientes = $derived(data.clientes ?? []);
 
+	let objetivo = $state('');
 	let requisitos = $state('');
 	let fecha = $state('');
 	let hora = $state('08:00');
@@ -92,6 +93,16 @@
 				<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
 				<Searchbar data={clientesFiltrados} keyColumns={['razon_social']} />
 				<FormSelectInput list={motivosProspeccion.concat(motivosOportunidad)} />
+					<FormOptionalInput title="+Objetivo">
+						<FormInput
+							label="Objetivo"
+							name="objetivo"
+							bind:value={objetivo}
+							placeholder="Define objetivos clave para crear una Oportunidad de venta y/o completar la actividad"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
 						label="Requisitos"

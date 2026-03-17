@@ -14,6 +14,7 @@ export type Oportunidad = {
 	motivo_inicial: string | null;
 	adjuntos: string | null;
 	documentos: string | null;
+	objetivo: string;
 };
 export type Actividad = {
 	id: string;

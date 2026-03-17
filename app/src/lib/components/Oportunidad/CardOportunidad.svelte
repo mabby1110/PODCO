@@ -30,6 +30,7 @@
 			cotizaciones: event.cotizaciones,
 			documentos: event.documentos,
 			adjuntos: event.adjuntos,
+			objetivo: event.objetivo,
 			style: getStyleForPhase(event.fase)
 		};
 	});
@@ -55,6 +56,12 @@
 		</header>
 		<div class="card-content">
 			<!-- informacion -->
+			{#if eventData.objetivo}
+				<section class="historia">
+					<h3>Objetivo</h3>
+					<p>{eventData.objetivo}</p>
+				</section>
+			{/if}
 			{#if eventData.historia}
 				<section class="historia">
 					<h3>Historia</h3>

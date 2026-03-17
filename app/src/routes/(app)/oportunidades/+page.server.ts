@@ -33,7 +33,9 @@ export const actions: Actions = {
 			formData.get('requisitos') || null,
 			new Date().toISOString(),
 			null,
-			formData.get('motivo') || null
+			formData.get('motivo') || null,
+			null,
+			formData.get('objetivo') || null,
 		];
 
 		console.log(formData, rowData);
@@ -63,7 +65,8 @@ export const actions: Actions = {
 			historia: 'H',
 			cotizaciones: 'I',
 			requisitos: 'J',
-			fecha_cierre: 'L'
+			fecha_cierre: 'L',
+			objetivo: 'O'
 		};
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
@@ -125,7 +128,7 @@ export const actions: Actions = {
 			const docsRaw = formData.get('adjuntos');
 			const docs = await processAttachments(docFiles, agenteNombre, opFolder, docsRaw);
 
-			newValues['O'] = JSON.stringify(docs);
+			newValues['N'] = JSON.stringify(docs);
 		} catch (err) {
 			console.error('Error procesando documentos', err);
 		}
