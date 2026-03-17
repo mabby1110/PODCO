@@ -19,7 +19,7 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import type { Oportunidad } from '$lib';
 	import CardActividadCalendarPreview from './Actividad/CardActividadCalendarPreview.svelte';
-	import Leyenda from './leyenda.svelte';
+	import Leyenda from './Leyenda.svelte';
 
 	const { events } = $props();
 

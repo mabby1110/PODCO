@@ -4,7 +4,7 @@
 	import { filterStore } from '$lib/stores/filterStore.svelte';
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import Leyenda from '../leyenda.svelte';
+	import Leyenda from '../Leyenda.svelte';
 
 	let { actividades } = $props();
 	const eventList = $derived(
