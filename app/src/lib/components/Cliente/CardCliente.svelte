@@ -6,6 +6,7 @@
 	import FormEditableJsonList from '../FormEditableJsonList.svelte';
 	import EditableSelectField from '../EditableSelectField.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import FormEditableContact from './FormEditableContact.svelte';
 
 	const { agentes } = $derived(page.data);
 	function closeCard(e: MouseEvent) {
@@ -86,9 +87,7 @@
 					</div>
 				{/if}
 
-				<FormEditableJsonList
-					label="Contactos"
-					name="contactos"
+				<FormEditableContact
 					bind:jsonList={$selectedClient.contactos}
 					id={$selectedClient.id}
 					action="?/updateClient"

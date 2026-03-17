@@ -223,22 +223,31 @@ export const actions: Actions = {
 		console.log('\nActividades updateClient\n');
 		const formData = await request.formData();
 		const id = formData.get('id');
+		console.log('formdata: ', formData);
 
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
 
 		const updateFieldMap: FieldColumnMap = {
-			id_agente: 'C',
-			razon_social: 'D',
-			ubicacion: 'E',
-			contactos: 'F'
+			id_contpaqi: "B",
+			id_agente: "C",
+			razon_social: "D",
+			nombre_comercial: "E",
+			estado: "F",
+			sector: "G",
+			ciudad: "H",
+			ubicacion: "I",
+			contactos: "J",
+			tipo_prospeccion: "K",
+			fecha_creacion: "L",
+			fecha_sync: "N",
 		};
-
+															
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
 
 		// Agregar fecha de actualización
-		newValues['I'] = new Date().toISOString();
+		newValues['M'] = new Date().toISOString();
 
 		await updateRowById(id as string, newValues, 'clientes!A:Z');
 		invalidateCache('clientes');

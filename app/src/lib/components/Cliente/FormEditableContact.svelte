@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	let { label = '', name = '', jsonList = $bindable(), id, action = '?/updateClient' } = $props();
+	let { jsonList = $bindable(), id, action = '?/updateClient' } = $props();
 
 	type ContactItem = {
 		type: string;
@@ -10,6 +10,7 @@
 
 	type ContactData = {
 		nombre: string;
+		puesto: string;
 		contactos: ContactItem[];
 	};
 
@@ -19,6 +20,7 @@
 	let showPersonForm = $state(false);
 
 	let contact_name = $state('');
+	let contact_position = $state('');
 	let contact_type = $state('telefono');
 	let contact_value = $state('');
 	let contactos = $state<ContactItem[]>([]);
@@ -27,6 +29,7 @@
 	let editPersonIndex = $state<number | null>(null);
 
 	let contacto_compuesto = $derived(JSON.stringify(lista));
+	let formEl = $state<HTMLFormElement | null>(null);
 
 	function openNewPerson() {
 		isEditing = true;
@@ -41,6 +44,7 @@
 		showPersonForm = true;
 		editPersonIndex = i;
 		contact_name = p.nombre;
+		contact_position = p.puesto || '';
 		contactos = [...p.contactos];
 	}
 
@@ -59,6 +63,7 @@
 
 	function resetPersonForm() {
 		contact_name = '';
+		contact_position = '';
 		contactos = [];
 		editPersonIndex = null;
 		resetForm();
@@ -72,12 +77,12 @@
 
 	function submitContacto() {
 		if (!contact_type || !contact_value) return;
+		const newContact = { type: contact_type, value: contact_value };
+
 		if (editIndex !== null) {
-			contactos = contactos.map((c, i) =>
-				i === editIndex ? { type: contact_type, value: contact_value } : c
-			);
+			contactos = contactos.map((c, i) => (i === editIndex ? newContact : c));
 		} else {
-			contactos = [...contactos, { type: contact_type, value: contact_value }];
+			contactos = [...contactos, newContact];
 		}
 		resetForm();
 	}
@@ -98,16 +103,18 @@
 
 	function submitPersonaLocal() {
 		if (!contact_name) return;
-		const persona = { nombre: contact_name, contactos };
+		const persona = { nombre: contact_name, puesto: contact_position, contactos };
+
 		if (editPersonIndex !== null) {
 			lista = lista.map((p, i) => (i === editPersonIndex ? persona : p));
 		} else {
 			lista = [...lista, persona];
 		}
-		jsonList = contacto_compuesto;
-	}
 
-	let formEl: HTMLFormElement | null = null;
+		jsonList = contacto_compuesto;
+		showPersonForm = false;
+		resetPersonForm();
+	}
 
 	function handleSubmit() {
 		return async ({ update }: any) => {
@@ -119,22 +126,61 @@
 
 <form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
 	<input type="hidden" name="id" value={id} />
-	<input type="hidden" {name} value={contacto_compuesto} />
+	<input type="hidden" name="contactos" value={contacto_compuesto} />
 
 	<div class="detail-block">
 		<div class="detail-header">
-			<h3 class="label">{label}:</h3>
+			<h3 class="label">Contactos:</h3>
 			{#if !isEditing}
 				<button type="button" class="btn-edit-small" onclick={() => (isEditing = true)}>✏️</button>
 			{/if}
 		</div>
 
 		<div class="detail-body">
-			{#if isEditing && showPersonForm}
+			<div class="contact-list">
+				{#if lista.length === 0}
+					<p class="value">Sin información</p>
+				{/if}
+
+				{#each lista as persona, i}
+					<div class="person-card">
+						<div class="contact-row">
+							<strong>{persona.nombre}</strong>
+							{#if persona.puesto}
+								<span class="puesto-badge">{persona.puesto}</span>
+							{/if}
+							{#if isEditing}
+								<button type="button" class="btn-edit-small" onclick={() => editPersona(i)}
+									>✏️</button
+								>
+								<button type="button" class="btn-del-small" onclick={() => confirmRemovePersona(i)}
+									>🗑️</button
+								>
+							{/if}
+						</div>
+						{#each persona.contactos as c}
+							<div>{c.type}: {c.value}</div>
+						{/each}
+					</div>
+				{/each}
+
+				{#if isEditing}
+					<div class="form-actions">
+						<button type="button" class="butter" onclick={openNewPerson}>Nueva persona</button>
+						<button type="button" class="butter" onclick={cancelAll}>Cerrar edición</button>
+						<button type="submit" class="butter">Guardar cambios</button>
+					</div>
+				{/if}
+			</div>
+			{#if showPersonForm}
 				<div class="person-form">
 					<label class="field">
 						<span>Nombre</span>
 						<input bind:value={contact_name} />
+					</label>
+					<label class="field">
+						<span>Puesto</span>
+						<input bind:value={contact_position} />
 					</label>
 
 					<div class="contact-row">
@@ -142,7 +188,6 @@
 							<span>Contacto</span>
 							<input bind:value={contact_value} />
 						</label>
-
 						<label class="field">
 							<span>Medio</span>
 							<select bind:value={contact_type}>
@@ -167,61 +212,25 @@
 						{#each contactos as c, i}
 							<div class="contact-row">
 								<span>{c.type}: {c.value}</span>
-								<button type="button" class="btn-edit-small" onclick={() => editContacto(i)}>✏️</button>
-								<button type="button" class="btn-del-small" onclick={() => confirmRemoveContacto(i)}>🗑️</button>
+								<button type="button" class="btn-edit-small" onclick={() => editContacto(i)}
+									>✏️</button
+								>
+								<button type="button" class="btn-del-small" onclick={() => confirmRemoveContacto(i)}
+									>🗑️</button
+								>
 							</div>
 						{/each}
 					</div>
 
 					<div class="form-actions">
-						<button
-							type="submit"
-							class="butter"
-							onclick={submitPersonaLocal}>
-							{editPersonIndex !== null ? 'Actualizar persona' : 'Agregar persona'}
+						<button type="button" class="butter" onclick={submitPersonaLocal}>
+							{editPersonIndex !== null ? 'Actualizar persona' : 'Guardar persona'}
 						</button>
-						<button type="button" class="butter" onclick={cancelAll}>Cancelar</button>
+						<button type="button" class="butter" onclick={() => (showPersonForm = false)}
+							>Cancelar</button
+						>
 					</div>
 				</div>
-			{:else}
-				{#if lista.length > 0}
-					<div class="contact-list">
-						{#each lista as persona, i}
-							<div class="person-card">
-								<div class="contact-row">
-									<strong>{persona.nombre}</strong>
-									{#if isEditing}
-										<button type="button" class="btn-edit-small" onclick={() => editPersona(i)}>✏️</button>
-										<button type="button" class="btn-del-small" onclick={() => confirmRemovePersona(i)}>🗑️</button>
-									{/if}
-								</div>
-								{#each persona.contactos as c}
-									<div>{c.type}: {c.value}</div>
-								{/each}
-							</div>
-						{/each}
-
-						{#if isEditing}
-							<button type="button" class="butter" onclick={openNewPerson}>
-								Nueva persona
-							</button>
-							<button type="button" class="butter" onclick={cancelAll}>
-								Cerrar
-							</button>
-						{/if}
-					</div>
-				{:else}
-					{#if isEditing}
-						<button type="button" class="butter" onclick={openNewPerson}>
-							Nueva persona
-						</button>
-						<button type="button" class="butter" onclick={cancelAll}>
-							Cerrar
-						</button>
-					{:else}
-						<p class="value">Sin información</p>
-					{/if}
-				{/if}
 			{/if}
 		</div>
 	</div>
@@ -246,11 +255,6 @@
 		gap: var(--b);
 		padding-left: var(--b);
 	}
-
-	.label {
-		font-size: 20px;
-	}
-
 	.contact-list {
 		display: flex;
 		flex-direction: column;
@@ -262,7 +266,8 @@
 		flex-direction: column;
 		gap: var(--a);
 		padding: var(--a);
-		border: 1px solid #ddd;
+		border-radius: 12px;
+		border: 1px solid var(--color-secondary);
 	}
 
 	.contact-row {
@@ -282,11 +287,20 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--b);
+		padding: var(--b);
+		border-radius: 12px;
+		border: 1px solid var(--color-contrast);
 	}
 
 	.form-actions {
 		display: flex;
 		gap: var(--a);
+		margin-top: var(--a);
+	}
+
+	.puesto-badge {
+		color: #555;
+		font-style: italic;
 	}
 
 	.btn-edit-small,
@@ -294,7 +308,6 @@
 		background: none;
 		border: none;
 		cursor: pointer;
-		font-size: 16px;
 		opacity: 0.7;
 	}
 
