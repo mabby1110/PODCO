@@ -19,6 +19,7 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import type { Oportunidad } from '$lib';
 	import CardActividadCalendarPreview from './Actividad/CardActividadCalendarPreview.svelte';
+	import Leyenda from './leyenda.svelte';
 
 	const { events } = $props();
 
@@ -142,6 +143,8 @@
 	</button>
 	<FilterOpList />
 </div>
+
+<Leyenda />
 
 <div class="calendar-container">
 	<table>
