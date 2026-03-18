@@ -8,6 +8,10 @@
 	import Reload from '../Reload.svelte';
 
 	let { actividades } = $props();
+	let steps = [
+			{ label: 'Programada', color: 'var(--color-secondary)' },
+			{ label: 'Finalizada', color: '#000000ee' }
+		]
 	const eventList = $derived(
 		filterStore.atributo !== ''
 			? filtrarConsecutivo(filterStore.atributo, 'id_agente', actividades)
@@ -21,7 +25,7 @@
 	<FilterOpList />
 	<Reload/>
 </div>
-<Leyenda />
+<Leyenda {steps}/>
 <div class="view-container">
 	<div class="op-list">
 		{#each eventList as event (event.id)}
