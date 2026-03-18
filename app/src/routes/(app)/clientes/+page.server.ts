@@ -254,6 +254,13 @@ export const actions: Actions = {
 
 		return { success: true };
 	},
+	reload: async () => {
+		invalidateCache('clientes');
+		invalidateCache('oportunidades');
+		invalidateCache('actividades');
+
+		return { success: true };
+	},
 
 	delete: async ({ request }) => {
 		const formData = await request.formData();

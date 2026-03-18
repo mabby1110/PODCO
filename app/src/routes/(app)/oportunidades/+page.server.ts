@@ -9,6 +9,7 @@ import { processAttachments, uploadToFolder } from '$lib/server/google/drive';
 import { Readable } from 'stream';
 import type { PageServerLoad } from './$types';
 import { getRange } from '$lib/server/google/sheets';
+import { invalidateCache } from '$lib/server/google/cachedQueries';
 
 export const load: PageServerLoad = async ({ depends }) => {
 	depends('app:data');
@@ -250,6 +251,13 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
+	reload: async () => {
+		invalidateCache('clientes');
+		invalidateCache('oportunidades');
+		invalidateCache('actividades');
+
+		return { success: true };
+	},
 	delete: async ({ request }) => {
 		const formData = await request.formData();
 		const id = formData.get('id');

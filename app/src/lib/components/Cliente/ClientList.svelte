@@ -3,6 +3,7 @@
 	import FilterClientList from '$lib/components/FilterClientList.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import Reload from '../Reload.svelte';
 
 	let { agentes, clients } = $props();
 
@@ -64,6 +65,7 @@
 			</button>
 		{/if}
 	</div>
+	<Reload />
 </div>
 
 <div class="view-container">
@@ -75,13 +77,14 @@
 			{/each}
 		</div>
 	{:else if $profile?.isAdmin}
-		<h3>Sin Asignar <span class="count">({sinAgente.length})</span></h3>
-		<div class="list">
-			{#each sortClients(sinAgente) as client (client.id)}
-				<CardClienteListPreview {client} />
-			{/each}
-		</div>
-
+		{#if sinAgente.length}
+			<h3>Sin Asignar <span class="count">({sinAgente.length})</span></h3>
+			<div class="list">
+				{#each sortClients(sinAgente) as client (client.id)}
+					<CardClienteListPreview {client} />
+				{/each}
+			</div>
+		{/if}
 		{#each agentes as agente (agente.id)}
 			{@const clientesAgente = clientesPorAgente(agente.id)}
 			<h3>{agente.nombre} <span class="count">({clientesAgente.length})</span></h3>

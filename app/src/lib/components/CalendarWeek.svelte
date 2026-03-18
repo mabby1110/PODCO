@@ -20,6 +20,7 @@
 	import type { Oportunidad } from '$lib';
 	import CardActividadCalendarPreview from './Actividad/CardActividadCalendarPreview.svelte';
 	import Leyenda from './Leyenda.svelte';
+	import Reload from './Reload.svelte';
 
 	const { events } = $props();
 
@@ -142,6 +143,7 @@
 		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
 	</button>
 	<FilterOpList />
+	<Reload/>
 </div>
 
 <Leyenda />

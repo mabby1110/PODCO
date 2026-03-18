@@ -6,36 +6,33 @@ import { supabaseAdmin } from '$lib/server/supabaseAdmin';
 import { getAllProfilesAdmin } from '$lib/utils/supabase';
 
 export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
-    console.log('Cargando Layout Data (Root)');
-    depends('app:data');
+	console.log('Cargando Layout Data (Root)');
+	depends('app:data');
 
-    if (!locals.session) {
-        throw redirect(303, '/auth');
-    }
+	if (!locals.session) {
+		throw redirect(303, '/auth');
+	}
 
-    if (url.pathname === '/') {
-        throw redirect(307, '/actividades');
-    }
+	if (url.pathname === '/') {
+		throw redirect(307, '/actividades');
+	}
 
-    const [profileResponse, clientes] = await Promise.all([
-        locals.supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', locals.user?.id)
-            .single(),
-        getClientes()
-    ]);
+	const [profileResponse, clientes] = await Promise.all([
+		locals.supabase.from('profiles').select('*').eq('id', locals.user?.id).single(),
+		getClientes()
+	]);
 
-    const profile = profileResponse.data;
+	const profile = profileResponse.data;
 
-    let agentes = [];
-    if (profile?.isAdmin) {
-        agentes = await getAllProfilesAdmin(supabaseAdmin);
-    }
+	let agentes;
+	if (profile?.isAdmin) {
+		agentes = (await getAllProfilesAdmin(supabaseAdmin)).filter((a) => !a.isAdmin && !a.isOper);
+		console.log(agentes);
+	}
 
-    return {
-        profile,
-        clientes: clientes ?? [],
-        agentes
-    };
+	return {
+		profile,
+		clientes: clientes ?? [],
+		agentes
+	};
 };

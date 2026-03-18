@@ -9,11 +9,12 @@ import { processAttachments, uploadToFolder } from '$lib/server/google/drive';
 import { Readable } from 'stream';
 import type { PageServerLoad } from './$types';
 import { getRange } from '$lib/server/google/sheets';
+import { invalidateCache } from '$lib/server/google/cachedQueries';
 
 export const load: PageServerLoad = async ({ depends }) => {
-    depends('app:data');
-    const actividades = await getRange('actividades!A:Z');
-    return { actividades };
+	depends('app:data');
+	const actividades = await getRange('actividades!A:Z');
+	return { actividades };
 };
 export const actions: Actions = {
 	addActivity: async ({ request }) => {
@@ -70,7 +71,7 @@ export const actions: Actions = {
 		await updateRowById(id as string, newValues, 'actividades!A:Z');
 
 		// crear cliente si el formulario contiene razon social
-		if(formData.get('id_cliente') || formData.get('razon_social')){
+		if (formData.get('id_cliente') || formData.get('razon_social')) {
 			console.log('con razon social');
 			const cliente = [
 				null,
@@ -85,9 +86,9 @@ export const actions: Actions = {
 				formData.get('tipo_prospeccion') || null,
 				new Date().toISOString()
 			];
-	
+
 			const newClient = await appendRow('clientes!A:Z', cliente, 'BMS-CLI');
-	
+
 			// crear oportunidad si se ha creado el cliente nuevo
 			const oportunidad = [
 				newClient?.id || null,
@@ -102,15 +103,20 @@ export const actions: Actions = {
 				new Date().toISOString(),
 				null,
 				formData.get('motivo') || null,
-				null,
-				
-			]; 
+				null
+			];
 			await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
 		}
 
 		return { success: true };
 	},
+	reload: async () => {
+		invalidateCache('clientes');
+		invalidateCache('oportunidades');
+		invalidateCache('actividades');
 
+		return { success: true };
+	},
 	delete: async ({ request }) => {
 		const formData = await request.formData();
 		const id = formData.get('id');
