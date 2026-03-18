@@ -109,40 +109,6 @@
 	}
 </script>
 
-<div class="controls">
-	<h2>Calendario</h2>
-
-	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-	<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-
-	<div class="calendar-navigation">
-		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
-		<button onclick={goToCurrentWeek} class="butter current-week">
-			{weekRangeText}
-		</button>
-		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
-	</div>
-
-	<!-- <div class="slot-selector">
-		<select id="slot-select" bind:value={SLOT_MINUTES} class="butter">
-			<option value={10}>10 min</option>
-			<option value={30}>30 min</option>
-			<option value={60}>1 hora</option>
-		</select>
-	</div> -->
-
-	{#if $profile?.isAdmin}
-		<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
-			✏️ Editar
-		</button>
-	{/if}
-	<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
-	</button>
-	<FilterOpList />
-	<Reload />
-</div>
-
 <Leyenda />
 
 <div class="calendar-container" style="--dynamic-cell-height: {CELL_HEIGHT}px;">
@@ -192,7 +158,37 @@
 		</tbody>
 	</table>
 </div>
+<div class="controls">
+	<div class="calendar-navigation">
+		<FilterOpList />
+		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
+		<button onclick={goToCurrentWeek} class="butter current-week">
+			{weekRangeText}
+		</button>
+		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
+	</div>
+	<Reload />
+	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+	<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 
+
+	<!-- <div class="slot-selector">
+		<select id="slot-select" bind:value={SLOT_MINUTES} class="butter">
+			<option value={10}>10 min</option>
+			<option value={30}>30 min</option>
+			<option value={60}>1 hora</option>
+		</select>
+	</div> -->
+
+	{#if $profile?.isAdmin}
+		<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
+			✏️ Editar
+		</button>
+	{/if}
+	<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
+	</button>
+</div>
 <style>
 	.calendar-container {
 		flex-grow: 1;
@@ -284,9 +280,10 @@
 	}
 	.controls {
 		display: flex;
+		justify-content: flex-start;
 		flex-wrap: wrap;
 		gap: 12px;
 		align-items: center;
-		margin-bottom: 1rem;
+		margin-top: 1rem;
 	}
 </style>

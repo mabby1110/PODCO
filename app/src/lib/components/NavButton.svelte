@@ -198,12 +198,12 @@
 <style>
 	.nav-container {
 		position: fixed;
-		bottom: var(--a);
+		top: var(--a);
 		right: var(--a);
 		align-items: end;
 		z-index: 1000;
 		display: flex;
-		flex-direction: column;
+		flex-direction: column-reverse;
 		gap: var(--a);
 		max-width: 96vw;
 		flex-wrap: wrap;

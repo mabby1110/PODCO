@@ -34,7 +34,8 @@
 		align-items: center;
 		gap: 0.4rem;           
 		padding: 0.25rem 0;
-		color: #333;           
+		color: #333;   
+		max-width: 70vw;        
 	}
 
 	.legend-item {
