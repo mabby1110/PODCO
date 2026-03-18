@@ -157,8 +157,8 @@ export let motivosOportunidad = [
 export let motivosProspeccion = [
 	'Prospección telefónica',
 	'Prospección digital',
-	'Visita con cita',
-	'Visita sin cita',
+	'Prospección con cita',
+	'Prospección en frio',
 	'Referido',
 	'Formulario Web',
 	'Ventas / Información entrante',
