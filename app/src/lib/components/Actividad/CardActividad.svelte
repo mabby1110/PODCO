@@ -17,7 +17,7 @@
 		return {
 			id: event.id,
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
-			fase: fases_actividad.find(f => f.id_fase == event.fase),
+			fase: fases_actividad.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
 			inicio: event?.inicio,
 			historia: event.historia,
@@ -42,12 +42,12 @@
 			<h1>{eventData.motivo}</h1>
 			<div class="meta">
 				<p class="date">{eventData.inicio}</p>
+				<p>|</p>
 				<p>{eventData.agente.nombre}</p>
-				<p>-</p>
-				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</div>
 		</header>
 		<div class="card-content">
+			<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			{#if eventData.historia}
 				<section>
 					<h3>Historia</h3>
@@ -106,12 +106,14 @@
 		top: 0;
 		z-index: 99;
 	}
-	header h1 {
-		width: 100%;
+	.meta {
+		display: flex;
+		gap: var(--a);
 	}
 	.close-btn {
 		position: absolute;
-		right: var(--a);
+		top: 0;
+		right: 0;
 		background: transparent;
 		border: none;
 		line-height: 1;

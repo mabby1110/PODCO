@@ -194,18 +194,6 @@
 </div>
 
 <style>
-	/* Estilos existentes... */
-	.slot-selector {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-size: 0.9em;
-	}
-	.slot-selector select {
-		padding: 4px 8px;
-		cursor: pointer;
-	}
-
 	.calendar-container {
 		flex-grow: 1;
 		overflow: auto;

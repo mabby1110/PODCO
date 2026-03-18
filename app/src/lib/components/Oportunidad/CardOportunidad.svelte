@@ -45,31 +45,33 @@
 	<div class="card-full" transition:slide>
 		<header style={eventData.style}>
 			<button class="close-btn" onclick={closeCard} aria-label="Cerrar">✕</button>
-			<h1>{eventData.motivo}</h1>
-			<h3>{eventData.razon_social}</h3>
+			<div class="title">
+				<h1>{eventData.motivo}</h1>
+				<h3>{eventData.razon_social}</h3>
+			</div>
 			<div class="meta">
 				<p class="date">{eventData.inicio}</p>
+				<p class="date">|</p>
 				<p>{eventData.agente.nombre}</p>
-				<p>-</p>
-				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</div>
 		</header>
 		<div class="card-content">
+			<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			<!-- informacion -->
 			{#if eventData.objetivo}
-				<section class="historia">
+				<section>
 					<h3>Objetivo</h3>
 					<p>{eventData.objetivo}</p>
 				</section>
 			{/if}
 			{#if eventData.historia}
-				<section class="historia">
+				<section>
 					<h3>Historia</h3>
 					<p>{eventData.historia}</p>
 				</section>
 			{/if}
 			{#if eventData.requisitos}
-				<section class="requisitos">
+				<section>
 					<h3>Requisitos</h3>
 					<p>{eventData.requisitos}</p>
 				</section>
@@ -116,20 +118,13 @@
 		top: 0;
 		z-index: 99;
 	}
-	header h3 {
-		margin-bottom: var(--b);
-	}
 	header h1 {
 		width: 100%;
 	}
-	header .date {
-		position: fixed;
-		bottom: 4px;
-		right: 4px;
-	}
 	.close-btn {
 		position: absolute;
-		right: var(--a);
+		top: 0;
+		right: 0;
 		background: transparent;
 		border: none;
 		line-height: 1;

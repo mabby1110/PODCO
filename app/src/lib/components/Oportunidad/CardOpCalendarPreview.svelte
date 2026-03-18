@@ -43,18 +43,16 @@
 		<header>
 			<b>{eventData?.razon_social}</b>
 		</header>
-
-		<p class="motivo">{event?.motivo}</p>
-		<p class="motivo">{event?.fase}</p>
-
 		<div class="meta">
+			<p class="motivo">{event?.motivo}</p>
+			<p class="motivo">{event?.objetivo}</p>
+
 			<span>{eventData?.agente.nombre}</span>
 			<span>{eventData?.inicio}</span>
 		</div>
 	{:else}
 		<div class="meta-min">
 			{#if $profile?.isAdmin}
-				<span class="meta-item">{eventData?.agente.nombre}</span>
 				<span class="meta-item">{eventData?.razon_social}</span>
 			{:else}
 				<span class="meta-item">{eventData?.razon_social}</span>
@@ -98,7 +96,6 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
-		white-space: nowrap;
 		position: absolute;
 		top: 2px;
 		left: 4px;

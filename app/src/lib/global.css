@@ -109,7 +109,11 @@ body {
 	gap: var(--b);
 	padding: var(--a);
 }
-
+.card-content section {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+	}
 .card-actions {
 	position: relative;
 	display: flex;
