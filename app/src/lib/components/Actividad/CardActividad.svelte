@@ -87,6 +87,8 @@
 		border-radius: 12px;
 		border: 1px solid var(--color-secondary);
 		width: 100%;
+		height: fit-content;
+		max-height: 80vh;
 		overflow: hidden;
 	}
 	header {

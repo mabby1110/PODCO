@@ -5,12 +5,13 @@
 	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import FormInput from '$lib/components/FormInput.svelte';
-	import { motivosActividades, motivosProspeccion } from '$lib';
+	import { motivosActividades } from '$lib';
 	import FormSelectAgente from '../FormSelectAgente.svelte';
 
 	let { data } = $props();
 
 	let objetivo = $state('');
+	let duracion = $state(10);
 	let observaciones = $state('');
 	let requisitos = $state('');
 	let fecha = $state('');
@@ -18,8 +19,9 @@
 	let inicio = $state('');
 	let fin = $state('');
 	let agenteSeleccionado = $state<string>('');
-	function setCustomEnd(fechaCompromiso: Date) {
-		const next = addMinutes(new Date(fechaCompromiso), 10);
+	function setCustomEnd(fechaCompromiso: Date, duracion: number = 10) {
+		const next = addMinutes(new Date(fechaCompromiso), duracion);
+
 		const yyyy = next.getFullYear();
 		const mm = String(next.getMonth() + 1).padStart(2, '0');
 		const dd = String(next.getDate()).padStart(2, '0');
@@ -27,7 +29,7 @@
 		const mi = String(next.getMinutes()).padStart(2, '0');
 
 		return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
-	};
+	}
 	function generarHoras() {
 		const horas = [];
 		let actual = 8 * 60; // 08:00
@@ -41,12 +43,12 @@
 		}
 
 		return horas;
-	};
+	}
 	$effect(() => {
 		if (fecha && hora) {
 			const base = `${fecha} ${hora}`;
 			inicio = base;
-			fin = setCustomEnd(new Date(`${fecha}T${hora}`));
+			fin = setCustomEnd(new Date(`${fecha}T${hora}`), duracion);
 		} else {
 			inicio = '';
 			fin = '';
@@ -70,14 +72,14 @@
 			</div>
 			<form
 				method="POST"
-				action="?/addActivity"
+				action="/actividades?/addActivity"
 				use:enhance={() => {
 					appState.toggleModalActivity();
 					alert('creado con exito!');
 				}}
 			>
 				<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
-				<FormSelectInput list={motivosActividades.concat(motivosProspeccion)} disableCustom/>
+				<FormSelectInput list={motivosActividades} disableCustom />
 				<div class="optional">
 					<FormOptionalInput title="+Objetivo">
 						<FormInput
@@ -123,7 +125,10 @@
 							{/each}
 						</select>
 					</div>
-
+					<label>
+						<span>Duración (minutos)</span>
+						<input type="number" bind:value={duracion} min="1" required />
+					</label>
 					<input type="hidden" name="fase" value={1} />
 					<input type="hidden" name="inicio" bind:value={inicio} />
 					<input type="hidden" name="fin" bind:value={fin} />

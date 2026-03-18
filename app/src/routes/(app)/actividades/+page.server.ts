@@ -38,6 +38,7 @@ export const actions: Actions = {
 		];
 		await appendRow('actividades!A:Z', activityData, 'BMS-ACT');
 
+		invalidateCache('actividades');
 		return { success: true };
 	},
 
@@ -108,6 +109,7 @@ export const actions: Actions = {
 			await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
 		}
 
+		invalidateCache('actividades');
 		return { success: true };
 	},
 	reload: async () => {

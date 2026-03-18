@@ -55,6 +55,7 @@
 		<div class="meta-min">
 			{#if $profile?.isAdmin}
 				<span class="meta-item">{eventData?.agente.nombre}</span>
+				<span class="meta-item">{eventData?.razon_social}</span>
 			{:else}
 				<span class="meta-item">{eventData?.razon_social}</span>
 			{/if}

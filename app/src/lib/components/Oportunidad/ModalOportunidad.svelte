@@ -86,7 +86,7 @@
             </div>
             <form
                 method="POST"
-                action="?/add"
+                action="/oportunidades?/add"
                 use:enhance={() => {
                     appState.toggleModalOp();
                     alert('creado con exito!');

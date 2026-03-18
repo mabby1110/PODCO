@@ -17,6 +17,7 @@
 		return {
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			motivo: event?.motivo,
+			objetivo: event?.objetivo,
 			inicio: event?.inicio,
 			fase: fases.find((f) => f.id_fase == event.fase),
 			historia: event.historia || 'Sin historial registrado',
@@ -40,8 +41,7 @@
 			<b>{eventData?.motivo}</b>
 		</header>
 
-		<p class="motivo">{event?.motivo}</p>
-		<p class="motivo">{event?.fase}</p>
+		<p class="motivo">{event?.objetivo}</p>
 
 		<div class="meta">
 			<span>{eventData?.agente.nombre}</span>
@@ -51,10 +51,11 @@
 		<div class="meta-min">
 			{#if $profile?.isAdmin}
 				<span class="meta-item">{eventData?.agente.nombre}</span>
+				<span class="meta-item">{eventData?.motivo}</span>
 			{:else}
 				<span class="meta-item">{eventData?.motivo}</span>
+				<span class="meta-item">{eventData?.objetivo}</span>
 			{/if}
-			<span class="meta-item">{eventData?.motivo}</span>
 		</div>
 	{/if}
 </button>
@@ -69,7 +70,8 @@
 		border-radius: var(--a);
 		padding: 4px var(--a);
 		text-align: left;
-		align-items: baseline;
+		align-content: flex-start;
+		gap: var(--a);
 		backdrop-filter: blur(16px);
 		overflow: hidden;
 		z-index: 1;
@@ -92,8 +94,8 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
+		gap: var(--a);
 		justify-content: space-around;
-		white-space: nowrap;
 		position: absolute;
 		top: 2px;
 		left: 4px;

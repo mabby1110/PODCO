@@ -145,14 +145,17 @@ export function parseDateTimeLocal(dateTimeStr: string): Date {
  * @param slotMinutes - Minutos por slot (default: 15)
  */
 export function calculateSlots(
-	inicio: string | Date,
-	fin: string | Date,
-	slotMinutes: number = 15
+    inicio: string | Date,
+    fin: string | Date,
+    slotMinutes: number = 15
 ): number {
-	const start = inicio instanceof Date ? inicio : new Date(inicio);
-	const end = fin instanceof Date ? fin : new Date(fin);
-	const durationMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
-	return Math.max(1, Math.round(durationMinutes / slotMinutes));
+    const start = inicio instanceof Date ? inicio : new Date(inicio);
+    const end = fin instanceof Date ? fin : new Date(fin);
+    
+    const durationMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+    const exactSlots = durationMinutes / slotMinutes;
+    
+    return Math.max(0.5, exactSlots);
 }
 
 /**

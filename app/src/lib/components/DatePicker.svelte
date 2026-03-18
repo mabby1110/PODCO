@@ -43,7 +43,7 @@
 
 	function generarHoras() {
 		const horas: string[] = [];
-		let actual = 8 * 60; // 08:00
+		let actual = 9 * 60; // 08:00
 		const limite = 18 * 60; // 18:00
 
 		while (actual <= limite) {

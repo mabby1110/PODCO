@@ -119,10 +119,11 @@ export const fases_actividad = [
 ];
 
 export let motivosActividades = [
-	'Viaje de prospeccion local',
-	'Viaje de prospeccion foraneo',
+	'Trabajo Administrativo',
 	'Trabajo en centro de servicio',
 	'Servicio especializado en sitio',
+	'Viaje de prospeccion local',
+	'Viaje de prospeccion foraneo',
 	'Visita técnica',
 	'Trabajo en bodega',
 	'Compras / refacciones',
@@ -131,7 +132,14 @@ export let motivosActividades = [
 	'Instalación',
 	'Diagnóstico técnico',
 	'Seguimiento administrativo',
-	'Traslado / logística'
+	'Traslado / logística',
+	'Prospección telefónica',
+	'Prospección digital',
+	'Visita con cita',
+	'Visita sin cita',
+	'Evento / Feria / Exposición',
+	'Reactivación de cliente',
+	'vacaciones'
 ];
 export let motivosOportunidad = [
 	'Visita técnica',

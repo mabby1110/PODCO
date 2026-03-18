@@ -26,10 +26,11 @@
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
 	const hoursRangePerDay = { start: 8, end: 19 };
-	const SLOT_MINUTES = 10;
-	const CELL_HEIGHT = 24;
 
-	// Generar slots de tiempo
+	const PIXELS_PER_HOUR = 120;
+	let SLOT_MINUTES = $state(10);
+	let CELL_HEIGHT = $derived((PIXELS_PER_HOUR / 60) * SLOT_MINUTES);
+
 	const hours = $derived(
 		Array.from(
 			{ length: ((hoursRangePerDay.end - hoursRangePerDay.start) * 60) / SLOT_MINUTES },
@@ -43,18 +44,15 @@
 		)
 	);
 
-	// Filtrar eventos
 	const eventList = $derived(
 		filterStore.atributo !== ''
 			? filtrarConsecutivo(filterStore.atributo, 'id_agente', events)
 			: events
 	);
 
-	// Fechas de la semana
 	const weekDates = $derived(getWeekDates(filterStore.weekOffset));
 	const weekRangeText = $derived(formatWeekRange(weekDates));
 
-	// Eventos de la semana
 	const weekEvents = $derived.by(() => {
 		return eventList.filter((event: Oportunidad) => {
 			const eventDate = new Date(event.inicio);
@@ -66,24 +64,20 @@
 		const event = eventList.find((e: { id: string }) => e.id === eventId);
 		if (!event) return;
 
-		// Calcular duración original en minutos
 		const duration = calculateDuration(event.inicio, event.fin);
-
-		// Nueva fecha de inicio
 		const newStart = new Date(targetDate);
 		newStart.setHours(hour, minute, 0, 0);
-
-		// Nueva fecha de fin
 		const newEnd = new Date(newStart.getTime() + duration * 60 * 1000);
 
 		const formData = new FormData();
 		formData.append('id', eventId);
 		formData.append('inicio', formatDateTime(newStart));
 		formData.append('fin', formatDateTime(newEnd));
+
 		if (event.id_cliente) {
-			await fetch('?/updateOp', { method: 'POST', body: formData });
+			await fetch('/oportunidades?/updateOp', { method: 'POST', body: formData });
 		} else {
-			await fetch('?/updateActivity', { method: 'POST', body: formData });
+			await fetch('/actividades?/updateActivity', { method: 'POST', body: formData });
 		}
 		await invalidate('app:calendar');
 	}
@@ -91,31 +85,25 @@
 	function getEvent(hour: number, minute: number, targetDate: Date) {
 		return weekEvents.find((event: Oportunidad) => {
 			const eventDate = new Date(event.inicio);
+			// Corrección: para que el evento se vea aunque el SLOT sea mayor (ej. 60min),
+			// comparamos si el inicio cae dentro del rango del slot actual
+			const eventTotalMin = eventDate.getHours() * 60 + eventDate.getMinutes();
+			const slotTotalMin = hour * 60 + minute;
+
 			return (
 				isSameDay(eventDate, targetDate) &&
-				eventDate.getHours() === hour &&
-				eventDate.getMinutes() === minute
+				eventTotalMin >= slotTotalMin &&
+				eventTotalMin < slotTotalMin + SLOT_MINUTES
 			);
 		});
-	}
-
-	function isEventStart(hour: number, minute: number, targetDate: Date, event: Oportunidad) {
-		const eventDate = new Date(event.inicio);
-		return (
-			isSameDay(eventDate, targetDate) &&
-			eventDate.getHours() === hour &&
-			eventDate.getMinutes() === minute
-		);
 	}
 
 	function previousWeek() {
 		filterStore.weekOffset -= 1;
 	}
-
 	function nextWeek() {
 		filterStore.weekOffset += 1;
 	}
-
 	function goToCurrentWeek() {
 		filterStore.weekOffset = 0;
 	}
@@ -134,6 +122,15 @@
 		</button>
 		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
 	</div>
+
+	<div class="slot-selector">
+		<select id="slot-select" bind:value={SLOT_MINUTES} class="butter">
+			<option value={10}>10 min</option>
+			<option value={30}>30 min</option>
+			<option value={60}>1 hora</option>
+		</select>
+	</div>
+
 	{#if $profile?.isAdmin}
 		<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
 			✏️ Editar
@@ -143,12 +140,12 @@
 		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
 	</button>
 	<FilterOpList />
-	<Reload/>
+	<Reload />
 </div>
 
 <Leyenda />
 
-<div class="calendar-container">
+<div class="calendar-container" style="--dynamic-cell-height: {CELL_HEIGHT}px;">
 	<table>
 		<thead>
 			<tr>
@@ -177,16 +174,14 @@
 								on_dropzone: (eventId: string) => handleDrop(eventId, h.hour, h.minute, date)
 							}}
 						>
-							{#if event && isEventStart(h.hour, h.minute, date, event)}
+							{#if event}
+								{@const slots = calculateSlots(event.inicio, event.fin, SLOT_MINUTES)}
 								{#if event.id_cliente}
-									<CardOpCalendarPreview
-										{event}
-										style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px;`}
-									/>
+									<CardOpCalendarPreview {event} style={`height:${slots * CELL_HEIGHT}px;`} />
 								{:else}
 									<CardActividadCalendarPreview
 										{event}
-										style={`height:${calculateSlots(event.inicio, event.fin, SLOT_MINUTES) * CELL_HEIGHT}px;`}
+										style={`height:${slots * CELL_HEIGHT}px;`}
 									/>
 								{/if}
 							{/if}
@@ -199,6 +194,18 @@
 </div>
 
 <style>
+	/* Estilos existentes... */
+	.slot-selector {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 0.9em;
+	}
+	.slot-selector select {
+		padding: 4px 8px;
+		cursor: pointer;
+	}
+
 	.calendar-container {
 		flex-grow: 1;
 		overflow: auto;
@@ -227,6 +234,7 @@
 		top: 0;
 		z-index: 9;
 		backdrop-filter: blur(16px);
+		border-bottom: 1px solid var(--color-secondary);
 	}
 
 	.day-header {
@@ -252,18 +260,23 @@
 		position: sticky;
 		left: 0;
 		z-index: 9;
-		height: var(--c);
+		height: var(--dynamic-cell-height);
 		display: flex;
+		align-items: center;
 		justify-content: center;
 		backdrop-filter: blur(16px);
+		font-size: 0.8em;
+		padding: 0 8px;
+		border-right: 1px solid var(--color-secondary);
 	}
 
 	.event-cell {
 		position: relative;
-		min-width: var(--e);
+		min-width: var(--e, 120px);
 		border-right: 1px solid var(--color-secondary);
 		border-bottom: 1px solid var(--color-secondary);
 		overflow: visible;
+		height: var(--dynamic-cell-height);
 	}
 	.max {
 		min-width: var(--h);
@@ -280,5 +293,12 @@
 	.calendar-navigation {
 		display: flex;
 		gap: var(--a);
+	}
+	.controls {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		align-items: center;
+		margin-bottom: 1rem;
 	}
 </style>

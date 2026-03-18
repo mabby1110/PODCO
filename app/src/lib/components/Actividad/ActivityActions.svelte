@@ -63,7 +63,7 @@
 <section class="actions">
 	<form
 		method="POST"
-		action="?/updateActivity"
+		action="/actividades?/updateActivity"
 		use:enhance={() => {
 			isSubmitting = true;
 			return handleSubmit();

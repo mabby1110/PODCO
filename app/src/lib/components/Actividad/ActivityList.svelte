@@ -5,6 +5,7 @@
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import Leyenda from '../Leyenda.svelte';
+	import Reload from '../Reload.svelte';
 
 	let { actividades } = $props();
 	const eventList = $derived(
@@ -18,6 +19,7 @@
 	<h2>Actividades</h2>
 	<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 	<FilterOpList />
+	<Reload/>
 </div>
 <Leyenda />
 <div class="view-container">

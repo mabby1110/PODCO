@@ -66,7 +66,7 @@
 <section class="actions">
 	<form
 		method="POST"
-		action="?/updateOp"
+		action="/oportunidades?/updateOp"
 		enctype="multipart/form-data"
 		use:enhance={() => {
 			isSubmitting = true;
