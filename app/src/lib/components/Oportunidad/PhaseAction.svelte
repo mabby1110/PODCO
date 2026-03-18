@@ -56,7 +56,8 @@
 				nuevaHistoria = '';
 				nuevaCotizacion = '';
 			}
-			await invalidate('app:data');
+
+			await invalidate('app:calendar');
 		};
 	}
 
@@ -234,7 +235,7 @@
 		{#if nextPhase == 6}
 			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 		{/if}
-		
+
 		<!-- opciones para envio de formulario -->
 		{#if fase.id_fase != 6}
 			<div class="submit">
