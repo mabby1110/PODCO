@@ -120,6 +120,8 @@ export const fases_actividad = [
 
 export let motivosActividades = [
 	'Trabajo Administrativo',
+	'Presentación de portafolio',
+	'Propuesta de negocio',
 	'Trabajo en centro de servicio',
 	'Servicio especializado en sitio',
 	'Viaje de prospeccion local',
@@ -135,13 +137,14 @@ export let motivosActividades = [
 	'Traslado / logística',
 	'Prospección telefónica',
 	'Prospección digital',
-	'Visita con cita',
-	'Visita sin cita',
 	'Evento / Feria / Exposición',
 	'Reactivación de cliente',
 	'vacaciones'
 ];
 export let motivosOportunidad = [
+	'Presentación de portafolio',
+	'Propuesta de negocio',
+	'Seguimiento de propuesta ',
 	'Visita técnica',
 	'Diagnóstico',
 	'Detección de necesidades',
