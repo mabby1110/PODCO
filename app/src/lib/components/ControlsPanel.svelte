@@ -74,15 +74,14 @@
 
 	.button-group {
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		gap: var(--a);
 		justify-content: flex-end;
 	}
-
-	.separator {
-		height: 1px;
-		background: var(--color-muted);
-		margin: 0;
-		align-self: stretch;
+	a {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-decoration: none;
 	}
 </style>

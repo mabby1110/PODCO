@@ -53,19 +53,17 @@
 </script>
 
 <div class="controls">
-	<h2>Clientes</h2>
-
-	<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 	<div class="controls-row">
 		<FilterClientList bind:sortField bind:sortOrder />
-
+		
 		{#if canGlobal}
-			<button class="butter" type="button" onclick={() => (showGlobal = !showGlobal)}>
-				{showGlobal ? 'Vista por agente' : 'Vista global'}
-			</button>
+		<button class="butter" type="button" onclick={() => (showGlobal = !showGlobal)}>
+			{showGlobal ? 'Vista por agente' : 'Vista global'}
+		</button>
 		{/if}
 	</div>
-	<Reload />
+	<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
+	<!-- <Reload /> -->
 </div>
 
 <div class="view-container">

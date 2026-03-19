@@ -3,12 +3,11 @@
 	// Al usar $props(), permitimos que este array sea sobreescrito si lo necesitas en el futuro.
 	let { 
 		steps = [
-			{ label: 'Prospecto', color: 'var(--color-secondary)' },
-			{ label: 'Analizar', color: '#5ca8ff99' },
+			{ label: 'Actividad', color: 'var(--color-secondary)' },
+			{ label: 'Oportunidad', color: '#5ca8ff99' },
 			{ label: 'Negociación', color: '#ffd70099' },
-			{ label: 'Enviar', color: '#6575ff99' },
 			{ label: 'Ganada', color: '#34d76a99' },
-			{ label: 'Perdida', color: '#ff444499' },
+			{ label: 'Enviar', color: '#6575ff99' },
 			{ label: 'Finalizar', color: '#000000ee' }
 		]
 	} = $props();
@@ -34,8 +33,8 @@
 		align-items: center;
 		gap: 0.4rem;           
 		padding: 0.25rem 0;
-		color: #333;   
-		max-width: 70vw;        
+		color: #333;
+		max-width: 80vw;
 	}
 
 	.legend-item {

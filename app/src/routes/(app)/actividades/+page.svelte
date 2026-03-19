@@ -8,9 +8,13 @@
 
 <div class="page-content">
 	{#if $selectedActivity}
-		<CardActividad />
+		<section>
+			<CardActividad />
+		</section>
 	{:else}
-		<ActivityList actividades={data.actividades} />
+		<section>
+			<ActivityList actividades={data.actividades} />
+		</section>
 	{/if}
 </div>
 

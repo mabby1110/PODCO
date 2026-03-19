@@ -30,7 +30,7 @@
 	}
 </script>
 
-<button class="card" style={eventData?.style} onclick={select}>
+<button class="card" style={eventData?.style} onclick={select} >
 	<p class="date">{eventData?.inicio}</p>
 	<div class="title">
 		<h3>{eventData?.motivo}</h3>

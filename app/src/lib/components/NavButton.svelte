@@ -198,14 +198,13 @@
 <style>
 	.nav-container {
 		position: fixed;
-		top: var(--a);
-		right: var(--a);
-		align-items: end;
+		bottom: 0;
+		right: 0;
 		z-index: 1000;
 		display: flex;
-		flex-direction: column-reverse;
+		flex-direction: column;
 		gap: var(--a);
-		max-width: 96vw;
+		width: fit-content;
 		flex-wrap: wrap;
 	}
 
@@ -222,7 +221,6 @@
 			background-color 0.2s,
 			transform 0.1s;
 		box-shadow: none;
-		width: fit-content;
 	}
 
 	.butter.dragging {
@@ -234,8 +232,8 @@
 	.logo {
 		display: flex;
 		align-items: center;
+		justify-content: end;
 		gap: var(--b);
-		width: fit-content;
 	}
 
 	.logo img {
@@ -256,11 +254,11 @@
 
 	.actions-button {
 		background-color: var(--color-highlight);
-		width: fit-content;
 	}
 
 	.page-controls {
 		display: flex;
+		justify-content: end;
 		gap: var(--a);
 	}
 </style>

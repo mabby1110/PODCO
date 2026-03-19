@@ -7,17 +7,12 @@
 </form>
 
 <style>
-	form {
-		flex-grow: 1;
-	}
-
 	.logout-button {
 		background-color: var(--color-error);
 		color: white;
 		font-weight: 600;
 		cursor: pointer;
 		transition: all 0.2s ease;
-		min-width: var(--f);
 	}
 
 	.logout-button:hover {

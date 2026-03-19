@@ -8,6 +8,6 @@
 
 <style>
 	button {
-		font-size: x-large;
+		font-size: large;
 	}
 </style>

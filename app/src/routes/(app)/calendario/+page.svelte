@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	
+
 	import CalendarWeek from '$lib/components/CalendarWeek.svelte';
 
 	import CardOportunidad from '$lib/components/Oportunidad/CardOportunidad.svelte';
@@ -10,39 +10,28 @@
 	import CardActividad from '$lib/components/Actividad/CardActividad.svelte';
 
 	let { data } = $props();
-	
+
 	let allActivities = $derived(data.oportunidades.concat(data.actividades));
 </script>
 
 <div class="page-content">
-		{#if $selectedOp}
-			<section class="selected" in:slide>
-				<CardOportunidad />
-			</section>
-		{:else if $selectedActivity}
+	{#if $selectedOp}
+		<section class="selected" in:slide>
+			<CardOportunidad />
+		</section>
+	{:else if $selectedActivity}
+		<section>
 			<CardActividad />
-		{:else}
-			<section in:slide>
-				<CalendarWeek events={allActivities} />
-			</section>
-		{/if}
+		</section>
+	{:else}
+		<section class="calendar-container" in:slide>
+			<CalendarWeek events={allActivities} />
+		</section>
+	{/if}
 </div>
 
 <style>
-	.page-content {
-		display: flex;
-		flex-direction: column;
-		overflow: auto;
-	}
-	section {
-		flex-grow: 1;
-		overflow: auto;
-		display: flex;
-		flex-direction: column;
-		min-height: var(--h);
-	}
-	.selected {
-		max-height: 90vh;
+	.calendar-container {
 		height: 100%;
 	}
 </style>

@@ -37,6 +37,7 @@
 	margin: 0;
 	padding: 0;
 	font-family: Arial, Helvetica, sans-serif;
+	overscroll-behavior: none;
 }
 
 h3 {
@@ -78,7 +79,35 @@ body {
 
 .page-content {
 	height: 100%;
+}
+
+.page-content section {
+	flex-grow: 1;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	min-height: var(--h);
+}
+
+.view-container {
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+	width: 100%;
+	gap: var(--b);
+	position: relative;
 	padding: var(--a);
+}
+
+.controls {
+	padding: var(--a);
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+	align-items: center;
+	position: sticky;
+	top: 0;
+	z-index: 1;
 }
 
 .panel {
@@ -109,11 +138,13 @@ body {
 	gap: var(--b);
 	padding: var(--a);
 }
+
 .card-content section {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-	}
+	display: flex;
+	flex-direction: column;
+	gap: var(--a);
+}
+
 .card-actions {
 	position: relative;
 	display: flex;
@@ -158,19 +189,6 @@ body {
 	background-color: var(--color-error);
 }
 
-.controls {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
-	padding: 0 0 var(--b);
-	justify-content: flex-end;
-}
-
-.controls h2 {
-	flex-grow: 1;
-	align-self: end;
-}
-
 .lost {
 	background-color: var(--color-error);
 }
@@ -181,14 +199,6 @@ body {
 
 .disabled {
 	background-color: var(--color-muted);
-}
-
-@media (min-width: 500px) {
-
-	html,
-	body {
-		overflow: hidden;
-	}
 }
 
 /* Webkit (Chrome, Edge, Safari) */

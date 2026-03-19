@@ -50,9 +50,9 @@
 	.card {
 		position: relative;
 		padding: var(--a);
+		margin: var();
 		backdrop-filter: blur(16px);
 		width: 100%;
-		min-height: var(--e);
 		display: flex;
 		gap: var(--a);
 		flex-wrap: wrap;
@@ -61,7 +61,6 @@
 		border-style: none;
 		border-width: 0;
 		border-radius: var(--a);
-		overflow: hidden;
 		box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	}
 	.title {
