@@ -31,7 +31,7 @@
 		</header>
 
 		<div class="content">
-			<section class="info-section">
+			<div class="info">
 				<EditableField
 					label="Razón Social"
 					name="razon_social"
@@ -92,8 +92,8 @@
 					id={$selectedClient.id}
 					action="?/updateClient"
 				/>
-			</section>
-			<section class="system-section">
+			</div>
+			<div class="system">
 				<div class="detail-block">
 					<span class="label">Tipo de Prospección:</span>
 					<p class="value">{$selectedClient.tipo_prospeccion || 'Cartera de clientes original'}</p>
@@ -140,7 +140,7 @@
 						</p>
 					</div>
 				{/if}
-			</section>
+			</div>
 		</div>
 	</div>
 {/if}
@@ -186,7 +186,7 @@
 		overflow-y: auto;
 	}
 
-	.info-section {
+	.info {
 		display: flex;
 		flex-direction: column;
 		gap: var(--d);
@@ -206,7 +206,7 @@
 		gap: var(--a);
 		flex-wrap: wrap;
 	}
-	.system-section {
+	.system {
 		display: flex;
 		gap: var(--b);
 		flex-direction: row;

@@ -77,8 +77,11 @@
 					alert('creado con exito!');
 				}}
 			>
+				<!-- si es admin queda el input oculto -->
 				<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
+
 				<FormSelectInput list={motivosActividades} disableCustom />
+
 				<div class="optional">
 					<FormOptionalInput title="+Objetivo">
 						<FormInput
@@ -86,16 +89,6 @@
 							name="objetivo"
 							bind:value={objetivo}
 							placeholder="Define objetivos clave para crear una Oportunidad de venta y/o completar la actividad"
-							type="textarea"
-							required
-						/>
-					</FormOptionalInput>
-					<FormOptionalInput title="+Observaciones">
-						<FormInput
-							label="Observaciones"
-							name="observaciones"
-							bind:value={observaciones}
-							placeholder="Detalles importantes y pautas a seguir"
 							type="textarea"
 							required
 						/>
@@ -110,28 +103,41 @@
 							required
 						/>
 					</FormOptionalInput>
+					<FormOptionalInput title="+Observaciones">
+						<FormInput
+							label="Observaciones"
+							name="observaciones"
+							bind:value={observaciones}
+							placeholder="Detalles importantes y pautas a seguir"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
 				</div>
 
-				<label>
-					<span>Inicio de actividad</span>
-					<div class="datetime-split">
+				<div class="datetime-split">
+					<div class="datetime-item">
+						<span>Fecha</span>
 						<!-- <input type="date" bind:value={fecha} min={getToday()} required /> -->
 						<input type="date" bind:value={fecha} required />
-
+					</div>
+					<div class="datetime-item">
+						<span>Hora</span>
 						<select bind:value={hora} required>
 							{#each generarHoras() as h}
 								<option value={h}>{h}</option>
 							{/each}
 						</select>
 					</div>
-					<label>
+					<div class="datetime-item">
 						<span>Duración (minutos)</span>
 						<input type="number" bind:value={duracion} min="1" required />
-					</label>
-					<input type="hidden" name="fase" value={1} />
-					<input type="hidden" name="inicio" bind:value={inicio} />
-					<input type="hidden" name="fin" bind:value={fin} />
-				</label>
+					</div>
+				</div>
+				
+				<input type="hidden" name="fase" value={1} />
+				<input type="hidden" name="inicio" bind:value={inicio} />
+				<input type="hidden" name="fin" bind:value={fin} />
 
 				<div class="actions">
 					<button class="butter success" type="submit">Agregar</button>
@@ -188,13 +194,7 @@
 		overflow-y: auto;
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
-	}
-
-	label {
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
+		gap: var(--b);
 	}
 
 	input {
@@ -205,12 +205,16 @@
 
 	.datetime-split {
 		display: flex;
-		gap: 0.5rem;
+		gap: var(--a);
 	}
-
+	.datetime-item {
+		display: flex;
+		flex-direction: column;
+		width: fit-content;
+	}
 	.actions {
 		display: flex;
-		gap: 0.5rem;
+		gap: var(--a);
 		justify-content: flex-end;
 		padding-top: 1rem;
 		border-top: 1px solid #e5e5e5;

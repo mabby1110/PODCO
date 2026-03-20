@@ -5,8 +5,6 @@ import {
 	type FieldColumnMap
 } from '$lib/server/google/sheets';
 import { fail, type Actions } from '@sveltejs/kit';
-import { processAttachments, uploadToFolder } from '$lib/server/google/drive';
-import { Readable } from 'stream';
 import type { PageServerLoad } from './$types';
 import { getRange } from '$lib/server/google/sheets';
 import { invalidateCache } from '$lib/server/google/cachedQueries';
@@ -21,21 +19,27 @@ export const actions: Actions = {
 		console.log('add activity');
 		const formData = await request.formData();
 		console.log(formData);
+		let historial_cambios = [{ fecha: new Date().toISOString(), entrada: 'Actividad creada' }];
 		const activityData = [
-			formData.get('id_agente') || 1,
-			formData.get('fase') || 1,
-			formData.get('motivo') || null,
-			formData.get('inicio') || null,
-			formData.get('fin') || null,
-			formData.get('historia') || null,
-			formData.get('requisitos') || null,
+			// del sistema
 			new Date().toISOString(),
 			null,
+			formData.get('inicio'),
+			formData.get('fin'),
 			null,
-			formData.get('observaciones') || null,
-			formData.get('potencial_venta') || null,
-			formData.get('objetivo') || null
+			formData.get('id_agente'),
+			formData.get('fase'),
+			JSON.stringify(historial_cambios),
+			null,
+
+			// de la actividad
+			formData.get('historia'),
+			formData.get('motivo'),
+			formData.get('objetivo'),
+			formData.get('requisitos'),
+			formData.get('observaciones')
 		];
+		
 		await appendRow('actividades!A:Z', activityData, 'BMS-ACT');
 
 		invalidateCache('actividades');

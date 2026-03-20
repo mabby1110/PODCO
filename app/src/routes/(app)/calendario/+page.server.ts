@@ -27,218 +27,218 @@ export const load: PageServerLoad = async ({ depends }) => {
 	};
 };
 export const actions: Actions = {
-	add: async ({ request }) => {
-		console.log('\nActividades add\n');
-		const formData = await request.formData();
+	// add: async ({ request }) => {
+	// 	console.log('\nActividades add\n');
+	// 	const formData = await request.formData();
 
-		const rowData = [
-			formData.get('id_cliente') || null,
-			formData.get('id_agente') || 1,
-			formData.get('fase') || 1,
-			formData.get('motivo') || null,
-			formData.get('inicio') || null,
-			formData.get('fin') || null,
-			formData.get('historia') || null,
-			formData.get('cotizaciones') || null,
-			formData.get('requisitos') || null,
-			new Date().toISOString(),
-			null,
-			formData.get('motivo') || null
-		];
+	// 	const rowData = [
+	// 		formData.get('id_cliente') || null,
+	// 		formData.get('id_agente') || 1,
+	// 		formData.get('fase') || 1,
+	// 		formData.get('motivo') || null,
+	// 		formData.get('inicio') || null,
+	// 		formData.get('fin') || null,
+	// 		formData.get('historia') || null,
+	// 		formData.get('cotizaciones') || null,
+	// 		formData.get('requisitos') || null,
+	// 		new Date().toISOString(),
+	// 		null,
+	// 		formData.get('motivo') || null
+	// 	];
 
-		console.log(formData, rowData);
-		await appendRow('oportunidades!A:Z', rowData, 'BMS-OP');
-		invalidateCache('oportunidades');
-		return { success: true };
-	},
+	// 	console.log(formData, rowData);
+	// 	await appendRow('oportunidades!A:Z', rowData, 'BMS-OP');
+	// 	invalidateCache('oportunidades');
+	// 	return { success: true };
+	// },
 
-	updateOp: async ({ request }) => {
-		console.log('update action');
+	// updateOp: async ({ request }) => {
+	// 	console.log('update action');
 
-		const formData = await request.formData();
-		const id = formData.get('id');
-		console.log(formData);
-		if (!id) {
-			return fail(400, { error: 'ID requerido' });
-		}
+	// 	const formData = await request.formData();
+	// 	const id = formData.get('id');
+	// 	console.log(formData);
+	// 	if (!id) {
+	// 		return fail(400, { error: 'ID requerido' });
+	// 	}
 
-		// ---------- MAP FORM ----------
-		const updateFieldMap: FieldColumnMap = {
-			id_cliente: 'B',
-			id_agente: 'C',
-			fase: 'D',
-			motivo: 'E',
-			inicio: 'F',
-			fin: 'G',
-			historia: 'H',
-			cotizaciones: 'I',
-			requisitos: 'J',
-			fecha_cierre: 'L'
-		};
+	// 	// ---------- MAP FORM ----------
+	// 	const updateFieldMap: FieldColumnMap = {
+	// 		id_cliente: 'B',
+	// 		id_agente: 'C',
+	// 		fase: 'D',
+	// 		motivo: 'E',
+	// 		inicio: 'F',
+	// 		fin: 'G',
+	// 		historia: 'H',
+	// 		cotizaciones: 'I',
+	// 		requisitos: 'J',
+	// 		fecha_cierre: 'L'
+	// 	};
 
-		const newValues = mapFormDataToColumns(formData, updateFieldMap);
+	// 	const newValues = mapFormDataToColumns(formData, updateFieldMap);
 
-		const agenteNombre = formData.get('agente') as string;
-		const opFolder = `${id}`;
+	// 	const agenteNombre = formData.get('agente') as string;
+	// 	const opFolder = `${id}`;
 
-		// ---------- UPLOAD QUOTE ----------
-		let uploadedQuoteFile = null;
-		const quoteFile = formData.get('quoteFile') as File;
+	// 	// ---------- UPLOAD QUOTE ----------
+	// 	let uploadedQuoteFile = null;
+	// 	const quoteFile = formData.get('quoteFile') as File;
 
-		if (quoteFile && quoteFile.size > 0) {
-			const buffer = Buffer.from(await quoteFile.arrayBuffer());
-			const stream = Readable.from(buffer);
+	// 	if (quoteFile && quoteFile.size > 0) {
+	// 		const buffer = Buffer.from(await quoteFile.arrayBuffer());
+	// 		const stream = Readable.from(buffer);
 
-			uploadedQuoteFile = await uploadToFolder(
-				quoteFile.name,
-				quoteFile.type,
-				stream,
-				agenteNombre,
-				opFolder
-			);
-		}
+	// 		uploadedQuoteFile = await uploadToFolder(
+	// 			quoteFile.name,
+	// 			quoteFile.type,
+	// 			stream,
+	// 			agenteNombre,
+	// 			opFolder
+	// 		);
+	// 	}
 
-		// ---------- COTIZACIONES ----------
-		try {
-			const historialRaw = formData.get('cotizaciones');
-			const nuevaCotizacionId = formData.get('nuevaCotizacion') as string | null;
+	// 	// ---------- COTIZACIONES ----------
+	// 	try {
+	// 		const historialRaw = formData.get('cotizaciones');
+	// 		const nuevaCotizacionId = formData.get('nuevaCotizacion') as string | null;
 
-			let historial: any[] = [];
+	// 		let historial: any[] = [];
 
-			if (historialRaw && String(historialRaw).trim() !== '') {
-				try {
-					historial = JSON.parse(historialRaw as string);
-					if (!Array.isArray(historial)) historial = [];
-				} catch {
-					historial = [];
-				}
-			}
+	// 		if (historialRaw && String(historialRaw).trim() !== '') {
+	// 			try {
+	// 				historial = JSON.parse(historialRaw as string);
+	// 				if (!Array.isArray(historial)) historial = [];
+	// 			} catch {
+	// 				historial = [];
+	// 			}
+	// 		}
 
-			if (nuevaCotizacionId && uploadedQuoteFile?.webViewLink) {
-				historial.push({
-					id: nuevaCotizacionId,
-					name: uploadedQuoteFile.name,
-					url: uploadedQuoteFile.webViewLink,
-					preview: `https://drive.google.com/file/d/${uploadedQuoteFile.id}/preview`
-				});
-			}
+	// 		if (nuevaCotizacionId && uploadedQuoteFile?.webViewLink) {
+	// 			historial.push({
+	// 				id: nuevaCotizacionId,
+	// 				name: uploadedQuoteFile.name,
+	// 				url: uploadedQuoteFile.webViewLink,
+	// 				preview: `https://drive.google.com/file/d/${uploadedQuoteFile.id}/preview`
+	// 			});
+	// 		}
 
-			newValues['I'] = JSON.stringify(historial);
-		} catch (err) {
-			console.error('Error procesando cotizaciones', err);
-		}
+	// 		newValues['I'] = JSON.stringify(historial);
+	// 	} catch (err) {
+	// 		console.error('Error procesando cotizaciones', err);
+	// 	}
 
-		// ---------- DOCUMENTOS ----------
-		try {
-			const docFiles = formData.getAll('docFile') as File[];
+	// 	// ---------- DOCUMENTOS ----------
+	// 	try {
+	// 		const docFiles = formData.getAll('docFile') as File[];
 
-			const docsRaw = formData.get('adjuntos');
-			const docs = await processAttachments(docFiles, agenteNombre, opFolder, docsRaw);
+	// 		const docsRaw = formData.get('adjuntos');
+	// 		const docs = await processAttachments(docFiles, agenteNombre, opFolder, docsRaw);
 
-			newValues['O'] = JSON.stringify(docs);
-		} catch (err) {
-			console.error('Error procesando documentos', err);
-		}
+	// 		newValues['O'] = JSON.stringify(docs);
+	// 	} catch (err) {
+	// 		console.error('Error procesando documentos', err);
+	// 	}
 
-		// ---------- UPDATE SHEET ----------
-		await updateRowById(id as string, newValues, 'oportunidades!A:Z');
-		invalidateCache('oportunidades');
-		return {
-			success: true,
-			file: uploadedQuoteFile
-		};
-	},
+	// 	// ---------- UPDATE SHEET ----------
+	// 	await updateRowById(id as string, newValues, 'oportunidades!A:Z');
+	// 	invalidateCache('oportunidades');
+	// 	return {
+	// 		success: true,
+	// 		file: uploadedQuoteFile
+	// 	};
+	// },
 
-	addActivity: async ({ request }) => {
-		console.log('update activity');
-		const formData = await request.formData();
-		console.log(formData);
-		const rowData = [
-			formData.get('id_agente') || 1,
-			formData.get('fase') || 1,
-			formData.get('motivo') || null,
-			formData.get('inicio') || null,
-			formData.get('fin') || null,
-			formData.get('historia') || null,
-			formData.get('requisitos') || null,
-			new Date().toISOString(),
-			null
-		];
+	// addActivity: async ({ request }) => {
+	// 	console.log('update activity');
+	// 	const formData = await request.formData();
+	// 	console.log(formData);
+	// 	const rowData = [
+	// 		formData.get('id_agente') || 1,
+	// 		formData.get('fase') || 1,
+	// 		formData.get('motivo') || null,
+	// 		formData.get('inicio') || null,
+	// 		formData.get('fin') || null,
+	// 		formData.get('historia') || null,
+	// 		formData.get('requisitos') || null,
+	// 		new Date().toISOString(),
+	// 		null
+	// 	];
 
-		await appendRow('actividades!A:Z', rowData, 'BMS-ACT');
-		invalidateCache('actividades');
-		return { success: true };
-	},
+	// 	await appendRow('actividades!A:Z', rowData, 'BMS-ACT');
+	// 	invalidateCache('actividades');
+	// 	return { success: true };
+	// },
 
-	updateActivity: async ({ request }) => {
-		console.log('update activity :)');
-		const formData = await request.formData();
+	// updateActivity: async ({ request }) => {
+	// 	console.log('update activity :)');
+	// 	const formData = await request.formData();
 
-		const id = formData.get('id');
-		console.log(id, formData);
+	// 	const id = formData.get('id');
+	// 	console.log(id, formData);
 
-		if (!id) {
-			return fail(400, { error: 'ID requerido' });
-		}
+	// 	if (!id) {
+	// 		return fail(400, { error: 'ID requerido' });
+	// 	}
 
-		// Actualizar actividad
-		const updateFieldMap: FieldColumnMap = {
-			id_agente: 'B',
-			fase: 'C',
-			motivo: 'D',
-			inicio: 'E',
-			fin: 'F',
-			historia: 'G',
-			requisitos: 'H',
-			fecha_cierre: 'J',
-			observaciones: 'L',
-			potencial_venta: 'M',
-			objetivos: 'N'
-		};
+	// 	// Actualizar actividad
+	// 	const updateFieldMap: FieldColumnMap = {
+	// 		id_agente: 'B',
+	// 		fase: 'C',
+	// 		motivo: 'D',
+	// 		inicio: 'E',
+	// 		fin: 'F',
+	// 		historia: 'G',
+	// 		requisitos: 'H',
+	// 		fecha_cierre: 'J',
+	// 		observaciones: 'L',
+	// 		potencial_venta: 'M',
+	// 		objetivos: 'N'
+	// 	};
 
-		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-		await updateRowById(id as string, newValues, 'actividades!A:Z');
+	// 	const newValues = mapFormDataToColumns(formData, updateFieldMap);
+	// 	await updateRowById(id as string, newValues, 'actividades!A:Z');
 
-		// crear cliente si el formulario contiene razon social
-		if (formData.get('id_cliente') || formData.get('razon_social')) {
-			console.log('con razon social');
-			const cliente = [
-				null,
-				formData.get('id_agente') || 1,
-				formData.get('razon_social') || null,
-				null,
-				null,
-				null,
-				null,
-				formData.get('ubicacion') || null,
-				formData.get('contactos') || null,
-				formData.get('tipo_prospeccion') || null,
-				new Date().toISOString()
-			];
+	// 	// crear cliente si el formulario contiene razon social
+	// 	if (formData.get('id_cliente') || formData.get('razon_social')) {
+	// 		console.log('con razon social');
+	// 		const cliente = [
+	// 			null,
+	// 			formData.get('id_agente') || 1,
+	// 			formData.get('razon_social') || null,
+	// 			null,
+	// 			null,
+	// 			null,
+	// 			null,
+	// 			formData.get('ubicacion') || null,
+	// 			formData.get('contactos') || null,
+	// 			formData.get('tipo_prospeccion') || null,
+	// 			new Date().toISOString()
+	// 		];
 
-			const newClient = await appendRow('clientes!A:Z', cliente, 'BMS-CLI');
+	// 		const newClient = await appendRow('clientes!A:Z', cliente, 'BMS-CLI');
 
-			// crear oportunidad si se ha creado el cliente nuevo
-			const oportunidad = [
-				newClient?.id || null,
-				formData.get('id_agente') || 1,
-				1,
-				formData.get('motivo') || null,
-				formData.get('inicio') || null,
-				formData.get('fin') || null,
-				null,
-				null,
-				null,
-				new Date().toISOString(),
-				null,
-				formData.get('motivo') || null,
-				null
-			];
-			await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
-		}
+	// 		// crear oportunidad si se ha creado el cliente nuevo
+	// 		const oportunidad = [
+	// 			newClient?.id || null,
+	// 			formData.get('id_agente') || 1,
+	// 			1,
+	// 			formData.get('motivo') || null,
+	// 			formData.get('inicio') || null,
+	// 			formData.get('fin') || null,
+	// 			null,
+	// 			null,
+	// 			null,
+	// 			new Date().toISOString(),
+	// 			null,
+	// 			formData.get('motivo') || null,
+	// 			null
+	// 		];
+	// 		await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
+	// 	}
 
-		return { success: true };
-	},
+	// 	return { success: true };
+	// },
 	
 	reload: async () => {
 		invalidateCache('clientes');
@@ -248,22 +248,22 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	delete: async ({ request }) => {
-		const formData = await request.formData();
-		const id = formData.get('id');
+	// delete: async ({ request }) => {
+	// 	const formData = await request.formData();
+	// 	const id = formData.get('id');
 
-		if (!id) {
-			return fail(400, { error: 'ID requerido' });
-		}
+	// 	if (!id) {
+	// 		return fail(400, { error: 'ID requerido' });
+	// 	}
 
-		await updateRowById(
-			id as string,
-			{
-				L: new Date().toISOString()
-			},
-			'oportunidades!A:Z'
-		);
+	// 	await updateRowById(
+	// 		id as string,
+	// 		{
+	// 			L: new Date().toISOString()
+	// 		},
+	// 		'oportunidades!A:Z'
+	// 	);
 
-		return { success: true };
-	}
+	// 	return { success: true };
+	// }
 };
