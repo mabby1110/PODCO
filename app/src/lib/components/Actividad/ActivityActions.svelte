@@ -37,6 +37,7 @@
 				nuevaHistoria = '';
 			}
 			await invalidate('app:data');
+			await invalidate('app:calendar');
 		};
 	}
 </script>

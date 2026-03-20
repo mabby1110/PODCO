@@ -58,28 +58,23 @@ export const actions: Actions = {
 
 		// Actualizar actividad
 		const updateFieldMap: FieldColumnMap = {
-			ultima_actualizacion: 'C',
+			historial_cambios: 'C',
 			inicio: 'D',
 			fin: 'E',
 			fecha_cierre: 'F',
 			id_agente: 'G',
 			fase: 'H',
-			historial_cambios: 'C',
-			documentos: 'J',
-			historia: 'K',
-			motivo: 'L',
-			objetivo: 'M',
-			requisitos: 'N',
-			observaciones: 'O'
+			documentos: 'I',
+			historia: 'J',
+			motivo: 'K',
+			objetivo: 'L',
+			requisitos: 'L',
+			observaciones: 'N'
 		};
 
 		// crear oportunidad con cliente existente o cliente nuevo
 		if (formData.get('razon_social')) {
 			console.log('cliente nuevo');
-			delete updateFieldMap.motivo;
-			delete updateFieldMap.objetivo;
-			delete updateFieldMap.observaciones;
-			delete updateFieldMap.requisitos;
 
 			let historial_cambios_cliente = [
 				{ fecha: new Date().toISOString(), entrada: 'Cliente creado' }
@@ -142,6 +137,10 @@ export const actions: Actions = {
 			let historial = JSON.parse(formData.get('historial_cambios') as string);
 			historial.push(entrada_historial);
 			formData.set('historial_cambios', JSON.stringify(historial));
+			delete updateFieldMap.motivo;
+			delete updateFieldMap.objetivo;
+			delete updateFieldMap.observaciones;
+			delete updateFieldMap.requisitos;
 		} else if (formData.get('id_cliente')) {
 			console.log('cliente existente');
 			// se crea oportunidad

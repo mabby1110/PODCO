@@ -32,14 +32,17 @@
 
 	function generarHoras() {
 		const horas: string[] = [];
-		let actual = 9 * 60; // 08:00
-		const limite = 18 * 60; // 18:00
+		let actual = 8 * 60;
+		const limite = 18 * 60;
+
+		const paso = duracion && duracion > 0 ? duracion : 30;
 
 		while (actual <= limite) {
 			const hh = String(Math.floor(actual / 60)).padStart(2, '0');
 			const mm = String(actual % 60).padStart(2, '0');
 			horas.push(`${hh}:${mm}`);
-			actual += duracion;
+
+			actual += paso; // <-- Usamos la variable segura aquí
 		}
 
 		return horas;
@@ -78,7 +81,7 @@
 		</div>
 		<div class="datetime-item">
 			<span>Duración (minutos)</span>
-			<input class="butter" type="number" bind:value={duracion} min="1" required />
+			<input class="butter" type="number" bind:value={duracion} required />
 		</div>
 	</div>
 
