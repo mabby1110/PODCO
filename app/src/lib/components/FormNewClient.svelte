@@ -3,12 +3,16 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import FormInputAddContact from './FormInputAddContact.svelte';
 	import FormSelectMotivo from './FormSelectMotivo.svelte';
 	import { motivosProspeccion } from '$lib';
 	import FormSelectAgente from './FormSelectAgente.svelte';
 	import { page } from '$app/state';
-
+	import FormInputAddContact from '$lib/components/FormInputAddContact.svelte';
+	let {
+		isDuplicate = $bindable()
+	}: {
+		isDuplicate: boolean;
+	} = $props();
 	let { clientes, agentes } = $derived(page.data);
 	let selectedDataItem = $state(null);
 
@@ -27,7 +31,6 @@
 			: []
 	);
 
-	let isDuplicate = $derived(razon_social.trim() === '' || matches.length > 0);
 
 	function getToday() {
 		const t = new Date();
@@ -70,6 +73,10 @@
 			inicio = '';
 			fin = '';
 		}
+	});
+	
+	$effect(() => {
+		isDuplicate = razon_social.trim() === '' || matches.length > 0;
 	});
 </script>
 

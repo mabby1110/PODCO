@@ -2,10 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
-	import { profile } from '$lib/stores/profileStore.svelte';
-	import FormInputAddContact from '../FormInputAddContact.svelte';
-	import FormSelectMotivo from '../FormSelectMotivo.svelte';
-	import { motivosProspeccion } from '$lib';
+	import FormNewClient from '../FormNewClient.svelte';
 	import FormSelectAgente from '../FormSelectAgente.svelte';
 
 	let { data } = $props();
@@ -15,7 +12,6 @@
 	let selectedDataItem = $state(null);
 	// --- Pickers separados ---
 	let razon_social = $state('');
-	let ubicaciones = $state('');
 	let fecha = $state<string>('');
 	let hora = $state<string>('08:00');
 	let inicio = $state<string>('');
@@ -28,12 +24,7 @@
 			: []
 	);
 
-	let isDuplicate = $derived(razon_social.trim() === '' || matches.length > 0);
-
-	function getToday() {
-		const t = new Date();
-		return t.toISOString().slice(0, 10);
-	}
+	let isDuplicate = $state(false);
 
 	function setCustomEnd(fechaCompromiso: Date) {
 		const next = addMinutes(new Date(fechaCompromiso), 10);
@@ -97,16 +88,6 @@
 					alert('creado con exito!');
 				}}
 			>
-				<label>
-					<span>Razon social</span>
-					<input
-						name="razon_social"
-						bind:value={razon_social}
-						placeholder="BMS Componentes y Equipos Industriales S.A. de C.V."
-						required
-					/>
-				</label>
-
 				{#if matches.length > 0}
 					<ul class="matches">
 						{#each matches as match}
@@ -120,24 +101,11 @@
 					</ul>
 				{/if}
 
-				<FormSelectMotivo title="Tipo de prospeccion" list={motivosProspeccion} />
 				<FormSelectAgente agentes={data.agentes} />
 
-				<label>
-					<span>Ubicacion</span>
-					<textarea
-						name="ubicaciones"
-						id="ubicaciones"
-						bind:value={ubicaciones}
-						required
-						rows="3"
-						placeholder="copiar y pegar de google maps ej. Antonio Bravo 128, Las Liebres, 45623 San Pedro Tlaquepaque, Jal."
-					></textarea>
-				</label>
+				 <FormNewClient bind:isDuplicate/>
 
-				<FormInputAddContact />
-
-				<label>
+				<!-- <label>
 					<span>Programar primer contacto</span>
 					<div class="datetime-split">
 						<input type="date" bind:value={fecha} min={getToday()} required />
@@ -153,7 +121,7 @@
 					<input type="hidden" name="inicio" bind:value={inicio} />
 					<input type="hidden" name="fin" bind:value={fin} />
 					<input type="hidden" name="id_agente" value={$profile?.id} />
-				</label>
+				</label> -->
 
 				<div class="actions">
 					<button

@@ -39,7 +39,7 @@ export const actions: Actions = {
 			formData.get('requisitos'),
 			formData.get('observaciones')
 		];
-		
+
 		await appendRow('actividades!A:Z', activityData, 'BMS-ACT');
 
 		invalidateCache('actividades');
@@ -59,19 +59,22 @@ export const actions: Actions = {
 
 		// Actualizar actividad
 		const updateFieldMap: FieldColumnMap = {
-			id_agente: 'B',
-			fase: 'C',
-			motivo: 'D',
-			inicio: 'E',
-			fin: 'F',
-			historia: 'G',
-			requisitos: 'H',
-			fecha_cierre: 'J',
-			observaciones: 'L',
-			potencial_venta: 'M',
-			objetivos: 'N'
+			fecha_creacion: 'B',
+			ultima_actualizacion: 'C',
+			inicio: 'D',
+			fin: 'E',
+			fecha_cierre: 'F',
+			id_agente: 'G',
+			fase: 'H',
+			historial_cambios: 'I',
+			documentos: 'J',
+			historia: 'K',
+			motivo: 'L',
+			objetivo: 'M',
+			requisitos: 'N',
+			observaciones: 'O'
 		};
-
+		
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
 		await updateRowById(id as string, newValues, 'actividades!A:Z');
 
@@ -80,15 +83,15 @@ export const actions: Actions = {
 			console.log('con razon social');
 			const cliente = [
 				null,
-				formData.get('id_agente') || 1,
-				formData.get('razon_social') || null,
+				formData.get('id_agente'),
+				formData.get('razon_social'),
 				null,
 				null,
 				null,
 				null,
-				formData.get('ubicacion') || null,
-				formData.get('contactos') || null,
-				formData.get('tipo_prospeccion') || null,
+				formData.get('ubicacion'),
+				formData.get('contactos'),
+				formData.get('tipo_prospeccion'),
 				new Date().toISOString()
 			];
 
