@@ -4,9 +4,8 @@
 	let {
 		isOpen = $bindable(),
 		titleOpen,
-		titleClose,
 		children
-	}: { isOpen: boolean; titleOpen: string; titleClose: string; children?: Snippet } = $props();
+	}: { isOpen: boolean; titleOpen: string; children?: Snippet } = $props();
 
 	function open() {
 		isOpen = true;
@@ -18,6 +17,9 @@
 </script>
 
 {#if isOpen}
+	{#if children}
+		{@render children()}
+	{/if}
 	<button class="close-btn" type="button" onclick={close}>✕</button>
 {:else}
 	<button class="butter" type="button" onclick={open}>
@@ -26,11 +28,7 @@
 {/if}
 
 <style>
-	.optional-input {
-		display: flex;
-		flex-direction: column;
-		flex-grow: 1;
-		width: 100%;
-		gap: var(--a);
+	.butter {
+		width: fit-content;
 	}
 </style>

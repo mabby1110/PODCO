@@ -1,14 +1,8 @@
 <script lang="ts">
 	import { addMinutes } from '$lib/utils/agenda';
-
-	// props (Svelte 5)
-	const { duration = 10, title = 'Inicio de actividad' } = $props<{
-		duration?: number;
-		title: string;
-	}>();
-
-	// --- Pickers separados ---
+	const { title = '' } = $props();
 	let fecha = $state('');
+	let duracion = $state(20);
 	let hora = $state('10:00');
 	let inicio = $state('');
 	let fin = $state('');
@@ -24,13 +18,8 @@
 		}
 	});
 
-	function getToday() {
-		const t = new Date();
-		return t.toISOString().slice(0, 10);
-	}
-
-	function setCustomEnd(fechaCompromiso: Date) {
-		const next = addMinutes(new Date(fechaCompromiso), duration);
+	function setCustomEnd(fechaCompromiso: Date, duracion: number = 10) {
+		const next = addMinutes(new Date(fechaCompromiso), duracion);
 
 		const yyyy = next.getFullYear();
 		const mm = String(next.getMonth() + 1).padStart(2, '0');
@@ -50,16 +39,17 @@
 			const hh = String(Math.floor(actual / 60)).padStart(2, '0');
 			const mm = String(actual % 60).padStart(2, '0');
 			horas.push(`${hh}:${mm}`);
-			actual += duration;
+			actual += duracion;
 		}
 
 		return horas;
 	}
+
 	$effect(() => {
 		if (fecha && hora) {
 			const base = `${fecha} ${hora}`;
 			inicio = base;
-			fin = setCustomEnd(new Date(`${fecha}T${hora}`));
+			fin = setCustomEnd(new Date(`${fecha}T${hora}`), duracion);
 		} else {
 			inicio = '';
 			fin = '';
@@ -68,17 +58,28 @@
 </script>
 
 <label>
-	<span>{title}</span>
+	{#if title}
+		<p>{title}</p>
+	{/if}
 
 	<div class="datetime-split">
-		<!-- <input class="butter" type="date" bind:value={fecha} min={getToday()} required /> -->
-		<input class="butter" type="date" bind:value={fecha} required />
-
-		<select class="butter" bind:value={hora} required>
-			{#each generarHoras() as h}
-				<option value={h}>{h}</option>
-			{/each}
-		</select>
+		<div class="datetime-item">
+			<span>Fecha</span>
+			<!-- <input type="date" bind:value={fecha} min={getToday()} required /> -->
+			<input class="butter" type="date" bind:value={fecha} required />
+		</div>
+		<div class="datetime-item">
+			<span>Hora</span>
+			<select class="butter" bind:value={hora} required>
+				{#each generarHoras() as h}
+					<option value={h}>{h}</option>
+				{/each}
+			</select>
+		</div>
+		<div class="datetime-item">
+			<span>Duración (minutos)</span>
+			<input class="butter" type="number" bind:value={duracion} min="1" required />
+		</div>
 	</div>
 
 	<input type="hidden" name="inicio" bind:value={inicio} />
@@ -86,17 +87,24 @@
 </label>
 
 <style>
-	.butter {
-		background-color: var(--color-secondary);
-	}
 	label {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
 		width: 100%;
 	}
+	.datetime-split {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.datetime-item {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+	}
 	span {
-		font-size: 20px;
-		cursor: pointer;
+		font-size: smaller;
+		color: var(--color-muted);
 	}
 </style>

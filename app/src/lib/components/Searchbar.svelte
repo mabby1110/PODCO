@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
+	import FormNewClient from './Cliente/FormNewClient.svelte';
+	import FormConditionalInput from './FormConditionalInput.svelte';
 
 	interface DataItem {
 		[key: string]: string | number | null | undefined;
@@ -7,15 +9,19 @@
 
 	let {
 		data = [],
-		keyColumns = ['motivo']
+		keyColumns = ['motivo'],
+		selectedItem = $bindable()
 	}: {
 		data: DataItem[];
-		keyColumns: string[]; // Cambiado de [string] a string[]
+		keyColumns: string[];
+		selectedItem: DataItem | null;
 	} = $props();
 
-	const eventList = $derived(data?.length ? data : []);
 	let keyword = $state('');
-	let selectedDataItem = $state(null);
+	let isDuplicate = $derived(false);
+	let isOpen = $state(false);
+
+	const eventList = $derived(data?.length ? data : []);
 	let filteredData = $derived.by(() => {
 		const searchTerm = keyword.toLowerCase().trim();
 		if (searchTerm === '') {
@@ -31,71 +37,65 @@
 		});
 	});
 
-	function selectItem(item: DataItem) {
-		selectedDataItem = item;
-		keyword = ''; // Limpiar búsqueda después de seleccionar
+	function selectItem(item: any) {
+		selectedItem = item;
+		keyword = '';
 	}
 </script>
 
-<div>
-	{#if selectedDataItem}
+<div class="search-container">
+	{#if selectedItem}
 		<label for="id_cliente">
 			<span>Cliente</span>
-			<input type="hidden" name="id_cliente" value={selectedDataItem?.id} />
 			<div class="selected-client">
-				<p>{selectedDataItem?.razon_social}</p>
 				<button
 					type="button"
 					class="close-btn"
 					onclick={(e) => {
 						e.stopPropagation();
-						selectedDataItem = null;
+						selectedItem = null;
 					}}>✕</button
 				>
+				<p>{selectedItem?.razon_social}</p>
 			</div>
 		</label>
 	{:else}
 		<label>
 			<span>Buscar Cliente</span>
-			<div class="search-input butter">
-				<input type="text" bind:value={keyword} placeholder="Buscar..." required />
-			</div>
-			{#if keyword}
-				<div class="results" transition:slide>
-					{#if filteredData.length > 0}
-						{#each filteredData as item (item.id)}
-							<button
-								type="button"
-								class="search-result"
-								onclick={(e) => {
-									e.stopPropagation();
-									selectItem(item);
-								}}
-							>
-								<span class="meta">{item.razon_social}</span>
-							</button>
-						{/each}
-					{:else}
-						<div class="no-results">No se encontraron resultados</div>
-					{/if}
-				</div>
+			{#if isOpen}
+				<FormNewClient bind:isDuplicate />
+			{:else}
+				<input class="butter" type="text" bind:value={keyword} placeholder="Buscar..." required />
+				{#if keyword}
+					<div class="results" transition:slide>
+						{#if filteredData.length > 0}
+							{#each filteredData as item (item.id)}
+								<button
+									type="button"
+									class="search-result"
+									onclick={(e) => {
+										e.stopPropagation();
+										selectItem(item);
+									}}
+								>
+									<span class="meta">{item.razon_social}</span>
+								</button>
+							{/each}
+						{:else}
+							<div class="no-results">No se encontraron resultados</div>
+						{/if}
+					</div>
+				{/if}
 			{/if}
+			<FormConditionalInput titleOpen="Agregar nuevo" bind:isOpen />
 		</label>
 	{/if}
 </div>
 
 <style>
-	.search-input {
-		flex-grow: 1;
-		padding: 0;
-		overflow: hidden;
-	}
-	.search-input input {
+	.search-container {
 		width: 100%;
-		height: 100%;
-		border: none;
-		border-radius: var(--a);
-		padding: 0 var(--a);
+		max-width: var(--j);
 	}
 	.results {
 		padding: var(--a);
@@ -112,13 +112,9 @@
 		border-radius: var(--a);
 		cursor: pointer;
 		text-align: left;
-		transition: background 0.2s;
 		display: flex;
 		flex-direction: column;
 		gap: 4px;
-	}
-	.search-result:hover {
-		background: var(--hover-bg, #f5f5f5);
 	}
 	.meta {
 		font-size: 0.85em;
@@ -131,7 +127,7 @@
 	}
 	.selected-client {
 		display: flex;
-		justify-content: space-between;
+		gap: var(--a);
 		align-items: center;
 	}
 </style>

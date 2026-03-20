@@ -5,8 +5,6 @@ import {
 	type FieldColumnMap
 } from '$lib/server/google/sheets';
 import { fail, type Actions } from '@sveltejs/kit';
-import { processAttachments, uploadToFolder } from '$lib/server/google/drive';
-import { Readable } from 'stream';
 import { invalidateCache } from '$lib/server/google/cachedQueries';
 
 export const actions: Actions = {
@@ -17,7 +15,6 @@ export const actions: Actions = {
 		let historial_cambios = [{ fecha: new Date().toISOString(), entrada: 'Cliente creado' }];
 
 		const cliente = [
-			// del sistema
 			new Date().toISOString(),
 			null,
 			JSON.stringify(historial_cambios),

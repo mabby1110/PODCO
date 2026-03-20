@@ -3,9 +3,9 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import FormSelectMotivo from './FormSelectMotivo.svelte';
+	import FormSelectMotivo from '../FormSelectMotivo.svelte';
 	import { motivosProspeccion } from '$lib';
-	import FormSelectAgente from './FormSelectAgente.svelte';
+	import FormSelectAgente from '../FormSelectAgente.svelte';
 	import { page } from '$app/state';
 	import FormInputAddContact from '$lib/components/FormInputAddContact.svelte';
 	let {
@@ -104,7 +104,7 @@
 		</ul>
 	{/if}
 
-	<FormSelectMotivo title="Tipo de prospeccion" list={motivosProspeccion} />
+	<FormSelectMotivo title="Tipo de prospeccion" name={'tipo_prospeccion'} list={motivosProspeccion} />
 
 	<label>
 		<span>Ubicacion</span>

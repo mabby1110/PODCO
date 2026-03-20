@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { addMinutes } from '$lib/utils/agenda';
-	import FormNewClient from '../FormNewClient.svelte';
+	import FormNewClient from './FormNewClient.svelte';
 	import FormSelectAgente from '../FormSelectAgente.svelte';
 
 	let { data } = $props();
@@ -103,7 +103,7 @@
 
 				<FormSelectAgente agentes={data.agentes} />
 
-				 <FormNewClient bind:isDuplicate/>
+				<FormNewClient bind:isDuplicate/>
 
 				<!-- <label>
 					<span>Programar primer contacto</span>

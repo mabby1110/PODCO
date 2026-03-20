@@ -1,40 +1,50 @@
-export type Oportunidad = {
-	id: string;
-	id_cliente: string;
-	id_agente: string;
-	fase: number;
-	motivo: string | null;
-	inicio: string;
-	fin: string;
-	historia: string | null;
-	cotizaciones: string | null;
-	requisitos: string;
-	fecha_creacion: string;
-	fecha_cierre: string | null;
-	motivo_inicial: string | null;
-	adjuntos: string | null;
-	documentos: string | null;
-	objetivo: string;
-};
 export type Actividad = {
+	// del sistema
 	id: string;
-	id_cliente: string;
-	id_agente: string;
-	fase: number;
-	motivo: string;
+	fecha_creacion: string | Date;
+	historial_cambios: string;
 	inicio: string | Date;
 	fin: string | Date;
-	historia: string;
-	cotizaciones: string;
-	requisitos: string;
-	fecha_creacion: string | Date;
 	fecha_cierre: string | Date;
-	motivo_inicial: string;
-	adjuntos: string;
+	id_agente: string;
+	fase: number;
+	documentos: string;
+
+	// de la actividad
+	historia: string;
+	motivo: string;
 	objetivo: string;
+	requisitos: string;
 	observaciones: string;
 	tipo_actividad: string;
+};
+export type Oportunidad = {
+	// del sistema
+	id: string;
+	fecha_creacion: string | Date;
+	historial_cambios: string;
+	inicio: string | Date;
+	fin: string | Date;
+	fecha_cierre: string | Date;
+	id_agente: string;
+	fase: number;
+	documentos: string;
 
+	// de la actividad
+	historia: string;
+	motivo: string;
+	objetivo: string;
+	requisitos: string;
+	observaciones: string;
+	
+	// de la oportunidad
+	necesidades: string;
+	potencial_venta: string;
+	id_cliente: string | null;
+	cotizaciones_presentadas: string | null;
+	cotizaciones_ganadas: string | null;
+	oc_cliente: string | null;
+	documentos_operacion: string | null;
 };
 export type Cliente = {
 	id: string;

@@ -27,7 +27,6 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 	let agentes;
 	if (profile?.isAdmin) {
 		agentes = (await getAllProfilesAdmin(supabaseAdmin)).filter((a) => !a.isAdmin && !a.isOper);
-		console.log(agentes);
 	}
 
 	return {

@@ -23,7 +23,8 @@
 			'Reclamación / garantía',
 			'Recompra',
 			'Urgencia operativa'
-		]
+		],
+		name = 'motivo'
 	} = $props();
 
 	let selected = $state('');
@@ -65,4 +66,4 @@
 {/if}
 
 <!-- Valor final para el formulario -->
-<input type="hidden" name="motivo" value={motivo} />
+<input type="hidden" {name} value={motivo} />

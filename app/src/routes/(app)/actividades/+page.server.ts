@@ -23,13 +23,12 @@ export const actions: Actions = {
 		const activityData = [
 			// del sistema
 			new Date().toISOString(),
-			null,
+			JSON.stringify(historial_cambios),
 			formData.get('inicio'),
 			formData.get('fin'),
 			null,
 			formData.get('id_agente'),
 			formData.get('fase'),
-			JSON.stringify(historial_cambios),
 			null,
 
 			// de la actividad
@@ -47,7 +46,7 @@ export const actions: Actions = {
 	},
 
 	updateActivity: async ({ request }) => {
-		console.log('update activity :)');
+		console.log('update activity');
 		const formData = await request.formData();
 
 		const id = formData.get('id');
@@ -59,14 +58,13 @@ export const actions: Actions = {
 
 		// Actualizar actividad
 		const updateFieldMap: FieldColumnMap = {
-			fecha_creacion: 'B',
 			ultima_actualizacion: 'C',
 			inicio: 'D',
 			fin: 'E',
 			fecha_cierre: 'F',
 			id_agente: 'G',
 			fase: 'H',
-			historial_cambios: 'I',
+			historial_cambios: 'C',
 			documentos: 'J',
 			historia: 'K',
 			motivo: 'L',
@@ -74,15 +72,24 @@ export const actions: Actions = {
 			requisitos: 'N',
 			observaciones: 'O'
 		};
-		
-		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-		await updateRowById(id as string, newValues, 'actividades!A:Z');
 
-		// crear cliente si el formulario contiene razon social
-		if (formData.get('id_cliente') || formData.get('razon_social')) {
-			console.log('con razon social');
+		// crear oportunidad con cliente existente o cliente nuevo
+		if (formData.get('razon_social')) {
+			console.log('cliente nuevo');
+			delete updateFieldMap.motivo;
+			delete updateFieldMap.objetivo;
+			delete updateFieldMap.observaciones;
+			delete updateFieldMap.requisitos;
+
+			let historial_cambios_cliente = [
+				{ fecha: new Date().toISOString(), entrada: 'Cliente creado' }
+			];
 			const cliente = [
+				new Date().toISOString(),
 				null,
+				JSON.stringify(historial_cambios_cliente),
+				null,
+				formData.get('observaciones'),
 				formData.get('id_agente'),
 				formData.get('razon_social'),
 				null,
@@ -91,30 +98,97 @@ export const actions: Actions = {
 				null,
 				formData.get('ubicacion'),
 				formData.get('contactos'),
-				formData.get('tipo_prospeccion'),
-				new Date().toISOString()
+				null,
+				formData.get('tipo_prospeccion')
 			];
-
 			const newClient = await appendRow('clientes!A:Z', cliente, 'BMS-CLI');
 
-			// crear oportunidad si se ha creado el cliente nuevo
 			const oportunidad = [
-				newClient?.id || null,
-				formData.get('id_agente') || 1,
-				1,
-				formData.get('motivo') || null,
-				formData.get('inicio') || null,
-				formData.get('fin') || null,
-				null,
-				null,
-				null,
 				new Date().toISOString(),
+				JSON.stringify([{ fecha: new Date().toISOString(), entrada: 'Oportunidad creada' }]),
+				formData.get('inicio'),
+				formData.get('fin'),
 				null,
-				formData.get('motivo') || null,
-				null
+				formData.get('id_agente'),
+				2,
+				null,
+				null,
+				formData.get('motivo'),
+				formData.get('objetivo'),
+				formData.get('requisitos'),
+				formData.get('observaciones'),
+				formData.get('necesidad'),
+				formData.get('potencial_venta'),
+				newClient.id,
+				null,
+				null,
+				null,
+				null,
+				formData.get('motivo_inicial')
 			];
-			await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
+			let newOp = await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
+
+			// se actualiza el historial de cambios
+			let entrada_historial = JSON.stringify([
+				{
+					fecha: new Date().toISOString(),
+					entrada: `se creo Cliente ${newClient.id}`
+				},
+				{
+					fecha: new Date().toISOString(),
+					entrada: `se creo Oportunidad ${newOp.id}`
+				}
+			]);
+			let historial = JSON.parse(formData.get('historial_cambios') as string);
+			historial.push(entrada_historial);
+			formData.set('historial_cambios', JSON.stringify(historial));
+		} else if (formData.get('id_cliente')) {
+			console.log('cliente existente');
+			// se crea oportunidad
+			const oportunidad = [
+				new Date().toISOString(),
+				JSON.stringify([{ fecha: new Date().toISOString(), entrada: 'Oportunidad creada' }]),
+				formData.get('inicio'),
+				formData.get('fin'),
+				null,
+				formData.get('id_agente'),
+				2,
+				null,
+				null,
+				formData.get('motivo'),
+				formData.get('objetivo'),
+				formData.get('requisitos'),
+				formData.get('observaciones'),
+				formData.get('necesidad'),
+				formData.get('potencial_venta'),
+				formData.get('id_cliente'),
+				null,
+				null,
+				null,
+				null,
+				formData.get('motivo_inicial')
+			];
+			let newOp = await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
+
+			// se actualiza el historial de cambios
+			let entrada_historial = [
+				{
+					fecha: new Date().toISOString(),
+					entrada: `se creo Oportunidad ${newOp.id}`
+				}
+			];
+			let historial = JSON.parse(formData.get('historial_cambios') as string);
+			historial.push(entrada_historial);
+			formData.set('historial_cambios', JSON.stringify(historial));
+
+			delete updateFieldMap.motivo;
+			delete updateFieldMap.objetivo;
+			delete updateFieldMap.observaciones;
+			delete updateFieldMap.requisitos;
 		}
+
+		const newValues = mapFormDataToColumns(formData, updateFieldMap);
+		await updateRowById(id as string, newValues, 'actividades!A:Z');
 
 		invalidateCache('actividades');
 		return { success: true };

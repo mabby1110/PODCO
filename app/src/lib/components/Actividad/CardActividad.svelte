@@ -24,7 +24,7 @@
 			requisitos: event.requisitos,
 			objetivo: event.objetivo,
 			observaciones: event.observaciones,
-			tipo_actividad: event.tipo_actividad,
+			historial_cambios: event.historial_cambios,
 			style: getStyleForPhase(event.fase)
 		};
 	});
@@ -88,7 +88,7 @@
 		border: 1px solid var(--color-secondary);
 		width: 100%;
 		height: fit-content;
-		max-height: 80vh;
+		max-height: 92vh;
 		overflow: hidden;
 	}
 	header {

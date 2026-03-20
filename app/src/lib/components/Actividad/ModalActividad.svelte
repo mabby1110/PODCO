@@ -135,9 +135,9 @@
 					</div>
 				</div>
 				
-				<input type="hidden" name="fase" value={1} />
 				<input type="hidden" name="inicio" bind:value={inicio} />
 				<input type="hidden" name="fin" bind:value={fin} />
+				<input type="hidden" name="fase" value={1} />
 
 				<div class="actions">
 					<button class="butter success" type="submit">Agregar</button>
