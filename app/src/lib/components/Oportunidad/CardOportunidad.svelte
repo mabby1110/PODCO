@@ -59,26 +59,26 @@
 			<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			<!-- informacion -->
 			{#if eventData.objetivo}
-				<section>
+				<div>
 					<h3>Objetivo</h3>
 					<p>{eventData.objetivo}</p>
-				</section>
+				</div>
 			{/if}
 			{#if eventData.historia}
-				<section>
+				<div>
 					<h3>Historia</h3>
 					<p>{eventData.historia}</p>
-				</section>
+				</div>
 			{/if}
 			{#if eventData.requisitos}
-				<section>
+				<div>
 					<h3>Requisitos</h3>
 					<p>{eventData.requisitos}</p>
-				</section>
+				</div>
 			{/if}
 
 			{#if eventData.cotizaciones}
-				<section class="cotizaciones">
+				<div class="cotizaciones">
 					<h3>Cotizaciones</h3>
 					<div class="documentos">
 						{#each JSON.parse(eventData.cotizaciones) as cotizacion}
@@ -86,23 +86,34 @@
 							<!-- <a href={cotizacion.url}>{cotizacion.id}</a> -->
 						{/each}
 					</div>
-				</section>
+				</div>
 			{/if}
 			{#if eventData.adjuntos}
-				<section>
+				<div>
 					<h3>Documentos</h3>
 					<AdjuntosGrid adjuntos={eventData.adjuntos} />
-				</section>
+				</div>
 			{/if}
 
-			<section class="card-actions">
+			<div class="card-actions">
 				<PhaseAction {...eventData} />
-			</section>
+			</div>
 		</div>
 	</div>
 {/if}
 
 <style>
+	.card-full {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+		border-radius: 12px;
+		border: 1px solid var(--color-secondary);
+		width: 100%;
+		height: fit-content;
+		max-height: 80vh;
+		overflow: hidden;
+	}
 	header {
 		display: flex;
 		gap: var(--a);
@@ -118,8 +129,9 @@
 		top: 0;
 		z-index: 99;
 	}
-	header h1 {
-		width: 100%;
+	.meta {
+		display: flex;
+		gap: var(--a);
 	}
 	.close-btn {
 		position: absolute;
@@ -134,21 +146,15 @@
 		transition: opacity 0.2s;
 		flex-shrink: 0;
 	}
+	.card-actions {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--b);
+	}
 	.meta {
 		display: flex;
 		gap: var(--a);
-	}
-	.iframe {
-		width: fit-content;
-		max-width: 80vw;
-		height: 40vh;
-		pointer-events: none;
-	}
-	.documentos {
-		width: 80vw;
-		height: fit-content;
-		display: flex;
-		overflow: auto;
-		-webkit-overflow-scrolling: touch;
 	}
 </style>

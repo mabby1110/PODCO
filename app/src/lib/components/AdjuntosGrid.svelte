@@ -10,7 +10,7 @@
 	}
 </script>
 
-<section class="adjuntos">
+<div class="adjuntos">
 	<div class="grid" class:expanded={expanded}>
 		{#each docs as doc}
 			<iframe src={doc.preview} class="iframe" title="Documento"></iframe>
@@ -26,7 +26,7 @@
 			mostrar menos
 		</button>
 	{/if}
-</section>
+</div>
 
 <style>
 	.adjuntos {

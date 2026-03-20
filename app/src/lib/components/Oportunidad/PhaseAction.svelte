@@ -64,7 +64,7 @@
 	// $effect(() => console.log(JSON.parse(cotizaciones)));
 </script>
 
-<section class="actions">
+<div class="actions">
 	<form
 		method="POST"
 		action="/oportunidades?/updateOp"
@@ -256,7 +256,7 @@
 			</div>
 		{/if}
 	</form>
-</section>
+</div>
 
 <style>
 	.actions {
