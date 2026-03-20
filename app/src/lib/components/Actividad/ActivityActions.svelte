@@ -60,7 +60,7 @@
 	}
 </script>
 
-<section class="actions">
+<div class="actions">
 	<form
 		method="POST"
 		action="/actividades?/updateActivity"
@@ -204,7 +204,7 @@
 			</div>
 		{/if}
 	</form>
-</section>
+</div>
 
 <style>
 	.actions {

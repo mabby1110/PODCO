@@ -49,32 +49,32 @@
 		<div class="card-content">
 			<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			{#if eventData.historia}
-				<section>
+				<div>
 					<h3>Historia</h3>
 					<p>{eventData.historia}</p>
-				</section>
+				</div>
 			{/if}
 			{#if eventData.requisitos}
-				<section>
+				<div>
 					<h3>Requisitos</h3>
 					<p>{eventData.requisitos}</p>
-				</section>
+				</div>
 			{/if}
 			{#if eventData.objetivo}
-				<section>
+				<div>
 					<h3>Objetivos</h3>
 					<p>{eventData.objetivo}</p>
-				</section>
+				</div>
 			{/if}
 			{#if eventData.observaciones}
-				<section>
+				<div>
 					<h3>Observaciones</h3>
 					<p>{eventData.observaciones}</p>
-				</section>
+				</div>
 			{/if}
-			<section class="card-actions">
+			<div class="card-actions">
 				<ActivityActions {eventData} />
-			</section>
+			</div>
 		</div>
 	</div>
 {/if}
