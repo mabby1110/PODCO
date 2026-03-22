@@ -145,7 +145,7 @@
 	<table>
 		<thead>
 			<tr>
-				<th class="corner"></th>
+				<th class="corner">{getMonth(weekDates[0])}</th>
 				{#each weekDates as date, i}
 					<th>
 						<div class="day-header">
@@ -241,7 +241,6 @@
 		left: 0;
 		z-index: 99;
 	}
-
 	.hour-cell {
 		position: sticky;
 		left: 0;

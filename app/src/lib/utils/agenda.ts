@@ -95,7 +95,7 @@ export function formatDate(date: Date): string {
  * Formatea una fecha como mes
  */
 export function getMonth(date: Date, full: boolean = false): string {
-	return `${String(full?fullMonths[date.getMonth()]:months[date.getMonth()])}`;
+	return `${String(full?fullMonths[date.getMonth()]:fullMonths[date.getMonth()])}`;
 }
 /**
 
