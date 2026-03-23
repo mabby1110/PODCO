@@ -114,7 +114,7 @@
 			{#if eventData.documentos}
 				<div>
 					<h3>Documentos</h3>
-					<documentosGrid adjuntos={eventData.documentos} />
+					<AdjuntosGrid adjuntos={eventData.documentos} />
 				</div>
 			{/if}
 

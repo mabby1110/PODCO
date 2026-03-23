@@ -19,10 +19,45 @@ export const load: PageServerLoad = async ({ depends }) => {
 
 export const actions: Actions = {
 	addOp: async ({ request }) => {
-		console.log('\nActividades add\n');
+		console.log('\nAgregar Oportunidad\n');
 		const formData = await request.formData();
 		console.log(formData);
 
+		if (formData.get('razon_social')) {
+			// crear oportunidad con cliente nuevo
+			console.log('cliente nuevo');
+
+			// se creal cliente nuevo
+			const cliente = [
+				new Date().toISOString(),
+				JSON.stringify([{ fecha: new Date().toISOString(), entrada: 'Cliente creado' }]),
+				null,
+				null,
+				formData.get('id_agente'),
+				formData.get('razon_social'),
+				null,
+				null,
+				null,
+				null,
+				formData.get('ubicacion'),
+				formData.get('contactos'),
+				formData.get('tipo_prospeccion')
+			];
+			const newClient = await appendRow('clientes!A:Z', cliente, 'BMS-CLI');
+
+			// se actualiza el historial de cambios de la actividad
+			let nuevas_entradas = [
+				{
+					fecha: new Date().toISOString(),
+					entrada: `se creo Cliente ${newClient.id}`
+				}
+			];
+			let historial_string = formData.get('historial_cambios') as string;
+			let historial = historial_string ? JSON.parse(historial_string) : [];
+			historial = historial.concat(nuevas_entradas);
+			formData.set('historial_cambios', JSON.stringify(historial));
+		}
+		
 		const oportunidad = [
 			new Date().toISOString(),
 			JSON.stringify([{ fecha: new Date().toISOString(), entrada: `Oportunidad creada` }]),
@@ -53,7 +88,7 @@ export const actions: Actions = {
 		invalidateCache('oportunidades');
 		return { success: true };
 	},
-	
+
 	updateOp: async ({ request }) => {
 		console.log('update action');
 
