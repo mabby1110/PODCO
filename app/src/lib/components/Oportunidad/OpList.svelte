@@ -7,7 +7,6 @@
 	import { columnasOportunidad } from '$lib';
 
 	let { oportunidades } = $props();
-
 	let filtrado = $derived([...oportunidades]);
 </script>
 

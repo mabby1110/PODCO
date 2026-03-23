@@ -5,6 +5,7 @@
 	import Reload from '../Reload.svelte';
 	import Filtro from '../Filtro.svelte';
 	import FilterOpList from '../FilterOpList.svelte';
+	import { columnasActividad } from '$lib';
 
 	let { actividades } = $props();
 
@@ -13,14 +14,6 @@
 		{ label: 'Programada', color: 'var(--color-secondary)' },
 		{ label: 'Finalizada', color: '#000000ee' }
 	];
-	const configuracionColumnas = [
-		{ key: 'motivo', label: 'Motivo' },
-		{ key: 'motivo_inicial', label: 'Motivo Inicial' },
-		{ key: 'objetivo', label: 'Objetivo' },
-		{ key: 'inicio', label: 'Fecha de Inicio' },
-		{ key: 'fase', label: 'Fase' },
-		{ key: 'id_cliente', label: 'ID Cliente' }
-	];
 </script>
 
 <div class="view-container">
@@ -28,7 +21,7 @@
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 		<FilterOpList />
 		<Reload />
-		<Filtro items={actividades} columns={configuracionColumnas} bind:filteredItems={filtrado} />
+		<Filtro items={actividades} columns={columnasActividad} bind:filteredItems={filtrado} />
 	</div>
 	<Leyenda {steps} />
 	{#each filtrado as event (event.id)}

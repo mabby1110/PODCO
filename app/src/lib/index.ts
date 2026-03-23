@@ -69,20 +69,20 @@ export type Cliente = {
 // FILTROS
 export const columnasActividad = [
     { key: 'motivo', label: 'Motivo' },
-    { key: 'tipo_actividad', label: 'Tipo' },
     { key: 'objetivo', label: 'Objetivo' },
     { key: 'inicio', label: 'Fecha Inicio' },
     { key: 'fase', label: 'Fase' },
-    { key: 'historia', label: 'Historia/Relato' },
+    { key: 'historia', label: 'Historia' },
     { key: 'id', label: 'ID Actividad' }
 ];
 
 export const columnasOportunidad = [
     { key: 'motivo', label: 'Motivo de Op.' },
+    { key: 'historia', label: 'Historia' },
     { key: 'id_cliente', label: 'ID Cliente' },
-    { key: 'potencial_venta', label: 'Potencial ($)' },
-    { key: 'fase', label: 'Etapa/Fase' },
-    { key: 'inicio', label: 'Próxima Acción' },
+    { key: 'potencial_venta', label: 'Potencial de venta' },
+    { key: 'fase', label: 'Fase' },
+    { key: 'inicio', label: 'Fecha Inicio' },
     { key: 'necesidades', label: 'Necesidades' },
     { key: 'objetivo', label: 'Objetivo Comercial' },
     { key: 'id', label: 'Folio' }
