@@ -11,7 +11,7 @@
 	const { clientes, agentes } = $derived(page.data);
 
 	let event = $derived($selectedOp);
-
+	
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 		return {
@@ -25,6 +25,7 @@
 			fin: event?.fin,
 			historia: event.historia,
 			requisitos: event.requisitos,
+			observaciones: event.observaciones,
 			cotizaciones_ganadas: event.cotizaciones_ganadas,
 			cotizaciones_presentadas: event.cotizaciones_presentadas,
 			oc_cliente: event.oc_cliente,
@@ -44,7 +45,7 @@
 {#if $selectedOp && eventData}
 	<div class="card-full" transition:slide>
 		<header style={eventData.style}>
-			<button class="close-btn" onclick={closeCard} aria-label="Cerrar">✕</button>
+			<button class="close-btn {eventData.fase?.id_fase == 6?'white-text':''}" onclick={closeCard} aria-label="Cerrar">✕</button>
 			<div class="title">
 				<h1>{eventData.motivo}</h1>
 				<h3>{eventData.razon_social}</h3>
@@ -73,6 +74,12 @@
 				<div>
 					<h3>Requisitos</h3>
 					<p>{eventData.requisitos}</p>
+				</div>
+			{/if}
+			{#if eventData.observaciones}
+				<div>
+					<h3>Observaciones</h3>
+					<p>{eventData.observaciones}</p>
 				</div>
 			{/if}
 
@@ -109,6 +116,9 @@
 	.meta {
 		display: flex;
 		gap: var(--a);
+	}
+	.white-text {
+		color: white;
 	}
 	.close-btn {
 		position: absolute;

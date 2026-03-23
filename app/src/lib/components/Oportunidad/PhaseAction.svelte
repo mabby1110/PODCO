@@ -12,14 +12,15 @@
 	import UploadFile from '$lib/components/UploadFile.svelte';
 
 	let { eventData } = $props();
-
+	
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
 	let nextPhase = $derived(Number(currentPhase) + 1);
-
+	
 	let nuevoRequisito = $state('');
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
 	let nuevaOc = $state('');
+	let nuevaObeservacion = $state('');
 
 	let isSubmitting = $state(false);
 	let submitUpdate = $state(false);
@@ -172,7 +173,7 @@
 			<FormInput
 				label="Observaciones"
 				name="observaciones"
-				bind:value={eventData.observaciones}
+				bind:value={nuevaObeservacion}
 				placeholder="Detalles importantes y pautas a seguir"
 				type="textarea"
 				required
@@ -192,7 +193,7 @@
 			<UploadFile label="Subir documentos" name="docFile" multiple />
 		</FormOptionalInput>
 		<!-- datos compuestos -->
-		<input type="hidden" name="id" bind:value={eventData.id} />
+		<input type="hidden" name="id" value={eventData.id} />
 		{#if nuevaHistoria}
 			<input
 				type="hidden"
@@ -212,6 +213,13 @@
 				type="hidden"
 				name="cotizaciones_presentadas"
 				bind:value={eventData.cotizaciones_presentadas}
+			/>
+		{/if}
+		{#if nuevaObeservacion}
+			<input
+				type="hidden"
+				name="observaciones"
+				value={combinarHistoria(eventData.observaciones, nuevaObeservacion)}
 			/>
 		{/if}
 		{#if eventData.agente}
