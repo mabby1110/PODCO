@@ -77,19 +77,6 @@
 				<div class="cotizacion">
 					<UploadFile label="Cotizaciones" name="quoteFile" required multiple />
 				</div>
-				<FormOptionalInput title="+Agregar requisitos">
-					<FormInput
-						label="Requisitos"
-						name="nuevosRequisitos"
-						bind:value={nuevoRequisito}
-						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-						type="textarea"
-						required
-					/>
-				</FormOptionalInput>
-				<FormOptionalInput title="+documentos">
-					<UploadFile label="Subir documentos" name="docFile" multiple />
-				</FormOptionalInput>
 				<DatePicker title="Fecha seguimiento o Expiración" />
 			{:else if currentPhase == 3}
 				<FormInput
@@ -102,15 +89,18 @@
 				/>
 
 				<div class="oc">
+					<UploadFile label="Cotizacion generada en Contpaqi" name="quoteWonFile" required />
+				</div>
+				<div class="oc">
 					<UploadFile label="Orden de compra del cliente" name="ocFile" required />
 				</div>
-				<DatePicker title="Fecha seguimiento o Expiración" />
+				<DatePicker title="Seguimiento / Envío" />
 			{:else if currentPhase == 4}
 				<FormInput
-					label="Acciones para realizar el proceso de envio"
+					label="Ejecución de envío"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
-					placeholder="Especificar paqueteria, etc"
+					placeholder="Detalles de Transporte y logística"
 					type="textarea"
 					required
 				/>
@@ -118,7 +108,21 @@
 				<div class="oc">
 					<UploadFile label="Documentos de operacion" name="docOpFile" required />
 				</div>
-				<DatePicker title="Fecha en que se envia el paquete" />
+				<DatePicker title="Salida de paquete" />
+			{:else if currentPhase == 5}
+				<FormInput
+					label="Estado de entrega / Incidencias"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Reporte de recepción y novedades"
+					type="textarea"
+					required
+				/>
+
+				<div class="oc">
+					<UploadFile label="Documentos de operacion" name="docOpFile" required />
+				</div>
+				<DatePicker title="Salida de paquete" />
 			{:else if currentPhase != 6}
 				<FormInput
 					label={eventData.fase.actual}
@@ -143,21 +147,11 @@
 					type="textarea"
 					required
 				/>
-				{#if currentPhase > 2}
+				{#if currentPhase == 3}
 					<FormOptionalInput title="+Nueva cotizacion">
 						<div class="cotizacion">
 							<UploadFile label="Nueva Cotización" name="quoteFile" required />
 						</div>
-					</FormOptionalInput>
-					<FormOptionalInput title="+Agregar requisitos">
-						<FormInput
-							label="Requisitos"
-							name="nuevosRequisitos"
-							bind:value={nuevoRequisito}
-							placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-							type="textarea"
-							required
-						/>
 					</FormOptionalInput>
 				{/if}
 				<DatePicker title="Fecha de compromiso" />
@@ -173,6 +167,30 @@
 			{/if}
 		{/if}
 
+		<!-- opciones generales -->
+		<FormOptionalInput title="+Observaciones">
+			<FormInput
+				label="Observaciones"
+				name="observaciones"
+				bind:value={eventData.observaciones}
+				placeholder="Detalles importantes y pautas a seguir"
+				type="textarea"
+				required
+			/>
+		</FormOptionalInput>
+		<FormOptionalInput title="+Agregar requisitos">
+			<FormInput
+				label="Requisitos"
+				name="nuevosRequisitos"
+				bind:value={nuevoRequisito}
+				placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+				type="textarea"
+				required
+			/>
+		</FormOptionalInput>
+		<FormOptionalInput title="+adjuntos">
+			<UploadFile label="Subir documentos" name="docFile" multiple />
+		</FormOptionalInput>
 		<!-- datos compuestos -->
 		<input type="hidden" name="id" bind:value={eventData.id} />
 		{#if nuevaHistoria}
