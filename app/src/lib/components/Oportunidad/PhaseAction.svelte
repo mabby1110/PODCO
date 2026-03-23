@@ -11,36 +11,21 @@
 	import { invalidate } from '$app/navigation';
 	import UploadFile from '$lib/components/UploadFile.svelte';
 
-	let {
-		fase,
-		id,
-		agente,
-		historia,
-		cotizaciones_presentadas,
-		requisitos,
-		documentos
-	}: {
-		fase: any;
-		id: string;
-		agente: any;
-		historia: string;
-		cotizaciones_presentadas: string;
-		requisitos: string;
-		documentos: string;
-	} = $props();
+	let { eventData } = $props();
 
-	let nextPhase = $derived(Number(fase.id_fase) + 1);
+	let currentPhase = $derived(Number(eventData.fase.id_fase));
+	let nextPhase = $derived(Number(currentPhase) + 1);
 	let nuevoRequisito = $state('');
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
 	let isSubmitting = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
-	let style = $derived(getStyleForPhase(fase.id_fase + 1));
+	let style = $derived(getStyleForPhase(currentPhase + 1));
 
 	// Placeholder dinámico por fase
 	let fasePlaceholder = $derived(
-		fases.find((f) => f.id_fase == fase.id_fase)?.placeholder ?? 'Ingresa la acción realizada'
+		fases.find((f) => f.id_fase == currentPhase)?.placeholder ?? 'Ingresa la acción realizada'
 	);
 
 	function combinarHistoria(anterior: string, nueva: string): string {
@@ -56,7 +41,7 @@
 				nuevaCotizacion = '';
 			}
 
-			await invalidate('app:calendar');
+			await invalidate('app:data');
 		};
 	}
 
@@ -75,7 +60,8 @@
 	>
 		{#if !submitCancel && !submitUpdate}
 			<!-- Acciones -->
-			{#if fase.id_fase == 2}
+			{#if currentPhase == 2}
+				<FormSelectMotivo list={motivosOportunidad} disableCustom={false}/>
 				<FormInput
 					label="Análisis"
 					name="nuevaHistoria"
@@ -85,7 +71,7 @@
 					required
 				/>
 				<div class="cotizacion">
-					<UploadFile label="Cotizaciones" name="quoteFile" required multiple/>
+					<UploadFile label="Cotizaciones" name="quoteFile" required multiple />
 				</div>
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
@@ -98,12 +84,12 @@
 					/>
 				</FormOptionalInput>
 				<FormOptionalInput title="+documentos">
-					<UploadFile label="Subir documentos" name="docFile" multiple/>
+					<UploadFile label="Subir documentos" name="docFile" multiple />
 				</FormOptionalInput>
 				<DatePicker title="Fecha en que la vigencia de la cotización termina" />
-			{:else if fase.id_fase == 3}
+			{:else if currentPhase == 3}
 				<FormInput
-					label={fase.actual}
+					label={eventData.fase.actual}
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
 					placeholder={fasePlaceholder}
@@ -123,9 +109,9 @@
 					<UploadFile label="" name="quoteFile" required />
 				</div>
 				<DatePicker title="Fecha en que la vigencia de la cotización termina" />
-			{:else if fase.id_fase != 6}
+			{:else if currentPhase != 6}
 				<FormInput
-					label={fase.actual}
+					label={eventData.fase.actual}
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
 					placeholder={fasePlaceholder}
@@ -137,7 +123,7 @@
 		{/if}
 
 		<!-- acciones opcionales -->
-		{#if fase.id_fase != 0}
+		{#if currentPhase != 0}
 			{#if submitUpdate}
 				<FormInput
 					label="Postergar"
@@ -147,7 +133,7 @@
 					type="textarea"
 					required
 				/>
-				{#if fase.id_fase > 2}
+				{#if currentPhase > 2}
 					<FormOptionalInput title="+Nueva cotizacion">
 						<div class="cotizacion">
 							<FormInput
@@ -186,30 +172,42 @@
 		{/if}
 
 		<!-- datos compuestos -->
-		<input type="hidden" name="id" bind:value={id} />
-		{#if nuevaHistoria && historia}
-			<input type="hidden" name="historia" value={combinarHistoria(historia, nuevaHistoria)} />
+		<input type="hidden" name="id" bind:value={eventData.id} />
+		{#if nuevaHistoria && eventData.historia}
+			<input
+				type="hidden"
+				name="historia"
+				value={combinarHistoria(eventData.historia, nuevaHistoria)}
+			/>
 		{/if}
-		{#if nuevoRequisito && requisitos}
-			<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
+		{#if nuevoRequisito && eventData.requisitos}
+			<input
+				type="hidden"
+				name="requisitos"
+				value={combinarHistoria(eventData.requisitos, nuevoRequisito)}
+			/>
 		{/if}
-		{#if nuevaCotizacion && cotizaciones_presentadas}
-			<input type="hidden" name="cotizaciones_presentadas" bind:value={cotizaciones_presentadas} />
+		{#if nuevaCotizacion && eventData.cotizaciones_presentadas}
+			<input
+				type="hidden"
+				name="cotizaciones_presentadas"
+				bind:value={eventData.cotizaciones_presentadas}
+			/>
 		{/if}
-		{#if agente}
-			<input type="hidden" name="agente" value={agente.nombre} />
+		{#if eventData.agente}
+			<input type="hidden" name="agente" value={eventData.agente.nombre} />
 		{/if}
 		{#if nextPhase == 6}
 			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 		{/if}
 
 		<!-- opciones para envio de formulario -->
-		{#if fase.id_fase != 6}
+		{#if currentPhase != 6}
 			<div class="submit">
 				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
 
 				{#if submitUpdate}
-					<input type="hidden" name="fase" value={fase.id_fase} />
+					<input type="hidden" name="fase" value={currentPhase} />
 					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
 				{:else if submitCancel}
 					<input type="hidden" name="fase" value={0} />
@@ -217,7 +215,7 @@
 				{:else}
 					<input type="hidden" name="fase" value={nextPhase} />
 					<button type="submit" class="butter" {style} disabled={isSubmitting}>
-						{isSubmitting ? 'Procesando...' : fase.accion}
+						{isSubmitting ? 'Procesando...' : eventData.fase.accion}
 					</button>
 				{/if}
 			</div>

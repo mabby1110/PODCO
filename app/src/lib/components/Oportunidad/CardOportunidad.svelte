@@ -3,10 +3,9 @@
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { slide } from 'svelte/transition';
 	import { getStyleForPhase } from '$lib/utils/util';
-	import { fases, type Oportunidad } from '$lib';
+	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import PhaseAction from './PhaseAction.svelte';
-	import AdjuntosGrid from '$lib/components/AdjuntosGrid.svelte';
 	import FilePreview from '../FilePreview.svelte';
 
 	const { clientes, agentes } = $derived(page.data);
@@ -85,7 +84,7 @@
 			<FilePreview title="Adjuntos" data={eventData.documentos} />
 
 			<div class="card-actions">
-				<PhaseAction {...eventData} />
+				<PhaseAction {eventData} />
 			</div>
 		</div>
 	</div>

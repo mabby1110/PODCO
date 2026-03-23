@@ -57,7 +57,7 @@ export const actions: Actions = {
 			historial = historial.concat(nuevas_entradas);
 			formData.set('historial_cambios', JSON.stringify(historial));
 		}
-		
+
 		const oportunidad = [
 			new Date().toISOString(),
 			JSON.stringify([{ fecha: new Date().toISOString(), entrada: `Oportunidad creada` }]),
@@ -205,7 +205,9 @@ export const actions: Actions = {
 		// ---------- UPDATE SHEET ----------
 		await updateRowById(id as string, newValues, 'oportunidades!A:Z');
 
+		invalidateCache('clientes');
 		invalidateCache('oportunidades');
+		invalidateCache('actividades');
 
 		return { success: true };
 	},
