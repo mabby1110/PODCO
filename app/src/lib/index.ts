@@ -48,6 +48,8 @@ export type Oportunidad = {
 };
 export type Cliente = {
 	id: string;
+	fecha_creacion: string | Date;
+	historial_cambios: string;
 	id_contpaqi: string;
 	id_agente: string;
 	razon_social: string;
@@ -58,11 +60,49 @@ export type Cliente = {
 	sector: string;
 	contactos: string;
 	tipo_prospeccion: string;
-	fecha_creacion: string | Date;
 	ultima_actualizacion: string | Date;
 	fecha_sync: string | Date;
+	historial: string;
+	observaciones: string;
 };
 
+// FILTROS
+export const columnasActividad = [
+    { key: 'motivo', label: 'Motivo' },
+    { key: 'tipo_actividad', label: 'Tipo' },
+    { key: 'objetivo', label: 'Objetivo' },
+    { key: 'inicio', label: 'Fecha Inicio' },
+    { key: 'fase', label: 'Fase' },
+    { key: 'historia', label: 'Historia/Relato' },
+    { key: 'id_agente', label: 'ID Agente' },
+    { key: 'id', label: 'ID Actividad' }
+];
+
+export const columnasOportunidad = [
+    { key: 'motivo', label: 'Motivo de Op.' },
+    { key: 'id_cliente', label: 'ID Cliente' },
+    { key: 'potencial_venta', label: 'Potencial ($)' },
+    { key: 'fase', label: 'Etapa/Fase' },
+    { key: 'inicio', label: 'Próxima Acción' },
+    { key: 'necesidades', label: 'Necesidades' },
+    { key: 'objetivo', label: 'Objetivo Comercial' },
+    { key: 'id_agente', label: 'Agente Asignado' },
+    { key: 'id', label: 'Folio' }
+];
+
+export const columnasCliente = [
+    { key: 'razon_social', label: 'Razón Social' },
+    { key: 'nombre_comercial', label: 'Nombre Comercial' },
+    { key: 'sector', label: 'Sector/Industria' },
+    { key: 'ciudad', label: 'Ciudad' },
+    { key: 'estado', label: 'Estado' },
+    { key: 'tipo_prospeccion', label: 'Origen/Prospección' },
+    { key: 'id_contpaqi', label: 'Código CONTPAQi' },
+    { key: 'id_agente', label: 'Agente Dueño' },
+    { key: 'id', label: 'ID Sistema' }
+];
+
+// FASES
 export const fases = [
 	{
 		id_fase: 1,
@@ -128,6 +168,7 @@ export const fases_actividad = [
 	}
 ];
 
+// MOTIVOS
 export let motivosActividades = [
 	'Trabajo Administrativo',
 	'Presentación de portafolio',

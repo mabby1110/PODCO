@@ -8,7 +8,7 @@
 
 <div class="page-content">
 	{#if $selectedActivity}
-		<section>
+		<section class="selected">
 			<CardActividad />
 		</section>
 	{:else}

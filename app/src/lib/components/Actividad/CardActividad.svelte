@@ -80,17 +80,6 @@
 {/if}
 
 <style>
-	.card-full {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-		border-radius: 12px;
-		border: 1px solid var(--color-secondary);
-		width: 100%;
-		height: fit-content;
-		max-height: 92vh;
-		overflow: hidden;
-	}
 	header {
 		display: flex;
 		gap: var(--a);

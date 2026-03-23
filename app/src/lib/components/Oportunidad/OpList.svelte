@@ -1,29 +1,39 @@
 <script lang="ts">
 	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
-	import { filtrarConsecutivo } from '$lib/utils/util';
-	import { filterStore } from '$lib/stores/filterStore.svelte';
-	import FilterOpList from '$lib/components/FilterOpList.svelte';
+	import Filtro from '$lib/components/Filtro.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import Leyenda from '../Leyenda.svelte';
 	import Reload from '../Reload.svelte';
+	import { columnasOportunidad } from '$lib';
 
 	let { oportunidades } = $props();
 
-	const eventList = $derived(
-		filterStore.atributo !== ''
-			? filtrarConsecutivo(filterStore.atributo, 'id_agente', oportunidades)
-			: oportunidades
-	);
+	let filtrado = $derived([...oportunidades]);
 </script>
 
 <div class="view-container">
 	<div class="controls">
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-		<FilterOpList />
 		<Reload />
+		<Filtro items={oportunidades} columns={columnasOportunidad} bind:filteredItems={filtrado} />
+		<Leyenda />
 	</div>
-	<Leyenda />
-	{#each eventList as event (event.id)}
+
+	{#each filtrado as event (event.id)}
 		<CardOpListPreview {event} />
 	{/each}
+
+	{#if filtrado.length === 0}
+		<div class="no-results">
+			<p>No se encontraron oportunidades con los filtros actuales.</p>
+		</div>
+	{/if}
 </div>
+
+<style>
+	.no-results {
+		text-align: center;
+		padding: 2rem;
+		color: #64748b;
+	}
+</style>
