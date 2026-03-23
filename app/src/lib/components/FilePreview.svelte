@@ -25,7 +25,7 @@
 	<div class="cotizaciones">
 		<h3>
 			<button type="button" onclick={() => (isOpen = !isOpen)} class="accordion-btn">
-				{title}
+				{title} ({items.length})
 				<span class="icon">{isOpen ? '▼' : '▶'}</span>
 			</button>
 		</h3>

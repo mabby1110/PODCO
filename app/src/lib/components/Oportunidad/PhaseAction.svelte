@@ -3,7 +3,7 @@
 	import DatePicker from '$lib/components/DatePicker.svelte';
 	import FormOptionalSubmit from '$lib/components/FormOptionalSubmit.svelte';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
-	import { getDurationForPhase, getStyleForPhase } from '$lib/utils/util';
+	import { getStyleForPhase } from '$lib/utils/util';
 	import { fases, motivosOportunidad } from '$lib';
 	import FormSelectMotivo from '$lib/components/FormSelectMotivo.svelte';
 	import FormInput from '../FormInput.svelte';
@@ -15,9 +15,12 @@
 
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
 	let nextPhase = $derived(Number(currentPhase) + 1);
+
 	let nuevoRequisito = $state('');
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
+	let nuevaOc = $state('');
+
 	let isSubmitting = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
@@ -39,6 +42,7 @@
 			if (result.type === 'success') {
 				nuevaHistoria = '';
 				nuevaCotizacion = '';
+				nuevaOc = '';
 			}
 
 			await invalidate('app:data');
@@ -88,6 +92,20 @@
 				</FormOptionalInput>
 				<DatePicker title="Fecha en que la vigencia de la cotización termina" />
 			{:else if currentPhase == 3}
+				<FormInput
+					label={eventData.fase.actual}
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder={fasePlaceholder}
+					type="textarea"
+					required
+				/>
+
+				<div class="oc">
+					<UploadFile label="Orden de compra del cliente" name="ocFile" required />
+				</div>
+				<DatePicker title="Fecha en que la vigencia de la cotización termina" />
+			{:else if currentPhase == 4}
 				<FormInput
 					label={eventData.fase.actual}
 					name="nuevaHistoria"
