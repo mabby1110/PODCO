@@ -16,9 +16,7 @@ export const actions: Actions = {
 
 		const cliente = [
 			new Date().toISOString(),
-			null,
 			JSON.stringify(historial_cambios),
-			null,
 			null,
 			formData.get('id_agente') || 1,
 			formData.get('razon_social') || null,
@@ -29,25 +27,10 @@ export const actions: Actions = {
 			formData.get('ubicacion') || null,
 			formData.get('contactos') || null,
 			formData.get('historial') || null,
-			formData.get('tipo_prospeccion') || null,
+			formData.get('tipo_prospeccion') || null
 		];
+		await appendRow('clientes!A:Z', cliente, 'BMS_CLI');
 
-		const newClient = await appendRow('clientes!A:Z', cliente);
-
-		// const oportunidad = [
-		// 	newClient?.id,
-		// 	formData.get('id_agente'),
-		// 	formData.get('fase'),
-		// 	formData.get('motivo'),
-		// 	formData.get('inicio'),
-		// 	formData.get('fin'),
-		// 	formData.get('motivo'),
-		// 	formData.get('cotizaciones'),
-		// 	formData.get('requisitos'),
-		// 	new Date().toISOString()
-		// ];
-
-		// await appendRow('oportunidades!A:Z', oportunidad, 'BMS_CLI');
 		invalidateCache('clientes');
 
 		return { success: true };
@@ -64,25 +47,35 @@ export const actions: Actions = {
 		}
 
 		const updateFieldMap: FieldColumnMap = {
-			id_contpaqi: "B",
-			id_agente: "C",
-			razon_social: "D",
-			nombre_comercial: "E",
-			estado: "F",
-			sector: "G",
-			ciudad: "H",
-			ubicacion: "I",
-			contactos: "J",
-			tipo_prospeccion: "K",
-			fecha_creacion: "L",
-			fecha_sync: "N",
+			fecha_creacion: 'B',
+			historial_cambios: 'C',
+			id_contpaqi: 'D',
+			id_agente: 'E',
+			razon_social: 'F',
+			nombre_comercial: 'G',
+			sector: 'H',
+			estado: 'I',
+			ciudad: 'J',
+			ubicacion: 'K',
+			contactos: 'L',
+			historial: 'M',
+			tipo_prospeccion: 'N',
+			observaciones: 'O'
 		};
-															
+
+		// se actualiza el historial de cambios de la actividad
+		let nuevas_entradas = [
+			{
+				fecha: new Date().toISOString(),
+				entrada: `se Actualizó Cliente`
+			}
+		];
+		let historial_string = formData.get('historial_cambios') as string;
+		let historial = historial_string ? JSON.parse(historial_string) : [];
+		historial = historial.concat(nuevas_entradas);
+		formData.set('historial_cambios', JSON.stringify(historial));
+
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-
-		// Agregar fecha de actualización
-		newValues['M'] = new Date().toISOString();
-
 		await updateRowById(id as string, newValues, 'clientes!A:Z');
 		invalidateCache('clientes');
 
