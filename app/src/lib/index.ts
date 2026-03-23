@@ -74,7 +74,6 @@ export const columnasActividad = [
     { key: 'inicio', label: 'Fecha Inicio' },
     { key: 'fase', label: 'Fase' },
     { key: 'historia', label: 'Historia/Relato' },
-    { key: 'id_agente', label: 'ID Agente' },
     { key: 'id', label: 'ID Actividad' }
 ];
 
@@ -86,7 +85,6 @@ export const columnasOportunidad = [
     { key: 'inicio', label: 'Próxima Acción' },
     { key: 'necesidades', label: 'Necesidades' },
     { key: 'objetivo', label: 'Objetivo Comercial' },
-    { key: 'id_agente', label: 'Agente Asignado' },
     { key: 'id', label: 'Folio' }
 ];
 
@@ -98,7 +96,6 @@ export const columnasCliente = [
     { key: 'estado', label: 'Estado' },
     { key: 'tipo_prospeccion', label: 'Origen/Prospección' },
     { key: 'id_contpaqi', label: 'Código CONTPAQi' },
-    { key: 'id_agente', label: 'Agente Dueño' },
     { key: 'id', label: 'ID Sistema' }
 ];
 
