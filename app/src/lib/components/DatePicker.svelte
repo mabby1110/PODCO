@@ -62,7 +62,7 @@
 
 <label>
 	{#if title}
-		<p>{title}</p>
+		<h3>{title}</h3>
 	{/if}
 
 	<div class="datetime-split">

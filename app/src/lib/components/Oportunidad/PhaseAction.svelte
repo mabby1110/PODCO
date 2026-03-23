@@ -45,7 +45,7 @@
 				nuevaOc = '';
 			}
 
-			await invalidate('app:data');
+			await invalidate('app:calendar');
 		};
 	}
 
@@ -65,7 +65,7 @@
 		{#if !submitCancel && !submitUpdate}
 			<!-- Acciones -->
 			{#if currentPhase == 2}
-				<FormSelectMotivo list={motivosOportunidad} disableCustom={false}/>
+				<FormSelectMotivo list={motivosOportunidad} disableCustom={false} />
 				<FormInput
 					label="Análisis"
 					name="nuevaHistoria"
@@ -80,7 +80,7 @@
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
 						label="Requisitos"
-						name="nuevoRequisitos"
+						name="nuevosRequisitos"
 						bind:value={nuevoRequisito}
 						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
 						type="textarea"
@@ -90,7 +90,7 @@
 				<FormOptionalInput title="+documentos">
 					<UploadFile label="Subir documentos" name="docFile" multiple />
 				</FormOptionalInput>
-				<DatePicker title="Fecha en que la vigencia de la cotización termina" />
+				<DatePicker title="Fecha seguimiento o Expiración" />
 			{:else if currentPhase == 3}
 				<FormInput
 					label={eventData.fase.actual}
@@ -104,7 +104,7 @@
 				<div class="oc">
 					<UploadFile label="Orden de compra del cliente" name="ocFile" required />
 				</div>
-				<DatePicker title="Fecha en que la vigencia de la cotización termina" />
+				<DatePicker title="Fecha seguimiento o Expiración" />
 			{:else if currentPhase == 4}
 				<FormInput
 					label="Acciones para realizar el proceso de envio"
@@ -146,21 +146,13 @@
 				{#if currentPhase > 2}
 					<FormOptionalInput title="+Nueva cotizacion">
 						<div class="cotizacion">
-							<FormInput
-								label="ID cotización"
-								name="nuevaCotizacion"
-								bind:value={nuevaCotizacion}
-								placeholder="ID de la cotización generada en CONTPAQi"
-								type="number"
-								required
-							/>
-							<UploadFile label="" name="quoteFile" required />
+							<UploadFile label="Nueva Cotización" name="quoteFile" required />
 						</div>
 					</FormOptionalInput>
 					<FormOptionalInput title="+Agregar requisitos">
 						<FormInput
 							label="Requisitos"
-							name="nuevoRequisitos"
+							name="nuevosRequisitos"
 							bind:value={nuevoRequisito}
 							placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
 							type="textarea"
