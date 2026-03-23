@@ -10,6 +10,8 @@
 	import { page } from '$app/state';
 	import DatePicker from '../DatePicker.svelte';
 
+	let { op=false }: { op?: boolean } = $props();
+
 	let data = $derived(page.data);
 
 	let clientes = $derived(data.clientes ?? []);
@@ -113,7 +115,7 @@
 	{#if selectedClient}
 		<input type="hidden" name="id_cliente" value={selectedClient?.id} required />
 	{/if}
-	<input type="hidden" name="fase" value={1} />
+	<input type="hidden" name="fase" value={op ? 2 : 1} />
 </div>
 
 <style>

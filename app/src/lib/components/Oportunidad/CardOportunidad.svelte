@@ -11,10 +11,33 @@
 	const { clientes, agentes } = $derived(page.data);
 
 	let event = $derived($selectedOp);
-	console.log(event);
-	// Agrupa todas las derivaciones en un solo $derived.by para mejor reactividad
+
 	const eventData = $derived.by(() => {
 		if (!event) return null;
+
+		// new Date().toISOString(),
+		// JSON.stringify([
+		// 	{ fecha: new Date().toISOString(), entrada: `Oportunidad creada` }
+		// ]),
+		// formData.get('inicio'),
+		// formData.get('fin'),
+		// null,
+		// formData.get('id_agente'),
+		// 2,
+		// null,
+		// null,
+		// formData.get('motivo'),
+		// formData.get('objetivo'),
+		// formData.get('requisitos'),
+		// formData.get('observaciones'),
+		// formData.get('necesidad'),
+		// formData.get('potencial_venta'),
+		// formData.get('id_cliente'),
+		// null,
+		// null,
+		// null,
+		// null,
+		// formData.get('motivo')
 
 		return {
 			id: event.id,
@@ -27,9 +50,8 @@
 			fin: event?.fin,
 			historia: event.historia,
 			requisitos: event.requisitos,
-			cotizaciones: event.cotizaciones,
+			cotizaciones_presentadas: event.cotizaciones_presentadas,
 			documentos: event.documentos,
-			adjuntos: event.adjuntos,
 			objetivo: event.objetivo,
 			style: getStyleForPhase(event.fase)
 		};
@@ -57,17 +79,16 @@
 		</header>
 		<div class="card-content">
 			<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
-			<!-- informacion -->
-			{#if eventData.objetivo}
-				<div>
-					<h3>Objetivo</h3>
-					<p>{eventData.objetivo}</p>
-				</div>
-			{/if}
 			{#if eventData.historia}
 				<div>
 					<h3>Historia</h3>
 					<p>{eventData.historia}</p>
+				</div>
+			{/if}
+			{#if eventData.objetivo}
+				<div>
+					<h3>Objetivo</h3>
+					<p>{eventData.objetivo}</p>
 				</div>
 			{/if}
 			{#if eventData.requisitos}
@@ -76,22 +97,24 @@
 					<p>{eventData.requisitos}</p>
 				</div>
 			{/if}
-
-			{#if eventData.cotizaciones}
+			{eventData.cotizaciones_presentadas}
+			{#if eventData.cotizaciones_presentadas}
 				<div class="cotizaciones">
 					<h3>Cotizaciones</h3>
 					<div class="documentos">
-						{#each JSON.parse(eventData.cotizaciones) as cotizacion}
+						{#each JSON.parse(eventData.cotizaciones_presentadas) as cotizacion}
 							<iframe src={cotizacion.preview} class="iframe" title="Descripción"></iframe>
 							<!-- <a href={cotizacion.url}>{cotizacion.id}</a> -->
 						{/each}
 					</div>
 				</div>
 			{/if}
-			{#if eventData.adjuntos}
+			
+			{eventData.documentos}
+			{#if eventData.documentos}
 				<div>
 					<h3>Documentos</h3>
-					<AdjuntosGrid adjuntos={eventData.adjuntos} />
+					<documentosGrid adjuntos={eventData.documentos} />
 				</div>
 			{/if}
 
@@ -111,7 +134,7 @@
 		border: 1px solid var(--color-secondary);
 		width: 100%;
 		height: fit-content;
-		max-height: 80vh;
+		max-height: 90vh;
 		overflow: hidden;
 	}
 	header {

@@ -16,17 +16,17 @@
 		id,
 		agente,
 		historia,
-		cotizaciones,
+		cotizaciones_presentadas,
 		requisitos,
-		adjuntos
+		documentos
 	}: {
 		fase: any;
 		id: string;
 		agente: any;
 		historia: string;
-		cotizaciones: string;
+		cotizaciones_presentadas: string;
 		requisitos: string;
-		adjuntos: string;
+		documentos: string;
 	} = $props();
 
 	let nextPhase = $derived(Number(fase.id_fase) + 1);
@@ -37,7 +37,6 @@
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 	let style = $derived(getStyleForPhase(fase.id_fase + 1));
-	let duration = $derived(getDurationForPhase(fase.id_fase));
 
 	// Placeholder dinámico por fase
 	let fasePlaceholder = $derived(
@@ -76,31 +75,7 @@
 	>
 		{#if !submitCancel && !submitUpdate}
 			<!-- Acciones -->
-			{#if fase.id_fase == 1}
-				<FormSelectMotivo title="Cambiar Motivo" list={motivosOportunidad} disableCustom={false} />
-				<FormInput
-					label="Necesidades"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder={fasePlaceholder}
-					type="textarea"
-					required
-				/>
-				<FormOptionalInput title="+requisitos">
-					<FormInput
-						label="Requisitos"
-						name="nuevoRequisitos"
-						bind:value={nuevoRequisito}
-						placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-						type="textarea"
-						required
-					/>
-				</FormOptionalInput>
-				<FormOptionalInput title="+documentos">
-					<UploadFile label="Subir documentos" name="docFile" multiple />
-				</FormOptionalInput>
-				<DatePicker {duration} title="Fecha de compromiso para presentar propuesta" />
-			{:else if fase.id_fase == 2}
+			{#if fase.id_fase == 2}
 				<FormInput
 					label="Análisis"
 					name="nuevaHistoria"
@@ -110,15 +85,7 @@
 					required
 				/>
 				<div class="cotizacion">
-					<FormInput
-						label="ID cotización"
-						name="nuevaCotizacion"
-						bind:value={nuevaCotizacion}
-						placeholder="ID de la cotización generada en CONTPAQi"
-						type="number"
-						required
-					/>
-					<UploadFile label="" name="quoteFile" required multiple={false} />
+					<UploadFile label="Cotizaciones" name="quoteFile" required multiple/>
 				</div>
 				<FormOptionalInput title="+Agregar requisitos">
 					<FormInput
@@ -131,9 +98,9 @@
 					/>
 				</FormOptionalInput>
 				<FormOptionalInput title="+documentos">
-					<UploadFile label="Subir documentos" name="docFile" />
+					<UploadFile label="Subir documentos" name="docFile" multiple/>
 				</FormOptionalInput>
-				<DatePicker {duration} title="Fecha en que la vigencia de la cotización termina" />
+				<DatePicker title="Fecha en que la vigencia de la cotización termina" />
 			{:else if fase.id_fase == 3}
 				<FormInput
 					label={fase.actual}
@@ -155,7 +122,7 @@
 					/>
 					<UploadFile label="" name="quoteFile" required />
 				</div>
-				<DatePicker {duration} title="Fecha en que la vigencia de la cotización termina" />
+				<DatePicker title="Fecha en que la vigencia de la cotización termina" />
 			{:else if fase.id_fase != 6}
 				<FormInput
 					label={fase.actual}
@@ -165,7 +132,7 @@
 					type="textarea"
 					required
 				/>
-				<DatePicker {duration} title="Fecha de compromiso" />
+				<DatePicker title="Fecha de compromiso" />
 			{/if}
 		{/if}
 
@@ -205,7 +172,7 @@
 						/>
 					</FormOptionalInput>
 				{/if}
-				<DatePicker {duration} title="Fecha de compromiso" />
+				<DatePicker title="Fecha de compromiso" />
 			{:else if submitCancel}
 				<FormInput
 					label="Pérdida"
@@ -220,14 +187,14 @@
 
 		<!-- datos compuestos -->
 		<input type="hidden" name="id" bind:value={id} />
-		{#if nuevaHistoria}
+		{#if nuevaHistoria && historia}
 			<input type="hidden" name="historia" value={combinarHistoria(historia, nuevaHistoria)} />
 		{/if}
-		{#if nuevoRequisito}
+		{#if nuevoRequisito && requisitos}
 			<input type="hidden" name="requisitos" value={combinarHistoria(requisitos, nuevoRequisito)} />
 		{/if}
-		{#if nuevaCotizacion}
-			<input type="hidden" name="cotizaciones" bind:value={cotizaciones} />
+		{#if nuevaCotizacion && cotizaciones_presentadas}
+			<input type="hidden" name="cotizaciones_presentadas" bind:value={cotizaciones_presentadas} />
 		{/if}
 		{#if agente}
 			<input type="hidden" name="agente" value={agente.nombre} />

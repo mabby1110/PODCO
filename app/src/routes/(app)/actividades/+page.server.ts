@@ -19,11 +19,11 @@ export const actions: Actions = {
 		console.log('add activity');
 		const formData = await request.formData();
 		console.log(formData);
-		let historial_cambios = [{ fecha: new Date().toISOString(), entrada: 'Actividad creada' }];
+		
 		const activityData = [
 			// del sistema
 			new Date().toISOString(),
-			JSON.stringify(historial_cambios),
+			JSON.stringify([{ fecha: new Date().toISOString(), entrada: 'Actividad creada' }]),
 			formData.get('inicio'),
 			formData.get('fin'),
 			null,
@@ -239,6 +239,7 @@ export const actions: Actions = {
 		invalidateCache('actividades');
 		return { success: true };
 	},
+
 	reload: async () => {
 		invalidateCache('clientes');
 		invalidateCache('oportunidades');
@@ -246,6 +247,7 @@ export const actions: Actions = {
 
 		return { success: true };
 	},
+
 	delete: async ({ request }) => {
 		const formData = await request.formData();
 		const id = formData.get('id');

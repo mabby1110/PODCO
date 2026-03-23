@@ -21,13 +21,13 @@
 			</div>
 			<form
 				method="POST"
-				action="/oportunidades?/add"
+				action="/oportunidades?/addOp"
 				use:enhance={() => {
 					appState.toggleModalOp();
 					alert('creado con exito!');
 				}}
 			>
-				<FormOportunidad {data}/>
+				<FormOportunidad op />
 
 				<div class="actions">
 					<button class="butter success" type="submit">Agregar</button>
