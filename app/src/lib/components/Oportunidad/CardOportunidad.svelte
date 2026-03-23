@@ -3,10 +3,11 @@
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { slide } from 'svelte/transition';
 	import { getStyleForPhase } from '$lib/utils/util';
-	import { fases } from '$lib';
+	import { fases, type Oportunidad } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import PhaseAction from './PhaseAction.svelte';
 	import AdjuntosGrid from '$lib/components/AdjuntosGrid.svelte';
+	import FilePreview from '../FilePreview.svelte';
 
 	const { clientes, agentes } = $derived(page.data);
 
@@ -14,31 +15,6 @@
 
 	const eventData = $derived.by(() => {
 		if (!event) return null;
-
-		// new Date().toISOString(),
-		// JSON.stringify([
-		// 	{ fecha: new Date().toISOString(), entrada: `Oportunidad creada` }
-		// ]),
-		// formData.get('inicio'),
-		// formData.get('fin'),
-		// null,
-		// formData.get('id_agente'),
-		// 2,
-		// null,
-		// null,
-		// formData.get('motivo'),
-		// formData.get('objetivo'),
-		// formData.get('requisitos'),
-		// formData.get('observaciones'),
-		// formData.get('necesidad'),
-		// formData.get('potencial_venta'),
-		// formData.get('id_cliente'),
-		// null,
-		// null,
-		// null,
-		// null,
-		// formData.get('motivo')
-
 		return {
 			id: event.id,
 			razon_social:
@@ -50,7 +26,10 @@
 			fin: event?.fin,
 			historia: event.historia,
 			requisitos: event.requisitos,
+			cotizaciones_ganadas: event.cotizaciones_ganadas,
 			cotizaciones_presentadas: event.cotizaciones_presentadas,
+			oc_cliente: event.oc_cliente,
+			documentos_operacion: event.documentos_operacion,
 			documentos: event.documentos,
 			objetivo: event.objetivo,
 			style: getStyleForPhase(event.fase)
@@ -97,24 +76,13 @@
 					<p>{eventData.requisitos}</p>
 				</div>
 			{/if}
-			{#if eventData.cotizaciones_presentadas}
-				<div class="cotizaciones">
-					<h3>Cotizaciones</h3>
-					<div class="documentos">
-						{#each JSON.parse(eventData.cotizaciones_presentadas) as cotizacion}
-							<iframe src={cotizacion.preview} class="iframe" title="Descripción"></iframe>
-							<!-- <a href={cotizacion.url}>{cotizacion.id}</a> -->
-						{/each}
-					</div>
-				</div>
-			{/if}
-			
-			{#if eventData.documentos}
-				<div>
-					<h3>Documentos</h3>
-					<AdjuntosGrid adjuntos={eventData.documentos} />
-				</div>
-			{/if}
+
+			<!-- DOCUMENTOS DE EVIDENCIA -->
+			<FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />
+			<FilePreview title="Cotizaciones Presentadas" data={eventData.cotizaciones_presentadas} />
+			<FilePreview title="Orden de compra" data={eventData.oc_cliente} />
+			<FilePreview title="Documentos de operacion" data={eventData.documentos_operacion} />
+			<FilePreview title="Adjuntos" data={eventData.documentos} />
 
 			<div class="card-actions">
 				<PhaseAction {...eventData} />
@@ -124,17 +92,6 @@
 {/if}
 
 <style>
-	.card-full {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-		border-radius: 12px;
-		border: 1px solid var(--color-secondary);
-		width: 100%;
-		height: fit-content;
-		max-height: 90vh;
-		overflow: hidden;
-	}
 	header {
 		display: flex;
 		gap: var(--a);
