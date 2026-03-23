@@ -15,9 +15,8 @@
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<Reload />
 		<Filtro items={oportunidades} columns={columnasOportunidad} bind:filteredItems={filtrado} />
-		<Leyenda />
 	</div>
-
+	<Leyenda />
 	{#each filtrado as event (event.id)}
 		<CardOpListPreview {event} />
 	{/each}

@@ -14,23 +14,18 @@
 	let show = $state(false);
 </script>
 
-{#if show}
-	<div class="funnel-legend">
-		{#each steps as step, index}
-			<div class="legend-item">
-				<span class="color-box" style="background-color: {step.color};"></span>
-				<span class="label">{step.label}</span>
-			</div>
+<div class="funnel-legend">
+	{#each steps as step, index}
+		<div class="legend-item">
+			<span class="color-box" style="background-color: {step.color};"></span>
+			<span class="label">{step.label}</span>
+		</div>
 
-			{#if index < steps.length - 1}
-				<span class="separator">&gt;</span>
-			{/if}
-		{/each}
-	</div>
-	<button class="close-btn" onclick={()=>show=false}>x</button>
-{:else}
-	<button class="butter" onclick={()=>show=true}>Leyenda</button>
-{/if}
+		{#if index < steps.length - 1}
+			<span class="separator">&gt;</span>
+		{/if}
+	{/each}
+</div>
 
 <style>
 	.funnel-legend {

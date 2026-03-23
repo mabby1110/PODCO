@@ -82,10 +82,4 @@
 		margin: 0;
 		font-weight: 600;
 	}
-
-	.page-controls {
-		display: flex;
-		justify-content: end;
-		gap: var(--a);
-	}
 </style>
