@@ -97,7 +97,6 @@
 					<p>{eventData.requisitos}</p>
 				</div>
 			{/if}
-			{eventData.cotizaciones_presentadas}
 			{#if eventData.cotizaciones_presentadas}
 				<div class="cotizaciones">
 					<h3>Cotizaciones</h3>
@@ -110,7 +109,6 @@
 				</div>
 			{/if}
 			
-			{eventData.documentos}
 			{#if eventData.documentos}
 				<div>
 					<h3>Documentos</h3>

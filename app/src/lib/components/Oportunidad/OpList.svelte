@@ -5,6 +5,7 @@
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import Leyenda from '../Leyenda.svelte';
+	import Reload from '../Reload.svelte';
 
 	let { oportunidades } = $props();
 
@@ -15,12 +16,13 @@
 	);
 </script>
 
-<!-- <Leyenda /> -->
 <div class="view-container">
 	<div class="controls">
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<FilterOpList />
+		<Reload />
 	</div>
+	<Leyenda />
 	{#each eventList as event (event.id)}
 		<CardOpListPreview {event} />
 	{/each}
