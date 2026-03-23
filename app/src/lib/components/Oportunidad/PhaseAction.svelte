@@ -107,26 +107,18 @@
 				<DatePicker title="Fecha en que la vigencia de la cotización termina" />
 			{:else if currentPhase == 4}
 				<FormInput
-					label={eventData.fase.actual}
+					label="Acciones para realizar el proceso de envio"
 					name="nuevaHistoria"
 					bind:value={nuevaHistoria}
-					placeholder={fasePlaceholder}
+					placeholder="Especificar paqueteria, etc"
 					type="textarea"
 					required
 				/>
 
 				<div class="oc">
-					<FormInput
-						label="Orden de compra"
-						name="nuevaCotizacion"
-						bind:value={nuevaCotizacion}
-						placeholder="ID de la cotización generada en CONTPAQi"
-						type="text"
-						required
-					/>
-					<UploadFile label="" name="quoteFile" required />
+					<UploadFile label="Documentos de operacion" name="docOpFile" required />
 				</div>
-				<DatePicker title="Fecha en que la vigencia de la cotización termina" />
+				<DatePicker title="Fecha en que se envia el paquete" />
 			{:else if currentPhase != 6}
 				<FormInput
 					label={eventData.fase.actual}
@@ -191,21 +183,21 @@
 
 		<!-- datos compuestos -->
 		<input type="hidden" name="id" bind:value={eventData.id} />
-		{#if nuevaHistoria && eventData.historia}
+		{#if nuevaHistoria}
 			<input
 				type="hidden"
 				name="historia"
 				value={combinarHistoria(eventData.historia, nuevaHistoria)}
 			/>
 		{/if}
-		{#if nuevoRequisito && eventData.requisitos}
+		{#if nuevoRequisito}
 			<input
 				type="hidden"
 				name="requisitos"
 				value={combinarHistoria(eventData.requisitos, nuevoRequisito)}
 			/>
 		{/if}
-		{#if nuevaCotizacion && eventData.cotizaciones_presentadas}
+		{#if nuevaCotizacion}
 			<input
 				type="hidden"
 				name="cotizaciones_presentadas"
