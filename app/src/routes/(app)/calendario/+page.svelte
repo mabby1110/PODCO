@@ -8,10 +8,17 @@
 	import { selectedOp } from '$lib/stores/selectedOp.js';
 	import { selectedActivity } from '$lib/stores/selectedActivity.js';
 	import CardActividad from '$lib/components/Actividad/CardActividad.svelte';
+	import { filtrarConsecutivo } from '$lib/utils/util.js';
+	import { filterStore } from '$lib/stores/filterStore.svelte.js';
 
 	let { data } = $props();
 
 	let allActivities = $derived(data.oportunidades.concat(data.actividades));
+	const events = $derived(
+		filterStore.atributo !== ''
+			? filtrarConsecutivo(filterStore.atributo, 'id_agente', allActivities)
+			: allActivities
+	);
 </script>
 
 <div class="page-content">
@@ -25,7 +32,7 @@
 		</section>
 	{:else}
 		<section class="calendar-container" in:slide>
-			<CalendarWeek events={allActivities} />
+			<CalendarWeek {events} />
 		</section>
 	{/if}
 </div>
