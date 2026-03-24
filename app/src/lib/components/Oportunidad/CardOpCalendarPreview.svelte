@@ -51,6 +51,7 @@
 		</div>
 		<div class="meta">
 			<p class="motivo">{event?.objetivo}</p>
+			<p class="motivo">{event?.historia}</p>
 		</div>
 	{:else}
 		<div class="preview-header">
@@ -67,13 +68,13 @@
 <style>
 	.preview-container {
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		width: 100%;
 		border: 1px solid var(--color-muted);
 		border-radius: var(--a);
 		padding: 4px var(--a);
 		text-align: left;
-		align-items: baseline;
+		align-items: flex-start;
 		backdrop-filter: blur(16px);
 		overflow: hidden;
 		z-index: 1;
@@ -89,6 +90,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--b);
+		width: 100%;
 	}
 	.header-title {
 		width: 80%;
@@ -104,8 +106,9 @@
 		right: 0;
 		font-size: smaller;
 	}
-	.motivo {
-		font-size: 0.8rem;
-		opacity: 0.9;
+	.meta {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
 	}
 </style>
