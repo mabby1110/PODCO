@@ -78,7 +78,35 @@
 				<div class="cotizacion">
 					<UploadFile label="Cotizaciones" name="quoteFile" required multiple />
 				</div>
-				<DatePicker title="Fecha seguimiento o Expiración" />
+				<div class="opcional">
+					<h3>Informacion adicional</h3>
+					<div class="opciones">
+						<FormOptionalInput title="+Observaciones">
+							<FormInput
+								label="Observaciones"
+								name="observaciones"
+								bind:value={nuevaObeservacion}
+								placeholder="Detalles importantes y pautas a seguir"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+Agregar requisitos">
+							<FormInput
+								label="Requisitos"
+								name="nuevosRequisitos"
+								bind:value={nuevoRequisito}
+								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+adjuntos">
+							<UploadFile label="Subir documentos" name="docFile" multiple />
+						</FormOptionalInput>
+					</div>
+				</div>
+				<DatePicker title="Fecha seguimiento o Expiración" /><!-- opciones generales -->
 			{:else if currentPhase == 3}
 				<FormInput
 					label={eventData.fase.actual}
@@ -95,6 +123,34 @@
 				<div class="oc">
 					<UploadFile label="Orden de compra del cliente" name="ocFile" required />
 				</div>
+				<div class="opcional">
+					<h3>Informacion adicional</h3>
+					<div class="opciones">
+						<FormOptionalInput title="+Observaciones">
+							<FormInput
+								label="Observaciones"
+								name="observaciones"
+								bind:value={nuevaObeservacion}
+								placeholder="Detalles importantes y pautas a seguir"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+Agregar requisitos">
+							<FormInput
+								label="Requisitos"
+								name="nuevosRequisitos"
+								bind:value={nuevoRequisito}
+								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+adjuntos">
+							<UploadFile label="Subir documentos" name="docFile" multiple />
+						</FormOptionalInput>
+					</div>
+				</div>
 				<DatePicker title="Seguimiento / Envío" />
 			{:else if currentPhase == 4}
 				<FormInput
@@ -105,9 +161,36 @@
 					type="textarea"
 					required
 				/>
-
 				<div class="oc">
 					<UploadFile label="Documentos de operacion" name="docOpFile" required />
+				</div>
+				<div class="opcional">
+					<h3>Informacion adicional</h3>
+					<div class="opciones">
+						<FormOptionalInput title="+Observaciones">
+							<FormInput
+								label="Observaciones"
+								name="observaciones"
+								bind:value={nuevaObeservacion}
+								placeholder="Detalles importantes y pautas a seguir"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+Agregar requisitos">
+							<FormInput
+								label="Requisitos"
+								name="nuevosRequisitos"
+								bind:value={nuevoRequisito}
+								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+adjuntos">
+							<UploadFile label="Subir documentos" name="docFile" multiple />
+						</FormOptionalInput>
+					</div>
 				</div>
 				<DatePicker title="Salida de paquete" />
 			{:else if currentPhase == 5}
@@ -119,7 +202,34 @@
 					type="textarea"
 					required
 				/>
-
+				<div class="opcional">
+					<h3>Informacion adicional</h3>
+					<div class="opciones">
+						<FormOptionalInput title="+Observaciones">
+							<FormInput
+								label="Observaciones"
+								name="observaciones"
+								bind:value={nuevaObeservacion}
+								placeholder="Detalles importantes y pautas a seguir"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+Agregar requisitos">
+							<FormInput
+								label="Requisitos"
+								name="nuevosRequisitos"
+								bind:value={nuevoRequisito}
+								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+adjuntos">
+							<UploadFile label="Subir documentos" name="docFile" multiple />
+						</FormOptionalInput>
+					</div>
+				</div>
 				<div class="oc">
 					<UploadFile label="Documentos de operacion" name="docOpFile" required />
 				</div>
@@ -145,6 +255,34 @@
 						</div>
 					</FormOptionalInput>
 				{/if}
+				<div class="opcional">
+					<h3>Informacion adicional</h3>
+					<div class="opciones">
+						<FormOptionalInput title="+Observaciones">
+							<FormInput
+								label="Observaciones"
+								name="observaciones"
+								bind:value={nuevaObeservacion}
+								placeholder="Detalles importantes y pautas a seguir"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+Agregar requisitos">
+							<FormInput
+								label="Requisitos"
+								name="nuevosRequisitos"
+								bind:value={nuevoRequisito}
+								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+adjuntos">
+							<UploadFile label="Subir documentos" name="docFile" multiple />
+						</FormOptionalInput>
+					</div>
+				</div>
 				<DatePicker title="Fecha de compromiso" />
 			{:else if submitCancel}
 				<FormInput
@@ -154,32 +292,25 @@
 					placeholder="Motivo de la pérdida"
 					type="textarea"
 					required
-				/>
+				/>				<div class="opcional">
+					<h3>Informacion adicional</h3>
+					<div class="opciones">
+						<FormOptionalInput title="+Observaciones">
+							<FormInput
+								label="Observaciones"
+								name="observaciones"
+								bind:value={nuevaObeservacion}
+								placeholder="Detalles importantes y pautas a seguir"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+adjuntos">
+							<UploadFile label="Subir documentos" name="docFile" multiple />
+						</FormOptionalInput>
+					</div>
+				</div>
 			{/if}
-			<!-- opciones generales -->
-			<FormOptionalInput title="+Observaciones">
-				<FormInput
-					label="Observaciones"
-					name="observaciones"
-					bind:value={nuevaObeservacion}
-					placeholder="Detalles importantes y pautas a seguir"
-					type="textarea"
-					required
-				/>
-			</FormOptionalInput>
-			<FormOptionalInput title="+Agregar requisitos">
-				<FormInput
-					label="Requisitos"
-					name="nuevosRequisitos"
-					bind:value={nuevoRequisito}
-					placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-					type="textarea"
-					required
-				/>
-			</FormOptionalInput>
-			<FormOptionalInput title="+adjuntos">
-				<UploadFile label="Subir documentos" name="docFile" multiple />
-			</FormOptionalInput>
 		{/if}
 
 		<!-- datos compuestos -->
@@ -271,10 +402,16 @@
 		flex-grow: 1;
 	}
 	.cotizacion,
-	.oc {
+	.oc,
+	.opcional {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
+		gap: var(--a);
+	}
+	.opciones {
+		display: flex;
+		flex-wrap: wrap;
 		gap: var(--a);
 	}
 </style>
