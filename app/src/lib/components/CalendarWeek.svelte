@@ -45,7 +45,6 @@
 		)
 	);
 
-
 	let eventList = $derived([...events]);
 	const weekDates = $derived(getWeekDates(filterStore.weekOffset));
 	const weekRangeText = $derived(formatWeekRange(weekDates));
@@ -106,8 +105,6 @@
 
 <div class="controls">
 	<FilterOpList />
-
-	<!-- <Filtro items={events} columns={columnasActividad.concat(columnasOportunidad)} bind:filteredItems={eventList} /> -->
 	<div class="calendar-navigation">
 		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
 		<button onclick={goToCurrentWeek} class="butter current-week">
@@ -261,6 +258,11 @@
 		border-bottom: 1px solid var(--color-secondary);
 		overflow: visible;
 		height: var(--dynamic-cell-height);
+		z-index: 1;
+	}
+
+	.event-cell:has(.event-wrapper:hover) {
+		z-index: 100;
 	}
 
 	.event-stack {
@@ -277,13 +279,30 @@
 		top: 0;
 		box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.1);
 		transition:
-			width 0.2s,
-			left 0.2s;
+			width 0.2s ease,
+			min-height 0.2s ease,
+			box-shadow 0.2s ease,
+			z-index 0s;
+		user-select: none; /* Evita que el texto se sombree/seleccione */
+		-webkit-user-select: none; /* Para Safari y Chrome en móviles */
+		-webkit-touch-callout: none;
 	}
 
 	.event-wrapper:hover {
-		z-index: 50 !important;
-		width: 90% !important;
+		z-index: 999 !important;
+		width: 150% !important;
+		min-height: 80px !important;
+		height: auto !important;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+		transition-delay: 0.15s;
+	}
+	.event-wrapper:active {
+		z-index: 999 !important;
+		width: 150% !important;
+		min-height: 80px !important;
+		height: auto !important;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+		transition-delay: 0.15s;
 	}
 
 	.max {
