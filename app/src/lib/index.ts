@@ -35,7 +35,7 @@ export type Oportunidad = {
 	objetivo: string;
 	requisitos: string;
 	observaciones: string;
-	
+
 	// de la oportunidad
 	necesidades: string;
 	potencial_venta: string;
@@ -67,35 +67,38 @@ export type Cliente = {
 
 // FILTROS
 export const columnasActividad = [
-    { key: 'motivo', label: 'Motivo' },
-    { key: 'objetivo', label: 'Objetivo' },
-    { key: 'inicio', label: 'Fecha Inicio' },
-    { key: 'fase', label: 'Fase' },
-    { key: 'historia', label: 'Historia' },
-    { key: 'id', label: 'ID Actividad' }
+	{ key: 'motivo', label: 'Motivo' },
+	{ key: 'objetivo', label: 'Objetivo' },
+	{ key: 'inicio', label: 'Fecha Inicio' },
+	{ key: 'fase', label: 'Fase' },
+	{ key: 'historia', label: 'Historia' }
 ];
 
 export const columnasOportunidad = [
-    { key: 'motivo', label: 'Motivo de Op.' },
-    { key: 'historia', label: 'Historia' },
-    { key: 'id_cliente', label: 'ID Cliente' },
-    { key: 'potencial_venta', label: 'Potencial de venta' },
-    { key: 'fase', label: 'Fase' },
-    { key: 'inicio', label: 'Fecha Inicio' },
-    { key: 'necesidades', label: 'Necesidades' },
-    { key: 'objetivo', label: 'Objetivo Comercial' },
-    { key: 'id', label: 'Folio' }
+	{ key: 'motivo', label: 'Motivo de Op.' },
+	{ key: 'historia', label: 'Historia' },
+	{ key: 'potencial_venta', label: 'Potencial de venta' },
+	{ key: 'fase', label: 'Fase' },
+	{ key: 'inicio', label: 'Fecha Inicio' },
+	{ key: 'necesidades', label: 'Necesidades' },
+	{ key: 'objetivo', label: 'Objetivo Comercial' }
+];
+
+export const columnasCalendario = [
+	{ key: 'motivo', label: 'Motivo' },
+	{ key: 'objetivo', label: 'Objetivo' },
+	{ key: 'inicio', label: 'Fecha Inicio' },
+	{ key: 'fase', label: 'Fase' },
+	{ key: 'historia', label: 'Historia' }
 ];
 
 export const columnasCliente = [
-    { key: 'razon_social', label: 'Razón Social' },
-    { key: 'nombre_comercial', label: 'Nombre Comercial' },
-    { key: 'sector', label: 'Sector/Industria' },
-    { key: 'ciudad', label: 'Ciudad' },
-    { key: 'estado', label: 'Estado' },
-    { key: 'tipo_prospeccion', label: 'Origen/Prospección' },
-    { key: 'id_contpaqi', label: 'Código CONTPAQi' },
-    { key: 'id', label: 'ID Sistema' }
+	{ key: 'razon_social', label: 'Razón Social' },
+	{ key: 'nombre_comercial', label: 'Nombre Comercial' },
+	{ key: 'sector', label: 'Sector/Industria' },
+	{ key: 'ciudad', label: 'Ciudad' },
+	{ key: 'estado', label: 'Estado' },
+	{ key: 'tipo_prospeccion', label: 'Origen/Prospección' }
 ];
 
 // FASES
@@ -202,7 +205,7 @@ export let motivosOportunidad = [
 	'Licitación',
 	'Renovación de contrato',
 	'Compras / Refacciones',
-  	'Servicio de mantenimiento'
+	'Servicio de mantenimiento'
 ];
 export let motivosProspeccion = [
 	'Prospección telefónica',
@@ -215,4 +218,3 @@ export let motivosProspeccion = [
 	'Evento / Feria / Exposición',
 	'Reactivación de cliente'
 ];
-

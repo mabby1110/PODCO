@@ -38,35 +38,36 @@
 	use:draggable={{ data: event.id, enabled: isDndEnabled }}
 	use:draggable={event.id}
 	onclick={select}
+	class="preview-container"
 >
 	{#if $appState.calendarCards}
-		<header>
-			<b>{eventData?.razon_social}</b>
-		</header>
+		<div class="preview-header">
+			<p class="header-date">{eventData?.inicio.split(' ')[1]}</p>
+			<b class="header-title">{eventData?.razon_social}</b>
+			<div class="header-meta">
+				<b>{eventData?.agente.nombre}</b>
+				<p>{event?.motivo}</p>
+			</div>
+		</div>
 		<div class="meta">
-			<p class="motivo">{event?.motivo}</p>
 			<p class="motivo">{event?.objetivo}</p>
-
-			<span>{eventData?.agente.nombre}</span>
-			<span>{eventData?.inicio}</span>
 		</div>
 	{:else}
-		<div class="meta-min">
-			{#if $profile?.isAdmin}
-				<span class="meta-item">{eventData?.razon_social}</span>
-			{:else}
-				<span class="meta-item">{eventData?.razon_social}</span>
-			{/if}
-			<span class="meta-item">{eventData?.motivo}</span>
+		<div class="preview-header">
+			<p class="header-date">{eventData?.inicio.split(' ')[1]}</p>
+			<b class="header-title">{eventData?.razon_social}</b>
+			<div class="header-meta">
+				<b>{eventData?.agente.nombre}</b>
+				<p>{event?.motivo}</p>
+			</div>
 		</div>
 	{/if}
 </button>
 
 <style>
-	button {
+	.preview-container {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.4rem;
 		width: 100%;
 		border: 1px solid var(--color-muted);
 		border-radius: var(--a);
@@ -82,26 +83,26 @@
 		right: 0;
 		pointer-events: auto;
 	}
-	header {
+	.preview-header {
+		position: relative;
 		flex-grow: 1;
-	}
-	.meta {
-		display: flex;
-		gap: var(--a);
-		font-size: 0.75rem;
-		opacity: 0.8;
-	}
-	.meta-min {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-around;
-		position: absolute;
-		top: 2px;
-		left: 4px;
+		gap: var(--b);
 	}
-	.meta-item {
-		flex-grow: 1;
+	.header-title {
+		width: 80%;
+	}
+	.header-meta {
+		display: flex;
+		font-size: smaller;
+		gap: var(--a);
+	}
+	.header-date {
+		position: absolute;
+		top: 0;
+		right: 0;
+		font-size: smaller;
 	}
 	.motivo {
 		font-size: 0.8rem;

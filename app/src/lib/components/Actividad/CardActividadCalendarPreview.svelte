@@ -35,43 +35,40 @@
 	use:draggable={{ data: event.id, enabled: isDndEnabled }}
 	use:draggable={event.id}
 	onclick={select}
+	class="preview-container"
 >
 	{#if $appState.calendarCards}
-		<header>
-			<b>{eventData?.motivo}</b>
-		</header>
-
-		<p class="motivo">{event?.objetivo}</p>
-
+		<div class="preview-header">
+			<p class="header-date">{eventData?.inicio.split(' ')[1]}</p>
+			<b class="header-title">{eventData?.motivo}</b>
+			<div class="header-meta">
+				<b>{eventData?.agente.nombre}</b>
+			</div>
+		</div>
 		<div class="meta">
-			<span>{eventData?.agente.nombre}</span>
-			<span>{eventData?.inicio}</span>
+			<p class="motivo">{event?.objetivo}</p>
 		</div>
 	{:else}
-		<div class="meta-min">
-			{#if $profile?.isAdmin}
-				<span class="meta-item">{eventData?.agente.nombre}</span>
-				<span class="meta-item">{eventData?.motivo}</span>
-			{:else}
-				<span class="meta-item">{eventData?.motivo}</span>
-				<span class="meta-item">{eventData?.objetivo}</span>
-			{/if}
+		<div class="preview-header">
+			<p class="header-date">{eventData?.inicio.split(' ')[1]}</p>
+			<b class="header-title">{eventData?.motivo}</b>
+			<div class="header-meta">
+				<b>{eventData?.agente.nombre}</b>
+			</div>
 		</div>
 	{/if}
 </button>
 
 <style>
-	button {
+	.preview-container {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.4rem;
 		width: 100%;
 		border: 1px solid var(--color-muted);
 		border-radius: var(--a);
 		padding: 4px var(--a);
 		text-align: left;
-		align-content: flex-start;
-		gap: var(--a);
+		align-items: baseline;
 		backdrop-filter: blur(16px);
 		overflow: hidden;
 		z-index: 1;
@@ -81,27 +78,26 @@
 		right: 0;
 		pointer-events: auto;
 	}
-	header {
+	.preview-header {
+		position: relative;
 		flex-grow: 1;
-	}
-	.meta {
-		display: flex;
-		gap: var(--a);
-		font-size: 0.75rem;
-		opacity: 0.8;
-	}
-	.meta-min {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
-		gap: var(--a);
-		justify-content: space-around;
-		position: absolute;
-		top: 2px;
-		left: 4px;
+		gap: var(--b);
 	}
-	.meta-item {
-		flex-grow: 1;
+	.header-title {
+		width: 80%;
+	}
+	.header-meta {
+		display: flex;
+		font-size: smaller;
+		gap: var(--a);
+	}
+	.header-date {
+		position: absolute;
+		top: 0;
+		right: 0;
+		font-size: smaller;
 	}
 	.motivo {
 		font-size: 0.8rem;

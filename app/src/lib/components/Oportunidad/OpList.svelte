@@ -22,8 +22,8 @@
 		<FilterOpList />
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<Filtro items={oportunidades} columns={columnasOportunidad} bind:filteredItems={filtrado} />
+		<Leyenda />
 	</div>
-	<Leyenda />
 
 	{#each oportunidadesAgrupadas as grupo (grupo.fecha)}
 		<div class="grupo-dia">

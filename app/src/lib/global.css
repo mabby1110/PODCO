@@ -106,7 +106,6 @@ body {
 }
 
 .controls {
-	padding: var(--a) 0;
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--a);

@@ -31,11 +31,12 @@
 	.funnel-legend {
 		display: flex;
 		flex-wrap: wrap;
+		width: 100%;
 		align-items: center;
-		gap: 0.4rem;
-		padding: 0.25rem 0;
+		gap: var(--a);
 		color: #333;
 		max-width: 80vw;
+		font-size: small;
 	}
 
 	.legend-item {

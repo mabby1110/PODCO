@@ -26,9 +26,8 @@
 		<FilterOpList />
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 		<Filtro items={actividades} columns={columnasActividad} bind:filteredItems={filtrado} />
+		<Leyenda {steps} />
 	</div>
-
-	<Leyenda {steps} />
 
 	{#each actividadesAgrupadas as grupo (grupo.fecha)}
 		<div class="grupo-dia">
@@ -59,8 +58,7 @@
 	.grupo-dia {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
-		margin-bottom: 1.5rem;
+		gap: var(--a);
 	}
 
 	.dia-header {
@@ -74,6 +72,6 @@
 	.lista-eventos {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: var(--a);
 	}
 </style>

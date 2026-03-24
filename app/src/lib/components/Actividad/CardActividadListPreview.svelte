@@ -16,8 +16,8 @@
 			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
 			inicio: event?.inicio,
-			historia: event.historia || 'Sin historial registrado',
-			requisitos: event.requisitos || 'No hay requisitos',
+			historia: event.historia,
+			requisitos: event.requisitos,
 			objetivo: event.objetivo,
 			style: getStyleForPhase(event.fase)
 		};
@@ -35,10 +35,16 @@
 	<div class="title">
 		<h3>{eventData?.motivo}</h3>
 	</div>
-
 	{#if eventData?.objetivo}
 		<div class="brief">
+			<b>Objetivo</b>
 			<p>{eventData?.objetivo}</p>
+		</div>
+	{/if}
+	{#if eventData?.historia}
+		<div class="brief">
+			<b>Historia</b>
+			<p>{eventData?.historia}</p>
 		</div>
 	{/if}
 

@@ -17,7 +17,12 @@
 	} from '$lib/utils/agenda';
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import { columnasActividad, columnasOportunidad, type Oportunidad } from '$lib';
+	import {
+		columnasActividad,
+		columnasCalendario,
+		columnasOportunidad,
+		type Oportunidad
+	} from '$lib';
 	import CardActividadCalendarPreview from './Actividad/CardActividadCalendarPreview.svelte';
 	import Leyenda from './Leyenda.svelte';
 	import Reload from './Reload.svelte';
@@ -103,8 +108,92 @@
 	}
 </script>
 
-<div class="controls">
-	<FilterOpList />
+<div class="view-container">
+	<div class="controls">
+		<Reload />
+		<FilterOpList />
+		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+
+		{#if $profile?.isAdmin}
+			<button
+				onclick={() => appState.toggleDnd()}
+				class="butter toggle"
+				class:active={$appState.dnd}
+			>
+				✏️ Editar
+			</button>
+		{/if}
+		<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+			{$appState.calendarCards ? '📏 Min' : '📐 Max'}
+		</button>
+
+		<Filtro items={events} columns={columnasCalendario} bind:filteredItems={eventList} />
+	</div>
+
+	<div class="calendar" style="--dynamic-cell-height: {CELL_HEIGHT}px;">
+		<table>
+			<thead>
+				<tr>
+					<th class="corner">{getMonth(weekDates[0])}</th>
+					{#each weekDates as date, i}
+						<th>
+							<div class="day-header">
+								<div>{weekdays[i]}</div>
+								<div class="date-label">{formatDate(date)}</div>
+							</div>
+						</th>
+					{/each}
+				</tr>
+			</thead>
+			<tbody>
+				{#each hours as h}
+					<tr>
+						<td class="hour-cell">
+							{String(h.hour).padStart(2, '0')}:{String(h.minute).padStart(2, '0')}
+						</td>
+						{#each weekDates as date}
+							{@const eventosSuperpuestos = getEventsForSlot(h.hour, h.minute, date)}
+							<td
+								class="{$appState.calendarCards ? 'max' : ''} event-cell"
+								use:dropzone={{
+									on_dropzone: (eventId: string) => handleDrop(eventId, h.hour, h.minute, date)
+								}}
+							>
+								{#if eventosSuperpuestos.length > 0}
+									<div class="event-stack">
+										{#each eventosSuperpuestos as event, index}
+											{@const slots = calculateSlots(event.inicio, event.fin, SLOT_MINUTES)}
+											{@const totalConcurrentes = eventosSuperpuestos.length}
+
+											<div
+												class="event-wrapper"
+												style="
+													width: {100 / totalConcurrentes}%;
+													left: {(100 / totalConcurrentes) * index}%;
+													height: {slots * CELL_HEIGHT}px;
+													z-index: {10 + index};
+												"
+											>
+												{#if event.id_cliente}
+													<CardOpCalendarPreview {event} style="height: 100%; width: 100%;" />
+												{:else}
+													<CardActividadCalendarPreview
+														{event}
+														style="height: 100%; width: 100%;"
+													/>
+												{/if}
+											</div>
+										{/each}
+									</div>
+								{/if}
+							</td>
+						{/each}
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
 	<div class="calendar-navigation">
 		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
 		<button onclick={goToCurrentWeek} class="butter current-week">
@@ -112,79 +201,6 @@
 		</button>
 		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
 	</div>
-	<Reload />
-	<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-	<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-
-	{#if $profile?.isAdmin}
-		<button onclick={() => appState.toggleDnd()} class="butter toggle" class:active={$appState.dnd}>
-			✏️ Editar
-		</button>
-	{/if}
-	<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-		{$appState.calendarCards ? '📏 Min' : '📐 Max'}
-	</button>
-</div>
-
-<div class="calendar" style="--dynamic-cell-height: {CELL_HEIGHT}px;">
-	<table>
-		<thead>
-			<tr>
-				<th class="corner">{getMonth(weekDates[0])}</th>
-				{#each weekDates as date, i}
-					<th>
-						<div class="day-header">
-							<div>{weekdays[i]}</div>
-							<div class="date-label">{formatDate(date)}</div>
-						</div>
-					</th>
-				{/each}
-			</tr>
-		</thead>
-		<tbody>
-			{#each hours as h}
-				<tr>
-					<td class="hour-cell">
-						{String(h.hour).padStart(2, '0')}:{String(h.minute).padStart(2, '0')}
-					</td>
-					{#each weekDates as date}
-						{@const eventosSuperpuestos = getEventsForSlot(h.hour, h.minute, date)}
-						<td
-							class="{$appState.calendarCards ? 'max' : ''} event-cell"
-							use:dropzone={{
-								on_dropzone: (eventId: string) => handleDrop(eventId, h.hour, h.minute, date)
-							}}
-						>
-							{#if eventosSuperpuestos.length > 0}
-								<div class="event-stack">
-									{#each eventosSuperpuestos as event, index}
-										{@const slots = calculateSlots(event.inicio, event.fin, SLOT_MINUTES)}
-										{@const totalConcurrentes = eventosSuperpuestos.length}
-
-										<div
-											class="event-wrapper"
-											style="
-                                                width: {100 / totalConcurrentes}%;
-                                                left: {(100 / totalConcurrentes) * index}%;
-                                                height: {slots * CELL_HEIGHT}px;
-                                                z-index: {10 + index};
-                                            "
-										>
-											{#if event.id_cliente}
-												<CardOpCalendarPreview {event} style="height: 100%; width: 100%;" />
-											{:else}
-												<CardActividadCalendarPreview {event} style="height: 100%; width: 100%;" />
-											{/if}
-										</div>
-									{/each}
-								</div>
-							{/if}
-						</td>
-					{/each}
-				</tr>
-			{/each}
-		</tbody>
-	</table>
 </div>
 
 <style>
@@ -320,5 +336,9 @@
 	.calendar-navigation {
 		display: flex;
 		gap: var(--a);
+		width: 100%;
+		max-width: fit-content;
+		min-width: 60vw;
+		align-self: center;
 	}
 </style>
