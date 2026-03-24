@@ -20,7 +20,7 @@
 		</section>
 	{:else}
 		<section>
-			<ActivityList actividades={data.actividades} />
+			<ActivityList actividades={events} />
 		</section>
 	{/if}
 </div>
