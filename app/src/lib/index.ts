@@ -26,7 +26,6 @@ export type Oportunidad = {
 	inicio: string | Date;
 	fin: string | Date;
 	fecha_cierre: string | Date;
-	id_agente: string;
 	fase: number;
 	documentos: string;
 
