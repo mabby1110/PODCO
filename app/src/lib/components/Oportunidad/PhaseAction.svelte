@@ -12,10 +12,10 @@
 	import UploadFile from '$lib/components/UploadFile.svelte';
 
 	let { eventData } = $props();
-	
+
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
 	let nextPhase = $derived(Number(currentPhase) + 1);
-	
+
 	let nuevoRequisito = $state('');
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
@@ -124,16 +124,6 @@
 					<UploadFile label="Documentos de operacion" name="docOpFile" required />
 				</div>
 				<DatePicker title="Salida de paquete" />
-			{:else if currentPhase != 6}
-				<FormInput
-					label={eventData.fase.actual}
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder={fasePlaceholder}
-					type="textarea"
-					required
-				/>
-				<DatePicker title="Fecha de compromiso" />
 			{/if}
 		{/if}
 
@@ -166,32 +156,32 @@
 					required
 				/>
 			{/if}
+			<!-- opciones generales -->
+			<FormOptionalInput title="+Observaciones">
+				<FormInput
+					label="Observaciones"
+					name="observaciones"
+					bind:value={nuevaObeservacion}
+					placeholder="Detalles importantes y pautas a seguir"
+					type="textarea"
+					required
+				/>
+			</FormOptionalInput>
+			<FormOptionalInput title="+Agregar requisitos">
+				<FormInput
+					label="Requisitos"
+					name="nuevosRequisitos"
+					bind:value={nuevoRequisito}
+					placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+					type="textarea"
+					required
+				/>
+			</FormOptionalInput>
+			<FormOptionalInput title="+adjuntos">
+				<UploadFile label="Subir documentos" name="docFile" multiple />
+			</FormOptionalInput>
 		{/if}
 
-		<!-- opciones generales -->
-		<FormOptionalInput title="+Observaciones">
-			<FormInput
-				label="Observaciones"
-				name="observaciones"
-				bind:value={nuevaObeservacion}
-				placeholder="Detalles importantes y pautas a seguir"
-				type="textarea"
-				required
-			/>
-		</FormOptionalInput>
-		<FormOptionalInput title="+Agregar requisitos">
-			<FormInput
-				label="Requisitos"
-				name="nuevosRequisitos"
-				bind:value={nuevoRequisito}
-				placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-				type="textarea"
-				required
-			/>
-		</FormOptionalInput>
-		<FormOptionalInput title="+adjuntos">
-			<UploadFile label="Subir documentos" name="docFile" multiple />
-		</FormOptionalInput>
 		<!-- datos compuestos -->
 		<input type="hidden" name="id" value={eventData.id} />
 		{#if nuevaHistoria}
@@ -230,7 +220,7 @@
 		{/if}
 
 		<!-- opciones para envio de formulario -->
-		{#if currentPhase != 6}
+		{#if currentPhase != 6 && currentPhase != 0}
 			<div class="submit">
 				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
 
