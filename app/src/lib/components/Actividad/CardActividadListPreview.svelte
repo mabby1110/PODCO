@@ -30,7 +30,7 @@
 	}
 </script>
 
-<button class="card" style={eventData?.style} onclick={select} >
+<a href="/actividades/{event.id}" class="card-list-preview" style={eventData?.style}>
 	<p class="date">{eventData?.inicio}</p>
 	<div class="title">
 		<h3>{eventData?.motivo}</h3>
@@ -51,7 +51,7 @@
 	<div class="meta">
 		<p>{eventData?.agente?.nombre}, fase: {eventData?.fase?.actual}</p>
 	</div>
-</button>
+</a>
 
 <style>
 	

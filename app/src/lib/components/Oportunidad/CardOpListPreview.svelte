@@ -39,7 +39,7 @@
 	}
 </script>
 
-<button class="card" style={eventData?.style} onclick={select}>
+<a href="/oportunidades/{event.id}" onclick={select} class="card-list-preview" style={eventData?.style}>
 	<p class="date">{eventData?.inicio}</p>
 	<div class="title">
 		<h3>{eventData?.motivo}</h3>
@@ -61,28 +61,10 @@
 	<div class="meta">
 		<p>{eventData?.agente?.nombre}, fase: {eventData?.fase?.actual}</p>
 	</div>
-</button>
+</a>
 
 <style>
-	.card {
-		position: relative;
-		padding: var(--a);
-		margin: var();
-		backdrop-filter: blur(16px);
-		width: 100%;
-		display: flex;
-		gap: var(--b);
-		flex-wrap: wrap;
-		align-items: center;
-		text-align: left;
-		border-style: none;
-		border-width: 0;
-		border-radius: var(--a);
-		box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
-	}
-	.card:hover {
-		cursor: pointer;
-	}
+
 	.title {
 		min-width: 60%;
 	}

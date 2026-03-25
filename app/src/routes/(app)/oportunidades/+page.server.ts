@@ -5,17 +5,8 @@ import {
 	type FieldColumnMap
 } from '$lib/server/google/sheets';
 import { fail, type Actions } from '@sveltejs/kit';
-import { processAttachments, uploadToFolder } from '$lib/server/google/drive';
-import { Readable } from 'stream';
-import type { PageServerLoad } from './$types';
-import { getRange } from '$lib/server/google/sheets';
+import { processAttachments } from '$lib/server/google/drive';
 import { invalidateCache } from '$lib/server/google/cachedQueries';
-
-export const load: PageServerLoad = async ({ depends }) => {
-	depends('app:data');
-	const oportunidades = await getRange('oportunidades!A:Z');
-	return { oportunidades };
-};
 
 export const actions: Actions = {
 	addOp: async ({ request }) => {

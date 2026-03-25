@@ -138,6 +138,26 @@ body {
 	position: relative;
 }
 
+.card-list-preview {
+	text-decoration: none;
+	color: inherit;
+	position: relative;
+	padding: var(--a);
+	background-color: var(--color-secondary);
+	backdrop-filter: blur(16px);
+	width: 100%;
+	min-height: var(--e);
+	display: flex;
+	gap: var(--a);
+	flex-wrap: wrap;
+	align-items: center;
+	text-align: left;
+	border-style: none;
+	border-width: 0;
+	border-radius: var(--a);
+	cursor: pointer;
+}
+
 .card-content {
 	overflow: auto;
 	display: flex;

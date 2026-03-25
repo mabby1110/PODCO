@@ -17,15 +17,9 @@
 </script>
 
 <div class="page-content">
-	{#if $selectedOp}
-		<section class="selected" in:slide>
-			<CardOportunidad />
-		</section>
-	{:else}
-		<section in:slide>
-			<OpList oportunidades={events} />
-		</section>
-	{/if}
+	<section in:slide>
+		<OpList oportunidades={events} />
+	</section>
 </div>
 
 <style>
