@@ -1,23 +1,20 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import ClientList from '$lib/components/Cliente/ClientList.svelte';
-	import CardCliente from '$lib/components/Cliente/CardCliente.svelte';
-
-	import { selectedClient } from '$lib/stores/selectedClient.js';
 
 	let { data } = $props();
 </script>
 
 <div class="page-content">
-	{#if $selectedClient}
+	<!-- {#if $selectedClient}
 		<section class="selected" in:slide>
 			<CardCliente />
 		</section>
-	{:else}
-		<section in:slide>
-			<ClientList clients={data.clientes} agentes={data.agentes} />
-		</section>
-	{/if}
+	{:else} -->
+	<section in:slide>
+		<ClientList clients={data.clientes} agentes={data.agentes} />
+	</section>
+	<!-- {/if} -->
 </div>
 
 <style>

@@ -52,54 +52,57 @@
 	}
 </script>
 
-<div class="controls">
-	<div class="controls-row">
-		<FilterClientList bind:sortField bind:sortOrder />
-		
-		{#if canGlobal}
-		<button class="butter" type="button" onclick={() => (showGlobal = !showGlobal)}>
-			{showGlobal ? 'Vista por agente' : 'Vista global'}
-		</button>
+<div class="view-container">
+
+	<div class="controls">
+		<div class="controls-row">
+			<FilterClientList bind:sortField bind:sortOrder />
+			
+			{#if canGlobal}
+			<button class="butter" type="button" onclick={() => (showGlobal = !showGlobal)}>
+				{showGlobal ? 'Vista por agente' : 'Vista global'}
+			</button>
+			{/if}
+		</div>
+		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
+		<!-- <Reload /> -->
+	</div>
+	
+	<div class="view-container">
+		{#if canGlobal && showGlobal}
+			<h3>Todos <span class="count">({todos.length})</span></h3>
+			<div class="list">
+				{#each sortClients(todos) as client (client.id)}
+					<CardClienteListPreview {client} />
+				{/each}
+			</div>
+		{:else if $profile?.isAdmin}
+			{#if sinAgente.length}
+				<h3>Sin Asignar <span class="count">({sinAgente.length})</span></h3>
+				<div class="list">
+					{#each sortClients(sinAgente) as client (client.id)}
+						<CardClienteListPreview {client} />
+					{/each}
+				</div>
+			{/if}
+			{#each agentes as agente (agente.id)}
+				{@const clientesAgente = clientesPorAgente(agente.id)}
+				<h3>{agente.nombre} <span class="count">({clientesAgente.length})</span></h3>
+				<div class="list">
+					{#each sortClients(clientesAgente) as client (client.id)}
+						<CardClienteListPreview {client} />
+					{/each}
+				</div>
+			{/each}
+		{:else}
+			<h3>{$profile?.nombre} <span class="count">({misClientes.length})</span></h3>
+			<div class="list">
+				{#each sortClients(misClientes) as client (client.id)}
+					<CardClienteListPreview {client} />
+				{/each}
+			</div>
 		{/if}
 	</div>
-	<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-	<!-- <Reload /> -->
-</div>
-
-<div class="view-container">
-	{#if canGlobal && showGlobal}
-		<h3>Todos <span class="count">({todos.length})</span></h3>
-		<div class="list">
-			{#each sortClients(todos) as client (client.id)}
-				<CardClienteListPreview {client} />
-			{/each}
-		</div>
-	{:else if $profile?.isAdmin}
-		{#if sinAgente.length}
-			<h3>Sin Asignar <span class="count">({sinAgente.length})</span></h3>
-			<div class="list">
-				{#each sortClients(sinAgente) as client (client.id)}
-					<CardClienteListPreview {client} />
-				{/each}
-			</div>
-		{/if}
-		{#each agentes as agente (agente.id)}
-			{@const clientesAgente = clientesPorAgente(agente.id)}
-			<h3>{agente.nombre} <span class="count">({clientesAgente.length})</span></h3>
-			<div class="list">
-				{#each sortClients(clientesAgente) as client (client.id)}
-					<CardClienteListPreview {client} />
-				{/each}
-			</div>
-		{/each}
-	{:else}
-		<h3>{$profile?.nombre} <span class="count">({misClientes.length})</span></h3>
-		<div class="list">
-			{#each sortClients(misClientes) as client (client.id)}
-				<CardClienteListPreview {client} />
-			{/each}
-		</div>
-	{/if}
 </div>
 
 <style>
@@ -109,15 +112,7 @@
 		align-items: center;
 		flex-wrap: wrap;
 	}
-
-	.view-container {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		padding: 0 var(--d) var(--a) var(--b);
-		gap: var(--b);
-	}
-
+	
 	.list {
 		min-height: 20vh;
 		max-height: 60vh;

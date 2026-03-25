@@ -16,9 +16,9 @@
 </script>
 
 {#if $selectedClient}
-	<div class="card-d" transition:slide>
+	<div class="card-full" transition:slide>
 		<header>
-			<button class="close-btn" onclick={closeCard} aria-label="Cerrar">✕</button>
+			<a href="/clientes" class="close-btn" onclick={closeCard} aria-label="Cerrar">✕</a>
 			<h1>{$selectedClient.razon_social}</h1>
 			<div class="meta">
 				<p>
@@ -146,15 +146,41 @@
 {/if}
 
 <style>
-	.card-d {
+	header {
 		display: flex;
-		flex-direction: column;
 		gap: var(--a);
-		border-radius: 12px;
-		border: 1px solid var(--color-secondary);
-		width: 100%;
-		overflow: auto;
-		max-height: 90vh;
+		position: relative;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: flex-start;
+		background-color: var(--color-primary);
+		backdrop-filter: blur(16px);
+		padding: var(--a);
+
+		position: sticky;
+		top: 0;
+		z-index: 99;
+	}
+	.meta {
+		display: flex;
+		gap: var(--a);
+	}
+	.close-btn {
+		position: absolute;
+		top: 0;
+		right: 0;
+		background: transparent;
+		border: none;
+		line-height: 1;
+		padding: 0;
+		cursor: pointer;
+		opacity: 0.6;
+		transition: opacity 0.2s;
+		flex-shrink: 0;
+	}
+	.meta {
+		display: flex;
+		gap: var(--a);
 	}
 
 	header {
@@ -213,8 +239,5 @@
 		flex-wrap: wrap;
 		border-top: 1px solid var(--color-secondary);
 		padding: var(--a);
-	}
-	.close-btn {
-		position: absolute;
 	}
 </style>

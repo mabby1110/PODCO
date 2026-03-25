@@ -28,7 +28,7 @@ const defaultState: AppState = {
 	ModalActivity: false,
 	ModalOp: false,
 	ModalClient: false,
-	pageActions: true
+	pageActions: false
 };
 
 function getInitialState(): AppState {

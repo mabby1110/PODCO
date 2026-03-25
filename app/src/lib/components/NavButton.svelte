@@ -21,7 +21,7 @@
 
 	<button onclick={togglePanel} class="butter">
 		<div class="logo">
-			<img src="bms-logo.svg" alt="BMS" />
+			<img src="/bms-logo.svg" alt="BMS" />
 			{#if expanded}
 				<div class="title" in:slide={{ axis: 'x' }}>
 					<p>COMPONENTES Y EQUIPOS</p>
