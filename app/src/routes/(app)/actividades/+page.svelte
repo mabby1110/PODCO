@@ -4,6 +4,7 @@
 	import CardActividad from '$lib/components/Actividad/CardActividad.svelte';
 	import { filterStore } from '$lib/stores/filterStore.svelte.js';
 	import { filtrarConsecutivo } from '$lib/utils/util.js';
+	import { slide } from 'svelte/transition';
 
 	let { data } = $props();
 	const events = $derived(
@@ -13,7 +14,7 @@
 	);
 </script>
 
-<div class="page-content">
+<div class="page-content" transition:slide>
 	{#if $selectedActivity}
 		<section class="selected">
 			<CardActividad />
