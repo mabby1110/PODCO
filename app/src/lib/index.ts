@@ -106,7 +106,8 @@ export const agrupacioneCliente = [
 	{ value: 'ciudad', label: 'ciudad' },
 	{ value: 'sector', label: 'sector' },
 	{ value: 'tipo_prospeccion', label: 'tipo_prospeccion' },
-	{ value: 'ultima_actualizacion', label: 'ultima_actualizacion' }
+	{ value: 'ultima_actualizacion', label: 'ultima_actualizacion' },
+	{ value: 'clasificacion', label: 'clasificacion' },
 ];
 
 export const agrupacioneActividades = [

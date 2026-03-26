@@ -112,7 +112,7 @@ export function agruparPorFecha<T>(items: T[], campoFecha: keyof T) {
 export function agruparPor<T>(
     items: T[],
     campo: keyof T,
-    valorPorDefecto: string = 'Sin clasificar'
+    valorPorDefecto: string = 'Todos'
 ): { grupo: string; elementos: T[] }[] {
     const grupos = new Map<string, T[]>();
 

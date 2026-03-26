@@ -4,36 +4,37 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import Leyenda from '../Leyenda.svelte';
 	import Reload from '../Reload.svelte';
-	import { columnasOportunidad } from '$lib';
-	import { agruparPorFecha } from '$lib/utils/util'; // <-- Importamos la función
+	import { agrupacioneOportunidades, columnasOportunidad } from '$lib';
+	import { agruparPor } from '$lib/utils/util'; // <-- Importamos la función
 	import FilterOpList from '../FilterOpList.svelte';
+	import Select from '../Select.svelte';
+	import Grupo from '../Grupo.svelte';
 
 	let { oportunidades } = $props();
 
 	let filtrado = $derived([...oportunidades]);
+	let selected = $state('');
+	let listaAgrupada = $derived(agruparPor(filtrado, selected));
 
-	// Igual de limpio y reutilizable:
-	let oportunidadesAgrupadas = $derived(agruparPorFecha(filtrado, 'inicio'));
 </script>
 
 <div class="view-container">
 	<div class="controls">
 		<Reload />
-		<FilterOpList />
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+		<FilterOpList />
+		<Select options={agrupacioneOportunidades} defaultOption="Todos" bind:selected />
 		<Filtro items={oportunidades} columns={columnasOportunidad} bind:filteredItems={filtrado} />
-		<Leyenda />
 	</div>
+	<Leyenda />
 
-	{#each oportunidadesAgrupadas as grupo (grupo.fecha)}
+	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
 		<div class="grupo-dia">
-			<h3 class="dia-header">{grupo.fecha}</h3>
-
-			<div class="lista-eventos">
-				{#each grupo.eventos as event (event.id)}
+			<Grupo {agrupacion} showByDefault>
+				{#each agrupacion.elementos as event (event.id)}
 					<CardOpListPreview {event} />
 				{/each}
-			</div>
+			</Grupo>
 		</div>
 	{/each}
 

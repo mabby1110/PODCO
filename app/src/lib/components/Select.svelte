@@ -6,15 +6,17 @@
 
     let {
         options,
+        defaultOption = 'seleccionar...',
         selected = $bindable()
     }: {
         options: Option[];
+        defaultOption: string;
         selected: T | undefined;
     } = $props();
 </script>
 
 <select bind:value={selected}>
-    <option value="" disabled selected>Agrupar por</option>
+    <option value="" selected>{defaultOption}</option>
     {#each options as option}
         <option value={option.value}>
             {option.label}

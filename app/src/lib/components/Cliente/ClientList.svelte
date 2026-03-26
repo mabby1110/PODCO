@@ -3,7 +3,6 @@
 	import { agrupacioneCliente, columnasCliente } from '$lib';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
 	import { agruparPor } from '$lib/utils/util';
 	import Filtro from '../Filtro.svelte';
 	import Grupo from '../Grupo.svelte';
@@ -11,7 +10,6 @@
 	import Select from '../Select.svelte';
 
 	let { clientes } = $derived(page.data);
-	console.log(clientes);
 
 	let filtrado = $derived([...clientes]);
 
@@ -23,12 +21,12 @@
 	<div class="controls">
 		<Reload />
 		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-		<Select options={agrupacioneCliente} bind:selected />
+		<Select options={agrupacioneCliente} defaultOption='Todos' bind:selected />
 		<Filtro items={clientes} columns={columnasCliente} bind:filteredItems={filtrado} />
 	</div>
 	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
 		<div class="grupo-dia">
-			<Grupo {agrupacion}>
+			<Grupo {agrupacion} showByDefault>
 				{#each agrupacion.elementos as elemento (elemento.id)}
 					<CardClienteListPreview client={elemento} />
 				{/each}

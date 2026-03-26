@@ -1,10 +1,6 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import OpList from '$lib/components/Oportunidad/OpList.svelte';
-
-	import CardOportunidad from '$lib/components/Oportunidad/CardOportunidad.svelte';
-
-	import { selectedOp } from '$lib/stores/selectedOp.js';
 	import { filterStore } from '$lib/stores/filterStore.svelte.js';
 	import { filtrarConsecutivo } from '$lib/utils/util.js';
 
@@ -14,6 +10,7 @@
 			? filtrarConsecutivo(filterStore.atributo, 'id_agente', data.oportunidades)
 			: data.oportunidades
 	);
+	console.log(events);
 </script>
 
 <div class="page-content">

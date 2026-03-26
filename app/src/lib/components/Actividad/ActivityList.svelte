@@ -9,14 +9,13 @@
 	import { agrupacioneActividades, columnasActividad } from '$lib';
 	import { agruparPor } from '$lib/utils/util';
 	import Select from '../Select.svelte';
+	import Grupo from '../Grupo.svelte';
 
 	let { actividades } = $props();
 
 	let filtrado = $derived([...actividades]);
 	let selected = $state('');
-
-	// let actividadesAgrupadas = $derived(agruparPorFecha(filtrado, 'inicio'));
-	let actividadesAgrupadas = $derived(agruparPor(filtrado, selected));
+	let listaAgrupada = $derived(agruparPor(filtrado, selected));
 
 	let steps = [
 		{ label: 'Programada', color: 'var(--color-secondary)' },
@@ -27,21 +26,19 @@
 <div class="view-container">
 	<div class="controls">
 		<Reload />
-		<FilterOpList />
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-		<Select options={agrupacioneActividades} bind:selected/>
+		<FilterOpList />
+		<Select options={agrupacioneActividades} defaultOption='Todos' bind:selected />
 		<Filtro items={actividades} columns={columnasActividad} bind:filteredItems={filtrado} />
 	</div>
 	<Leyenda {steps} />
-	{#each actividadesAgrupadas as agrupacion (agrupacion.grupo)}
+	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
 		<div class="grupo-dia">
-			<h3 class="dia-header">{agrupacion.grupo}</h3>
-
-			<div class="lista-eventos">
+			<Grupo {agrupacion} showByDefault>
 				{#each agrupacion.elementos as event (event.id)}
 					<CardActividadListPreview {event} />
 				{/each}
-			</div>
+			</Grupo>
 		</div>
 	{/each}
 
