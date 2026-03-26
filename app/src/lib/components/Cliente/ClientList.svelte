@@ -1,136 +1,58 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import { agrupacioneCliente, columnasCliente } from '$lib';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
-	import FilterClientList from '$lib/components/FilterClientList.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import { agruparPor } from '$lib/utils/util';
+	import Filtro from '../Filtro.svelte';
+	import Grupo from '../Grupo.svelte';
 	import Reload from '../Reload.svelte';
+	import Select from '../Select.svelte';
 
-	let { agentes, clients } = $props();
+	let { clientes } = $derived(page.data);
+	console.log(clientes);
 
-	type SortField =
-		| 'razon_social'
-		| 'ubicacion'
-		| 'tipo_prospeccion'
-		| 'ultima_actualizacion'
-		| 'oportunidades';
-	type SortOrder = 'asc' | 'desc';
+	let filtrado = $derived([...clientes]);
 
-	let sortField = $state<SortField>('razon_social');
-	let sortOrder = $state<SortOrder>('asc');
-
-	// toggle vista
-	let showGlobal = $state(false);
-	let canGlobal = $derived($profile?.isAdmin === true);
-
-	const sinAgente = $derived(
-		clients?.filter((c: { id_agente: string }) => c.id_agente == '') ?? []
-	);
-	const misClientes = $derived(
-		clients?.filter((c: { id_agente: string | undefined }) => c.id_agente === $profile?.id) ?? []
-	);
-	const todos = $derived(clients ?? []);
-
-	const clientesPorAgente = $derived(
-		(agenteId: string) =>
-			clients?.filter((c: { id_agente: string }) => c.id_agente === agenteId) ?? []
-	);
-
-	function sortClients(clientList: typeof clients) {
-		return [...clientList].sort((a, b) => {
-			let aVal = a[sortField] || '';
-			let bVal = b[sortField] || '';
-
-			if (sortField === 'oportunidades') {
-				aVal = parseInt(aVal) || 0;
-				bVal = parseInt(bVal) || 0;
-			}
-
-			if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
-			if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
-			return 0;
-		});
-	}
+	let selected = $state('');
+	let listaAgrupada = $derived(agruparPor(filtrado, selected));
 </script>
 
 <div class="view-container">
-
 	<div class="controls">
-		<div class="controls-row">
-			<FilterClientList bind:sortField bind:sortOrder />
-			
-			{#if canGlobal}
-			<button class="butter" type="button" onclick={() => (showGlobal = !showGlobal)}>
-				{showGlobal ? 'Vista por agente' : 'Vista global'}
-			</button>
-			{/if}
-		</div>
+		<Reload />
 		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-		<!-- <Reload /> -->
+		<Select options={agrupacioneCliente} bind:selected />
+		<Filtro items={clientes} columns={columnasCliente} bind:filteredItems={filtrado} />
 	</div>
-	
-	<div class="view-container">
-		{#if canGlobal && showGlobal}
-			<h3>Todos <span class="count">({todos.length})</span></h3>
-			<div class="list">
-				{#each sortClients(todos) as client (client.id)}
-					<CardClienteListPreview {client} />
+	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
+		<div class="grupo-dia">
+			<Grupo {agrupacion}>
+				{#each agrupacion.elementos as elemento (elemento.id)}
+					<CardClienteListPreview client={elemento} />
 				{/each}
-			</div>
-		{:else if $profile?.isAdmin}
-			{#if sinAgente.length}
-				<h3>Sin Asignar <span class="count">({sinAgente.length})</span></h3>
-				<div class="list">
-					{#each sortClients(sinAgente) as client (client.id)}
-						<CardClienteListPreview {client} />
-					{/each}
-				</div>
-			{/if}
-			{#each agentes as agente (agente.id)}
-				{@const clientesAgente = clientesPorAgente(agente.id)}
-				<h3>{agente.nombre} <span class="count">({clientesAgente.length})</span></h3>
-				<div class="list">
-					{#each sortClients(clientesAgente) as client (client.id)}
-						<CardClienteListPreview {client} />
-					{/each}
-				</div>
-			{/each}
-		{:else}
-			<h3>{$profile?.nombre} <span class="count">({misClientes.length})</span></h3>
-			<div class="list">
-				{#each sortClients(misClientes) as client (client.id)}
-					<CardClienteListPreview {client} />
-				{/each}
-			</div>
-		{/if}
-	</div>
+			</Grupo>
+		</div>
+	{/each}
+
+	{#if filtrado.length === 0}
+		<div class="no-results">
+			<p>No se encontraron actividades con los filtros actuales.</p>
+		</div>
+	{/if}
 </div>
 
 <style>
-	.controls-row {
-		display: flex;
-		gap: var(--a);
-		align-items: center;
-		flex-wrap: wrap;
+	.no-results {
+		text-align: center;
+		padding: 2rem;
+		color: #64748b;
 	}
-	
-	.list {
-		min-height: 20vh;
-		max-height: 60vh;
 
+	.grupo-dia {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
-
-		overflow: auto;
-
-		border: 1px solid var(--color-secondary);
-		border-radius: var(--a);
-		padding: var(--a) var(--b);
-	}
-
-	.count {
-		font-weight: normal;
-		color: var(--text-secondary, #666);
-		font-size: 0.9em;
 	}
 </style>

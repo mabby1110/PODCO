@@ -123,7 +123,11 @@ body {
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(16px);
 }
-
+.flex-a {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+}
 /* ESTILOS PARA TARJETAS */
 .card-full {
 	display: flex;
@@ -198,7 +202,6 @@ body {
 	backdrop-filter: blur(16px);
 	cursor: pointer;
 }
-
 .close-btn {
 	border: none;
 	cursor: pointer;

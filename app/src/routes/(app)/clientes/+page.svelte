@@ -6,15 +6,9 @@
 </script>
 
 <div class="page-content">
-	<!-- {#if $selectedClient}
-		<section class="selected" in:slide>
-			<CardCliente />
-		</section>
-	{:else} -->
 	<section in:slide>
 		<ClientList clients={data.clientes} agentes={data.agentes} />
 	</section>
-	<!-- {/if} -->
 </div>
 
 <style>

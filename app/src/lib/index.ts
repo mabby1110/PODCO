@@ -16,7 +16,6 @@ export type Actividad = {
 	objetivo: string;
 	requisitos: string;
 	observaciones: string;
-	tipo_actividad: string;
 };
 export type Oportunidad = {
 	// del sistema
@@ -60,7 +59,6 @@ export type Cliente = {
 	contactos: string;
 	tipo_prospeccion: string;
 	ultima_actualizacion: string | Date;
-	fecha_sync: string | Date;
 	historial: string;
 	observaciones: string;
 };
@@ -99,6 +97,42 @@ export const columnasCliente = [
 	{ key: 'ciudad', label: 'Ciudad' },
 	{ key: 'estado', label: 'Estado' },
 	{ key: 'tipo_prospeccion', label: 'Origen/Prospección' }
+];
+
+// AGRUPACIONES
+export const agrupacioneCliente = [
+	{ value: 'fecha_creacion', label: 'fecha_creacion' },
+	{ value: 'estado', label: 'estado' },
+	{ value: 'ciudad', label: 'ciudad' },
+	{ value: 'sector', label: 'sector' },
+	{ value: 'tipo_prospeccion', label: 'tipo_prospeccion' },
+	{ value: 'ultima_actualizacion', label: 'ultima_actualizacion' }
+];
+
+export const agrupacioneActividades = [
+	// del sistema
+	{ value: 'fecha_creacion', label: 'fecha_creacion' },
+	{ value: 'inicio', label: 'inicio' },
+	{ value: 'fecha_cierre', label: 'fecha_cierre' },
+	{ value: 'fase', label: 'fase' },
+
+	// de la actividad
+	{ value: 'motivo', label: 'motivo' },
+	{ value: 'tipo_actividad', label: 'tipo_actividad' }
+];
+
+export const agrupacioneOportunidades = [
+	// del sistema
+	{ value: 'fecha_creacion', label: 'fecha_creacion' },
+	{ value: 'inicio', label: 'inicio' },
+	{ value: 'fecha_cierre', label: 'fecha_cierre' },
+	{ value: 'fase', label: 'fase' },
+	
+	// de la actividad
+	{ value: 'motivo', label: 'motivo' },
+	{ value: 'requisitos', label: 'requisitos' },
+	{ value: 'tipo_actividad', label: 'tipo_actividad' },
+	{ value: 'id_cliente', label: 'id_cliente' }
 ];
 
 // FASES

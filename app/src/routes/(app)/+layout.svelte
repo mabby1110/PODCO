@@ -5,20 +5,21 @@
 	import NavButton from '$lib/components/NavButton.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte.js';
 
-	let { children, data } = $props();import { onNavigate } from '$app/navigation';
+	let { children, data } = $props();
+	import { onNavigate } from '$app/navigation';
 
-    onNavigate((navigation) => {
-        // Verificamos si el navegador soporta esta tecnología (Safari 18+, Chrome, Edge)
-        if (!document.startViewTransition) return;
+	onNavigate((navigation) => {
+		// Verificamos si el navegador soporta esta tecnología (Safari 18+, Chrome, Edge)
+		if (!document.startViewTransition) return;
 
-        return new Promise((resolve) => {
-            document.startViewTransition(async () => {
-                resolve();
-                await navigation.complete;
-            });
-        });
-    });
-	
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
+
 	$effect(() => {
 		profile.set(data.profile);
 	});
