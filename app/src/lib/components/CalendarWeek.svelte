@@ -111,9 +111,9 @@
 <div class="view-container">
 	<div class="controls">
 		<Reload />
-		<FilterOpList />
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+		<FilterOpList />
 
 		{#if $profile?.isAdmin}
 			<button
@@ -127,8 +127,6 @@
 		<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
 			{$appState.calendarCards ? '📏 Min' : '📐 Max'}
 		</button>
-
-		<Filtro items={events} columns={columnasCalendario} bind:filteredItems={eventList} />
 	</div>
 
 	<div class="calendar" style="--dynamic-cell-height: {CELL_HEIGHT}px;">

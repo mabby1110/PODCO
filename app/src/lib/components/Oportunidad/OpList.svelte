@@ -4,7 +4,7 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import Leyenda from '../Leyenda.svelte';
 	import Reload from '../Reload.svelte';
-	import { agrupacioneOportunidades, columnasOportunidad } from '$lib';
+	import { agrupacionesOportunidades, columnasOportunidad } from '$lib';
 	import { agruparPor } from '$lib/utils/util'; // <-- Importamos la función
 	import FilterOpList from '../FilterOpList.svelte';
 	import Select from '../Select.svelte';
@@ -23,7 +23,7 @@
 		<Reload />
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<FilterOpList />
-		<Select options={agrupacioneOportunidades} defaultOption="Todos" bind:selected />
+		<Select options={agrupacionesOportunidades} defaultOption="Agrupar todos" bind:selected />
 		<Filtro items={oportunidades} columns={columnasOportunidad} bind:filteredItems={filtrado} />
 	</div>
 	<Leyenda />

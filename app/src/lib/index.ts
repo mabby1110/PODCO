@@ -100,17 +100,15 @@ export const columnasCliente = [
 ];
 
 // AGRUPACIONES
-export const agrupacioneCliente = [
-	{ value: 'fecha_creacion', label: 'fecha_creacion' },
+export const agrupacionesCliente = [
 	{ value: 'estado', label: 'estado' },
 	{ value: 'ciudad', label: 'ciudad' },
 	{ value: 'sector', label: 'sector' },
 	{ value: 'tipo_prospeccion', label: 'tipo_prospeccion' },
-	{ value: 'ultima_actualizacion', label: 'ultima_actualizacion' },
 	{ value: 'clasificacion', label: 'clasificacion' },
 ];
 
-export const agrupacioneActividades = [
+export const agrupacionesActividades = [
 	// del sistema
 	{ value: 'fecha_creacion', label: 'fecha_creacion' },
 	{ value: 'inicio', label: 'inicio' },
@@ -122,7 +120,7 @@ export const agrupacioneActividades = [
 	{ value: 'tipo_actividad', label: 'tipo_actividad' }
 ];
 
-export const agrupacioneOportunidades = [
+export const agrupacionesOportunidades = [
 	// del sistema
 	{ value: 'fecha_creacion', label: 'fecha_creacion' },
 	{ value: 'inicio', label: 'inicio' },

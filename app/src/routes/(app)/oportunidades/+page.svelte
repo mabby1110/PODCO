@@ -10,7 +10,6 @@
 			? filtrarConsecutivo(filterStore.atributo, 'id_agente', data.oportunidades)
 			: data.oportunidades
 	);
-	console.log(events);
 </script>
 
 <div class="page-content">

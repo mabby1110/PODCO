@@ -1,13 +1,22 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import ClientList from '$lib/components/Cliente/ClientList.svelte';
+	import { filterStore } from '$lib/stores/filterStore.svelte.js';
+	import { filtrarConsecutivo } from '$lib/utils/util.js';
+
 
 	let { data } = $props();
+	const events = $derived(
+		filterStore.atributo !== ''
+			? filtrarConsecutivo(filterStore.atributo, 'id_agente', data.clientes)
+			: data.clientes
+	);
+
 </script>
 
 <div class="page-content">
 	<section in:slide>
-		<ClientList clients={data.clientes} agentes={data.agentes} />
+		<ClientList clientes={events}/>
 	</section>
 </div>
 
@@ -23,9 +32,5 @@
 		display: flex;
 		flex-direction: column;
 		min-height: var(--h);
-	}
-	.selected {
-		max-height: 90vh;
-		height: 100%;
 	}
 </style>

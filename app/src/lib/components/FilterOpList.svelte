@@ -15,7 +15,7 @@
 {#if profile.isAdmin}
 	<div class="filter-container">
 		<select bind:value={selected} class="butter">
-			<option value="">Todos</option>
+			<option value="">Todos los agentes</option>
 			{#each agentes as agente}
 				<option value={String(agente.id)}>{agente.nombre}</option>
 			{/each}
