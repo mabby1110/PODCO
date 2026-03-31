@@ -28,7 +28,7 @@
 		<Reload />
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 		<FilterOpList />
-		<Select options={agrupacionesActividades} defaultOption=''Agrupar todos'' bind:selected />
+		<Select options={agrupacionesActividades} defaultOption='Agrupar todos' bind:selected />
 		<Filtro items={actividades} columns={columnasActividad} bind:filteredItems={filtrado} />
 	</div>
 	<Leyenda {steps} />
