@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { invalidate } from '$app/navigation';
-	import { selectedClient } from '$lib/stores/selectedClient';
 
 	let {
 		label,
@@ -10,7 +9,7 @@
 		type = 'text',
 		rows = 3,
 		id,
-		action = '?/updateClient',
+		action = '/clientes?/updateClient',
 		placeholder = '',
 		hint = '',
 		options = []

@@ -1,22 +1,14 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
-	import { selectedActivity } from '$lib/stores/selectedActivity';
-	import { selectedClient } from '$lib/stores/selectedClient';
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { slide } from 'svelte/transition';
-	function handleNav() {
-		selectedOp.clear();
-		selectedClient.clear();
-		selectedActivity.clear();
-	}
 </script>
 
 <div class="container" in:slide={{ delay: 300, duration: 300 }}>
 	<div class="button-group">
 		<a
-		href="/calendario"
+			href="/calendario"
 			onclick={() => {
-				handleNav();
 				appState.togglePageActions();
 				$selectedOp = null;
 			}}
@@ -25,9 +17,8 @@
 			📅 Calendario
 		</a>
 		<a
-		href="/oportunidades"
+			href="/oportunidades"
 			onclick={() => {
-				handleNav();
 				appState.togglePageActions();
 				$selectedOp = null;
 			}}
@@ -36,9 +27,8 @@
 			📋 Oportunidades
 		</a>
 		<a
-		href="/clientes"
+			href="/clientes"
 			onclick={() => {
-				handleNav();
 				appState.togglePageActions();
 				$selectedOp = null;
 			}}
@@ -47,15 +37,14 @@
 			🐄 Clientes
 		</a>
 		<a
-		href="/actividades"
+			href="/actividades"
 			onclick={() => {
-				handleNav();
 				appState.togglePageActions();
 				$selectedOp = null;
 			}}
 			class="butter"
 		>
-		⚡ Actividades
+			⚡ Actividades
 		</a>
 	</div>
 </div>

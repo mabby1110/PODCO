@@ -101,11 +101,11 @@ export const columnasCliente = [
 
 // AGRUPACIONES
 export const agrupacionesCliente = [
-	{ value: 'estado', label: 'estado' },
-	{ value: 'ciudad', label: 'ciudad' },
-	{ value: 'sector', label: 'sector' },
-	{ value: 'tipo_prospeccion', label: 'tipo_prospeccion' },
-	{ value: 'clasificacion', label: 'clasificacion' },
+	{ value: 'estado', label: 'Estado' },
+	{ value: 'ciudad', label: 'Ciudad' },
+	{ value: 'sector', label: 'Sector' },
+	{ value: 'tipo_prospeccion', label: 'Tipo_prospeccion' },
+	{ value: 'clasificacion', label: 'Clasificacion' },
 ];
 
 export const agrupacionesActividades = [

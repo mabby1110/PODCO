@@ -5,7 +5,6 @@
 	import { getStyleForPhase } from '$lib/utils/util';
 	import FormInput from '../FormInput.svelte';
 	import { invalidate } from '$app/navigation';
-	import { selectedActivity } from '$lib/stores/selectedActivity';
 	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
 	import FormOportunidad from '../Oportunidad/FormOportunidad.svelte';
 
@@ -31,7 +30,6 @@
 
 	function handleSubmit() {
 		return async ({ result }: any) => {
-			selectedActivity.clear();
 			isSubmitting = false;
 			if (result.type === 'success') {
 				nuevaHistoria = '';
