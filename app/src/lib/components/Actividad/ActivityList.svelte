@@ -6,7 +6,7 @@
 	import Leyenda from '../Leyenda.svelte';
 	import Reload from '../Reload.svelte';
 	import Filtro from '../Filtro.svelte';
-	import { agrupacioneActividades, columnasActividad } from '$lib';
+	import { agrupacionesActividades, columnasActividad } from '$lib';
 	import { agruparPor } from '$lib/utils/util';
 	import Select from '../Select.svelte';
 	import Grupo from '../Grupo.svelte';
@@ -28,7 +28,7 @@
 		<Reload />
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 		<FilterOpList />
-		<Select options={agrupacioneActividades} defaultOption=''Agrupar todos'' bind:selected />
+		<Select options={agrupacionesActividades} defaultOption=''Agrupar todos'' bind:selected />
 		<Filtro items={actividades} columns={columnasActividad} bind:filteredItems={filtrado} />
 	</div>
 	<Leyenda {steps} />

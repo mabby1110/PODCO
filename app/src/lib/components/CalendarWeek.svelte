@@ -1,7 +1,6 @@
 <script lang="ts">
 	import CardOpCalendarPreview from '$lib/components/Oportunidad/CardOpCalendarPreview.svelte';
 	import { dropzone } from '$lib/actions/dnd';
-	import { filtrarConsecutivo } from '$lib/utils/util';
 	import { filterStore } from '$lib/stores/filterStore.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { invalidate } from '$app/navigation';
@@ -17,16 +16,9 @@
 	} from '$lib/utils/agenda';
 	import FilterOpList from '$lib/components/FilterOpList.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import {
-		columnasActividad,
-		columnasCalendario,
-		columnasOportunidad,
-		type Oportunidad
-	} from '$lib';
+	import { type Oportunidad } from '$lib';
 	import CardActividadCalendarPreview from './Actividad/CardActividadCalendarPreview.svelte';
-	import Leyenda from './Leyenda.svelte';
 	import Reload from './Reload.svelte';
-	import Filtro from './Filtro.svelte';
 
 	const { events } = $props();
 
