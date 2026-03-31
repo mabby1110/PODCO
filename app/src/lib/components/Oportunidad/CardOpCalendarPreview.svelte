@@ -55,7 +55,6 @@
 		</div>
 	{:else}
 		<div class="preview-header">
-			<p class="header-date">{eventData?.inicio.split(' ')[1]}</p>
 			<b class="header-title">{eventData?.razon_social}</b>
 			<div class="header-meta">
 				<b>{eventData?.agente.nombre}</b>
