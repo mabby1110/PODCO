@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fade, slide } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 	import { appState } from '$lib/stores/appState.svelte';
 	import ControlsPanel from './ControlsPanel.svelte';
 	import Logout from './Logout.svelte';

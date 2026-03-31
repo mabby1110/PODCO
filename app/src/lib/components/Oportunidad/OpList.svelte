@@ -9,11 +9,16 @@
 	import FilterOpList from '../FilterOpList.svelte';
 	import Select from '../Select.svelte';
 	import Grupo from '../Grupo.svelte';
+	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
 
 	let { oportunidades } = $props();
 
 	let filtrado = $derived([...oportunidades]);
-	let selected = $state('');
+	let selected = $state(selectedGroupStore.selectedGroup ?? '');
+	$effect(() => {
+		console.log(selected);
+		selectedGroupStore.selectedGroup = selected != '' ? selected : '';
+	});
 	let listaAgrupada = $derived(agruparPor(filtrado, selected));
 
 </script>

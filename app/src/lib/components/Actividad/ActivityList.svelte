@@ -10,11 +10,16 @@
 	import { agruparPor } from '$lib/utils/util';
 	import Select from '../Select.svelte';
 	import Grupo from '../Grupo.svelte';
+	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
 
 	let { actividades } = $props();
 
 	let filtrado = $derived([...actividades]);
-	let selected = $state('');
+	let selected = $state(selectedGroupStore.selectedGroup ?? '');
+	$effect(() => {
+		console.log(selected);
+		selectedGroupStore.selectedGroup = selected != '' ? selected : '';
+	});
 	let listaAgrupada = $derived(agruparPor(filtrado, selected));
 
 	let steps = [

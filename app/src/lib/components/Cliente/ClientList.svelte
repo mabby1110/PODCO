@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { agrupacionesCliente, columnasCliente } from '$lib';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
+	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
 	import { agruparPor } from '$lib/utils/util';
 	import FilterOpList from '../FilterOpList.svelte';
 	import Filtro from '../Filtro.svelte';
@@ -13,7 +13,11 @@
 	let { clientes } = $props();
 
 	let filtrado = $derived([...clientes]);
-	let selected = $state('');
+	let selected = $state(selectedGroupStore.selectedGroup ?? '');
+	$effect(() => {
+		console.log(selected);
+		selectedGroupStore.selectedGroup = selected != '' ? selected : '';
+	});
 	let listaAgrupada = $derived(agruparPor(filtrado, selected));
 </script>
 
@@ -22,7 +26,7 @@
 		<Reload />
 		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 		<FilterOpList />
-		<Select options={agrupacionesCliente} defaultOption='Agrupar todos' bind:selected />
+		<Select options={agrupacionesCliente} defaultOption="Agrupar todos" bind:selected />
 		<Filtro items={clientes} columns={columnasCliente} bind:filteredItems={filtrado} />
 	</div>
 	{#each listaAgrupada as agrupacion (agrupacion.grupo)}

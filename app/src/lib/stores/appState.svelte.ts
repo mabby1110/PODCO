@@ -4,8 +4,6 @@ import { browser } from '$app/environment';
 
 interface AppState {
 	dnd: boolean;
-	calendarActions: boolean;
-	panelPosition: { x: number; y: number };
 	panelMinimized: boolean;
 	calendarCards: boolean;
 	calendarView: boolean;
@@ -20,8 +18,6 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 año
 
 const defaultState: AppState = {
 	dnd: false,
-	calendarActions: false,
-	panelPosition: { x: 0, y: 0 },
 	panelMinimized: false,
 	calendarCards: false,
 	calendarView: false,
