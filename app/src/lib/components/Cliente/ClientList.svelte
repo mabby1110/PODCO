@@ -31,7 +31,7 @@
 	</div>
 	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
 		<div class="grupo-dia">
-			<Grupo {agrupacion} showByDefault>
+			<Grupo {agrupacion}>
 				{#each agrupacion.elementos as elemento (elemento.id)}
 					<CardClienteListPreview client={elemento} />
 				{/each}

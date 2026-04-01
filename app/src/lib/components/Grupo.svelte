@@ -1,6 +1,6 @@
 <script>
 	let { agrupacion, showByDefault=false, children } = $props();
-	let show = $state(showByDefault);
+	let show = $derived(showByDefault);
 </script>
 
 <button class="group-header" onclick={() => (show = !show)}>
