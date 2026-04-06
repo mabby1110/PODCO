@@ -1,11 +1,6 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { appState } from '$lib/stores/appState.svelte';
-	import { addMinutes } from '$lib/utils/agenda';
-	import { profile } from '$lib/stores/profileStore.svelte';
 	import FormSelectMotivo from '../FormSelectMotivo.svelte';
 	import { motivosProspeccion } from '$lib';
-	import FormSelectAgente from '../FormSelectAgente.svelte';
 	import { page } from '$app/state';
 	import FormInputAddContact from '$lib/components/FormInputAddContact.svelte';
 	let {
@@ -14,15 +9,10 @@
 		isDuplicate: boolean;
 	} = $props();
 	let { clientes, agentes } = $derived(page.data);
-	let selectedDataItem = $state(null);
 
 	// --- Pickers separados ---
 	let razon_social = $state('');
 	let ubicacion = $state('');
-	let fecha = $state<string>('');
-	let hora = $state<string>('08:00');
-	let inicio = $state<string>('');
-	let fin = $state<string>('');
 	let matches = $derived(
 		razon_social.trim().length > 0
 			? (clientes?.filter((c: any) =>
@@ -30,50 +20,6 @@
 				) ?? [])
 			: []
 	);
-
-
-	function getToday() {
-		const t = new Date();
-		return t.toISOString().slice(0, 10);
-	}
-
-	function setCustomEnd(fechaCompromiso: Date) {
-		const next = addMinutes(new Date(fechaCompromiso), 10);
-
-		const yyyy = next.getFullYear();
-		const mm = String(next.getMonth() + 1).padStart(2, '0');
-		const dd = String(next.getDate()).padStart(2, '0');
-		const hh = String(next.getHours()).padStart(2, '0');
-		const mi = String(next.getMinutes()).padStart(2, '0');
-
-		return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
-	}
-
-	function generarHoras() {
-		const horas = [];
-		let actual = 8 * 60; // 08:00
-		const limite = 18 * 60; // 18:00
-
-		while (actual <= limite) {
-			const hh = String(Math.floor(actual / 60)).padStart(2, '0');
-			const mm = String(actual % 60).padStart(2, '0');
-			horas.push(`${hh}:${mm}`);
-			actual += 10;
-		}
-
-		return horas;
-	}
-
-	$effect(() => {
-		if (fecha && hora) {
-			const base = `${fecha} ${hora}`;
-			inicio = base;
-			fin = setCustomEnd(new Date(`${fecha}T${hora}`));
-		} else {
-			inicio = '';
-			fin = '';
-		}
-	});
 	
 	$effect(() => {
 		isDuplicate = razon_social.trim() === '' || matches.length > 0;

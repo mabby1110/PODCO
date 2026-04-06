@@ -5,9 +5,12 @@
 	import EditableField from '$lib/components/EditableField.svelte';
 	import EditableSelectField from '$lib/components/EditableSelectField.svelte';
 	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
+	import { appState } from '$lib/stores/appState.svelte';
+	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
 
 	let { cliente } = $derived(page.data);
-
+	let { oportunidades } = $derived(page.data);
+	let openOp = $derived(oportunidades?.filter((a: any) => a.id_cliente == cliente.id));
 	const agentes = $derived(page.data.agentes);
 </script>
 
@@ -93,6 +96,12 @@
 				/>
 			</div>
 
+			<div class="op-list">
+				{#each openOp as op}
+					<CardOpListPreview event={op} />
+				{/each}
+			</div>
+
 			<div class="system">
 				<div class="detail-block">
 					<span class="label">Tipo de Prospección:</span>
@@ -143,6 +152,9 @@
 				{/if}
 			</div>
 		</div>
+	</div>
+	<div class="controls">
+		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 	</div>
 </div>
 
@@ -241,5 +253,13 @@
 		flex-wrap: wrap;
 		border-top: 1px solid var(--color-secondary);
 		padding: var(--a);
+	}
+	.op-list {
+		padding: var(--a);
+		border-top: 1px solid var(--color-secondary);
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+		margin-bottom: 1.5rem;
 	}
 </style>

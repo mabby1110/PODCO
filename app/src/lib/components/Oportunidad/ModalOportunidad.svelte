@@ -2,8 +2,6 @@
 	import { enhance } from '$app/forms';
 	import { appState } from '$lib/stores/appState.svelte';
 	import FormOportunidad from './FormOportunidad.svelte';
-
-	let { data } = $props();
 </script>
 
 {#if $appState.ModalOp}

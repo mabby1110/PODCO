@@ -23,7 +23,6 @@ export const actions: Actions = {
 				new Date().toISOString(),
 				JSON.stringify([{ fecha: new Date().toISOString(), entrada: 'Cliente creado' }]),
 				null,
-				null,
 				formData.get('id_agente'),
 				formData.get('razon_social'),
 				null,

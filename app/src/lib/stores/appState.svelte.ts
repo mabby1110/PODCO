@@ -47,21 +47,9 @@ function createAppState() {
 				saveToCookie(newState);
 				return newState;
 			}),
-		toggleCalendarActions: () =>
-			update((state) => {
-				const newState = { ...state, calendarActions: !state.calendarActions };
-				saveToCookie(newState);
-				return newState;
-			}),
 		setDnd: (value: boolean) =>
 			update((state) => {
 				const newState = { ...state, dnd: value };
-				saveToCookie(newState);
-				return newState;
-			}),
-		setCalendarActions: (value: boolean) =>
-			update((state) => {
-				const newState = { ...state, calendarActions: value };
 				saveToCookie(newState);
 				return newState;
 			}),

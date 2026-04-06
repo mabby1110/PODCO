@@ -3,6 +3,7 @@
 	import ClientList from '$lib/components/Cliente/ClientList.svelte';
 	import { filterStore } from '$lib/stores/filterStore.svelte.js';
 	import { filtrarConsecutivo } from '$lib/utils/util.js';
+	import { appState } from '$lib/stores/appState.svelte.js';
 
 	let { data } = $props();
 	const events = $derived(

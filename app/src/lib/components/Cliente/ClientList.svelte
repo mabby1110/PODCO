@@ -25,7 +25,7 @@
 	<div class="controls">
 		<Reload />
 		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
+		<button onclick={() => show=!show} class="butter">{show?"min":"max"}</button>
 		<FilterOpList />
 		<Select options={agrupacionesCliente} defaultOption="Agrupar todos" bind:selected />
 		<Filtro items={clientes} columns={columnasCliente} bind:filteredItems={filtrado} />

@@ -3,12 +3,13 @@
 	import OpList from '$lib/components/Oportunidad/OpList.svelte';
 	import { filterStore } from '$lib/stores/filterStore.svelte.js';
 	import { filtrarConsecutivo } from '$lib/utils/util.js';
+	import { page } from '$app/state';
 
-	let { data } = $props();
+	let { oportunidades } = $derived(page.data);
 	const events = $derived(
 		filterStore.atributo !== ''
-			? filtrarConsecutivo(filterStore.atributo, 'id_agente', data.oportunidades)
-			: data.oportunidades
+			? filtrarConsecutivo(filterStore.atributo, 'id_agente', oportunidades)
+			: oportunidades
 	);
 </script>
 

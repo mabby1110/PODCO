@@ -49,7 +49,7 @@
 </div>
 
 <ModalActividad {data} />
-<ModalOportunidad {data} />
+<ModalOportunidad />
 <ModalCliente {data} />
 
 <style>

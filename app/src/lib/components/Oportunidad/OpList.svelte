@@ -62,21 +62,7 @@
 	.grupo-dia {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: var(--a);
 		margin-bottom: 1.5rem;
-	}
-
-	.dia-header {
-		margin: 0;
-		padding-bottom: 0.5rem;
-		border-bottom: 2px solid var(--color-muted, #e2e8f0);
-		color: var(--color-text, #333);
-		font-size: 1.1rem;
-	}
-
-	.lista-eventos {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem; /* Ajusta según el espaciado que necesites entre tarjetas */
 	}
 </style>

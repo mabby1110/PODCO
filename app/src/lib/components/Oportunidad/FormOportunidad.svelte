@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Searchbar from '$lib/components/Searchbar.svelte';
-	import { addMinutes } from '$lib/utils/agenda';
 	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
 	import { motivosOportunidad } from '$lib';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
@@ -9,25 +8,23 @@
 	import { filtrarPorAgente } from '$lib/utils/util';
 	import { page } from '$app/state';
 	import DatePicker from '../DatePicker.svelte';
-
+	
+	
 	let { op=false }: { op?: boolean } = $props();
-
+	
 	let data = $derived(page.data);
-
+	let { cliente } = $derived(page.data);
 	let clientes = $derived(data.clientes ?? []);
-
-	let selectedClient = $state(null);
+	
+	let selectedClient = $state(cliente?cliente:null);
 	let necesidad = $state('');
 	let potencial_venta = $state('');
 	let objetivo = $state('');
 	let requisitos = $state('');
-	let fecha = $state('');
-	let hora = $state('08:00');
-	let inicio = $state('');
-	let fin = $state('');
-	let duracion = $state(20);
-	let agenteSeleccionado = $state<string>('');
-
+	
+	let agenteSeleccionado = $derived(data.profile?.isAdmin?'':data.profile.id);
+	console.log(cliente);
+	console.log('agenteSeleccionado', agenteSeleccionado);
 	let clientesFiltrados = $derived(
 		data.profile?.isAdmin
 			? agenteSeleccionado
@@ -35,30 +32,10 @@
 				: clientes
 			: filtrarPorAgente(clientes, String(data.profile?.id))
 	);
-
-	function setCustomEnd(fechaCompromiso: Date, duracion: number = 10) {
-		const next = addMinutes(new Date(fechaCompromiso), duracion);
-
-		const yyyy = next.getFullYear();
-		const mm = String(next.getMonth() + 1).padStart(2, '0');
-		const dd = String(next.getDate()).padStart(2, '0');
-		const hh = String(next.getHours()).padStart(2, '0');
-		const mi = String(next.getMinutes()).padStart(2, '0');
-
-		return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
-	}
 	$effect(() => {
-		agenteSeleccionado;
-		selectedClient = null;
-	});
-	$effect(() => {
-		if (fecha && hora) {
-			const base = `${fecha} ${hora}`;
-			inicio = base;
-			fin = setCustomEnd(new Date(`${fecha}T${hora}`), duracion);
-		} else {
-			inicio = '';
-			fin = '';
+		if(!cliente) {
+			agenteSeleccionado;
+			selectedClient = null;
 		}
 	});
 </script>
@@ -74,8 +51,6 @@
 		keyColumns={['razon_social']}
 		bind:selectedItem={selectedClient}
 	/>
-
-	<DatePicker />
 
 	<FormInput
 		label="Necesidad"
@@ -112,6 +87,9 @@
 			required
 		/>
 	</FormOptionalInput>
+	
+	<DatePicker />
+
 	{#if selectedClient}
 		<input type="hidden" name="id_cliente" value={selectedClient?.id} required />
 	{/if}
