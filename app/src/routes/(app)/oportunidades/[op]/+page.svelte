@@ -23,7 +23,7 @@
 		return {
 			id: event.id,
 			razon_social:
-				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
+			clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase) || undefined,
 			motivo: event?.motivo,

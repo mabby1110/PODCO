@@ -128,7 +128,7 @@
 			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 		{/if}
 		{#if !submitOp}
-			<input type="hidden" name="id_agente" value={eventData.agente.id} />
+			<input type="hidden" name="id_agente" value={eventData?.agente?.id} />
 		{/if}
 		{#if currentPhase != 6 && currentPhase != 0}
 			<div class="submit">

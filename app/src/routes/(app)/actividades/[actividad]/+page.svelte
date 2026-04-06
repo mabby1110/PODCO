@@ -41,7 +41,7 @@
 			<div class="meta">
 				<p class="date">{eventData.inicio}</p>
 				<p>|</p>
-				<p>{eventData.agente.nombre}</p>
+				<p>{eventData?.agente?.nombre}</p>
 			</div>
 		</header>
 		<div class="card-content">
