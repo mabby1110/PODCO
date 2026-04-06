@@ -36,29 +36,30 @@
 		if (!anterior || nueva.trim() == '') return nueva;
 		return `${anterior}, ${nueva}`;
 	}
-function handleSubmit() {
-    return async ({ result, update }: any) => {
-        selectedOp.clear();
-        isSubmitting = false;
+	
+	function handleSubmit() {
+		return async ({ result, update }: any) => {
+			selectedOp.clear();
+			isSubmitting = false;
 
-        if (result.type === 'success') {
-            // Reiniciar estado reactivo vinculado (bind:value)
-            nuevoRequisito = '';
-            nuevaHistoria = '';
-            nuevaCotizacion = '';
-            nuevaOc = '';
-            nuevaObeservacion = '';
-            
-            // Reiniciar modificadores de UI
-            submitUpdate = false;
-            submitCancel = false;
+			if (result.type === 'success') {
+				// Reiniciar estado reactivo vinculado (bind:value)
+				nuevoRequisito = '';
+				nuevaHistoria = '';
+				nuevaCotizacion = '';
+				nuevaOc = '';
+				nuevaObeservacion = '';
 
-            await update({ reset: true });
-        }
+				// Reiniciar modificadores de UI
+				submitUpdate = false;
+				submitCancel = false;
 
-        await invalidateAll();
-    };
-}
+				await update({ reset: true });
+			}
+
+			await invalidateAll();
+		};
+	}
 </script>
 
 <div class="actions">
