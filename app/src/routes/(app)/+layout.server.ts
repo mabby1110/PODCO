@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-import { getClientes, getOportunidades } from '$lib/server/google/cachedQueries';
+import { getActividades, getClientes, getOportunidades } from '$lib/server/google/cachedQueries';
 import { supabaseAdmin } from '$lib/server/supabaseAdmin';
 import { getAllProfilesAdmin } from '$lib/utils/supabase';
 
@@ -18,10 +18,11 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
     }
 
     // Cambio de 'const' a 'let' para permitir reasignación
-    let [profileResponse, clientes, oportunidades] = await Promise.all([
+    let [profileResponse, clientes, oportunidades, actividades] = await Promise.all([
         locals.supabase.from('profiles').select('*').eq('id', locals.user?.id).single(),
         getClientes(),
-        getOportunidades()
+        getOportunidades(),
+        getActividades()
     ]);
 
     const profile = profileResponse.data;
@@ -40,6 +41,7 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
         profile,
         clientes: clientes ?? [],
         agentes,
-        oportunidades
+        oportunidades,
+        actividades
     };
 };

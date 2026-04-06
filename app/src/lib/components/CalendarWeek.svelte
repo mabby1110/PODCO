@@ -194,6 +194,9 @@
 </div>
 
 <style>
+	.view-container {
+		height: 100%;
+	}
 	.calendar {
 		flex-grow: 1;
 		overflow: auto;

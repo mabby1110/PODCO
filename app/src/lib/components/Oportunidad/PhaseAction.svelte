@@ -8,7 +8,7 @@
 	import FormSelectMotivo from '$lib/components/FormSelectMotivo.svelte';
 	import FormInput from '../FormInput.svelte';
 	import { selectedOp } from '$lib/stores/selectedOp';
-	import { invalidate } from '$app/navigation';
+	import { invalidate, invalidateAll } from '$app/navigation';
 	import UploadFile from '$lib/components/UploadFile.svelte';
 
 	let { eventData } = $props();
@@ -45,8 +45,7 @@
 				nuevaCotizacion = '';
 				nuevaOc = '';
 			}
-
-			await invalidate('app:calendar');
+			await invalidateAll();
 		};
 	}
 
@@ -292,7 +291,8 @@
 					placeholder="Motivo de la pérdida"
 					type="textarea"
 					required
-				/>				<div class="opcional">
+				/>
+				<div class="opcional">
 					<h3>Informacion adicional</h3>
 					<div class="opciones">
 						<FormOptionalInput title="+Observaciones">

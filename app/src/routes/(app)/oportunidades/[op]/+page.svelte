@@ -12,12 +12,12 @@
 	// 1. Extraemos los datos del padre y del hijo
 	const clientes = $derived(page.data.clientes || []);
 	const agentes = $derived(page.data.agentes || []);
-    
+
 	// 2. Determinamos la oportunidad activa (Store vs URL)
 	const event = $derived(data.oportunidad);
 
 	// 3. Formateamos los datos para la vista (tu eventData original adaptado)
-	
+
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 		return {
@@ -30,6 +30,7 @@
 			inicio: event?.inicio,
 			fin: event?.fin,
 			historia: event.historia,
+			necesidades: event.necesidades,
 			requisitos: event.requisitos,
 			observaciones: event.observaciones,
 			cotizaciones_ganadas: event.cotizaciones_ganadas,
@@ -47,7 +48,9 @@
 {#if eventData}
 	<div class="card-full" transition:slide>
 		<header style={eventData.style}>
-			<a href="/oportunidades" class="close {currentFase}" aria-label="Cerrar">✕</a>
+			<button onclick={() => history.back()} class="close {currentFase}" aria-label="Cerrar">
+				✕
+			</button>
 			<div class="title">
 				<h1>{eventData.motivo}</h1>
 				<h3>{eventData.razon_social}</h3>
@@ -55,7 +58,7 @@
 			<div class="meta">
 				<p class="date">{eventData.inicio}</p>
 				<p class="date">|</p>
-				<p>{eventData.agente.nombre}</p>
+				<p>{eventData?.agente?.nombre}</p>
 			</div>
 		</header>
 
@@ -66,6 +69,13 @@
 				<div>
 					<h3>Historia</h3>
 					<p>{eventData.historia}</p>
+				</div>
+			{/if}
+
+			{#if eventData.necesidades}
+				<div>
+					<h3>Necesidades</h3>
+					<p>{eventData.necesidades}</p>
 				</div>
 			{/if}
 

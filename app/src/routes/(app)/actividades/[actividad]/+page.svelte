@@ -3,7 +3,6 @@
 	import { slide } from 'svelte/transition';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import { selectedActivity } from '$lib/stores/selectedActivity';
 	import { fases_actividad } from '$lib';
 	import ActivityActions from '$lib/components/Actividad/ActivityActions.svelte';
 
@@ -35,7 +34,9 @@
 {#if eventData}
 	<div class="card-full" transition:slide>
 		<header style={eventData.style}>
-			<a href="/actividades" class="close {currentFase}" aria-label="Cerrar">✕</a>
+			<button onclick={() => history.back()} class="close {currentFase}" aria-label="Cerrar">
+				✕
+			</button>
 			<h1>{eventData.motivo}</h1>
 			<div class="meta">
 				<p class="date">{eventData.inicio}</p>

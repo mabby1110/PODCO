@@ -54,23 +54,6 @@
 </a>
 
 <style>
-	
-	.card {
-		position: relative;
-		padding: var(--a);
-		margin: var();
-		backdrop-filter: blur(16px);
-		width: 100%;
-		display: flex;
-		gap: var(--a);
-		flex-wrap: wrap;
-		align-items: center;
-		text-align: left;
-		border-style: none;
-		border-width: 0;
-		border-radius: var(--a);
-		box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
-	}
 	.title {
 		min-width: 60%;
 	}

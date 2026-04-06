@@ -39,7 +39,11 @@
 	}
 </script>
 
-<a href="/oportunidades/{event.id}" onclick={select} class="card-list-preview" style={eventData?.style}>
+<a
+	href="/oportunidades/{event.id}"
+	class="card-list-preview"
+	style={eventData?.style}
+>
 	<p class="date">{eventData?.inicio}</p>
 	<div class="title">
 		<h3>{eventData?.motivo}</h3>
@@ -64,7 +68,6 @@
 </a>
 
 <style>
-
 	.title {
 		min-width: 60%;
 	}

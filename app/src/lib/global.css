@@ -124,11 +124,13 @@ body {
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(16px);
 }
+
 .flex-a {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--a);
 }
+
 /* ESTILOS PARA TARJETAS */
 .card-full {
 	display: flex;
@@ -160,6 +162,28 @@ body {
 	border-style: none;
 	border-width: 0;
 	border-radius: var(--a);
+	cursor: pointer;
+}
+
+.card-calendar-preview {
+	text-decoration: none;
+	color: inherit;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border: 1px solid var(--color-muted);
+	border-radius: var(--a);
+	padding: 4px var(--a);
+	text-align: left;
+	align-items: flex-start;
+	backdrop-filter: blur(16px);
+	overflow: hidden;
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	pointer-events: auto;
 	cursor: pointer;
 }
 
@@ -203,6 +227,7 @@ body {
 	backdrop-filter: blur(16px);
 	cursor: pointer;
 }
+
 .close-btn {
 	border: none;
 	cursor: pointer;
