@@ -7,7 +7,6 @@ export const load: LayoutServerLoad = async ({ depends, parent }) => {
     const { profile } = await parent();
     let oportunidades = await getRange('oportunidades!A:Z');
     let actividades = await getRange('actividades!A:Z');
-    
     if (!profile?.isAdmin) {
         oportunidades = oportunidades.filter((a: any) => a.id_agente === profile?.id);
         actividades = actividades.filter((a: any) => a.id_agente === profile?.id);
