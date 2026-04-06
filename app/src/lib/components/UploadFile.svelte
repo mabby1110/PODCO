@@ -98,6 +98,7 @@
 		color: inherit;
 		cursor: pointer;
 		font-size: 14px;
+		width: 100%;
 	}
 	.files {
 		display: flex;

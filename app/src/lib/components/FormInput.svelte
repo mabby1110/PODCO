@@ -49,9 +49,9 @@
 <div class="field-block">
     <div class="field-header">
         <label for={name} class="label">
-            <span>
+            <h3>
                 {label}{required ? '*' : ''}
-            </span>
+            </h3>
         </label>
     </div>
 

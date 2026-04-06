@@ -156,6 +156,9 @@
 		flex-direction: column;
 		align-items: flex-start;
 		gap: var(--b);
+		border-top: 1px solid var(--color-secondary);
+		margin-top: var(--c);
+		padding-top: var(--c);
 	}
 	.meta {
 		display: flex;

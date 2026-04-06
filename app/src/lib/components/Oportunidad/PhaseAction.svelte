@@ -36,20 +36,29 @@
 		if (!anterior || nueva.trim() == '') return nueva;
 		return `${anterior}, ${nueva}`;
 	}
-	function handleSubmit() {
-		return async ({ result }: any) => {
-			selectedOp.clear();
-			isSubmitting = false;
-			if (result.type === 'success') {
-				nuevaHistoria = '';
-				nuevaCotizacion = '';
-				nuevaOc = '';
-			}
-			await invalidateAll();
-		};
-	}
+function handleSubmit() {
+    return async ({ result, update }: any) => {
+        selectedOp.clear();
+        isSubmitting = false;
 
-	// $effect(() => console.log(JSON.parse(cotizaciones)));
+        if (result.type === 'success') {
+            // Reiniciar estado reactivo vinculado (bind:value)
+            nuevoRequisito = '';
+            nuevaHistoria = '';
+            nuevaCotizacion = '';
+            nuevaOc = '';
+            nuevaObeservacion = '';
+            
+            // Reiniciar modificadores de UI
+            submitUpdate = false;
+            submitCancel = false;
+
+            await update({ reset: true });
+        }
+
+        await invalidateAll();
+    };
+}
 </script>
 
 <div class="actions">
@@ -282,7 +291,7 @@
 						</FormOptionalInput>
 					</div>
 				</div>
-				<DatePicker title="Fecha de compromiso" />
+				<DatePicker title="Fecha Seguimiento" />
 			{:else if submitCancel}
 				<FormInput
 					label="Pérdida"
@@ -311,6 +320,26 @@
 					</div>
 				</div>
 			{/if}
+		{/if}
+
+		<!-- opciones para envio de formulario -->
+		{#if currentPhase != 6 && currentPhase != 0}
+			<div class="submit">
+				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
+
+				{#if submitUpdate}
+					<input type="hidden" name="fase" value={currentPhase} />
+					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
+				{:else if submitCancel}
+					<input type="hidden" name="fase" value={0} />
+					<button type="submit" class="butter" disabled={isSubmitting}>Perder</button>
+				{:else}
+					<input type="hidden" name="fase" value={nextPhase} />
+					<button type="submit" class="butter" {style} disabled={isSubmitting}>
+						{isSubmitting ? 'Procesando...' : eventData.fase.accion}
+					</button>
+				{/if}
+			</div>
 		{/if}
 
 		<!-- datos compuestos -->
@@ -349,26 +378,6 @@
 		{#if nextPhase == 6}
 			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 		{/if}
-
-		<!-- opciones para envio de formulario -->
-		{#if currentPhase != 6 && currentPhase != 0}
-			<div class="submit">
-				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
-
-				{#if submitUpdate}
-					<input type="hidden" name="fase" value={currentPhase} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
-				{:else if submitCancel}
-					<input type="hidden" name="fase" value={0} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Perder</button>
-				{:else}
-					<input type="hidden" name="fase" value={nextPhase} />
-					<button type="submit" class="butter" {style} disabled={isSubmitting}>
-						{isSubmitting ? 'Procesando...' : eventData.fase.accion}
-					</button>
-				{/if}
-			</div>
-		{/if}
 	</form>
 </div>
 
@@ -397,6 +406,7 @@
 	}
 	.submit {
 		display: flex;
+		flex-wrap: wrap;
 		gap: var(--a);
 		justify-content: flex-end;
 		flex-grow: 1;
