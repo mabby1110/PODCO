@@ -8,6 +8,7 @@
 	let { children, data } = $props();
 	import { beforeNavigate, onNavigate } from '$app/navigation';
 	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte.js';
+	import { globalFilterStore } from '$lib/stores/globalFilterStore.svelte.js';
 
 	onNavigate((navigation) => {
 		// Verificamos si el navegador soporta esta tecnología (Safari 18+, Chrome, Edge)
@@ -31,6 +32,7 @@
 		// Limpiar el store solo si el segmento principal cambia
 		if (fromBase !== toBase) {
 			selectedGroupStore.clearGroup();
+			globalFilterStore.clearFilters();
 		}
 	});
 	$effect(() => {
