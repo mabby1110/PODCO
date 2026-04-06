@@ -1,7 +1,5 @@
 <script lang="ts">
 	import ActivityList from '$lib/components/Actividad/ActivityList.svelte';
-	import { selectedActivity } from '$lib/stores/selectedActivity.js';
-	import CardActividad from '$lib/components/Actividad/CardActividad.svelte';
 	import { filterStore } from '$lib/stores/filterStore.svelte.js';
 	import { filtrarConsecutivo } from '$lib/utils/util.js';
 	import { slide } from 'svelte/transition';
@@ -15,15 +13,7 @@
 </script>
 
 <div class="page-content" transition:slide>
-	{#if $selectedActivity}
-		<section class="selected">
-			<CardActividad />
-		</section>
-	{:else}
-		<section>
-			<ActivityList actividades={events} />
-		</section>
-	{/if}
+	<ActivityList actividades={events} />
 </div>
 
 <style>

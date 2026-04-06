@@ -16,17 +16,18 @@
 	}>();
 
 	// Estado local solo para los inputs de la UI
-	let show = $state(false);
 	let selectedColumnKey = $derived<string>(columns[0]?.key || '');
-	let selectedAction = $state<FilterAction>('asc');
+	let selectedAction = $state<FilterAction>('contains');
 	let inputValue = $state<string>('');
 	let filterCount = $derived(globalFilterStore.activeFilters.length);
+	let show = $state(filterCount?true:false);
+
 	const getNestedValue = (obj: any, path: string) => {
 		return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 	};
 
 	function handleAdd() {
-		const column = columns.find((c:any) => c.key === selectedColumnKey);
+		const column = columns.find((c: any) => c.key === selectedColumnKey);
 		if (!column) return;
 		if (selectedAction === 'contains' && !inputValue.trim()) return;
 
@@ -73,53 +74,55 @@
 </script>
 
 {#if show}
-	<div class="panel">
-		<button class="butter" type="button" onclick={() => (show = false)}>ocultar</button>
+	<div class="filter-options">
+		<div class="panel">
+			<button class="butter" type="button" onclick={() => (show = false)}>ocultar</button>
 
-		<select bind:value={selectedColumnKey}>
-			{#each columns as col}
-				<option value={col.key}>{col.label}</option>
-			{/each}
-		</select>
-
-		<select bind:value={selectedAction}>
-			<option value="asc">Orden Ascendente</option>
-			<option value="desc">Orden Descendente</option>
-			<option value="contains">Contiene (Texto)</option>
-		</select>
-
-		{#if selectedAction === 'contains'}
-			<input
-				type="text"
-				bind:value={inputValue}
-				placeholder="Escribe la palabra clave..."
-				onkeydown={(e) => e.key === 'Enter' && handleAdd()}
-			/>
-		{/if}
-
-		<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
-
-		{#if globalFilterStore.activeFilters.length > 0}
-			<div class="active-filters">
-				{#each globalFilterStore.activeFilters as filter (filter.id)}
-					<button class="chip butter" onclick={() => globalFilterStore.removeFilter(filter.id)}>
-						{filter.column.label}
-						{#if filter.action === 'contains'}
-							contiene "{filter.value}"
-						{:else}
-							({filter.action})
-						{/if}
-						<p class="close-chip">×</p>
-					</button>
+			<select bind:value={selectedColumnKey}>
+				{#each columns as col}
+					<option value={col.key}>{col.label}</option>
 				{/each}
+			</select>
 
-				{#if globalFilterStore.activeFilters.length > 1}
-					<button class="chop butter" onclick={() => globalFilterStore.clearFilters()}
-						>Limpiar todo</button
-					>
-				{/if}
-			</div>
-		{/if}
+			<select bind:value={selectedAction}>
+				<option value="contains">Contiene (Texto)</option>
+				<option value="asc">Orden Ascendente</option>
+				<option value="desc">Orden Descendente</option>
+			</select>
+
+			{#if selectedAction === 'contains'}
+				<input
+					type="text"
+					bind:value={inputValue}
+					placeholder="Escribe la palabra clave..."
+					onkeydown={(e) => e.key === 'Enter' && handleAdd()}
+				/>
+			{/if}
+
+			<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
+
+			{#if globalFilterStore.activeFilters.length > 0}
+				<div class="active-filters">
+					{#each globalFilterStore.activeFilters as filter (filter.id)}
+						<button class="chip butter" onclick={() => globalFilterStore.removeFilter(filter.id)}>
+							{filter.column.label}
+							{#if filter.action === 'contains'}
+								contiene "{filter.value}"
+							{:else}
+								({filter.action})
+							{/if}
+							<p class="close-chip">×</p>
+						</button>
+					{/each}
+
+					{#if globalFilterStore.activeFilters.length > 1}
+						<button class="chop butter" onclick={() => globalFilterStore.clearFilters()}
+							>Limpiar todo</button
+						>
+					{/if}
+				</div>
+			{/if}
+		</div>
 	</div>
 {:else}
 	<button class="butter" onclick={() => (show = true)}
@@ -128,10 +131,14 @@
 {/if}
 
 <style>
-	.panel{
+	.filter-options {
+		width: 100%;
+	}
+	.panel {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
+		width: fit-content;
 	}
 
 	.active-filters {

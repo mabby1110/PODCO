@@ -16,8 +16,8 @@
 
 	let filtrado = $derived([...actividades]);
 	let selected = $state(selectedGroupStore.selectedGroup ?? '');
+	let show = $state(selected?false:true);
 	$effect(() => {
-		console.log(selected);
 		selectedGroupStore.selectedGroup = selected != '' ? selected : '';
 	});
 	let listaAgrupada = $derived(agruparPor(filtrado, selected));
@@ -32,6 +32,7 @@
 	<div class="controls">
 		<Reload />
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+		<button onclick={() => show=!show} class="butter">{show?"min":"max"}</button>
 		<FilterOpList />
 		<Select options={agrupacionesActividades} defaultOption='Agrupar todos' bind:selected />
 		<Filtro items={actividades} columns={columnasActividad} bind:filteredItems={filtrado} />
@@ -39,7 +40,7 @@
 	<Leyenda {steps} />
 	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
 		<div class="grupo-dia">
-			<Grupo {agrupacion} showByDefault>
+			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as event (event.id)}
 					<CardActividadListPreview {event} />
 				{/each}

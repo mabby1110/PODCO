@@ -13,9 +13,7 @@
 </script>
 
 <div class="page-content">
-	<section in:slide>
-		<OpList oportunidades={events} />
-	</section>
+	<OpList oportunidades={events} />
 </div>
 
 <style>

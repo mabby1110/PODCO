@@ -14,8 +14,8 @@
 
 	let filtrado = $derived([...clientes]);
 	let selected = $state(selectedGroupStore.selectedGroup ?? '');
+	let show = $derived(selected?false:true);
 	$effect(() => {
-		console.log(selected);
 		selectedGroupStore.selectedGroup = selected != '' ? selected : '';
 	});
 	let listaAgrupada = $derived(agruparPor(filtrado, selected));
@@ -25,13 +25,14 @@
 	<div class="controls">
 		<Reload />
 		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
+		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 		<FilterOpList />
 		<Select options={agrupacionesCliente} defaultOption="Agrupar todos" bind:selected />
 		<Filtro items={clientes} columns={columnasCliente} bind:filteredItems={filtrado} />
 	</div>
 	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
 		<div class="grupo-dia">
-			<Grupo {agrupacion}>
+			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as elemento (elemento.id)}
 					<CardClienteListPreview client={elemento} />
 				{/each}
