@@ -135,14 +135,58 @@ body {
 .card-full {
 	display: flex;
 	flex-direction: column;
-	gap: var(--a);
-	border-radius: 12px;
-	border: 1px solid var(--color-secondary);
 	width: 100%;
 	height: fit-content;
 	max-height: 90vh;
 	overflow: hidden;
 	position: relative;
+}
+
+.card-full header {
+	display: flex;
+	gap: var(--a);
+	position: relative;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+	background-color: var(--color-primary);
+	backdrop-filter: blur(16px);
+	padding: var(--a);
+	position: sticky;
+	top: 0;
+	z-index: 99;
+	border-radius: 0 0 var(--b) var(--b);
+}
+
+.card-full .actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--c);
+	width: 100%;
+	padding: 0 var(--a);
+}
+
+.card-full .close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: transparent;
+	border: none;
+	padding: 0 4px;
+	cursor: pointer;
+	opacity: 0.6;
+	transition: opacity 0.2s;
+	flex-shrink: 0;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.card-full .card-content {
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	gap: var(--c);
+	padding: var(--a) 0 0;
 }
 
 .card-list-preview {
@@ -187,19 +231,11 @@ body {
 	cursor: pointer;
 }
 
-.card-content {
-	overflow: auto;
-	display: flex;
-	flex-direction: column;
-	gap: var(--b);
-	padding: var(--a);
-}
 
 .card-content section {
-	display: flex;
-	flex-direction: column;
-	gap: var(--a);
+	padding: 0 var(--a);
 }
+
 
 .card-actions {
 	position: relative;
@@ -207,6 +243,24 @@ body {
 	flex-direction: column;
 	align-items: flex-start;
 	gap: var(--b);
+	border-top: 1px solid var(--color-secondary);
+	padding-top: var(--c);
+}
+
+.card-actions .submit {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+	justify-content: flex-end;
+	flex-grow: 1;
+	border-top: 1px solid var(--color-secondary);
+	padding: var(--b);
+	margin-top: var(--c);
+	width: 100%;
+	position: sticky;
+	bottom: 0;
+	backdrop-filter: blur(16px);
+	border-radius: var(--a) var(--a) 0 0;
 }
 
 /* ESTILOS PARA MODALES */
@@ -277,6 +331,7 @@ body {
 
 /* Más visible en móvil */
 @media (max-width: 768px) {
+
 	::-webkit-scrollbar {
 		width: 10px;
 		height: 10px;

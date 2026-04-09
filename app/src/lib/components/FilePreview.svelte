@@ -22,7 +22,7 @@
 </script>
 
 {#if items.length > 0}
-	<div class="cotizaciones">
+	<div class="file-preview">
 		<h3>
 			<button type="button" onclick={() => (isOpen = !isOpen)} class="accordion-btn">
 				{title} ({items.length})
@@ -42,6 +42,9 @@
 {/if}
 
 <style>
+	.file-preview {
+		padding: 0 var(--a);
+	}
 	.accordion-btn {
 		background: none;
 		border: none;

@@ -36,7 +36,7 @@
 		if (!anterior || nueva.trim() == '') return nueva;
 		return `${anterior}, ${nueva}`;
 	}
-	
+
 	function handleSubmit() {
 		return async ({ result, update }: any) => {
 			selectedOp.clear();
@@ -62,16 +62,16 @@
 	}
 </script>
 
-<div class="actions">
-	<form
-		method="POST"
-		action="/oportunidades?/updateOp"
-		enctype="multipart/form-data"
-		use:enhance={() => {
-			isSubmitting = true;
-			return handleSubmit();
-		}}
-	>
+<form
+	method="POST"
+	action="/oportunidades?/updateOp"
+	enctype="multipart/form-data"
+	use:enhance={() => {
+		isSubmitting = true;
+		return handleSubmit();
+	}}
+>
+	<div class="actions">
 		{#if !submitCancel && !submitUpdate}
 			<!-- Acciones -->
 			{#if currentPhase == 2}
@@ -115,7 +115,7 @@
 						</FormOptionalInput>
 					</div>
 				</div>
-				<DatePicker title="Fecha seguimiento o Expiración" /><!-- opciones generales -->
+				<DatePicker title="Fecha seguimiento o Expiración" />
 			{:else if currentPhase == 3}
 				<FormInput
 					label={eventData.fase.actual}
@@ -132,6 +132,7 @@
 				<div class="oc">
 					<UploadFile label="Orden de compra del cliente" name="ocFile" required />
 				</div>
+				<DatePicker title="Seguimiento / Envío" />
 				<div class="opcional">
 					<h3>Informacion adicional</h3>
 					<div class="opciones">
@@ -160,7 +161,6 @@
 						</FormOptionalInput>
 					</div>
 				</div>
-				<DatePicker title="Seguimiento / Envío" />
 			{:else if currentPhase == 4}
 				<FormInput
 					label="Ejecución de envío"
@@ -173,6 +173,7 @@
 				<div class="oc">
 					<UploadFile label="Documentos de operacion" name="docOpFile" required />
 				</div>
+				<DatePicker title="Salida de paquete" />
 				<div class="opcional">
 					<h3>Informacion adicional</h3>
 					<div class="opciones">
@@ -201,7 +202,6 @@
 						</FormOptionalInput>
 					</div>
 				</div>
-				<DatePicker title="Salida de paquete" />
 			{:else if currentPhase == 5}
 				<FormInput
 					label="Estado de entrega / Incidencias"
@@ -245,155 +245,144 @@
 				<DatePicker title="Salida de paquete" />
 			{/if}
 		{/if}
-
+	</div>
+	<!-- opciones para envio de formulario -->
+	{#if currentPhase != 6 && currentPhase != 0}
 		<!-- acciones opcionales -->
-		{#if currentPhase != 0}
-			{#if submitUpdate}
-				<FormInput
-					label="Postergar"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Motivo de la postergación y acción a realizar"
-					type="textarea"
-					required
-				/>
-				{#if currentPhase == 3}
-					<FormOptionalInput title="+Nueva cotizacion">
-						<div class="cotizacion">
-							<UploadFile label="Nueva Cotización" name="quoteFile" required />
-						</div>
-					</FormOptionalInput>
-				{/if}
-				<div class="opcional">
-					<h3>Informacion adicional</h3>
-					<div class="opciones">
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								bind:value={nuevaObeservacion}
-								placeholder="Detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+Agregar requisitos">
-							<FormInput
-								label="Requisitos"
-								name="nuevosRequisitos"
-								bind:value={nuevoRequisito}
-								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
-						</FormOptionalInput>
+		{#if submitUpdate}
+			<FormInput
+				label="Postergar"
+				name="nuevaHistoria"
+				bind:value={nuevaHistoria}
+				placeholder="Motivo de la postergación y acción a realizar"
+				type="textarea"
+				required
+			/>
+			{#if currentPhase == 3}
+				<FormOptionalInput title="+Nueva cotizacion">
+					<div class="cotizacion">
+						<UploadFile label="Nueva Cotización" name="quoteFile" required />
 					</div>
-				</div>
-				<DatePicker title="Fecha Seguimiento" />
-			{:else if submitCancel}
-				<FormInput
-					label="Pérdida"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Motivo de la pérdida"
-					type="textarea"
-					required
-				/>
-				<div class="opcional">
-					<h3>Informacion adicional</h3>
-					<div class="opciones">
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								bind:value={nuevaObeservacion}
-								placeholder="Detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
-						</FormOptionalInput>
-					</div>
-				</div>
+				</FormOptionalInput>
 			{/if}
-		{/if}
-
-		<!-- opciones para envio de formulario -->
-		{#if currentPhase != 6 && currentPhase != 0}
-			<div class="submit">
-				<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
-
-				{#if submitUpdate}
-					<input type="hidden" name="fase" value={currentPhase} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
-				{:else if submitCancel}
-					<input type="hidden" name="fase" value={0} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Perder</button>
-				{:else}
-					<input type="hidden" name="fase" value={nextPhase} />
-					<button type="submit" class="butter" {style} disabled={isSubmitting}>
-						{isSubmitting ? 'Procesando...' : eventData.fase.accion}
-					</button>
-				{/if}
+			<div class="opcional">
+				<h3>Informacion adicional</h3>
+				<div class="opciones">
+					<FormOptionalInput title="+Observaciones">
+						<FormInput
+							label="Observaciones"
+							name="observaciones"
+							bind:value={nuevaObeservacion}
+							placeholder="Detalles importantes y pautas a seguir"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+Agregar requisitos">
+						<FormInput
+							label="Requisitos"
+							name="nuevosRequisitos"
+							bind:value={nuevoRequisito}
+							placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+adjuntos">
+						<UploadFile label="Subir documentos" name="docFile" multiple />
+					</FormOptionalInput>
+				</div>
+			</div>
+			<DatePicker title="Fecha Seguimiento" />
+		{:else if submitCancel}
+			<FormInput
+				label="Pérdida"
+				name="nuevaHistoria"
+				bind:value={nuevaHistoria}
+				placeholder="Motivo de la pérdida"
+				type="textarea"
+				required
+			/>
+			<div class="opcional">
+				<h3>Informacion adicional</h3>
+				<div class="opciones">
+					<FormOptionalInput title="+Observaciones">
+						<FormInput
+							label="Observaciones"
+							name="observaciones"
+							bind:value={nuevaObeservacion}
+							placeholder="Detalles importantes y pautas a seguir"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+adjuntos">
+						<UploadFile label="Subir documentos" name="docFile" multiple />
+					</FormOptionalInput>
+				</div>
 			</div>
 		{/if}
+		<div class="submit">
+			<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
 
-		<!-- datos compuestos -->
-		<input type="hidden" name="id" value={eventData.id} />
-		{#if nuevaHistoria}
-			<input
-				type="hidden"
-				name="historia"
-				value={combinarHistoria(eventData.historia, nuevaHistoria)}
-			/>
-		{/if}
-		{#if nuevoRequisito}
-			<input
-				type="hidden"
-				name="requisitos"
-				value={combinarHistoria(eventData.requisitos, nuevoRequisito)}
-			/>
-		{/if}
-		{#if nuevaCotizacion}
-			<input
-				type="hidden"
-				name="cotizaciones_presentadas"
-				bind:value={eventData.cotizaciones_presentadas}
-			/>
-		{/if}
-		{#if nuevaObeservacion}
-			<input
-				type="hidden"
-				name="observaciones"
-				value={combinarHistoria(eventData.observaciones, nuevaObeservacion)}
-			/>
-		{/if}
-		{#if eventData.agente}
-			<input type="hidden" name="agente" value={eventData.agente.nombre} />
-		{/if}
-		{#if nextPhase == 6}
-			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
-		{/if}
-	</form>
-</div>
+			{#if submitUpdate}
+				<input type="hidden" name="fase" value={currentPhase} />
+				<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
+			{:else if submitCancel}
+				<input type="hidden" name="fase" value={0} />
+				<button type="submit" class="butter" disabled={isSubmitting}>Perder</button>
+			{:else}
+				<input type="hidden" name="fase" value={nextPhase} />
+				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					{isSubmitting ? 'Procesando...' : eventData.fase.accion}
+				</button>
+			{/if}
+		</div>
+	{/if}
+
+	<!-- datos compuestos -->
+	<input type="hidden" name="id" value={eventData.id} />
+	{#if nuevaHistoria}
+		<input
+			type="hidden"
+			name="historia"
+			value={combinarHistoria(eventData.historia, nuevaHistoria)}
+		/>
+	{/if}
+	{#if nuevoRequisito}
+		<input
+			type="hidden"
+			name="requisitos"
+			value={combinarHistoria(eventData.requisitos, nuevoRequisito)}
+		/>
+	{/if}
+	{#if nuevaCotizacion}
+		<input
+			type="hidden"
+			name="cotizaciones_presentadas"
+			bind:value={eventData.cotizaciones_presentadas}
+		/>
+	{/if}
+	{#if nuevaObeservacion}
+		<input
+			type="hidden"
+			name="observaciones"
+			value={combinarHistoria(eventData.observaciones, nuevaObeservacion)}
+		/>
+	{/if}
+	{#if eventData.agente}
+		<input type="hidden" name="agente" value={eventData.agente.nombre} />
+	{/if}
+	{#if nextPhase == 6}
+		<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
+	{/if}
+</form>
 
 <style>
-	.actions {
+	form {
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-	}
-	form {
-		display: flex;
-		flex-wrap: wrap;
-		width: 100%;
-		padding: var(--a);
-		gap: var(--b);
 	}
 	.butter:hover:not(:disabled) {
 		transform: translateY(-2px);
@@ -404,13 +393,6 @@
 	.butter:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
-	}
-	.submit {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-		justify-content: flex-end;
-		flex-grow: 1;
 	}
 	.cotizacion,
 	.oc,

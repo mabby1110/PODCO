@@ -23,7 +23,7 @@
 		return {
 			id: event.id,
 			razon_social:
-			clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
+				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase) || undefined,
 			motivo: event?.motivo,
@@ -63,41 +63,43 @@
 		</header>
 
 		<div class="card-content">
-			<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
+			<section>
+				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
+			</section>
 
 			{#if eventData.historia}
-				<div>
+				<section>
 					<h3>Historia</h3>
 					<p>{eventData.historia}</p>
-				</div>
+				</section>
 			{/if}
 
 			{#if eventData.necesidades}
-				<div>
+				<section>
 					<h3>Necesidades</h3>
 					<p>{eventData.necesidades}</p>
-				</div>
+				</section>
 			{/if}
 
 			{#if eventData.objetivo}
-				<div>
+				<section>
 					<h3>Objetivo</h3>
 					<p>{eventData.objetivo}</p>
-				</div>
+				</section>
 			{/if}
 
 			{#if eventData.requisitos}
-				<div>
+				<section>
 					<h3>Requisitos</h3>
 					<p>{eventData.requisitos}</p>
-				</div>
+				</section>
 			{/if}
 
 			{#if eventData.observaciones}
-				<div>
+				<section>
 					<h3>Observaciones</h3>
 					<p>{eventData.observaciones}</p>
-				</div>
+				</section>
 			{/if}
 
 			<FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />
@@ -114,51 +116,12 @@
 {/if}
 
 <style>
-	header {
-		display: flex;
-		gap: var(--a);
-		position: relative;
-		flex-direction: column;
-		justify-content: space-between;
-		align-items: flex-start;
-		background-color: var(--color-primary);
-		backdrop-filter: blur(16px);
-		padding: var(--a);
-
-		position: sticky;
-		top: 0;
-		z-index: 99;
-	}
 	.meta {
 		display: flex;
 		gap: var(--a);
 	}
 	.w {
 		color: white;
-	}
-	.close {
-		position: absolute;
-		top: 0;
-		right: 0;
-		background: transparent;
-		border: none;
-		padding: 0 var(--a);
-		cursor: pointer;
-		opacity: 0.6;
-		transition: opacity 0.2s;
-		flex-shrink: 0;
-		cursor: pointer;
-		text-decoration: none;
-	}
-	.card-actions {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: var(--b);
-		border-top: 1px solid var(--color-secondary);
-		margin-top: var(--c);
-		padding-top: var(--c);
 	}
 	.meta {
 		display: flex;

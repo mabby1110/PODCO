@@ -78,41 +78,12 @@
 {/if}
 
 <style>
-	header {
-		display: flex;
-		gap: var(--a);
-		position: relative;
-		flex-direction: column;
-		justify-content: space-between;
-		align-items: flex-start;
-		background-color: var(--color-primary);
-		backdrop-filter: blur(16px);
-		padding: var(--a);
-
-		position: sticky;
-		top: 0;
-		z-index: 99;
-	}
 	.meta {
 		display: flex;
 		gap: var(--a);
 	}
 	.w {
 		color: white;
-	}
-	.close {
-		position: absolute;
-		top: 0;
-		right: 0;
-		background: transparent;
-		border: none;
-		padding: 0 var(--a);
-		cursor: pointer;
-		opacity: 0.6;
-		transition: opacity 0.2s;
-		flex-shrink: 0;
-		cursor: pointer;
-		text-decoration: none;
 	}
 	.card-actions {
 		position: relative;

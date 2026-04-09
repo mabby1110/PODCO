@@ -38,7 +38,7 @@
 </script>
 
 <label>
-	<span>{title}</span>
+	<h3>{title}</h3>
 
 	<select class="butter" bind:value={selected} required>
 		<option value="" disabled selected>Selecciona un motivo</option>

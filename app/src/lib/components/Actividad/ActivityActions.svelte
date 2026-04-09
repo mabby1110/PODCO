@@ -162,13 +162,6 @@
 		width: 100%;
 		padding: var(--b);
 	}
-
-	form {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--c);
-		width: 100%;
-	}
 	.butter:hover:not(:disabled) {
 		transform: translateY(-2px);
 	}
@@ -180,11 +173,5 @@
 	.butter:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
-	}
-	.submit {
-		display: flex;
-		gap: var(--a);
-		justify-content: flex-end;
-		flex-grow: 1;
 	}
 </style>
