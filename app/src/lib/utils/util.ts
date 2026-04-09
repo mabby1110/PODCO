@@ -21,7 +21,7 @@ export function getStyleForPhase(fase: string | number) {
 		'3': 'background-color: var(--color-cotizar);',
 		'4': 'background-color: var(--color-ganada);',
 		'5': 'background-color: var(--color-enviar);',
-		'6': 'background-color: var(--color-finalizar); color: white;'
+		'6': 'background-color: var(--color-finalizar); color: var(--color-text-ob);'
 	};
 	return colorMap[String(fase)] || 'background-color: var(--color-prospecto);';
 }

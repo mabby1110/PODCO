@@ -17,7 +17,7 @@
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
-			inicio: event?.inicio,
+			inicio: event?.inicio.split(" ")[0],
 			fin: event?.fin,
 			historia: event.historia,
 			requisitos: event.requisitos,
@@ -62,32 +62,4 @@
 			<p>{eventData?.historia}</p>
 		</div>
 	{/if}
-	<div class="meta">
-		<p>{eventData?.agente?.nombre}, fase: {eventData?.fase?.actual}</p>
-	</div>
 </a>
-
-<style>
-	.title {
-		min-width: 60%;
-	}
-	.brief {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-		flex-grow: 1;
-		width: 100%;
-		max-height: var(--e);
-		overflow: hidden;
-	}
-	.meta {
-		min-width: 60%;
-		flex-grow: 1;
-	}
-	.date {
-		position: absolute;
-		top: 4px;
-		right: var(--a);
-		font-size: smaller;
-	}
-</style>

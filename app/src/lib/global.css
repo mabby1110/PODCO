@@ -6,6 +6,7 @@
 	--color-contrast: rgba(0, 0, 105, 0.8);
 	--color-title: #000000;
 	--color-text: #000000;
+	--color-text-ob: #d8d3d3;
 	--color-error: #ff0000bb;
 	--color-success: #05a941bb;
 	--color-muted: #babababb;
@@ -40,8 +41,11 @@
 	overscroll-behavior: none;
 }
 
+h1 {
+	font-size: 28px;
+}
 h3 {
-	font-weight: 200;
+	font-weight: 400;
 	font-size: 20px;
 }
 
@@ -137,7 +141,7 @@ body {
 	flex-direction: column;
 	width: 100%;
 	height: fit-content;
-	max-height: 100vh;
+	max-height: 100dvh;
 	overflow: hidden;
 	position: relative;
 }
@@ -208,7 +212,26 @@ body {
 	border-radius: var(--a);
 	cursor: pointer;
 }
-
+.card-list-preview .title {
+	min-width: 60%;
+}
+.card-list-preview .brief {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+	flex-grow: 1;
+	width: 100%;
+	max-height: var(--e);
+	overflow: hidden;
+}
+.card-list-preview .date {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	font-size: smaller;
+	max-width: 30%;
+	text-align: end;
+}
 .card-calendar-preview {
 	text-decoration: none;
 	color: inherit;
@@ -231,11 +254,9 @@ body {
 	cursor: pointer;
 }
 
-
 .card-content section {
 	padding: 0 var(--a);
 }
-
 
 .card-actions {
 	position: relative;
@@ -262,6 +283,7 @@ body {
 	bottom: 0;
 	backdrop-filter: blur(16px);
 	border-radius: var(--a) var(--a) 0 0;
+	padding-left: var(--d);
 }
 
 /* ESTILOS PARA MODALES */
@@ -332,7 +354,6 @@ body {
 
 /* Más visible en móvil */
 @media (max-width: 768px) {
-
 	::-webkit-scrollbar {
 		width: 10px;
 		height: 10px;
