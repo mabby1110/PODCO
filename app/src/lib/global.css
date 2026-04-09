@@ -170,7 +170,7 @@ body {
 	padding: 0 var(--a);
 }
 
-.card-full .close {
+.card-full .close, .panel .close {
 	position: absolute;
 	top: 0;
 	right: 0;

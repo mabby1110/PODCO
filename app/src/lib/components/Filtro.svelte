@@ -4,14 +4,20 @@
 		type ColumnDef,
 		type FilterAction
 	} from '$lib/stores/globalFilterStore.svelte';
+	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
+	import FilterOpList from './FilterOpList.svelte';
+	import Select from './Select.svelte';
 
+	let selected = $state(selectedGroupStore.selectedGroup ?? '');
 	let {
 		items,
 		columns,
+		agrupaciones,
 		filteredItems = $bindable()
 	} = $props<{
 		items: T[];
 		columns: ColumnDef[];
+		agrupaciones: any;
 		filteredItems?: T[];
 	}>();
 
@@ -20,7 +26,7 @@
 	let selectedAction = $state<FilterAction>('contains');
 	let inputValue = $state<string>('');
 	let filterCount = $derived(globalFilterStore.activeFilters.length);
-	let show = $state(filterCount?true:false);
+	let show = $state(true);
 
 	const getNestedValue = (obj: any, path: string) => {
 		return path.split('.').reduce((acc, part) => acc && acc[part], obj);
@@ -37,6 +43,10 @@
 		inputValue = '';
 	}
 
+	$effect(() => {
+		console.log('selected', selected);
+		selectedGroupStore.selectedGroup = selected != '' ? selected : '';
+	});
 	// Efecto derivado que aplica la lógica de filtrado observando el store global
 	$effect(() => {
 		let result = [...items];
@@ -74,32 +84,40 @@
 </script>
 
 {#if show}
-	<div class="filter-options">
+	<div class="filter-container">
 		<div class="panel">
-			<button class="butter" type="button" onclick={() => (show = false)}>ocultar</button>
+			<div class="filter-options">
+				<span>Agrupar</span>
+				<button class="close" type="button" onclick={() => (show = false)}>x</button>
+				<FilterOpList />
+				<Select options={agrupaciones} defaultOption="Agrupar todos" bind:selected />
+			</div>
 
-			<select bind:value={selectedColumnKey}>
-				{#each columns as col}
-					<option value={col.key}>{col.label}</option>
-				{/each}
-			</select>
+			<div class="filter-options">
+				<span>Filtrar</span>
+				<select bind:value={selectedColumnKey}>
+					{#each columns as col}
+						<option value={col.key}>{col.label}</option>
+					{/each}
+				</select>
 
-			<select bind:value={selectedAction}>
-				<option value="contains">Contiene (Texto)</option>
-				<option value="asc">Orden Ascendente</option>
-				<option value="desc">Orden Descendente</option>
-			</select>
+				<select bind:value={selectedAction}>
+					<option value="contains">Contiene</option>
+					<option value="asc">Asc</option>
+					<option value="desc">Desc</option>
+				</select>
 
-			{#if selectedAction === 'contains'}
-				<input
-					type="text"
-					bind:value={inputValue}
-					placeholder="Escribe la palabra clave..."
-					onkeydown={(e) => e.key === 'Enter' && handleAdd()}
-				/>
-			{/if}
+				{#if selectedAction === 'contains'}
+					<input
+						type="text"
+						bind:value={inputValue}
+						placeholder="Escribe la palabra clave..."
+						onkeydown={(e) => e.key === 'Enter' && handleAdd()}
+					/>
+				{/if}
 
-			<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
+				<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
+			</div>
 
 			{#if globalFilterStore.activeFilters.length > 0}
 				<div class="active-filters">
@@ -131,8 +149,18 @@
 {/if}
 
 <style>
-	.filter-options {
+	.filter-container {
 		width: 100%;
+	}
+	.filter-options {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+	}
+	.filter-options span {
+		width: 100%;
+		font-size: smaller;
+		color: var(--color-muted);
 	}
 	.panel {
 		display: flex;

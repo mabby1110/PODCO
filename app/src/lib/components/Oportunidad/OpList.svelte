@@ -14,24 +14,22 @@
 	let { oportunidades } = $props();
 
 	let filtrado = $derived([...oportunidades]);
-	let selected = $state(selectedGroupStore.selectedGroup ?? '');
-	let show = $state(selected?false:true);
-	$effect(() => {
-		console.log(selected);
-		selectedGroupStore.selectedGroup = selected != '' ? selected : '';
-	});
+	let selected = $derived(selectedGroupStore.selectedGroup ?? '');
+	let show = $state(selected ? false : true);
 	let listaAgrupada = $derived(agruparPor(filtrado, selected));
-
 </script>
 
 <div class="view-container">
 	<div class="controls">
 		<Reload />
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-		<button onclick={() => show=!show} class="butter">{show?"min":"max"}</button>
-		<FilterOpList />
-		<Select options={agrupacionesOportunidades} defaultOption="Agrupar todos" bind:selected />
-		<Filtro items={oportunidades} columns={columnasOportunidad} bind:filteredItems={filtrado} />
+		<button onclick={() => (show = !show)} class="butter">{show ? 'min' : 'max'}</button>
+		<Filtro
+			items={oportunidades}
+			columns={columnasOportunidad}
+			agrupaciones={agrupacionesOportunidades}
+			bind:filteredItems={filtrado}
+		/>
 	</div>
 	<Leyenda />
 

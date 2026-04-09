@@ -2,13 +2,11 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
 	import CardActividadListPreview from '$lib/components/Actividad/CardActividadListPreview.svelte';
-	import FilterOpList from '../FilterOpList.svelte';
 	import Leyenda from '../Leyenda.svelte';
 	import Reload from '../Reload.svelte';
 	import Filtro from '../Filtro.svelte';
 	import { agrupacionesActividades, columnasActividad } from '$lib';
 	import { agruparPor } from '$lib/utils/util';
-	import Select from '../Select.svelte';
 	import Grupo from '../Grupo.svelte';
 	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
 
@@ -16,7 +14,7 @@
 
 	let filtrado = $derived([...actividades]);
 	let selected = $state(selectedGroupStore.selectedGroup ?? '');
-	let show = $state(selected?false:true);
+	let show = $state(selected ? false : true);
 	$effect(() => {
 		selectedGroupStore.selectedGroup = selected != '' ? selected : '';
 	});
@@ -32,10 +30,13 @@
 	<div class="controls">
 		<Reload />
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-		<button onclick={() => show=!show} class="butter">{show?"min":"max"}</button>
-		<FilterOpList />
-		<Select options={agrupacionesActividades} defaultOption='Agrupar todos' bind:selected />
-		<Filtro items={actividades} columns={columnasActividad} bind:filteredItems={filtrado} />
+		<button onclick={() => (show = !show)} class="butter">{show ? 'min' : 'max'}</button>
+		<Filtro
+			items={actividades}
+			columns={columnasActividad}
+			agrupaciones={agrupacionesActividades}
+			bind:filteredItems={filtrado}
+		/>
 	</div>
 	<Leyenda {steps} />
 	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
