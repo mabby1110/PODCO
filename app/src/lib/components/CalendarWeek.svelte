@@ -332,7 +332,7 @@
 		gap: var(--a);
 		width: 100%;
 		max-width: fit-content;
-		min-width: 60vw;
-		align-self: center;
+		min-width: 40vw;
+		align-self: flex-end;
 	}
 </style>

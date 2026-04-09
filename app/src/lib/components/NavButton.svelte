@@ -35,15 +35,14 @@
 <style>
 	.nav-container {
 		position: fixed;
-		bottom: 0;
-		right: 0;
+		bottom: var(--a);
+		left: var(--a);
 		z-index: 1000;
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
 		width: fit-content;
 		flex-wrap: wrap;
-		align-items: flex-end; /* Asegura que el contenido se alinee a la derecha */
 	}
 
 	button {
@@ -58,12 +57,12 @@
 			background-color 0.2s,
 			transform 0.1s;
 		box-shadow: none;
+		background-color: var(--color-primary);
 	}
 
 	.logo {
 		display: flex;
 		align-items: center;
-		justify-content: end;
 		gap: var(--b);
 	}
 
@@ -74,8 +73,6 @@
 
 	.title {
 		white-space: nowrap;
-		font-size: 0.85rem;
-		line-height: 1.2;
 	}
 
 	.title p {
