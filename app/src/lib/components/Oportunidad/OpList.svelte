@@ -44,6 +44,20 @@
 </div>
 
 <style>
+    .view-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--a);
+        padding-bottom: var(--f);
+    }
+
+    .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--a);
+        align-items: center;
+    }
+
     .no-results {
         text-align: center;
         padding: 2rem;
@@ -54,19 +68,5 @@
         display: flex;
         flex-direction: column;
         gap: var(--a);
-        margin-bottom: 1.5rem;
-    }
-
-    .view-container {
-        display: flex;
-        flex-direction: column;
-        gap: var(--a);
-    }
-
-    .controls {
-        display: flex;
-        gap: var(--a);
-        align-items: center;
-        flex-wrap: wrap;
     }
 </style>

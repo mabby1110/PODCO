@@ -53,13 +53,14 @@
         display: flex;
         flex-direction: column;
         gap: var(--a);
+        padding-bottom: var(--f);
     }
 
     .controls {
         display: flex;
+        flex-wrap: wrap;
         gap: var(--a);
         align-items: center;
-        flex-wrap: wrap;
     }
 
     .no-results {

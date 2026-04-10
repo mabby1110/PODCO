@@ -16,7 +16,7 @@
 	} = $props<{
 		columns: ColumnDef[];
 		agrupaciones: any;
-		calendar: boolean;
+		calendar?: boolean;
 	}>();
 
 	// UI State

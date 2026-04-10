@@ -44,6 +44,7 @@
         display: flex;
         flex-direction: column;
         gap: var(--a);
+        padding-bottom: var(--f);
     }
 
     .controls {
@@ -63,6 +64,5 @@
         display: flex;
         flex-direction: column;
         gap: var(--a);
-        margin-bottom: 1rem;
     }
 </style>
