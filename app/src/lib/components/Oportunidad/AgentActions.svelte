@@ -161,93 +161,11 @@
 						</FormOptionalInput>
 					</div>
 				</div>
-			{:else if currentPhase == 4}
-				<FormInput
-					label="Ejecución de envío"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Detalles de Transporte y logística"
-					type="textarea"
-					required
-				/>
-				<div class="oc">
-					<UploadFile label="Documentos de operacion" name="docOpFile" required />
-				</div>
-				<DatePicker title="Salida de paquete" />
-				<div class="opcional">
-					<h3>Informacion adicional</h3>
-					<div class="opciones">
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								bind:value={nuevaObeservacion}
-								placeholder="Detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+Agregar requisitos">
-							<FormInput
-								label="Requisitos"
-								name="nuevosRequisitos"
-								bind:value={nuevoRequisito}
-								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
-						</FormOptionalInput>
-					</div>
-				</div>
-			{:else if currentPhase == 5}
-				<FormInput
-					label="Estado de entrega / Incidencias"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Reporte de recepción y novedades"
-					type="textarea"
-					required
-				/>
-				<div class="opcional">
-					<h3>Informacion adicional</h3>
-					<div class="opciones">
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								bind:value={nuevaObeservacion}
-								placeholder="Detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+Agregar requisitos">
-							<FormInput
-								label="Requisitos"
-								name="nuevosRequisitos"
-								bind:value={nuevoRequisito}
-								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
-						</FormOptionalInput>
-					</div>
-				</div>
-				<div class="oc">
-					<UploadFile label="Documentos de operacion" name="docOpFile" required />
-				</div>
-				<DatePicker title="Salida de paquete" />
 			{/if}
 		{/if}
 	</div>
 	<!-- opciones para envio de formulario -->
-	{#if currentPhase != 6 && currentPhase != 0}
+	{#if currentPhase <= 3 && currentPhase != 0}
 		<!-- acciones opcionales -->
 		{#if submitUpdate}
 			<FormInput

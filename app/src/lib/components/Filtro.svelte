@@ -5,6 +5,7 @@
 		type FilterAction
 	} from '$lib/stores/globalFilterStore.svelte';
 	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
+	import { slide } from 'svelte/transition';
 	import FilterOpList from './FilterOpList.svelte';
 	import Select from './Select.svelte';
 
@@ -84,41 +85,44 @@
 </script>
 
 {#if show}
-	<div class="filter-container">
+	<div class="filter-container" in:slide>
 		<div class="panel">
 			<div class="filter-options">
 				<span>Agrupar</span>
-				<button class="close" type="button" onclick={() => (show = false)}>x</button>
-				<FilterOpList />
-				<Select options={agrupaciones} defaultOption="Agrupar todos" bind:selected />
+				<div class="options">
+					<button class="close" type="button" onclick={() => (show = false)}>x</button>
+					<FilterOpList />
+					<Select options={agrupaciones} defaultOption="Agrupar todos" bind:selected />
+				</div>
 			</div>
 
 			<div class="filter-options">
 				<span>Filtrar</span>
-				<select bind:value={selectedColumnKey}>
-					{#each columns as col}
-						<option value={col.key}>{col.label}</option>
-					{/each}
-				</select>
+				<div class="options">
+					<select bind:value={selectedColumnKey}>
+						{#each columns as col}
+							<option value={col.key}>{col.label}</option>
+						{/each}
+					</select>
 
-				<select bind:value={selectedAction}>
-					<option value="contains">Contiene</option>
-					<option value="asc">Asc</option>
-					<option value="desc">Desc</option>
-				</select>
+					<select bind:value={selectedAction}>
+						<option value="contains">Contiene</option>
+						<option value="asc">Asc</option>
+						<option value="desc">Desc</option>
+					</select>
 
-				{#if selectedAction === 'contains'}
-					<input
-						type="text"
-						bind:value={inputValue}
-						placeholder="Escribe la palabra clave..."
-						onkeydown={(e) => e.key === 'Enter' && handleAdd()}
-					/>
-				{/if}
+					{#if selectedAction === 'contains'}
+						<input
+							type="text"
+							bind:value={inputValue}
+							placeholder="Escribe la palabra clave..."
+							onkeydown={(e) => e.key === 'Enter' && handleAdd()}
+						/>
+					{/if}
 
-				<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
+					<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
+				</div>
 			</div>
-
 			{#if globalFilterStore.activeFilters.length > 0}
 				<div class="active-filters">
 					{#each globalFilterStore.activeFilters as filter (filter.id)}
@@ -154,13 +158,18 @@
 	}
 	.filter-options {
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		gap: var(--a);
 	}
 	.filter-options span {
 		width: 100%;
 		font-size: smaller;
 		color: var(--color-muted);
+	}
+	.options {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
 	}
 	.panel {
 		display: flex;
@@ -172,11 +181,12 @@
 	.active-filters {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5rem;
+		gap: var(--a);
+		width: 100%;
 	}
 	.chip {
 		background-color: var(--color-highlight);
-		padding: 0.2rem 0.5rem;
+		padding: 4px var(--a);
 		border-radius: 16px;
 		display: flex;
 		align-items: center;
@@ -184,7 +194,7 @@
 	}
 	.chop {
 		background-color: var(--color-error);
-		padding: 0.2rem 0.5rem;
+		padding: 4px var(--a);
 		border-radius: 16px;
 		display: flex;
 		align-items: center;
@@ -196,7 +206,7 @@
 		color: #64748b;
 		cursor: pointer;
 		font-weight: bold;
-		padding: 0 0.2rem;
+		padding: 0 4px;
 	}
 	.chip:hover {
 		background-color: var(--color-error);

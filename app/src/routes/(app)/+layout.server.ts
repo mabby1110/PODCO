@@ -30,12 +30,13 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 
     if (profile?.isAdmin) {
         agentes = (await getAllProfilesAdmin(supabaseAdmin)).filter((a) => !a.isOper);
+    }else if (profile?.isOper) {
+        agentes = (await getAllProfilesAdmin(supabaseAdmin)).filter((a) => !a.isOper);
+        oportunidades = oportunidades?.filter((a: any) => a.fase >= 3);
     } else {
         // Filtrado aplicado correctamente a no administradores
         clientes = clientes?.filter((c: { id_agente: string | undefined }) => c.id_agente === profile?.id) ?? [];
         oportunidades = oportunidades?.filter((a: any) => a.id_agente === profile?.id);
-    }
-    if (!profile?.isAdmin) {
     }
     return {
         profile,

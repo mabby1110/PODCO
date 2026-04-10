@@ -4,7 +4,7 @@
 
 	const agentes = $derived(page.data.agentes ?? []);
 	let profile = $state(page.data.profile);
-	let selected = $state(profile.isAdmin ? filterStore.atributo : profile.id);
+	let selected = $state(profile.isAdmin || profile.isOper? filterStore.atributo : profile.id);
 	$effect(() => {
 		console.log(selected);
 		filterStore.atributo = selected != '' ? selected : '';
@@ -12,7 +12,7 @@
 
 </script>
 
-{#if profile.isAdmin}
+{#if profile.isAdmin || profile.isOper}
 	<div class="filter-container">
 		<select bind:value={selected} class="butter">
 			<option value="">Todos los agentes</option>

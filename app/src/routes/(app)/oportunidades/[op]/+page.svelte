@@ -5,7 +5,8 @@
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import FilePreview from '$lib/components/FilePreview.svelte';
-	import PhaseAction from '$lib/components/Oportunidad/PhaseAction.svelte';
+	import AgentActions from '$lib/components/Oportunidad/AgentActions.svelte';
+	import OperActions from '$lib/components/Oportunidad/OperActions.svelte';
 
 	let { data } = $props();
 
@@ -109,7 +110,11 @@
 			<FilePreview title="Adjuntos" data={eventData.documentos} />
 
 			<div class="card-actions">
-				<PhaseAction {eventData} />
+				{#if $profile?.isOper}
+					<OperActions {eventData} />
+				{:else}
+					<AgentActions {eventData} />
+				{/if}
 			</div>
 		</div>
 	</div>
