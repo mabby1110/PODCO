@@ -65,7 +65,7 @@
 	<input type="hidden" name="id" value={id} />
 	<input type="hidden" name="field" value={name} />
 
-	<div class="detail-block">
+	<section class="detail-block">
 		<div class="detail-header">
 			<h3>{label}:</h3>
 			{#if !isEditing}
@@ -103,7 +103,7 @@
 				<p class="value">{editedValue || 'Sin información'}</p>
 			{/if}
 		</div>
-	</div>
+	</section>
 </form>
 
 <style>

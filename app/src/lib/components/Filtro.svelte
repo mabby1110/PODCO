@@ -6,7 +6,7 @@
 	} from '$lib/stores/globalFilterStore.svelte';
 	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
 	import { slide } from 'svelte/transition';
-	import FilterOpList from './FilterOpList.svelte';
+	import FiltroAgente from './FiltroAgente.svelte';
 	import Select from './Select.svelte';
 
 	let {
@@ -45,7 +45,7 @@
 			<div class="filter-options">
 				<span>Agrupar</span>
 				<div class="options">
-					<FilterOpList />
+					<FiltroAgente />
 					{#if !calendar}
 						<Select
 							options={agrupaciones}

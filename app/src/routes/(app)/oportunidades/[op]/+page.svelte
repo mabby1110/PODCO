@@ -128,8 +128,4 @@
 	.w {
 		color: white;
 	}
-	.meta {
-		display: flex;
-		gap: var(--a);
-	}
 </style>

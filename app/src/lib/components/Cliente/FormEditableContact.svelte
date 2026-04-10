@@ -128,7 +128,7 @@
 	<input type="hidden" name="id" value={id} />
 	<input type="hidden" name="contactos" value={contacto_compuesto} />
 
-	<div class="detail-block">
+	<section class="detail-block">
 		<div class="detail-header">
 			<h3 class="label">Contactos:</h3>
 			{#if !isEditing}
@@ -233,7 +233,7 @@
 				</div>
 			{/if}
 		</div>
-	</div>
+	</section>
 </form>
 
 <style>
@@ -308,6 +308,8 @@
 		background: none;
 		border: none;
 		cursor: pointer;
+		font-size: 18px;
+		padding: 4px;
 		opacity: 0.7;
 	}
 

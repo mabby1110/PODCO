@@ -15,15 +15,11 @@
 		getMonth
 	} from '$lib/utils/agenda';
 
-	// Importación de Filtro y sus dependencias (Ajustar si el calendario mezcla Oportunidades y Actividades)
-	import Filtro from '$lib/components/Filtro.svelte';
-	import { columnasOportunidad, agrupacionesOportunidades } from '$lib';
-
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { type Oportunidad } from '$lib';
 	import CardActividadCalendarPreview from './Actividad/CardActividadCalendarPreview.svelte';
 	import Reload from './Reload.svelte';
-	import FilterOpList from './FilterOpList.svelte';
+	import FiltroAgente from './FiltroAgente.svelte';
 
 	// Se recibe la lista procesada atómicamente desde el +page.svelte
 	let { listaAgrupada } = $props<{
@@ -116,7 +112,7 @@
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 
-		<FilterOpList />
+		<FiltroAgente />
 
 		{#if $profile?.isAdmin}
 			<button

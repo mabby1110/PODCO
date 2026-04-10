@@ -6,17 +6,19 @@
 
 	type ContactData = {
 		nombre: string;
+		puesto: string;
 		contactos: ContactItem[];
 	};
 
 	let contact_name = $state('');
+	let contact_position = $state('');
 	let contact_type = $state('telefono');
 	let contact_value = $state('');
 	let contactos = $state<ContactItem[]>([]);
 
 	// Array para que FormEditableJsonList pueda leerlo directamente
 	let contacto_compuesto = $derived(
-		JSON.stringify([{ nombre: contact_name, contactos }] satisfies ContactData[])
+		JSON.stringify([{ nombre: contact_name, puesto: contact_position, contactos }] satisfies ContactData[])
 	);
 
 	function addContacto() {
@@ -41,6 +43,11 @@
 		<span>Contacto</span>
 		<input bind:value={contact_value} placeholder="3322558174 o correo@empresa.com" />
 	</label>
+	<label class="field">
+		<span>Puesto</span>
+		<input bind:value={contact_position} />
+	</label>
+
 	<label>
 		<span>Medio</span>
 		<select bind:value={contact_type}>
@@ -51,7 +58,7 @@
 			<option value="otro">Otro</option>
 		</select>
 	</label>
-	<button class="butter" type="button" onclick={addContacto}>Agregar</button>
+	<button class="butter" type="button" onclick={addContacto}>Agregar Contacto</button>
 </div>
 
 {#if contactos.length}
