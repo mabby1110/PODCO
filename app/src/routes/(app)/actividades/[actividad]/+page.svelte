@@ -45,9 +45,9 @@
 			</div>
 		</header>
 		<div class="card-content">
-		<section>
-			<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
-		</section>
+			<section>
+				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
+			</section>
 			{#if eventData.historia}
 				<section>
 					<h3>Historia</h3>
@@ -72,9 +72,9 @@
 					<p>{eventData.observaciones}</p>
 				</section>
 			{/if}
-			<section class="card-actions">
+			<div class="card-actions">
 				<ActivityActions {eventData} />
-			</section>
+			</div>
 		</div>
 	</div>
 {/if}

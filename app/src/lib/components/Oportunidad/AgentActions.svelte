@@ -299,11 +299,6 @@
 </form>
 
 <style>
-	form {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-	}
 	.butter:hover:not(:disabled) {
 		transform: translateY(-2px);
 	}

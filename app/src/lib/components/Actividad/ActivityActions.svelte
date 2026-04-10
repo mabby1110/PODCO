@@ -40,15 +40,15 @@
 	}
 </script>
 
-<div class="actions">
-	<form
-		method="POST"
-		action="/actividades?/updateActivity"
-		use:enhance={() => {
-			isSubmitting = true;
-			return handleSubmit();
-		}}
-	>
+<form
+	method="POST"
+	action="/actividades?/updateActivity"
+	use:enhance={() => {
+		isSubmitting = true;
+		return handleSubmit();
+	}}
+>
+	<div class="actions">
 		{#if !submitCancel && !submitUpdate && !submitOp}
 			{#if currentPhase == 1}
 				<FormInput
@@ -71,7 +71,8 @@
 				</FormOptionalInput>
 			{/if}
 		{/if}
-
+	</div>
+	<div class="actions">
 		{#if currentPhase != 0}
 			{#if submitUpdate}
 				<FormInput
@@ -97,71 +98,60 @@
 				/>
 			{/if}
 		{/if}
+	</div>
 
-		<!-- datos para el sistema -->
-		<input type="hidden" name="id" value={eventData.id} />
-		{#if eventData.historial_cambios}
-			<input type="hidden" name="historial_cambios" value={eventData.historial_cambios} />
-		{/if}
-		{#if nuevaHistoria}
-			<input
-				type="hidden"
-				name="historia"
-				value={concatStrings(eventData.historia, nuevaHistoria)}
-			/>
-		{/if}
-		{#if nuevoRequisito}
-			<input
-				type="hidden"
-				name="requisitos"
-				value={concatStrings(eventData.requisitos, nuevoRequisito)}
-			/>
-		{/if}
-		{#if nuevaObservacion}
-			<input
-				type="hidden"
-				name="observaciones"
-				value={concatStrings(eventData.observaciones, nuevaObservacion)}
-			/>
-		{/if}
-		{#if nextPhase == 6}
-			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
-		{/if}
-		{#if !submitOp}
-			<input type="hidden" name="id_agente" value={eventData?.agente?.id} />
-		{/if}
-		{#if currentPhase != 6 && currentPhase != 0}
-			<div class="submit">
-				<ActivityOptionalSubmit bind:submitUpdate bind:submitCancel bind:submitOp />
+	<!-- datos para el sistema -->
+	<input type="hidden" name="id" value={eventData.id} />
+	{#if eventData.historial_cambios}
+		<input type="hidden" name="historial_cambios" value={eventData.historial_cambios} />
+	{/if}
+	{#if nuevaHistoria}
+		<input type="hidden" name="historia" value={concatStrings(eventData.historia, nuevaHistoria)} />
+	{/if}
+	{#if nuevoRequisito}
+		<input
+			type="hidden"
+			name="requisitos"
+			value={concatStrings(eventData.requisitos, nuevoRequisito)}
+		/>
+	{/if}
+	{#if nuevaObservacion}
+		<input
+			type="hidden"
+			name="observaciones"
+			value={concatStrings(eventData.observaciones, nuevaObservacion)}
+		/>
+	{/if}
+	{#if nextPhase == 6}
+		<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
+	{/if}
+	{#if !submitOp}
+		<input type="hidden" name="id_agente" value={eventData?.agente?.id} />
+	{/if}
+	{#if currentPhase != 6 && currentPhase != 0}
+		<div class="submit">
+			<ActivityOptionalSubmit bind:submitUpdate bind:submitCancel bind:submitOp />
 
-				{#if submitUpdate}
-					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
-				{:else if submitOp}
-					<button type="submit" class="butter" {style} disabled={isSubmitting}>
-						{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
-					</button>
-				{:else if submitCancel}
-					<input type="hidden" name="fase" value={0} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
-				{:else}
-					<input type="hidden" name="fase" value={nextPhase} />
-					<button type="submit" class="butter" {style} disabled={isSubmitting}>
-						{isSubmitting ? 'Procesando...' : 'Finzalizar'}
-					</button>
-				{/if}
-			</div>
-		{/if}
-	</form>
-</div>
+			{#if submitUpdate}
+				<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
+			{:else if submitOp}
+				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
+				</button>
+			{:else if submitCancel}
+				<input type="hidden" name="fase" value={0} />
+				<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
+			{:else}
+				<input type="hidden" name="fase" value={nextPhase} />
+				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					{isSubmitting ? 'Procesando...' : 'Finzalizar'}
+				</button>
+			{/if}
+		</div>
+	{/if}
+</form>
 
 <style>
-	.actions {
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-		width: 100%;
-		padding: var(--b);
-	}
 	.butter:hover:not(:disabled) {
 		transform: translateY(-2px);
 	}
