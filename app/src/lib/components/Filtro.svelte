@@ -1,4 +1,4 @@
-<script lang="ts" generics="T">
+<script lang="ts">
 	import {
 		globalFilterStore,
 		type ColumnDef,
@@ -9,120 +9,83 @@
 	import FilterOpList from './FilterOpList.svelte';
 	import Select from './Select.svelte';
 
-	let selected = $state(selectedGroupStore.selectedGroup ?? '');
 	let {
-		items,
 		columns,
 		agrupaciones,
-		filteredItems = $bindable()
+		calendar = false
 	} = $props<{
-		items: T[];
 		columns: ColumnDef[];
 		agrupaciones: any;
-		filteredItems?: T[];
+		calendar: boolean;
 	}>();
 
-	// Estado local solo para los inputs de la UI
-	let selectedColumnKey = $derived<string>(columns[0]?.key || '');
+	// UI State
+	let selectedColumnKey = $state<string>(columns[0]?.key || '');
 	let selectedAction = $state<FilterAction>('contains');
 	let inputValue = $state<string>('');
-	let filterCount = $derived(globalFilterStore.activeFilters.length);
-	let show = $state(true);
+	let show = $state(false);
 
-	const getNestedValue = (obj: any, path: string) => {
-		return path.split('.').reduce((acc, part) => acc && acc[part], obj);
-	};
+	// Derived from stores
+	let filterCount = $derived(globalFilterStore.activeFilters.length);
 
 	function handleAdd() {
 		const column = columns.find((c: any) => c.key === selectedColumnKey);
 		if (!column) return;
 		if (selectedAction === 'contains' && !inputValue.trim()) return;
 
-		// Llamamos al método del store
 		globalFilterStore.addFilter(column, selectedAction, inputValue.trim().toLowerCase());
-
 		inputValue = '';
 	}
-
-	$effect(() => {
-		console.log('selected', selected);
-		selectedGroupStore.selectedGroup = selected != '' ? selected : '';
-	});
-	// Efecto derivado que aplica la lógica de filtrado observando el store global
-	$effect(() => {
-		let result = [...items];
-
-		// Accedemos a los filtros desde el store
-		const filters = globalFilterStore.activeFilters;
-		const searchFilters = filters.filter((f) => f.action === 'contains');
-		if (searchFilters.length > 0) {
-			result = result.filter((item) => {
-				return searchFilters.every((f) => {
-					const val = getNestedValue(item, f.column.key);
-					return String(val || '')
-						.toLowerCase()
-						.includes(f.value);
-				});
-			});
-		}
-
-		const sortFilters = filters.filter((f) => f.action !== 'contains');
-		if (sortFilters.length > 0) {
-			result.sort((a, b) => {
-				for (const f of sortFilters) {
-					const valA = getNestedValue(a, f.column.key) || '';
-					const valB = getNestedValue(b, f.column.key) || '';
-
-					if (valA < valB) return f.action === 'asc' ? -1 : 1;
-					if (valA > valB) return f.action === 'asc' ? 1 : -1;
-				}
-				return 0;
-			});
-		}
-
-		filteredItems = result;
-	});
 </script>
 
 {#if show}
 	<div class="filter-container" in:slide>
 		<div class="panel">
+			<button class="close" type="button" onclick={() => (show = false)}>x</button>
 			<div class="filter-options">
 				<span>Agrupar</span>
 				<div class="options">
-					<button class="close" type="button" onclick={() => (show = false)}>x</button>
 					<FilterOpList />
-					<Select options={agrupaciones} defaultOption="Agrupar todos" bind:selected />
-				</div>
-			</div>
-
-			<div class="filter-options">
-				<span>Filtrar</span>
-				<div class="options">
-					<select bind:value={selectedColumnKey}>
-						{#each columns as col}
-							<option value={col.key}>{col.label}</option>
-						{/each}
-					</select>
-
-					<select bind:value={selectedAction}>
-						<option value="contains">Contiene</option>
-						<option value="asc">Asc</option>
-						<option value="desc">Desc</option>
-					</select>
-
-					{#if selectedAction === 'contains'}
-						<input
-							type="text"
-							bind:value={inputValue}
-							placeholder="Escribe la palabra clave..."
-							onkeydown={(e) => e.key === 'Enter' && handleAdd()}
+					{#if !calendar}
+						<Select
+							options={agrupaciones}
+							defaultOption="Agrupar todos"
+							bind:selected={selectedGroupStore.selectedGroup}
 						/>
 					{/if}
-
-					<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
 				</div>
 			</div>
+
+			{#if !calendar}
+				<div class="filter-options">
+					<span>Filtrar</span>
+					<div class="options">
+						<select bind:value={selectedColumnKey}>
+							{#each columns as col}
+								<option value={col.key}>{col.label}</option>
+							{/each}
+						</select>
+
+						<select bind:value={selectedAction}>
+							<option value="contains">Contiene</option>
+							<option value="asc">Asc</option>
+							<option value="desc">Desc</option>
+						</select>
+
+						{#if selectedAction === 'contains'}
+							<input
+								type="text"
+								bind:value={inputValue}
+								placeholder="Escribe la palabra clave..."
+								onkeydown={(e) => e.key === 'Enter' && handleAdd()}
+							/>
+						{/if}
+
+						<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
+					</div>
+				</div>
+			{/if}
+
 			{#if globalFilterStore.activeFilters.length > 0}
 				<div class="active-filters">
 					{#each globalFilterStore.activeFilters as filter (filter.id)}
@@ -133,23 +96,23 @@
 							{:else}
 								({filter.action})
 							{/if}
-							<p class="close-chip">×</p>
+							<span class="close-chip">×</span>
 						</button>
 					{/each}
 
 					{#if globalFilterStore.activeFilters.length > 1}
-						<button class="chop butter" onclick={() => globalFilterStore.clearFilters()}
-							>Limpiar todo</button
-						>
+						<button class="chop butter" onclick={() => globalFilterStore.clearFilters()}>
+							Limpiar todo
+						</button>
 					{/if}
 				</div>
 			{/if}
 		</div>
 	</div>
 {:else}
-	<button class="butter" onclick={() => (show = true)}
-		>+Filtros {filterCount > 0 ? `(${filterCount})` : ''}</button
-	>
+	<button class="butter" onclick={() => (show = true)}>
+		+Filtros {filterCount > 0 ? `(${filterCount})` : ''}
+	</button>
 {/if}
 
 <style>
@@ -177,7 +140,6 @@
 		gap: var(--a);
 		width: fit-content;
 	}
-
 	.active-filters {
 		display: flex;
 		flex-wrap: wrap;
@@ -201,10 +163,6 @@
 		gap: 0.4rem;
 	}
 	.close-chip {
-		background: none;
-		border: none;
-		color: #64748b;
-		cursor: pointer;
 		font-weight: bold;
 		padding: 0 4px;
 	}

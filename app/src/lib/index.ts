@@ -117,8 +117,7 @@ export const agrupacionesActividades = [
 	{ value: 'fase', label: 'fase' },
 
 	// de la actividad
-	{ value: 'motivo', label: 'motivo' },
-	{ value: 'tipo_actividad', label: 'tipo_actividad' }
+	{ value: 'motivo', label: 'motivo' }
 ];
 
 export const agrupacionesOportunidades = [
@@ -131,8 +130,12 @@ export const agrupacionesOportunidades = [
 	// de la actividad
 	{ value: 'motivo', label: 'motivo' },
 	{ value: 'requisitos', label: 'requisitos' },
-	{ value: 'tipo_actividad', label: 'tipo_actividad' },
 	{ value: 'id_cliente', label: 'id_cliente' }
+];
+
+export const agrupacionesCalendario = [
+	{ value: 'fase', label: 'fase' },
+	{ value: 'motivo', label: 'motivo' },
 ];
 
 // FASES

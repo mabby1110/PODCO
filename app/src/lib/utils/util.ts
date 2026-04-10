@@ -102,32 +102,3 @@ export function agruparPorFecha<T>(items: T[], campoFecha: keyof T) {
 		eventos
 	}));
 }
-
-/**
- * Agrupa una lista de objetos por una propiedad específica.
- * @param items El array de elementos genéricos.
- * @param campo El nombre de la propiedad por la cual agrupar.
- * @param valorPorDefecto String a mostrar cuando el campo es null o undefined.
- */
-export function agruparPor<T>(
-    items: T[],
-    campo: keyof T,
-    valorPorDefecto: string = 'Todos'
-): { grupo: string; elementos: T[] }[] {
-    const grupos = new Map<string, T[]>();
-
-    for (const item of items) {
-        const valor = item[campo];
-        const nombreGrupo = valor ? String(valor) : valorPorDefecto;
-
-        if (!grupos.has(nombreGrupo)) {
-            grupos.set(nombreGrupo, []);
-        }
-        grupos.get(nombreGrupo)!.push(item);
-    }
-
-    return Array.from(grupos.entries()).map(([grupo, elementos]) => ({
-        grupo,
-        elementos
-    }));
-}

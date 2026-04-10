@@ -1,66 +1,72 @@
 <script lang="ts">
-	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
-	import Filtro from '$lib/components/Filtro.svelte';
-	import { appState } from '$lib/stores/appState.svelte';
-	import Leyenda from '../Leyenda.svelte';
-	import Reload from '../Reload.svelte';
-	import { agrupacionesOportunidades, columnasOportunidad } from '$lib';
-	import { agruparPor } from '$lib/utils/util'; // <-- Importamos la función
-	import FilterOpList from '../FilterOpList.svelte';
-	import Select from '../Select.svelte';
-	import Grupo from '../Grupo.svelte';
-	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
+    import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
+    import Filtro from '$lib/components/Filtro.svelte';
+    import { appState } from '$lib/stores/appState.svelte';
+    import Leyenda from '../Leyenda.svelte';
+    import Reload from '../Reload.svelte';
+    import { agrupacionesOportunidades, columnasOportunidad } from '$lib';
+    import Grupo from '../Grupo.svelte';
 
-	let { oportunidades } = $props();
+    let { listaAgrupada } = $props();
 
-	let filtrado = $derived([...oportunidades]);
-	let selected = $derived(selectedGroupStore.selectedGroup ?? '');
-	let show = $state(selected ? false : true);
-	let listaAgrupada = $derived(agruparPor(filtrado, selected));
+    let show = $state(true);
 </script>
 
 <div class="view-container">
-	<div class="controls">
-		<Reload />
-		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-		<button onclick={() => (show = !show)} class="butter">{show ? 'min' : 'max'}</button>
-		<Filtro
-			items={oportunidades}
-			columns={columnasOportunidad}
-			agrupaciones={agrupacionesOportunidades}
-			bind:filteredItems={filtrado}
-		/>
-	</div>
-	<Leyenda />
+    <div class="controls">
+        <Reload />
+        <button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+        <button onclick={() => (show = !show)} class="butter">
+            {show ? 'min' : 'max'}
+        </button>
+        
+        <Filtro
+            columns={columnasOportunidad}
+            agrupaciones={agrupacionesOportunidades}
+        />
+    </div>
 
-	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
-		<div class="grupo-dia">
-			<Grupo {agrupacion} showByDefault={show}>
-				{#each agrupacion.elementos as event (event.id)}
-					<CardOpListPreview {event} />
-				{/each}
-			</Grupo>
-		</div>
-	{/each}
+    <Leyenda />
 
-	{#if filtrado.length === 0}
-		<div class="no-results">
-			<p>No se encontraron oportunidades con los filtros actuales.</p>
-		</div>
-	{/if}
+    {#each listaAgrupada as agrupacion (agrupacion.grupo)}
+        <div class="grupo-dia">
+            <Grupo {agrupacion} showByDefault={show}>
+                {#each agrupacion.elementos as event (event.id)}
+                    <CardOpListPreview {event} />
+                {/each}
+            </Grupo>
+        </div>
+    {:else}
+        <div class="no-results">
+            <p>No se encontraron oportunidades con los filtros actuales.</p>
+        </div>
+    {/each}
 </div>
 
 <style>
-	.no-results {
-		text-align: center;
-		padding: 2rem;
-		color: #64748b;
-	}
+    .no-results {
+        text-align: center;
+        padding: 2rem;
+        color: #64748b;
+    }
 
-	.grupo-dia {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-		margin-bottom: 1.5rem;
-	}
+    .grupo-dia {
+        display: flex;
+        flex-direction: column;
+        gap: var(--a);
+        margin-bottom: 1.5rem;
+    }
+
+    .view-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--a);
+    }
+
+    .controls {
+        display: flex;
+        gap: var(--a);
+        align-items: center;
+        flex-wrap: wrap;
+    }
 </style>

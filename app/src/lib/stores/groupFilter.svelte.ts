@@ -4,28 +4,44 @@ import { getCookie, setCookie } from '$lib/utils/cookies';
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
-function getInitialGroup(): string {
-    if (!browser) return '';
-    return getCookie('selectedGroup') || '';
+function getInitialValue(key: string): string {
+	if (!browser) return '';
+	return getCookie(key) || '';
 }
 
-function saveGroupToCookie(group: string) {
-    if (!browser) return;
-    setCookie('selectedGroup', group, { maxAge: COOKIE_MAX_AGE });
+function saveToCookie(key: string, value: string) {
+	if (!browser) return;
+	setCookie(key, value, { maxAge: COOKIE_MAX_AGE });
 }
 
 export const selectedGroupStore = $state({
-    selectedGroup: getInitialGroup(),
-    
-    setGroup(group: string) {
-        this.selectedGroup = group;
-    },
+	selectedGroup: getInitialValue('selectedGroup'),
+	selectedAgent: getInitialValue('selectedAgent'),
 
-    clearGroup() {
-        this.selectedGroup = '';
-    }
+	setGroup(group: string) {
+		this.selectedGroup = group;
+	},
+
+	setAgent(agentId: string) {
+		this.selectedAgent = agentId;
+	},
+
+	clearGroup() {
+		this.selectedGroup = '';
+	},
+    
+	clearAll() {
+		this.selectedGroup = '';
+		this.selectedAgent = '';
+	}
 });
 
+// Persistencia reactiva
 $effect.root(() => {
-    $effect(() => saveGroupToCookie(selectedGroupStore.selectedGroup));
+	$effect(() => {
+		saveToCookie('selectedGroup', selectedGroupStore.selectedGroup);
+	});
+	$effect(() => {
+		saveToCookie('selectedAgent', selectedGroupStore.selectedAgent);
+	});
 });

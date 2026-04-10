@@ -100,4 +100,8 @@
 		flex-direction: column;
 		flex-grow: 1;
 	}
+	.datetime-item {
+		font-size: smaller;
+		color: var(--color-muted);
+	}
 </style>

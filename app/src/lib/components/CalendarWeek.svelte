@@ -14,13 +14,21 @@
 		formatWeekRange,
 		getMonth
 	} from '$lib/utils/agenda';
-	import FilterOpList from '$lib/components/FilterOpList.svelte';
+
+	// Importación de Filtro y sus dependencias (Ajustar si el calendario mezcla Oportunidades y Actividades)
+	import Filtro from '$lib/components/Filtro.svelte';
+	import { columnasOportunidad, agrupacionesOportunidades } from '$lib';
+
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { type Oportunidad } from '$lib';
 	import CardActividadCalendarPreview from './Actividad/CardActividadCalendarPreview.svelte';
 	import Reload from './Reload.svelte';
+	import FilterOpList from './FilterOpList.svelte';
 
-	const { events } = $props();
+	// Se recibe la lista procesada atómicamente desde el +page.svelte
+	let { listaAgrupada } = $props<{
+		listaAgrupada: any[];
+	}>();
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
 	const hoursRangePerDay = { start: 8, end: 19 };
@@ -42,7 +50,9 @@
 		)
 	);
 
-	let eventList = $derived([...events]);
+	// Se extraen todos los elementos de los grupos para posicionarlos en la matriz Día/Hora
+	const eventList = $derived(listaAgrupada.flatMap((agrupacion) => agrupacion.elementos));
+
 	const weekDates = $derived(getWeekDates(filterStore.weekOffset));
 	const weekRangeText = $derived(formatWeekRange(weekDates));
 
@@ -105,6 +115,7 @@
 		<Reload />
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+
 		<FilterOpList />
 
 		{#if $profile?.isAdmin}
@@ -159,11 +170,11 @@
 											<div
 												class="event-wrapper"
 												style="
-													width: {100 / totalConcurrentes}%;
-													left: {(100 / totalConcurrentes) * index}%;
-													height: {slots * CELL_HEIGHT}px;
-													z-index: {10 + index};
-												"
+                                                    width: {100 / totalConcurrentes}%;
+                                                    left: {(100 / totalConcurrentes) * index}%;
+                                                    height: {slots * CELL_HEIGHT}px;
+                                                    z-index: {10 + index};
+                                                "
 											>
 												{#if event.id_cliente}
 													<CardOpCalendarPreview {event} style="height: 100%; width: 100%;" />
@@ -184,6 +195,7 @@
 			</tbody>
 		</table>
 	</div>
+
 	<div class="calendar-navigation">
 		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
 		<button onclick={goToCurrentWeek} class="butter current-week">

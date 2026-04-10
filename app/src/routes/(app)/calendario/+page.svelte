@@ -2,17 +2,14 @@
 	import CalendarWeek from '$lib/components/CalendarWeek.svelte';
 	import { selectedOp } from '$lib/stores/selectedOp.js';
 	import { selectedActivity } from '$lib/stores/selectedActivity.js';
-	import { filtrarConsecutivo } from '$lib/utils/util.js';
-	import { filterStore } from '$lib/stores/filterStore.svelte.js';
 	import { page } from '$app/state';
+	import { procesarDatosReactivos } from '$lib/utils/filtro';
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));
-	const events = $derived(
-		filterStore.atributo !== ''
-			? filtrarConsecutivo(filterStore.atributo, 'id_agente', allActivities)
-			: allActivities
-	);
+
+	
+	const listaAgrupada = $derived.by(() => procesarDatosReactivos(allActivities));
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
@@ -25,5 +22,5 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <div class="page-content">
-	<CalendarWeek {events} />
+	<CalendarWeek {listaAgrupada} />
 </div>

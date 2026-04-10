@@ -8,7 +8,7 @@
 	import FormSelectMotivo from '$lib/components/FormSelectMotivo.svelte';
 	import FormInput from '../FormInput.svelte';
 	import { selectedOp } from '$lib/stores/selectedOp';
-	import { invalidate, invalidateAll } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	import UploadFile from '$lib/components/UploadFile.svelte';
 
 	let { eventData } = $props();
@@ -75,7 +75,7 @@
 		{#if !submitCancel && !submitUpdate}
 			<!-- Acciones -->
 			{#if currentPhase == 2}
-				<FormSelectMotivo list={motivosOportunidad} disableCustom={false} />
+				<FormSelectMotivo title="Especificar Motivo" list={motivosOportunidad} disableCustom={false} />
 				<FormInput
 					label="Análisis"
 					name="nuevaHistoria"
@@ -167,79 +167,81 @@
 	<!-- opciones para envio de formulario -->
 	{#if currentPhase <= 3 && currentPhase != 0}
 		<!-- acciones opcionales -->
-		{#if submitUpdate}
-			<FormInput
-				label="Postergar"
-				name="nuevaHistoria"
-				bind:value={nuevaHistoria}
-				placeholder="Motivo de la postergación y acción a realizar"
-				type="textarea"
-				required
-			/>
-			{#if currentPhase == 3}
-				<FormOptionalInput title="+Nueva cotizacion">
-					<div class="cotizacion">
-						<UploadFile label="Nueva Cotización" name="quoteFile" required />
+		<div class="actions">
+			{#if submitUpdate}
+				<FormInput
+					label="Postergar"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Motivo de la postergación y acción a realizar"
+					type="textarea"
+					required
+				/>
+				{#if currentPhase == 3}
+					<FormOptionalInput title="+Nueva cotizacion">
+						<div class="cotizacion">
+							<UploadFile label="Nueva Cotización" name="quoteFile" required />
+						</div>
+					</FormOptionalInput>
+				{/if}
+				<div class="opcional">
+					<h3>Informacion adicional</h3>
+					<div class="opciones">
+						<FormOptionalInput title="+Observaciones">
+							<FormInput
+								label="Observaciones"
+								name="observaciones"
+								bind:value={nuevaObeservacion}
+								placeholder="Detalles importantes y pautas a seguir"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+Agregar requisitos">
+							<FormInput
+								label="Requisitos"
+								name="nuevosRequisitos"
+								bind:value={nuevoRequisito}
+								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+adjuntos">
+							<UploadFile label="Subir documentos" name="docFile" multiple />
+						</FormOptionalInput>
 					</div>
-				</FormOptionalInput>
+				</div>
+				<DatePicker title="Fecha Seguimiento" />
+			{:else if submitCancel}
+				<FormInput
+					label="Pérdida"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Motivo de la pérdida"
+					type="textarea"
+					required
+				/>
+				<div class="opcional">
+					<h3>Informacion adicional</h3>
+					<div class="opciones">
+						<FormOptionalInput title="+Observaciones">
+							<FormInput
+								label="Observaciones"
+								name="observaciones"
+								bind:value={nuevaObeservacion}
+								placeholder="Detalles importantes y pautas a seguir"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+adjuntos">
+							<UploadFile label="Subir documentos" name="docFile" multiple />
+						</FormOptionalInput>
+					</div>
+				</div>
 			{/if}
-			<div class="opcional">
-				<h3>Informacion adicional</h3>
-				<div class="opciones">
-					<FormOptionalInput title="+Observaciones">
-						<FormInput
-							label="Observaciones"
-							name="observaciones"
-							bind:value={nuevaObeservacion}
-							placeholder="Detalles importantes y pautas a seguir"
-							type="textarea"
-							required
-						/>
-					</FormOptionalInput>
-					<FormOptionalInput title="+Agregar requisitos">
-						<FormInput
-							label="Requisitos"
-							name="nuevosRequisitos"
-							bind:value={nuevoRequisito}
-							placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-							type="textarea"
-							required
-						/>
-					</FormOptionalInput>
-					<FormOptionalInput title="+adjuntos">
-						<UploadFile label="Subir documentos" name="docFile" multiple />
-					</FormOptionalInput>
-				</div>
-			</div>
-			<DatePicker title="Fecha Seguimiento" />
-		{:else if submitCancel}
-			<FormInput
-				label="Pérdida"
-				name="nuevaHistoria"
-				bind:value={nuevaHistoria}
-				placeholder="Motivo de la pérdida"
-				type="textarea"
-				required
-			/>
-			<div class="opcional">
-				<h3>Informacion adicional</h3>
-				<div class="opciones">
-					<FormOptionalInput title="+Observaciones">
-						<FormInput
-							label="Observaciones"
-							name="observaciones"
-							bind:value={nuevaObeservacion}
-							placeholder="Detalles importantes y pautas a seguir"
-							type="textarea"
-							required
-						/>
-					</FormOptionalInput>
-					<FormOptionalInput title="+adjuntos">
-						<UploadFile label="Subir documentos" name="docFile" multiple />
-					</FormOptionalInput>
-				</div>
-			</div>
-		{/if}
+		</div>
 		<div class="submit">
 			<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
 
