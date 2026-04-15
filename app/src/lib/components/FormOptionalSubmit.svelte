@@ -1,34 +1,47 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	let {
+		nextFase = $bindable(),
+		isOpen = $bindable(),
+		submit = $bindable(),
 		submitUpdate = $bindable(),
 		submitCancel = $bindable()
 	}: {
-		children?: Snippet;
+		nextFase: string;
+		isOpen: boolean;
+		submit: boolean;
 		submitUpdate: boolean;
 		submitCancel: boolean;
 	} = $props();
-	let isOpen = $state(false);
-	function toggleUpdate() {
-		submitUpdate = true;
-		submitCancel = false;
+
+	function toggleSubmit() {
+		close();
 		isOpen = true;
+		submit = true;
+	}
+	function toggleUpdate() {
+		close();
+		isOpen = true;
+		submitUpdate = true;
 	}
 	function toggleCancel() {
-		submitCancel = true;
-		submitUpdate = false;
+		close();
 		isOpen = true;
+		submitCancel = true;
 	}
+
 	function close() {
 		isOpen = false;
+		submit = false;
 		submitUpdate = false;
 		submitCancel = false;
 	}
 </script>
 
 {#if !isOpen}
-	<button class="butter" type="button" onclick={toggleUpdate}> Postergar </button>
+	<button class="butter" type="button" onclick={toggleUpdate}> Actualizar </button>
 	<button class="butter" type="button" onclick={toggleCancel}> Descartar </button>
+	<button class="butter" type="button" onclick={toggleSubmit}> {nextFase} </button>
 {:else}
 	<button class="close-btn" type="button" onclick={close}>✕</button>
 {/if}

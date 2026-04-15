@@ -149,24 +149,24 @@ export const fases = [
 	{
 		id_fase: 2,
 		actual: 'Analisis',
-		accion: 'Cotizar',
+		accion: 'Negociar',
 		placeholder: 'Validar alcance, condiciones técnicas y viabilidad comercial'
 	},
 	{
 		id_fase: 3,
 		actual: 'Negociacion',
-		accion: 'Documentar',
+		accion: 'Ganar',
 		placeholder: 'Motivos de conversión'
 	},
 	{
 		id_fase: 4,
 		actual: 'Ganada',
-		accion: 'Enviar',
+		accion: 'Proceso de envío',
 		placeholder: 'Preparar productos y documentación para entrega'
 	},
 	{
 		id_fase: 5,
-		actual: 'En proceso de envio',
+		actual: 'En proceso de envío',
 		accion: 'Finalizar',
 		placeholder: 'Dar seguimiento a logística, entrega o ejecución del servicio'
 	},

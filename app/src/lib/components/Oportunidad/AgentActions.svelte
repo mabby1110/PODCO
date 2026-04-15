@@ -23,6 +23,8 @@
 	let nuevaObeservacion = $state('');
 
 	let isSubmitting = $state(false);
+	let isOpen = $state(false);
+	let submit = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 	let style = $derived(getStyleForPhase(currentPhase + 1));
@@ -51,8 +53,7 @@
 				nuevaObeservacion = '';
 
 				// Reiniciar modificadores de UI
-				submitUpdate = false;
-				submitCancel = false;
+				isOpen = false;
 
 				await update({ reset: true });
 			}
@@ -71,194 +72,223 @@
 		return handleSubmit();
 	}}
 >
-	<div class="actions">
-		{#if !submitCancel && !submitUpdate}
-			<!-- Acciones -->
-			{#if currentPhase == 2}
-				<FormSelectMotivo title="Especificar Motivo" list={motivosOportunidad} disableCustom={false} />
-				<FormInput
-					label="Análisis"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder={fasePlaceholder}
-					type="textarea"
-					required
-				/>
-				<div class="cotizacion">
-					<UploadFile label="Cotizaciones" name="quoteFile" required multiple />
-				</div>
-				<div class="opcional">
-					<h3>Informacion adicional</h3>
-					<div class="opciones">
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								bind:value={nuevaObeservacion}
-								placeholder="Detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+Agregar requisitos">
-							<FormInput
-								label="Requisitos"
-								name="nuevosRequisitos"
-								bind:value={nuevoRequisito}
-								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
-						</FormOptionalInput>
-					</div>
-				</div>
-				<DatePicker title="Fecha seguimiento o Expiración" />
-			{:else if currentPhase == 3}
-				<FormInput
-					label={eventData.fase.actual}
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder={fasePlaceholder}
-					type="textarea"
-					required
-				/>
-
-				<div class="oc">
-					<UploadFile label="Cotizacion generada en Contpaqi" name="quoteWonFile" required />
-				</div>
-				<div class="oc">
-					<UploadFile label="Orden de compra del cliente" name="ocFile" required />
-				</div>
-				<DatePicker title="Seguimiento / Envío" />
-				<div class="opcional">
-					<h3>Informacion adicional</h3>
-					<div class="opciones">
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								bind:value={nuevaObeservacion}
-								placeholder="Detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+Agregar requisitos">
-							<FormInput
-								label="Requisitos"
-								name="nuevosRequisitos"
-								bind:value={nuevoRequisito}
-								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
-						</FormOptionalInput>
-					</div>
-				</div>
-			{/if}
-		{/if}
-	</div>
-	<!-- opciones para envio de formulario -->
 	{#if currentPhase <= 3 && currentPhase != 0}
-		<!-- acciones opcionales -->
-		<div class="actions">
-			{#if submitUpdate}
-				<FormInput
-					label="Postergar"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Motivo de la postergación y acción a realizar"
-					type="textarea"
-					required
-				/>
-				{#if currentPhase == 3}
-					<FormOptionalInput title="+Nueva cotizacion">
+		{#if isOpen}
+			<div class="actions">
+				{#if submit}
+					{#if currentPhase == 2}
+						<FormSelectMotivo
+							title="Especificar Motivo"
+							list={motivosOportunidad}
+							disableCustom={false}
+						/>
+						<FormInput
+							label="Análisis"
+							name="nuevaHistoria"
+							bind:value={nuevaHistoria}
+							placeholder={fasePlaceholder}
+							type="textarea"
+							required
+						/>
 						<div class="cotizacion">
-							<UploadFile label="Nueva Cotización" name="quoteFile" required />
+							<UploadFile label="Cotizaciones" name="quoteFile" required multiple />
 						</div>
-					</FormOptionalInput>
-				{/if}
-				<div class="opcional">
-					<h3>Informacion adicional</h3>
-					<div class="opciones">
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								bind:value={nuevaObeservacion}
-								placeholder="Detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+Agregar requisitos">
-							<FormInput
-								label="Requisitos"
-								name="nuevosRequisitos"
-								bind:value={nuevoRequisito}
-								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
-						</FormOptionalInput>
-					</div>
-				</div>
-				<DatePicker title="Fecha Seguimiento" />
-			{:else if submitCancel}
-				<FormInput
-					label="Pérdida"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Motivo de la pérdida"
-					type="textarea"
-					required
-				/>
-				<div class="opcional">
-					<h3>Informacion adicional</h3>
-					<div class="opciones">
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								bind:value={nuevaObeservacion}
-								placeholder="Detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
-						</FormOptionalInput>
-					</div>
-				</div>
-			{/if}
-		</div>
-		<div class="submit">
-			<FormOptionalSubmit bind:submitUpdate bind:submitCancel />
+						<div class="opcional">
+							<h3>Informacion adicional</h3>
+							<div class="opciones">
+								<FormOptionalInput title="+Observaciones">
+									<FormInput
+										label="Observaciones"
+										name="observaciones"
+										bind:value={nuevaObeservacion}
+										placeholder="Detalles importantes y pautas a seguir"
+										type="textarea"
+										required
+									/>
+								</FormOptionalInput>
+								<FormOptionalInput title="+Agregar requisitos">
+									<FormInput
+										label="Requisitos"
+										name="nuevosRequisitos"
+										bind:value={nuevoRequisito}
+										placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+										type="textarea"
+										required
+									/>
+								</FormOptionalInput>
+								<FormOptionalInput title="+adjuntos">
+									<UploadFile label="Subir documentos" name="docFile" multiple />
+								</FormOptionalInput>
+							</div>
+						</div>
+						<DatePicker title="Fecha seguimiento o Expiración" />
+					{:else if currentPhase == 3}
+						<FormInput
+							label={eventData.fase.actual}
+							name="nuevaHistoria"
+							bind:value={nuevaHistoria}
+							placeholder={fasePlaceholder}
+							type="textarea"
+							required
+						/>
 
-			{#if submitUpdate}
+						<div class="oc">
+							<UploadFile label="Cotizacion generada en Contpaqi" name="quoteWonFile" required />
+						</div>
+						<div class="oc">
+							<UploadFile label="Orden de compra del cliente" name="ocFile" required />
+						</div>
+						<DatePicker title="Seguimiento / Envío" />
+						<div class="opcional">
+							<h3>Informacion adicional</h3>
+							<div class="opciones">
+								<FormOptionalInput title="+Observaciones">
+									<FormInput
+										label="Observaciones"
+										name="observaciones"
+										bind:value={nuevaObeservacion}
+										placeholder="Detalles importantes y pautas a seguir"
+										type="textarea"
+										required
+									/>
+								</FormOptionalInput>
+								<FormOptionalInput title="+Agregar requisitos">
+									<FormInput
+										label="Requisitos"
+										name="nuevosRequisitos"
+										bind:value={nuevoRequisito}
+										placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+										type="textarea"
+										required
+									/>
+								</FormOptionalInput>
+								<FormOptionalInput title="+adjuntos">
+									<UploadFile label="Subir documentos" name="docFile" multiple />
+								</FormOptionalInput>
+							</div>
+						</div>
+					{/if}
+				{:else if submitUpdate}
+					<h3>Editar informacion</h3>
+					<div class="opcional">
+						<div class="opciones">
+							{#if currentPhase == 3}
+								<FormOptionalInput title="+Nueva cotizacion">
+									<div class="cotizacion">
+										<UploadFile label="Nueva Cotización" name="quoteFile" required />
+									</div>
+								</FormOptionalInput>
+							{/if}
+							<FormOptionalInput title="+Historia">
+								<FormInput
+									label="Historia"
+									name="historia"
+									value={eventData.historia}
+									type="textarea"
+									required
+								/>
+							</FormOptionalInput>
+							<FormOptionalInput title="+Observaciones">
+								<FormInput
+									label="Observaciones"
+									name="observaciones"
+									value={eventData.Observaciones}
+									type="textarea"
+									required
+								/>
+							</FormOptionalInput>
+							<FormOptionalInput title="+Objetivo">
+								<FormInput
+									label="Objetivo"
+									name="objetivo"
+									value={eventData.objetivo}
+									type="textarea"
+									required
+								/>
+							</FormOptionalInput>
+							<FormOptionalInput title="+Agregar requisitos">
+								<FormInput
+									label="Requisitos"
+									name="nuevosRequisitos"
+									value={nuevoRequisito}
+									placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+									type="textarea"
+									required
+								/>
+							</FormOptionalInput>
+							<FormOptionalInput title="+adjuntos">
+								<UploadFile label="Subir documentos" name="docFile" multiple />
+							</FormOptionalInput>
+
+							<FormOptionalInput title="+Postergar">
+								<div class="opciones">
+									<FormInput
+										label="Postergar"
+										name="nuevaHistoria"
+										value={nuevaHistoria}
+										placeholder="Motivo de la postergación y acción a realizar"
+										type="textarea"
+										required
+									/>
+									<DatePicker title="Fecha Seguimiento" />
+								</div>
+							</FormOptionalInput>
+						</div>
+					</div>
+				{:else if submitCancel}
+					<FormInput
+						label="Pérdida"
+						name="nuevaHistoria"
+						bind:value={nuevaHistoria}
+						placeholder="Motivo de la pérdida"
+						type="textarea"
+						required
+					/>
+					<div class="opcional">
+						<h3>Informacion adicional</h3>
+						<div class="opciones">
+							<FormOptionalInput title="+Observaciones">
+								<FormInput
+									label="Observaciones"
+									name="observaciones"
+									bind:value={nuevaObeservacion}
+									placeholder="Detalles importantes y pautas a seguir"
+									type="textarea"
+									required
+								/>
+							</FormOptionalInput>
+							<FormOptionalInput title="+adjuntos">
+								<UploadFile label="Subir documentos" name="docFile" multiple />
+							</FormOptionalInput>
+						</div>
+					</div>
+				{/if}
+			</div>
+		{/if}
+		<div class="submit">
+			<FormOptionalSubmit
+				nextFase={eventData.fase.accion}
+				bind:submit
+				bind:submitUpdate
+				bind:submitCancel
+				bind:isOpen
+			/>
+
+			{#if submit}
+				<input type="hidden" name="fase" value={nextPhase} />
+				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					{isSubmitting ? 'Procesando...' : eventData.fase.accion}
+				</button>
+			{:else if submitUpdate}
 				<input type="hidden" name="fase" value={currentPhase} />
 				<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
 			{:else if submitCancel}
 				<input type="hidden" name="fase" value={0} />
 				<button type="submit" class="butter" disabled={isSubmitting}>Perder</button>
-			{:else}
-				<input type="hidden" name="fase" value={nextPhase} />
-				<button type="submit" class="butter" {style} disabled={isSubmitting}>
-					{isSubmitting ? 'Procesando...' : eventData.fase.accion}
-				</button>
 			{/if}
 		</div>
 	{/if}
+	<!-- opciones para envio de formulario -->
 
 	<!-- datos compuestos -->
 	<input type="hidden" name="id" value={eventData.id} />

@@ -1,0 +1,46 @@
+<script lang="ts">
+    import type { Snippet } from 'svelte';
+    import { slide } from 'svelte/transition';
+
+    let {
+        header,
+        content,
+        actions,
+        headerStyle = ''
+    }: {
+        header?: Snippet;
+        content?: Snippet;
+        actions?: Snippet;
+        headerStyle?: string;
+    } = $props();
+</script>
+
+<div class="card-full" transition:slide>
+    {#if header}
+        <header style={headerStyle}>
+            {@render header()}
+        </header>
+    {/if}
+
+    <div class="card-content">
+        {#if content}
+            {@render content()}
+        {/if}
+
+        {#if actions}
+            <div class="card-actions">
+                {@render actions()}
+            </div>
+        {/if}
+    </div>
+</div>
+
+<style>
+    .card-actions {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--b);
+    }
+</style>

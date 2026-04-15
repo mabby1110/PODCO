@@ -7,6 +7,7 @@
 	import FilePreview from '$lib/components/FilePreview.svelte';
 	import AgentActions from '$lib/components/Oportunidad/AgentActions.svelte';
 	import OperActions from '$lib/components/Oportunidad/OperActions.svelte';
+	import Card from '$lib/components/Card.svelte';
 
 	let { data } = $props();
 
@@ -47,8 +48,8 @@
 </script>
 
 {#if eventData}
-	<div class="card-full" transition:slide>
-		<header style={eventData.style}>
+	<Card headerStyle={eventData.style}>
+		{#snippet header()}
 			<button onclick={() => history.back()} class="close {currentFase}" aria-label="Cerrar">
 				✕
 			</button>
@@ -61,9 +62,8 @@
 				<p class="date">|</p>
 				<p>{eventData?.agente?.nombre}</p>
 			</div>
-		</header>
-
-		<div class="card-content">
+		{/snippet}
+		{#snippet content()}
 			<section>
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 			</section>
@@ -108,16 +108,16 @@
 			<FilePreview title="Orden de compra" data={eventData.oc_cliente} />
 			<FilePreview title="Documentos de operacion" data={eventData.documentos_operacion} />
 			<FilePreview title="Adjuntos" data={eventData.documentos} />
+		{/snippet}
 
-			<div class="card-actions">
-				{#if $profile?.isOper}
-					<OperActions {eventData} />
-				{:else}
-					<AgentActions {eventData} />
-				{/if}
-			</div>
-		</div>
-	</div>
+		{#snippet actions()}
+			{#if $profile?.isOper}
+				<OperActions {eventData} />
+			{:else}
+				<AgentActions {eventData} />
+			{/if}
+		{/snippet}
+	</Card>
 {/if}
 
 <style>
