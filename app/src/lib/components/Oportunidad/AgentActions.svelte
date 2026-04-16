@@ -265,6 +265,44 @@
 				{/if}
 			</div>
 		{/if}
+
+		<!-- datos compuestos -->
+		<input type="hidden" name="id" value={eventData.id} />
+		{#if nuevaHistoria}
+			<input
+				type="hidden"
+				name="historia"
+				value={combinarHistoria(eventData.historia, nuevaHistoria)}
+			/>
+		{/if}
+		{#if nuevoRequisito}
+			<input
+				type="hidden"
+				name="requisitos"
+				value={combinarHistoria(eventData.requisitos, nuevoRequisito)}
+			/>
+		{/if}
+		{#if nuevaCotizacion}
+			<input
+				type="hidden"
+				name="cotizaciones_presentadas"
+				bind:value={eventData.cotizaciones_presentadas}
+			/>
+		{/if}
+		{#if nuevaObeservacion}
+			<input
+				type="hidden"
+				name="observaciones"
+				value={combinarHistoria(eventData.observaciones, nuevaObeservacion)}
+			/>
+		{/if}
+		{#if eventData.agente}
+			<input type="hidden" name="agente" value={eventData.agente.nombre} />
+		{/if}
+		{#if nextPhase == 6}
+			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
+		{/if}
+		
 		<div class="submit">
 			<FormOptionalSubmit
 				nextFase={eventData.fase.accion}
@@ -287,44 +325,6 @@
 				<button type="submit" class="butter" disabled={isSubmitting}>Perder</button>
 			{/if}
 		</div>
-	{/if}
-	<!-- opciones para envio de formulario -->
-
-	<!-- datos compuestos -->
-	<input type="hidden" name="id" value={eventData.id} />
-	{#if nuevaHistoria}
-		<input
-			type="hidden"
-			name="historia"
-			value={combinarHistoria(eventData.historia, nuevaHistoria)}
-		/>
-	{/if}
-	{#if nuevoRequisito}
-		<input
-			type="hidden"
-			name="requisitos"
-			value={combinarHistoria(eventData.requisitos, nuevoRequisito)}
-		/>
-	{/if}
-	{#if nuevaCotizacion}
-		<input
-			type="hidden"
-			name="cotizaciones_presentadas"
-			bind:value={eventData.cotizaciones_presentadas}
-		/>
-	{/if}
-	{#if nuevaObeservacion}
-		<input
-			type="hidden"
-			name="observaciones"
-			value={combinarHistoria(eventData.observaciones, nuevaObeservacion)}
-		/>
-	{/if}
-	{#if eventData.agente}
-		<input type="hidden" name="agente" value={eventData.agente.nombre} />
-	{/if}
-	{#if nextPhase == 6}
-		<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 	{/if}
 </form>
 

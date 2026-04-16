@@ -1,48 +1,61 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	let {
+		nextFase = $bindable(),
+		isOpen = $bindable(),
+		submit = $bindable(),
 		submitUpdate = $bindable(),
-		submitOp = $bindable(),
-		submitCancel = $bindable()
+		submitCancel = $bindable(),
+		newOp = $bindable()
 	}: {
-		children?: Snippet;
+		nextFase: string;
+		isOpen: boolean;
+		submit: boolean;
 		submitUpdate: boolean;
-		submitOp: boolean;
 		submitCancel: boolean;
+		newOp: boolean;
 	} = $props();
 
-	let isOpen = $state(false);
-	function toggleOp() {
-		submitOp = true;
-		submitUpdate = false;
-		submitCancel = false;
+	function toggleSubmit() {
+		close();
 		isOpen = true;
+		submit = true;
 	}
 	function toggleUpdate() {
-		submitUpdate = true;
-		submitOp = false;
-		submitCancel = false;
+		close();
 		isOpen = true;
+		submitUpdate = true;
 	}
 	function toggleCancel() {
-		submitCancel = true;
-		submitUpdate = false;
-		submitOp = false;
+		close();
 		isOpen = true;
+		submitCancel = true;
 	}
+	function toggleNewOp() {
+		close();
+		isOpen = true;
+		newOp = true;
+	}
+
 	function close() {
 		isOpen = false;
-		submitOp = false;
+		submit = false;
 		submitUpdate = false;
-		submitOp = false;
 		submitCancel = false;
+		newOp = false;
 	}
+
+	$effect(()=>{
+		if(!isOpen) {
+			close();
+		}
+	})
 </script>
 
 {#if !isOpen}
-	<button class="butter" type="button" onclick={toggleUpdate}>Postergar</button>
+	<button class="butter" type="button" onclick={toggleUpdate}>Editar</button>
 	<button class="butter" type="button" onclick={toggleCancel}>Descartar</button>
-	<button class="butter" type="button" onclick={toggleOp}>+Oportunidad</button>
+	<button class="butter" type="button" onclick={toggleNewOp}>+Oportunidad</button>
+	<button class="butter" type="button" onclick={toggleSubmit}> {nextFase} </button>
 {:else}
 	<button class="close-btn" type="button" onclick={close}>✕</button>
 {/if}

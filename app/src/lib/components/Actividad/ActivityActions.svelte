@@ -16,10 +16,12 @@
 	let nuevaHistoria = $state('');
 	let nuevaObservacion = $state('');
 
+	let isOpen = $state(false);
 	let isSubmitting = $state(false);
-	let submitOp = $state(false);
+	let submit = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
+	let newOp = $state(false);
 
 	let style = $derived(getStyleForPhase(currentPhase + 5));
 
@@ -49,7 +51,7 @@
 	}}
 >
 	<div class="actions">
-		{#if !submitCancel && !submitUpdate && !submitOp}
+		{#if submit}
 			{#if currentPhase == 1}
 				<FormInput
 					label="Seguimiento"
@@ -70,33 +72,82 @@
 					/>
 				</FormOptionalInput>
 			{/if}
-		{/if}
-	</div>
-	<div class="actions">
-		{#if currentPhase != 0}
-			{#if submitUpdate}
-				<FormInput
-					label="Justificación"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Motivo de la postergación y acción a realizar"
-					type="textarea"
-					required
-				/>
-				<DatePicker title="Fecha de compromiso" />
-			{:else if submitOp}
-				<FormOportunidad />
-				<input type="hidden" name="motivo_inicial" value={eventData.motivo} />
-			{:else if submitCancel}
-				<FormInput
-					label="Justificación"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Motivo de la cancelación"
-					type="textarea"
-					required
-				/>
-			{/if}
+		{:else if submitUpdate}
+			<h3>Editar informacion</h3>
+			<div class="opcional">
+				<div class="opciones">
+					{#if currentPhase == 3}
+						<FormOptionalInput title="+Nueva cotizacion">
+							<div class="cotizacion">
+								<UploadFile label="Nueva Cotización" name="quoteFile" required />
+							</div>
+						</FormOptionalInput>
+					{/if}
+					<FormOptionalInput title="+Historia">
+						<FormInput
+							label="Historia"
+							name="historia"
+							value={eventData.historia}
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+Observaciones">
+						<FormInput
+							label="Observaciones"
+							name="observaciones"
+							value={eventData.Observaciones}
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+Objetivo">
+						<FormInput
+							label="Objetivo"
+							name="objetivo"
+							value={eventData.objetivo}
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+Agregar requisitos">
+						<FormInput
+							label="Requisitos"
+							name="nuevosRequisitos"
+							value={nuevoRequisito}
+							placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+
+					<FormOptionalInput title="+Postergar">
+						<div class="opciones">
+							<FormInput
+								label="Postergar"
+								name="nuevaHistoria"
+								value={nuevaHistoria}
+								placeholder="Motivo de la postergación y acción a realizar"
+								type="textarea"
+								required
+							/>
+							<DatePicker title="Fecha Seguimiento" />
+						</div>
+					</FormOptionalInput>
+				</div>
+			</div>
+		{:else if newOp}
+			<FormOportunidad />
+			<input type="hidden" name="motivo_inicial" value={eventData.motivo} />
+		{:else if submitCancel}
+			<FormInput
+				label="Justificación"
+				name="nuevaHistoria"
+				bind:value={nuevaHistoria}
+				placeholder="Motivo de la cancelación"
+				type="textarea"
+				required
+			/>
 		{/if}
 	</div>
 
@@ -125,30 +176,36 @@
 	{#if nextPhase == 6}
 		<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 	{/if}
-	{#if !submitOp}
+	{#if !newOp}
 		<input type="hidden" name="id_agente" value={eventData?.agente?.id} />
 	{/if}
-	{#if currentPhase != 6 && currentPhase != 0}
-		<div class="submit">
-			<ActivityOptionalSubmit bind:submitUpdate bind:submitCancel bind:submitOp />
 
-			{#if submitUpdate}
-				<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
-			{:else if submitOp}
-				<button type="submit" class="butter" {style} disabled={isSubmitting}>
-					{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
-				</button>
-			{:else if submitCancel}
-				<input type="hidden" name="fase" value={0} />
-				<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
-			{:else}
-				<input type="hidden" name="fase" value={nextPhase} />
-				<button type="submit" class="butter" {style} disabled={isSubmitting}>
-					{isSubmitting ? 'Procesando...' : 'Finzalizar'}
-				</button>
-			{/if}
-		</div>
-	{/if}
+	<div class="submit">
+		<ActivityOptionalSubmit
+			nextFase={eventData.fase.accion}
+			bind:isOpen
+			bind:submit
+			bind:submitUpdate
+			bind:submitCancel
+			bind:newOp
+		/>
+
+		{#if submit}
+			<input type="hidden" name="fase" value={nextPhase} />
+			<button type="submit" class="butter" {style} disabled={isSubmitting}>
+				{isSubmitting ? 'Procesando...' : 'Finzalizar'}
+			</button>
+		{:else if submitUpdate}
+			<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
+		{:else if newOp}
+			<button type="submit" class="butter" {style} disabled={isSubmitting}>
+				{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
+			</button>
+		{:else if submitCancel}
+			<input type="hidden" name="fase" value={0} />
+			<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
+		{/if}
+	</div>
 </form>
 
 <style>
@@ -163,5 +220,17 @@
 	.butter:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
+	}
+	.opcional {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+	}
+	.opciones {
+		display: flex;
+		width: 100%;
+		flex-wrap: wrap;
+		gap: var(--a);
 	}
 </style>
