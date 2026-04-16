@@ -142,7 +142,6 @@ export const actions: Actions = {
 				new Date().toISOString(),
 				JSON.stringify([{ fecha: new Date().toISOString(), entrada: 'Cliente creado' }]),
 				null,
-				formData.get('observaciones'),
 				formData.get('id_agente'),
 				formData.get('razon_social'),
 				null,
@@ -151,6 +150,7 @@ export const actions: Actions = {
 				null,
 				formData.get('ubicacion'),
 				formData.get('contactos'),
+				null,
 				formData.get('tipo_prospeccion')
 			];
 			const newClient = await appendRow('clientes!A:Z', cliente, 'BMS-CLI');
