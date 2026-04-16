@@ -14,7 +14,7 @@
 			}}
 			class="butter"
 		>
-			📅 Calendario
+			📆 Calendario
 		</a>
 		<a
 			href="/oportunidades"
@@ -34,7 +34,7 @@
 			}}
 			class="butter"
 		>
-			🐄 Clientes
+			👨‍💼 Clientes
 		</a>
 		<a
 			href="/actividades"
