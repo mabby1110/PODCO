@@ -10,6 +10,8 @@
 	import { selectedOp } from '$lib/stores/selectedOp';
 	import { invalidateAll } from '$app/navigation';
 	import UploadFile from '$lib/components/UploadFile.svelte';
+	import EditableJsonList from '../EditableJsonList.svelte';
+	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 
 	let { eventData } = $props();
 
@@ -33,11 +35,6 @@
 	let fasePlaceholder = $derived(
 		fases.find((f) => f.id_fase == currentPhase)?.placeholder ?? 'Ingresa la acción realizada'
 	);
-
-	function combinarHistoria(anterior: string, nueva: string): string {
-		if (!anterior || nueva.trim() == '') return nueva;
-		return `${anterior}, ${nueva}`;
-	}
 
 	function handleSubmit() {
 		return async ({ result, update }: any) => {
@@ -138,7 +135,6 @@
 						<div class="oc">
 							<UploadFile label="Orden de compra del cliente" name="ocFile" required />
 						</div>
-						<DatePicker title="Seguimiento / Envío" />
 						<div class="opcional">
 							<h3>Informacion adicional</h3>
 							<div class="opciones">
@@ -167,11 +163,34 @@
 								</FormOptionalInput>
 							</div>
 						</div>
+						<DatePicker title="Seguimiento / Envío" />
 					{/if}
 				{:else if submitUpdate}
 					<h3>Editar informacion</h3>
 					<div class="opcional">
 						<div class="opciones">
+							{#if !eventData.historia}
+								<FormOptionalInput title="+Historia">
+									<FormInput
+										label="Historia"
+										name="nuevaHistoria"
+										bind:value={nuevaHistoria}
+										type="textarea"
+										required
+									/>
+								</FormOptionalInput>
+							{:else}
+								<EditableJsonList
+									jsonList={eventData.historia}
+									action="/oportunidades?/updateOp"
+									name={'historia'}
+									id={eventData.id}
+									fields={[
+										{ name: 'fecha', label: 'Fecha', type: 'date' },
+										{ name: 'entrada', label: 'Entrada', type: 'textarea' }
+									]}
+								/>
+							{/if}
 							{#if currentPhase == 3}
 								<FormOptionalInput title="+Nueva cotizacion">
 									<div class="cotizacion">
@@ -179,24 +198,6 @@
 									</div>
 								</FormOptionalInput>
 							{/if}
-							<FormOptionalInput title="+Historia">
-								<FormInput
-									label="Historia"
-									name="historia"
-									value={eventData.historia}
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+Observaciones">
-								<FormInput
-									label="Observaciones"
-									name="observaciones"
-									value={eventData.Observaciones}
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
 							<FormOptionalInput title="+Objetivo">
 								<FormInput
 									label="Objetivo"
@@ -206,11 +207,20 @@
 									required
 								/>
 							</FormOptionalInput>
+							<FormOptionalInput title="+Observaciones">
+								<FormInput
+									label="Observaciones"
+									name="observaciones"
+									value={eventData.observaciones}
+									type="textarea"
+									required
+								/>
+							</FormOptionalInput>
 							<FormOptionalInput title="+Agregar requisitos">
 								<FormInput
 									label="Requisitos"
-									name="nuevosRequisitos"
-									value={nuevoRequisito}
+									name="requisitos"
+									value={eventData.requisitos}
 									placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
 									type="textarea"
 									required
@@ -225,7 +235,7 @@
 									<FormInput
 										label="Postergar"
 										name="nuevaHistoria"
-										value={nuevaHistoria}
+										bind:value={nuevaHistoria}
 										placeholder="Motivo de la postergación y acción a realizar"
 										type="textarea"
 										required
@@ -272,14 +282,14 @@
 			<input
 				type="hidden"
 				name="historia"
-				value={combinarHistoria(eventData.historia, nuevaHistoria)}
+				value={agregarEntrada(eventData.historia, nuevaHistoria)}
 			/>
 		{/if}
 		{#if nuevoRequisito}
 			<input
 				type="hidden"
 				name="requisitos"
-				value={combinarHistoria(eventData.requisitos, nuevoRequisito)}
+				value={concatStrings(eventData.requisitos, nuevoRequisito)}
 			/>
 		{/if}
 		{#if nuevaCotizacion}
@@ -293,7 +303,7 @@
 			<input
 				type="hidden"
 				name="observaciones"
-				value={combinarHistoria(eventData.observaciones, nuevaObeservacion)}
+				value={concatStrings(eventData.observaciones, nuevaObeservacion)}
 			/>
 		{/if}
 		{#if eventData.agente}
@@ -302,7 +312,7 @@
 		{#if nextPhase == 6}
 			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 		{/if}
-		
+
 		<div class="submit">
 			<FormOptionalSubmit
 				nextFase={eventData.fase.accion}
@@ -339,8 +349,6 @@
 		opacity: 0.6;
 		cursor: not-allowed;
 	}
-	.cotizacion,
-	.oc,
 	.opcional {
 		width: 100%;
 		display: flex;
@@ -349,6 +357,7 @@
 	}
 	.opciones {
 		display: flex;
+		width: 100%;
 		flex-wrap: wrap;
 		gap: var(--a);
 	}

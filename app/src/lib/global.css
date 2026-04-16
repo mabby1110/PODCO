@@ -201,6 +201,17 @@ body {
 	padding: var(--a) 0 0;
 }
 
+.card-full .entradas {
+	display: flex;
+	flex-direction: column;
+	gap: var(--b);
+}
+
+.card-full .entrada {
+	display: flex;
+	gap: var(--a);
+}
+
 .card-list-preview {
 	text-decoration: none;
 	color: inherit;
@@ -231,7 +242,6 @@ body {
 	gap: var(--a);
 	flex-grow: 1;
 	width: 100%;
-	max-height: var(--e);
 	overflow: hidden;
 }
 

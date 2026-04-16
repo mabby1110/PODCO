@@ -8,6 +8,8 @@
 	import AgentActions from '$lib/components/Oportunidad/AgentActions.svelte';
 	import OperActions from '$lib/components/Oportunidad/OperActions.svelte';
 	import Card from '$lib/components/Card.svelte';
+	import EditableJsonList from '$lib/components/EditableJsonList.svelte';
+	import { formatDate, formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
 
 	let { data } = $props();
 
@@ -68,13 +70,6 @@
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 			</section>
 
-			{#if eventData.historia}
-				<section>
-					<h3>Historia</h3>
-					<p>{eventData.historia}</p>
-				</section>
-			{/if}
-
 			{#if eventData.necesidades}
 				<section>
 					<h3>Necesidades</h3>
@@ -100,6 +95,20 @@
 				<section>
 					<h3>Observaciones</h3>
 					<p>{eventData.observaciones}</p>
+				</section>
+			{/if}
+
+			{#if eventData.historia}
+				<section>
+					<h3>Historia</h3>
+					<div class="entradas">
+						{#each JSON.parse(eventData?.historia) as item}
+							<div class="entrada">
+								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
+								<p>{item.entrada}</p>
+							</div>
+						{/each}
+					</div>
 				</section>
 			{/if}
 

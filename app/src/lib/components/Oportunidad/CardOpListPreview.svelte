@@ -56,10 +56,4 @@
 			<p>{eventData?.objetivo}</p>
 		</div>
 	{/if}
-	{#if eventData?.historia}
-		<div class="brief">
-			<b>Historia</b>
-			<p>{eventData?.historia}</p>
-		</div>
-	{/if}
 </a>

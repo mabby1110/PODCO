@@ -7,6 +7,7 @@
 	import FormInput from '$lib/components/FormInput.svelte';
 	import { motivosActividades } from '$lib';
 	import FormSelectAgente from '../FormSelectAgente.svelte';
+	import DatePicker from '../DatePicker.svelte';
 
 	let { data } = $props();
 
@@ -83,16 +84,14 @@
 				<FormSelectInput list={motivosActividades} disableCustom />
 
 				<div class="optional">
-					<FormOptionalInput title="+Objetivo">
-						<FormInput
-							label="Objetivo"
-							name="objetivo"
-							bind:value={objetivo}
-							placeholder="Define objetivos clave para crear una Oportunidad de venta y/o completar la actividad"
-							type="textarea"
-							required
-						/>
-					</FormOptionalInput>
+					<FormInput
+						label="Objetivo"
+						name="objetivo"
+						bind:value={objetivo}
+						placeholder="Define objetivos clave para crear una Oportunidad de venta y/o completar la actividad"
+						type="textarea"
+						required
+					/>
 					<FormOptionalInput title="+Requisitos">
 						<FormInput
 							label="Requisitos"
@@ -115,26 +114,8 @@
 					</FormOptionalInput>
 				</div>
 
-				<div class="datetime-split">
-					<div class="datetime-item">
-						<span>Fecha</span>
-						<!-- <input type="date" bind:value={fecha} min={getToday()} required /> -->
-						<input type="date" bind:value={fecha} required />
-					</div>
-					<div class="datetime-item">
-						<span>Hora</span>
-						<select bind:value={hora} required>
-							{#each generarHoras() as h}
-								<option value={h}>{h}</option>
-							{/each}
-						</select>
-					</div>
-					<div class="datetime-item">
-						<span>Duración (minutos)</span>
-						<input type="number" bind:value={duracion} min="1" required />
-					</div>
-				</div>
-				
+				<DatePicker />
+
 				<input type="hidden" name="inicio" bind:value={inicio} />
 				<input type="hidden" name="fin" bind:value={fin} />
 				<input type="hidden" name="fase" value={1} />
