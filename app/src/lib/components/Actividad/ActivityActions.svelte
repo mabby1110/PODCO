@@ -55,7 +55,7 @@
 		return handleSubmit();
 	}}
 >
-	{#if currentPhase != 0}
+	{#if currentPhase != 0  && currentPhase != 6}
 		{#if isOpen}
 			<div class="actions">
 				{#if submit}
@@ -192,35 +192,33 @@
 			{#if !newOp}
 				<input type="hidden" name="id_agente" value={eventData?.agente?.id} />
 			{/if}
-			{#if eventData.fase.id_fase != 0}
-				<div class="submit">
-					<ActivityOptionalSubmit
-						nextFase={eventData.fase.accion}
-						bind:isOpen
-						bind:submit
-						bind:submitUpdate
-						bind:submitCancel
-						bind:newOp
-					/>
-
-					{#if submit}
-						<input type="hidden" name="fase" value={nextPhase} />
-						<button type="submit" class="butter" {style} disabled={isSubmitting}>
-							{isSubmitting ? 'Procesando...' : 'Finzalizar'}
-						</button>
-					{:else if submitUpdate}
-						<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
-					{:else if newOp}
-						<button type="submit" class="butter" {style} disabled={isSubmitting}>
-							{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
-						</button>
-					{:else if submitCancel}
-						<input type="hidden" name="fase" value={0} />
-						<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
-					{/if}
-				</div>
-			{/if}
 		{/if}
+		<div class="submit">
+			<ActivityOptionalSubmit
+				nextFase={eventData.fase.accion}
+				bind:isOpen
+				bind:submit
+				bind:submitUpdate
+				bind:submitCancel
+				bind:newOp
+			/>
+
+			{#if submit}
+				<input type="hidden" name="fase" value={nextPhase} />
+				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					{isSubmitting ? 'Procesando...' : 'Finzalizar'}
+				</button>
+			{:else if submitUpdate}
+				<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
+			{:else if newOp}
+				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
+				</button>
+			{:else if submitCancel}
+				<input type="hidden" name="fase" value={0} />
+				<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
+			{/if}
+		</div>
 	{/if}
 </form>
 

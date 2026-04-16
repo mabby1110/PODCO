@@ -62,7 +62,7 @@
 		return handleSubmit();
 	}}
 >
-	{#if currentPhase >= 4 && currentPhase != 0}
+	{#if currentPhase >= 4 && currentPhase != 0 && currentPhase != 6}
 		{#if isOpen}
 			<div class="actions">
 				{#if submit}
