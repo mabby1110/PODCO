@@ -76,17 +76,18 @@
 		type="textarea"
 		required
 	/>
-
-	<FormOptionalInput title="+Agregar requisitos">
-		<FormInput
-			label="Requisitos"
-			name="requisitos"
-			bind:value={requisitos}
-			placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-			type="textarea"
-			required
-		/>
-	</FormOptionalInput>
+	<div class="form-group">
+		<FormOptionalInput title="+Agregar requisitos">
+			<FormInput
+				label="Requisitos"
+				name="requisitos"
+				bind:value={requisitos}
+				placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+				type="textarea"
+				required
+			/>
+		</FormOptionalInput>
+	</div>
 	
 	<DatePicker />
 

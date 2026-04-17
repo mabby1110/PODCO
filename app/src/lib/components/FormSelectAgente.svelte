@@ -17,7 +17,7 @@
 
 {#if $profile?.isAdmin}
 	<label>
-		<span>Seleccionar Agente</span>
+		<h3>Seleccionar Agente</h3>
 		<select
 			name="id_agente"
 			bind:value={selected}

@@ -46,7 +46,7 @@
 <div class="search-container">
 	{#if selectedItem}
 		<label for="id_cliente">
-			<span>Cliente</span>
+			<h3>Cliente</h3>
 			<div class="selected-client">
 				<button
 					type="button"
