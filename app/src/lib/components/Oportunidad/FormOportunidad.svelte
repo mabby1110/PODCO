@@ -8,21 +8,20 @@
 	import { filtrarPorAgente } from '$lib/utils/util';
 	import { page } from '$app/state';
 	import DatePicker from '../DatePicker.svelte';
-	
-	
-	let { op=false }: { op?: boolean } = $props();
-	
+
+	let { op = false }: { op?: boolean } = $props();
+
 	let data = $derived(page.data);
 	let { cliente } = $derived(page.data);
 	let clientes = $derived(data.clientes ?? []);
-	
-	let selectedClient = $state(cliente?cliente:null);
+
+	let selectedClient = $state(cliente ? cliente : null);
 	let necesidad = $state('');
 	let potencial_venta = $state('');
 	let objetivo = $state('');
 	let requisitos = $state('');
-	
-	let agenteSeleccionado = $derived(data.profile?.isAdmin?'':data.profile.id);
+
+	let agenteSeleccionado = $derived(data.profile?.isAdmin ? '' : data.profile.id);
 	console.log(cliente);
 	console.log('agenteSeleccionado', agenteSeleccionado);
 	let clientesFiltrados = $derived(
@@ -33,7 +32,7 @@
 			: filtrarPorAgente(clientes, String(data.profile?.id))
 	);
 	$effect(() => {
-		if(!cliente) {
+		if (!cliente) {
 			agenteSeleccionado;
 			selectedClient = null;
 		}
@@ -42,7 +41,7 @@
 
 <div class="form-content">
 	<div class="form-group">
-		<FormSelectInput list={motivosOportunidad} disableCustom={false}/>
+		<FormSelectInput list={motivosOportunidad} disableCustom={false} />
 		<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
 	</div>
 
@@ -88,9 +87,11 @@
 			/>
 		</FormOptionalInput>
 	</div>
-	
-	<DatePicker />
 
+	<DatePicker />
+	{#if op}
+		<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
+	{/if}
 	{#if selectedClient}
 		<input type="hidden" name="id_cliente" value={selectedClient?.id} required />
 	{/if}

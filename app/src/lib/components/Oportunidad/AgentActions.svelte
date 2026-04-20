@@ -118,6 +118,8 @@
 							</div>
 						</div>
 						<DatePicker title="Fecha seguimiento o Expiración" />
+
+						<input type="hidden" name="fecha_negociacion" value={new Date().toISOString()} />
 					{:else if currentPhase == 3}
 						<FormInput
 							label={eventData.fase.actual}
@@ -171,6 +173,8 @@
 							</div>
 						</div>
 						<DatePicker title="Seguimiento / Envío" />
+
+						<input type="hidden" name="fecha_pedido" value={new Date().toISOString()} />
 					{/if}
 				{:else if submitUpdate}
 					<h3>Editar informacion</h3>

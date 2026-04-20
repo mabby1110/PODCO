@@ -79,7 +79,6 @@
 						<div class="oc">
 							<UploadFile label="Documentos de operacion" name="docOpFile" required />
 						</div>
-						<DatePicker title="Salida de paquete" />
 						<div class="opcional">
 							<h3>Informacion adicional</h3>
 							<div class="opciones">
@@ -108,6 +107,8 @@
 								</FormOptionalInput>
 							</div>
 						</div>
+						<DatePicker title="Salida de paquete" />
+						<input type="hidden" name="fecha_proceso_entrega" value={new Date().toISOString()} />
 					{:else if currentPhase == 5}
 						<FormInput
 							label="Estado de entrega / Incidencias"
@@ -149,6 +150,7 @@
 							<UploadFile label="Documentos de operacion" name="docOpFile" required />
 						</div>
 						<DatePicker title="Salida de paquete" />
+						<input type="hidden" name="fecha_transito" value={new Date().toISOString()} />
 					{/if}
 				{:else if submitUpdate}
 					<div class="opcional">

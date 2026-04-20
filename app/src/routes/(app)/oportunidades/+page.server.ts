@@ -69,7 +69,15 @@ export const actions: Actions = {
 			null,
 			null,
 			null,
-			formData.get('motivo')
+			formData.get('motivo'),
+			null,
+			null,
+			formData.get('fecha_analisis'),
+			null,
+			null,
+			null,
+			null,
+			null,
 		];
 
 		console.log(formData, oportunidad);
@@ -121,7 +129,14 @@ export const actions: Actions = {
 			cotizaciones_ganadas: 'S',
 			oc_cliente: 'T',
 			documentos_operacion: 'U',
-			monto_oc: 'X'
+			etiquetas: 'W',
+			monto_oc: 'X',
+			fecha_analisis: 'Y',
+			fecha_negociacion: 'Z',
+			fecha_pedido: 'AA',
+			fecha_proceso_entrega: 'AB',
+			fecha_transito: 'AC',
+			fecha_entrega: 'AD',
 		};
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
