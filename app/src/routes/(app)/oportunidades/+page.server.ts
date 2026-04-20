@@ -89,6 +89,16 @@ export const actions: Actions = {
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
+		// se actualiza el historial de cambios de la actividad
+		let historial_string = formData.get('historial_cambios') as string;
+		let historial = historial_string ? JSON.parse(historial_string) : [];
+		let nueva_entrada = [
+			{
+				fecha: new Date().toISOString(),
+				entrada: `Actualización`
+			}
+		];
+		historial = historial.concat(nueva_entrada);
 
 		// ---------- MAP FORM ----------
 		const updateFieldMap: FieldColumnMap = {
@@ -110,7 +120,8 @@ export const actions: Actions = {
 			cotizaciones_presentadas: 'R',
 			cotizaciones_ganadas: 'S',
 			oc_cliente: 'T',
-			documentos_operacion: 'U'
+			documentos_operacion: 'U',
+			monto_oc: 'X'
 		};
 
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
@@ -129,6 +140,14 @@ export const actions: Actions = {
 					quotesRaw
 				);
 				newValues['R'] = JSON.stringify(updatedQuotes);
+
+				let nueva_entrada = [
+					{
+						fecha: new Date().toISOString(),
+						entrada: `Se sube cotización`
+					}
+				];
+				historial = historial.concat(nueva_entrada);
 			} catch (err) {
 				console.error('Error procesando cotizaciones', err);
 			}
@@ -146,6 +165,13 @@ export const actions: Actions = {
 					quotesWonRaw
 				);
 				newValues['S'] = JSON.stringify(updatedQuotesWon);
+				let nueva_entrada = [
+					{
+						fecha: new Date().toISOString(),
+						entrada: `Se sube cotización ganadora`
+					}
+				];
+				historial = historial.concat(nueva_entrada);
 			} catch (err) {
 				console.error('Error procesando cotizaciones ganadas', err);
 			}
@@ -158,6 +184,13 @@ export const actions: Actions = {
 				const ocRaw = formData.get('oc_cliente');
 				const updatedOC = await processAttachments(ocFiles, agenteNombre, opFolder, ocRaw);
 				newValues['T'] = JSON.stringify(updatedOC);
+				let nueva_entrada = [
+					{
+						fecha: new Date().toISOString(),
+						entrada: `Se sube orden de compra del cliente`
+					}
+				];
+				historial = historial.concat(nueva_entrada);
 			} catch (err) {
 				console.error('Error procesando OC Cliente', err);
 			}
@@ -170,6 +203,13 @@ export const actions: Actions = {
 				const docsRaw = formData.get('documentos');
 				const docs = await processAttachments(docFiles, agenteNombre, opFolder, docsRaw);
 				newValues['I'] = JSON.stringify(docs);
+				let nueva_entrada = [
+					{
+						fecha: new Date().toISOString(),
+						entrada: `Se sube(n) archivo(s) adjuntos`
+					}
+				];
+				historial = historial.concat(nueva_entrada);
 			} catch (err) {
 				console.error('Error procesando documentos', err);
 			}
@@ -187,10 +227,19 @@ export const actions: Actions = {
 					docsOpRaw
 				);
 				newValues['U'] = JSON.stringify(updatedDocsOp);
+				let nueva_entrada = [
+					{
+						fecha: new Date().toISOString(),
+						entrada: `Se sube(n) documentos(s) logistica`
+					}
+				];
+				historial = historial.concat(nueva_entrada);
 			} catch (err) {
 				console.error('Error procesando documentos de operacion', err);
 			}
 		}
+
+		newValues['C'] = JSON.stringify(historial);
 
 		// ---------- UPDATE SHEET ----------
 		await updateRowById(id as string, newValues, 'oportunidades!A:Z');

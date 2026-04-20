@@ -21,8 +21,8 @@
 	let nuevoRequisito = $state('');
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
-	let nuevaOc = $state('');
 	let nuevaObeservacion = $state('');
+	let monto_oc = $state('');
 
 	let isSubmitting = $state(false);
 	let isOpen = $state(false);
@@ -46,7 +46,6 @@
 				nuevoRequisito = '';
 				nuevaHistoria = '';
 				nuevaCotizacion = '';
-				nuevaOc = '';
 				nuevaObeservacion = '';
 
 				// Reiniciar modificadores de UI
@@ -126,6 +125,14 @@
 							bind:value={nuevaHistoria}
 							placeholder={fasePlaceholder}
 							type="textarea"
+							required
+						/>
+						<FormInput
+							label="Monto"
+							name="monto_oc"
+							value={monto_oc}
+							placeholder="Monto especificado en la orden de compra"
+							type="number"
 							required
 						/>
 
