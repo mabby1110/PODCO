@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import { appState } from '$lib/stores/appState.svelte';
 	import FormOportunidad from './FormOportunidad.svelte';
 </script>
@@ -22,10 +23,16 @@
 				action="/oportunidades?/addOp"
 				use:enhance={() => {
 					appState.toggleModalOp();
-					alert('creado con exito!');
+					return async ({ result, update }) => {
+						if (result.type === 'success' && result.data?.op) {
+							const id = result.data.op;
+							invalidateAll();
+							await update({ reset: true });
+						}
+					};
 				}}
 			>
-				<FormOportunidad op />
+				<FormOportunidad />
 
 				<div class="actions">
 					<button class="butter success" type="submit">Agregar</button>

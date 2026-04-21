@@ -54,7 +54,7 @@
 
 {#if selected === '__otro__'}
 	<label>
-		<span>Especificar motivo</span>
+		<h3>Especificar motivo</h3>
 		<input
 			class="butter"
 			type="text"

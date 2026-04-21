@@ -1,39 +1,36 @@
 <script lang="ts">
 	import Searchbar from '$lib/components/Searchbar.svelte';
 	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
-	import { motivosOportunidad } from '$lib';
-	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
+	import { motivosOportunidad, motivosActividades } from '$lib';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import FormSelectAgente from '../FormSelectAgente.svelte';
 	import { filtrarPorAgente } from '$lib/utils/util';
 	import { page } from '$app/state';
 	import DatePicker from '../DatePicker.svelte';
-
-	let { op = false }: { op?: boolean } = $props();
+	import FormConditionalInput from '../FormConditionalInput.svelte';
 
 	let data = $derived(page.data);
 	let { cliente } = $derived(page.data);
 	let clientes = $derived(data.clientes ?? []);
 
-	let selectedClient = $state(cliente ? cliente : null);
 	let necesidad = $state('');
 	let potencial_venta = $state('');
 	let objetivo = $state('');
-	let requisitos = $state('');
+	let isOpen = $state(false);
 
-	let agenteSeleccionado = $derived(data.profile?.isAdmin ? '' : data.profile.id);
-	console.log(cliente);
-	console.log('agenteSeleccionado', agenteSeleccionado);
+	let fase = $derived(isOpen?2:1);
+	let selectedAgent = $derived(data.profile?.isAdmin ? '' : data.profile.id);
+	let selectedClient = $derived(cliente ? cliente : null);
 	let clientesFiltrados = $derived(
 		data.profile?.isAdmin
-			? agenteSeleccionado
-				? filtrarPorAgente(clientes, agenteSeleccionado)
+			? selectedAgent
+				? filtrarPorAgente(clientes, selectedAgent)
 				: clientes
 			: filtrarPorAgente(clientes, String(data.profile?.id))
 	);
 	$effect(() => {
 		if (!cliente) {
-			agenteSeleccionado;
+			selectedAgent;
 			selectedClient = null;
 		}
 	});
@@ -41,8 +38,8 @@
 
 <div class="form-content">
 	<div class="form-group">
-		<FormSelectInput list={motivosOportunidad} disableCustom={false} />
-		<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
+		<FormSelectInput list={motivosOportunidad} disableCustom={false}/>
+		<FormSelectAgente agentes={data.agentes} bind:selected={selectedAgent} />
 	</div>
 
 	<Searchbar
@@ -52,50 +49,44 @@
 	/>
 
 	<FormInput
-		label="Necesidad"
-		name="necesidad"
-		bind:value={necesidad}
-		placeholder="Areas de oportunidad"
-		type="textarea"
-		required
-	/>
-	<FormInput
-		label="Potencial de venta"
-		name="potencial_venta"
-		bind:value={potencial_venta}
-		placeholder="Servicios o productos que tiene mayor probabilidad de venta"
-		type="textarea"
-		required
-	/>
-	<FormInput
 		label="Objetivo"
 		name="objetivo"
 		bind:value={objetivo}
-		placeholder="Define objetivos clave para concretar la venta"
+		placeholder="Resultado concreto a conseguir"
 		type="textarea"
+		hint="ej. levantamiento técnico en sitio,  o presentar cotización"
 		required
 	/>
-	<div class="form-group">
-		<FormOptionalInput title="+Agregar requisitos">
-			<FormInput
-				label="Requisitos"
-				name="requisitos"
-				bind:value={requisitos}
-				placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-				type="textarea"
-				required
-			/>
-		</FormOptionalInput>
-	</div>
+	<FormConditionalInput bind:isOpen titleOpen="+Necesidad detectada">
+		<FormInput
+			label="Necesidad"
+			name="necesidad"
+			bind:value={necesidad}
+			placeholder="Requerimiento técnico u operacional detectados"
+			type="textarea"
+			required
+		/>
+		<FormInput
+			label="Potencial de venta"
+			name="potencial_venta"
+			bind:value={potencial_venta}
+			placeholder="Producto o servicio que tiene mayor probabilidad de venta"
+			type="textarea"
+			required
+		/>
+	</FormConditionalInput>
 
-	<DatePicker />
-	{#if op}
+	<div class="form-group">
+		<DatePicker title="Fecha de seguimiento"/>
+	</div>
+	{#if isOpen}
 		<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
 	{/if}
 	{#if selectedClient}
 		<input type="hidden" name="id_cliente" value={selectedClient?.id} required />
 	{/if}
-	<input type="hidden" name="fase" value={op ? 2 : 1} />
+	{fase}
+	<input type="hidden" name="fase" bind:value={fase} />
 </div>
 
 <style>

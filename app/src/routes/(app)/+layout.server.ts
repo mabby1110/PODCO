@@ -17,7 +17,6 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 		throw redirect(307, '/clientes');
 	}
 
-	// Cambio de 'const' a 'let' para permitir reasignación
 	let [profileResponse, clientes, oportunidades, actividades] = await Promise.all([
 		locals.supabase.from('profiles').select('*').eq('id', locals.user?.id).single(),
 		getClientes(),
@@ -48,7 +47,6 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 					new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
 			);
 	} else {
-		// Filtrado aplicado correctamente a no administradores
 		clientes =
 			clientes?.filter((c: { id_agente: string | undefined }) => c.id_agente === profile?.id) ?? [];
 		oportunidades = oportunidades

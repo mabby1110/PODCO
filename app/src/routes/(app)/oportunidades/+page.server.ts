@@ -34,7 +34,7 @@ export const actions: Actions = {
 				formData.get('tipo_prospeccion')
 			];
 			const newClient = await appendRow('clientes!A:Z', cliente, 'BMS-CLI');
-
+			formData.set('id_cliente', newClient.id);
 			// se actualiza el historial de cambios de la actividad
 			let nuevas_entradas = [
 				{
@@ -55,7 +55,7 @@ export const actions: Actions = {
 			formData.get('fin'),
 			null,
 			formData.get('id_agente'),
-			2,
+			formData.get('fase'),
 			null,
 			null,
 			formData.get('motivo'),
@@ -81,10 +81,10 @@ export const actions: Actions = {
 		];
 
 		console.log(formData, oportunidad);
-		await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
+		const op = await appendRow('oportunidades!A:Z', oportunidad, 'BMS-OP');
 
 		invalidateCache('oportunidades');
-		return { success: true };
+		return { success: true, op: op.id };
 	},
 
 	updateOp: async ({ request }) => {

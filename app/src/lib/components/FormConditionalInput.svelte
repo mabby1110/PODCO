@@ -17,10 +17,12 @@
 </script>
 
 {#if isOpen}
-	{#if children}
-		{@render children()}
-	{/if}
-	<button class="close-btn" type="button" onclick={close}>✕</button>
+	<div class="open">
+		{#if children}
+			{@render children()}
+		{/if}
+		<button class="close-btn" type="button" onclick={close}>✕</button>
+	</div>
 {:else}
 	<button class="butter" type="button" onclick={open}>
 		{titleOpen}
@@ -30,5 +32,12 @@
 <style>
 	.butter {
 		width: fit-content;
+	}
+	.open {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: var(--b);
 	}
 </style>
