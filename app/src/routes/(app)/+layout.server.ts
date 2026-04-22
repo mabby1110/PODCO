@@ -4,6 +4,7 @@ import type { LayoutServerLoad } from './$types';
 import { getActividades, getClientes, getOportunidades } from '$lib/server/google/cachedQueries';
 import { supabaseAdmin } from '$lib/server/supabaseAdmin';
 import { getAllProfilesAdmin } from '$lib/utils/supabase';
+import { ordenarDatos } from '$lib/utils/filtro';
 
 export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 	console.log('Cargando Layout Data (Root)');
@@ -27,41 +28,32 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 	const profile = profileResponse.data;
 	let agentes = [];
 
+	const filtrosOrden = [{ action: 'desc', column: { key: 'inicio' } }];
+
 	if (profile?.isAdmin) {
 		agentes = (await getAllProfilesAdmin(supabaseAdmin)).filter((a) => !a.isOper);
-		oportunidades = oportunidades.sort(
-			(a: any, b: any) =>
-				new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
-		);
 
-		actividades = actividades.sort(
-			(a: any, b: any) =>
-				new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
-		);
+		oportunidades = ordenarDatos(oportunidades ?? [], filtrosOrden);
+		actividades = ordenarDatos(actividades ?? [], filtrosOrden);
 	} else if (profile?.isOper) {
 		agentes = (await getAllProfilesAdmin(supabaseAdmin)).filter((a) => !a.isOper);
-		oportunidades = oportunidades
-			?.filter((a: any) => a.id_agente === profile?.id)
-			.sort(
-				(a: any, b: any) =>
-					new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
-			);
-	} else {
-		clientes =
-			clientes?.filter((c: { id_agente: string | undefined }) => c.id_agente === profile?.id) ?? [];
-		oportunidades = oportunidades
-			?.filter((a: any) => a.id_agente === profile?.id)
-			.sort(
-				(a: any, b: any) =>
-					new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
-			);
 
-		actividades = actividades
-			?.filter((a: any) => a.id_agente === profile?.id)
-			.sort(
-				(a: any, b: any) =>
-					new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()
-			);
+		oportunidades = ordenarDatos(
+			oportunidades?.filter((a: any) => a.id_agente === profile?.id) ?? [],
+			filtrosOrden
+		);
+	} else {
+		clientes = clientes?.filter((c: any) => c.id_agente === profile?.id) ?? [];
+
+		oportunidades = ordenarDatos(
+			oportunidades?.filter((a: any) => a.id_agente === profile?.id) ?? [],
+			filtrosOrden
+		);
+
+		actividades = ordenarDatos(
+			actividades?.filter((a: any) => a.id_agente === profile?.id) ?? [],
+			filtrosOrden
+		);
 	}
 	return {
 		profile,
