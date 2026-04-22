@@ -29,7 +29,7 @@
 			razon_social:
 				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
-			fase: fases.find((f) => f.id_fase == event.fase) || undefined,
+			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
 			inicio: event?.inicio,
 			fin: event?.fin,
@@ -118,9 +118,14 @@
 			<FilePreview title="Documentos de operacion" data={eventData.documentos_operacion} />
 			<FilePreview title="Adjuntos" data={eventData.documentos} />
 		{/snippet}
-
 		{#snippet actions()}
-			{#if $profile?.isOper}
+			{#if $profile?.isAdmin}
+				{#if eventData.fase.id_fase < 4}
+					<AgentActions {eventData} />
+				{:else}
+					<OperActions {eventData} />
+				{/if}
+			{:else if $profile?.isOper}
 				<OperActions {eventData} />
 			{:else}
 				<AgentActions {eventData} />

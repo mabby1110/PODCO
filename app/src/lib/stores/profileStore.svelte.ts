@@ -7,7 +7,6 @@ export type Profile = {
 	nombre: string;
 	isAdmin: boolean;
 	isOper: boolean;
-	// agrega campos reales de tu tabla si hay más
 };
 
 const COOKIE_NAME = 'profile';

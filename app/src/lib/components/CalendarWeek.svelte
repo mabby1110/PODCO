@@ -1,7 +1,7 @@
 <script lang="ts">
 	import CardOpCalendarPreview from '$lib/components/Oportunidad/CardOpCalendarPreview.svelte';
 	import { dropzone } from '$lib/actions/dnd';
-	import { filterStore } from '$lib/stores/filterStore.svelte';
+	import { calendarStore } from '$lib/stores/calendarStore.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { invalidate } from '$app/navigation';
 	import {
@@ -47,9 +47,9 @@
 	);
 
 	// Se extraen todos los elementos de los grupos para posicionarlos en la matriz Día/Hora
-	const eventList = $derived(listaAgrupada.flatMap((agrupacion) => agrupacion.elementos));
+	const eventList = $derived(listaAgrupada.flatMap((agrupacion: any) => agrupacion.elementos));
 
-	const weekDates = $derived(getWeekDates(filterStore.weekOffset));
+	const weekDates = $derived(getWeekDates(calendarStore.weekOffset));
 	const weekRangeText = $derived(formatWeekRange(weekDates));
 
 	const weekEvents = $derived.by(() => {
@@ -96,13 +96,13 @@
 	}
 
 	function previousWeek() {
-		filterStore.weekOffset -= 1;
+		calendarStore.weekOffset -= 1;
 	}
 	function nextWeek() {
-		filterStore.weekOffset += 1;
+		calendarStore.weekOffset += 1;
 	}
 	function goToCurrentWeek() {
-		filterStore.weekOffset = 0;
+		calendarStore.weekOffset = 0;
 	}
 </script>
 

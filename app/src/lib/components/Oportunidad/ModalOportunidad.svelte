@@ -3,6 +3,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import { appState } from '$lib/stores/appState.svelte';
 	import FormOportunidad from './FormOportunidad.svelte';
+	
 </script>
 
 {#if $appState.ModalOp}

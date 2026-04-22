@@ -2,7 +2,6 @@
 	import { page } from '$app/state';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import { selectedActivity } from '$lib/stores/selectedActivity';
 	import { getStyleForPhase } from '$lib/utils/util';
 
 	let { event } = $props();
@@ -22,12 +21,6 @@
 			style: getStyleForPhase(event.fase)
 		};
 	});
-
-	function select() {
-		console.log('selected', event);
-		// Crear una copia del evento para evitar problemas de referencia
-		selectedActivity.set({ ...event });
-	}
 </script>
 
 <a href="/actividades/{event.id}" class="card-list-preview" style={eventData?.style}>

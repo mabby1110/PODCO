@@ -2,7 +2,6 @@
 	import { page } from '$app/state';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import { selectedOp } from '$lib/stores/selectedOp';
 	import { getStyleForPhase } from '$lib/utils/util';
 
 	let { event } = $props();
@@ -31,12 +30,6 @@
 			style: getStyleForPhase(event.fase)
 		};
 	});
-
-	function select() {
-		console.log('selected', event);
-		// Crear una copia del evento para evitar problemas de referencia
-		selectedOp.set({ ...event });
-	}
 </script>
 
 <a

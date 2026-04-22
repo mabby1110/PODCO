@@ -4,9 +4,10 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { fases_actividad } from '$lib';
 	import ActivityActions from '$lib/components/Actividad/ActivityActions.svelte';
-	import Card from '$lib/components/Card.svelte'; // Ajustar ruta de importación
-	import EditableJsonList from '$lib/components/EditableJsonList.svelte';
+	import Card from '$lib/components/Card.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
+	import { appState } from '$lib/stores/appState.svelte.js';
+	import { opModalStore } from '$lib/stores/opModalStore.svelte.js';
 
 	let { data } = $props();
 	const event = $derived(data.actividad);
@@ -31,6 +32,11 @@
 	});
 
 	let currentFase = $derived(eventData?.fase?.id_fase == 6 ? 'w' : '');
+
+	function handleHotOp(objetivo: string) {
+		opModalStore.objetivo =  objetivo;
+		appState.toggleModalOp();
+	}
 </script>
 
 {#if eventData}
@@ -76,6 +82,7 @@
 					<div class="entradas">
 						{#each JSON.parse(eventData?.historia) as item}
 							<div class="entrada">
+								<button class="butter" onclick={()=>handleHotOp(item.entrada)}>+</button>
 								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
 								<p>{item.entrada}</p>
 							</div>

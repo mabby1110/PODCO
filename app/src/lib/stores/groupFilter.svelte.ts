@@ -36,7 +36,6 @@ export const selectedGroupStore = $state({
 	}
 });
 
-// Persistencia reactiva
 $effect.root(() => {
 	$effect(() => {
 		saveToCookie('selectedGroup', selectedGroupStore.selectedGroup);

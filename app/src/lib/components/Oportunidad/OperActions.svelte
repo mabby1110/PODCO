@@ -5,7 +5,6 @@
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import FormInput from '../FormInput.svelte';
-	import { selectedOp } from '$lib/stores/selectedOp';
 	import { invalidateAll } from '$app/navigation';
 	import UploadFile from '$lib/components/UploadFile.svelte';
 	import EditableJsonList from '../EditableJsonList.svelte';
@@ -31,7 +30,6 @@
 
 	function handleSubmit() {
 		return async ({ result, update }: any) => {
-			selectedOp.clear();
 			isSubmitting = false;
 
 			if (result.type === 'success') {

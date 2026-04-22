@@ -48,7 +48,7 @@
 	{@render children()}
 </div>
 
-<ModalActividad {data} />
+<ModalActividad />
 <ModalOportunidad />
 <ModalCliente {data} />
 

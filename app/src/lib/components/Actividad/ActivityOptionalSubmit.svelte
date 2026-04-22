@@ -4,15 +4,13 @@
 		isOpen = $bindable(),
 		submit = $bindable(),
 		submitUpdate = $bindable(),
-		submitCancel = $bindable(),
-		newOp = $bindable()
+		submitCancel = $bindable()
 	}: {
 		nextFase: string;
 		isOpen: boolean;
 		submit: boolean;
 		submitUpdate: boolean;
 		submitCancel: boolean;
-		newOp: boolean;
 	} = $props();
 
 	function toggleSubmit() {
@@ -30,18 +28,12 @@
 		isOpen = true;
 		submitCancel = true;
 	}
-	function toggleNewOp() {
-		close();
-		isOpen = true;
-		newOp = true;
-	}
 
 	function close() {
 		isOpen = false;
 		submit = false;
 		submitUpdate = false;
 		submitCancel = false;
-		newOp = false;
 	}
 
 	$effect(()=>{
@@ -52,9 +44,8 @@
 </script>
 
 {#if !isOpen}
-	<button class="butter" type="button" onclick={toggleUpdate}>Editar</button>
+	<button class="butter" type="button" onclick={toggleUpdate}>Actualizar</button>
 	<button class="butter" type="button" onclick={toggleCancel}>Descartar</button>
-	<button class="butter" type="button" onclick={toggleNewOp}>+Oportunidad</button>
 	<button class="butter" type="button" onclick={toggleSubmit}> {nextFase} </button>
 {:else}
 	<button class="close-btn" type="button" onclick={close}>✕</button>

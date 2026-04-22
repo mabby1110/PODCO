@@ -61,32 +61,22 @@
 				{#if submit}
 					{#if currentPhase == 1}
 						<FormInput
-							label="Seguimiento"
+							label="Conclusión"
 							name="nuevaHistoria"
 							bind:value={nuevaHistoria}
-							placeholder="Actividades realizadas"
+							placeholder="Resultados técnicos, potencial detectado y acuerdos de seguimiento."
 							type="textarea"
 							required
 						/>
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="nuevaObservacion"
-								bind:value={nuevaObservacion}
-								placeholder="Documenta novedades, detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
 					{/if}
 				{:else if submitUpdate}
 					<h3>Editar informacion</h3>
 					<div class="opcional">
 						<div class="opciones">
-							<FormOptionalInput title="+Historia">
+							<FormOptionalInput title="+Seguimiento">
 								{#if !eventData.historia}
 									<FormInput
-										label="Historia"
+										label="Seguimiento"
 										name="nuevaHistoria"
 										bind:value={nuevaHistoria}
 										type="textarea"
@@ -148,9 +138,6 @@
 							</FormOptionalInput>
 						</div>
 					</div>
-				{:else if newOp}
-					<FormOportunidad />
-					<input type="hidden" name="motivo_inicial" value={eventData.motivo} />
 				{:else if submitCancel}
 					<FormInput
 						label="Justificación"
@@ -200,7 +187,6 @@
 				bind:submit
 				bind:submitUpdate
 				bind:submitCancel
-				bind:newOp
 			/>
 
 			{#if submit}

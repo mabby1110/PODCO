@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
-	import { selectedOp } from '$lib/stores/selectedOp';
 	import { slide } from 'svelte/transition';
 </script>
 
@@ -10,7 +9,6 @@
 			href="/calendario"
 			onclick={() => {
 				appState.togglePageActions();
-				$selectedOp = null;
 			}}
 			class="butter"
 		>
@@ -20,7 +18,6 @@
 			href="/oportunidades"
 			onclick={() => {
 				appState.togglePageActions();
-				$selectedOp = null;
 			}}
 			class="butter"
 		>
@@ -30,7 +27,6 @@
 			href="/clientes"
 			onclick={() => {
 				appState.togglePageActions();
-				$selectedOp = null;
 			}}
 			class="butter"
 		>
@@ -40,7 +36,6 @@
 			href="/actividades"
 			onclick={() => {
 				appState.togglePageActions();
-				$selectedOp = null;
 			}}
 			class="butter"
 		>

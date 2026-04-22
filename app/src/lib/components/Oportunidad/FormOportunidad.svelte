@@ -1,13 +1,14 @@
 <script lang="ts">
 	import Searchbar from '$lib/components/Searchbar.svelte';
 	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
-	import { motivosOportunidad, motivosActividades } from '$lib';
+	import { motivosOportunidad } from '$lib';
 	import FormInput from '$lib/components/FormInput.svelte';
 	import FormSelectAgente from '../FormSelectAgente.svelte';
 	import { filtrarPorAgente } from '$lib/utils/util';
 	import { page } from '$app/state';
 	import DatePicker from '../DatePicker.svelte';
 	import FormConditionalInput from '../FormConditionalInput.svelte';
+	import { opModalStore } from '$lib/stores/opModalStore.svelte';
 
 	let data = $derived(page.data);
 	let { cliente } = $derived(page.data);
@@ -15,10 +16,11 @@
 
 	let necesidad = $state('');
 	let potencial_venta = $state('');
-	let objetivo = $state('');
+	let objetivo = $state(opModalStore.objetivo || '');
+
 	let isOpen = $state(false);
 
-	let fase = $derived(isOpen?2:1);
+	let fase = $derived(isOpen ? 2 : 1);
 	let selectedAgent = $derived(data.profile?.isAdmin ? '' : data.profile.id);
 	let selectedClient = $derived(cliente ? cliente : null);
 	let clientesFiltrados = $derived(
@@ -38,7 +40,7 @@
 
 <div class="form-content">
 	<div class="form-group">
-		<FormSelectInput list={motivosOportunidad} disableCustom={false}/>
+		<FormSelectInput list={motivosOportunidad} disableCustom={false} />
 		<FormSelectAgente agentes={data.agentes} bind:selected={selectedAgent} />
 	</div>
 
@@ -77,7 +79,7 @@
 	</FormConditionalInput>
 
 	<div class="form-group">
-		<DatePicker title="Fecha de seguimiento"/>
+		<DatePicker title="Fecha de seguimiento" />
 	</div>
 	{#if isOpen}
 		<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
@@ -85,7 +87,6 @@
 	{#if selectedClient}
 		<input type="hidden" name="id_cliente" value={selectedClient?.id} required />
 	{/if}
-	{fase}
 	<input type="hidden" name="fase" bind:value={fase} />
 </div>
 

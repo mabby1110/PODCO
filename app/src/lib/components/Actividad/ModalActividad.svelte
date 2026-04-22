@@ -8,8 +8,9 @@
 	import { motivosActividades } from '$lib';
 	import FormSelectAgente from '../FormSelectAgente.svelte';
 	import DatePicker from '../DatePicker.svelte';
+	import { page } from '$app/state';
 
-	let { data } = $props();
+	let data = $derived(page.data);
 
 	let objetivo = $state('');
 	let duracion = $state(10);
