@@ -176,6 +176,7 @@ body {
 	gap: var(--c);
 	width: 100%;
 	padding: 0 var(--a);
+	margin-top: var(--b);
 }
 
 .card-full .close,
@@ -284,6 +285,9 @@ body {
 
 .card-content section {
 	padding: 0 var(--a);
+	display: flex;
+	flex-direction: column;
+	gap: var(--a);
 }
 
 .card-actions {

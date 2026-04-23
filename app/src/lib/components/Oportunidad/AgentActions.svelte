@@ -373,6 +373,82 @@
 				<button type="submit" class="butter" disabled={isSubmitting}>Perder</button>
 			{/if}
 		</div>
+	{:else}
+		<div class="actions">
+			<h3>Editar informacion</h3>
+			<div class="opcional">
+				<div class="opciones">
+					<FormOptionalInput title="+Observaciones">
+						<FormInput
+							label="Observaciones"
+							name="observaciones"
+							value={eventData.observaciones}
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+adjuntos">
+						<UploadFile label="Subir documentos" name="docFile" multiple />
+					</FormOptionalInput>
+
+					<FormOptionalInput title="+Postergar">
+						<div class="opciones">
+							<FormInput
+								label="Postergar"
+								name="nuevaHistoria"
+								bind:value={nuevaHistoria}
+								placeholder="Motivo de la postergación y acción a realizar"
+								type="textarea"
+								required
+							/>
+							<DatePicker title="Fecha Seguimiento" />
+						</div>
+					</FormOptionalInput>
+				</div>
+			</div>
+		</div>
+
+		<!-- datos compuestos -->
+		<input type="hidden" name="id" value={eventData.id} />
+		{#if nuevaHistoria}
+			<input
+				type="hidden"
+				name="historia"
+				value={agregarEntrada(eventData.historia, nuevaHistoria)}
+			/>
+		{/if}
+		{#if nuevoRequisito}
+			<input
+				type="hidden"
+				name="requisitos"
+				value={concatStrings(eventData.requisitos, nuevoRequisito)}
+			/>
+		{/if}
+		{#if nuevaCotizacion}
+			<input
+				type="hidden"
+				name="cotizaciones_presentadas"
+				bind:value={eventData.cotizaciones_presentadas}
+			/>
+		{/if}
+		{#if nuevaObeservacion}
+			<input
+				type="hidden"
+				name="observaciones"
+				value={concatStrings(eventData.observaciones, nuevaObeservacion)}
+			/>
+		{/if}
+		{#if eventData.agente}
+			<input type="hidden" name="agente" value={eventData.agente.nombre} />
+		{/if}
+		{#if nextPhase == 6}
+			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
+		{/if}
+
+		<div class="submit">
+			<input type="hidden" name="fase" value={currentPhase} />
+			<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
+		</div>
 	{/if}
 </form>
 

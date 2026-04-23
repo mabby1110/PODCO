@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { getStyleForPhase } from '$lib/utils/util';
+	import { formatCurrency, getStyleForPhase } from '$lib/utils/util';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import FilePreview from '$lib/components/FilePreview.svelte';
@@ -17,7 +17,6 @@
 
 	// 2. Determinamos la oportunidad activa (Store vs URL)
 	const event = $derived(data.oportunidad);
-
 	// 3. Formateamos los datos para la vista (tu eventData original adaptado)
 
 	const eventData = $derived.by(() => {
@@ -41,6 +40,7 @@
 			documentos_operacion: event.documentos_operacion,
 			documentos: event.documentos,
 			objetivo: event.objetivo,
+			monto_oc: formatCurrency(event.monto_oc, 'USD'),
 			style: getStyleForPhase(event.fase)
 		};
 	});
@@ -67,7 +67,12 @@
 			<section>
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 			</section>
-
+			{#if eventData.monto_oc}
+				<section>
+					<h3>Monto</h3>
+					<h3>{eventData.monto_oc}</h3>
+				</section>
+			{/if}
 			{#if eventData.necesidades}
 				<section>
 					<h3>Necesidades</h3>

@@ -20,3 +20,13 @@ export function filtrarPorAgente(lista: [], agenteId: string) {
 		);
 	});
 }
+
+export const formatCurrency = (value: string, currency: string) => {
+  // Ajustamos la región según la moneda para un formato más natural
+  const locale = currency === 'MXN' ? 'es-MX' : 'en-US';
+  
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(Number(value));
+};
