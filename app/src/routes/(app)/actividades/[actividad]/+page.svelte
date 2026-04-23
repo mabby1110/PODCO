@@ -8,6 +8,8 @@
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
 	import { appState } from '$lib/stores/appState.svelte.js';
 	import { opModalStore } from '$lib/stores/opModalStore.svelte.js';
+	import { postActivityUpdate } from '$lib/utils/actions.js';
+	import { invalidateAll } from '$app/navigation';
 
 	let { data } = $props();
 	const event = $derived(data.actividad);
@@ -33,10 +35,36 @@
 
 	let currentFase = $derived(eventData?.fase?.id_fase == 6 ? 'w' : '');
 
-	function handleHotOp(objetivo: string) {
-		opModalStore.objetivo =  objetivo;
+	let activeHistoriaIndex = $state<number | null>(null);
+	function handleHotOp(objetivo: string, index: number) {
+		activeHistoriaIndex = index;
+		opModalStore.objetivo = objetivo;
 		appState.toggleModalOp();
 	}
+
+	$effect(() => {
+		if (opModalStore.succeded && activeHistoriaIndex !== null && eventData) {
+			console.log('modificar actividad', opModalStore.id_op);
+
+			let historiaArray = JSON.parse(eventData.historia || '[]');
+
+			if (historiaArray[activeHistoriaIndex]) {
+				historiaArray[activeHistoriaIndex].id_op = opModalStore.id_op;
+			}
+
+			const updatedHistoria = JSON.stringify(historiaArray);
+
+			postActivityUpdate(
+				eventData.id,
+				{ id: eventData.id, historia: updatedHistoria },
+				'/actividades?/updateActivity'
+			).then(() => {
+				activeHistoriaIndex = null;
+				opModalStore.clearStore();
+				invalidateAll();
+			});
+		}
+	});
 </script>
 
 {#if eventData}
@@ -80,9 +108,13 @@
 				<section>
 					<h3>Historia</h3>
 					<div class="entradas">
-						{#each JSON.parse(eventData?.historia) as item}
+						{#each JSON.parse(eventData.historia) as item, index}
 							<div class="entrada">
-								<button class="butter" onclick={()=>handleHotOp(item.entrada)}>+</button>
+								{#if item.id_op}
+									<a href="/oportunidades/{item.id_op}">op</a>
+								{:else}
+									<button class="butter" onclick={() => handleHotOp(item.entrada, index)}>+</button>
+								{/if}
 								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
 								<p>{item.entrada}</p>
 							</div>

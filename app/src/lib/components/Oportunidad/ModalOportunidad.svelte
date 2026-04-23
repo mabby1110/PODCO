@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { appState } from '$lib/stores/appState.svelte';
+	import { opModalStore } from '$lib/stores/opModalStore.svelte';
 	import FormOportunidad from './FormOportunidad.svelte';
 	
 </script>
@@ -27,6 +28,8 @@
 					return async ({ result, update }) => {
 						if (result.type === 'success' && result.data?.op) {
 							const id = result.data.op;
+							opModalStore.succeded = true;
+							opModalStore.id_op = id;
 							invalidateAll();
 							await update({ reset: true });
 						}

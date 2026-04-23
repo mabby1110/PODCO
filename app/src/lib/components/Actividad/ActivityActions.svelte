@@ -6,7 +6,6 @@
 	import FormInput from '../FormInput.svelte';
 	import { invalidateAll } from '$app/navigation';
 	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
-	import FormOportunidad from '../Oportunidad/FormOportunidad.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import EditableJsonList from '../EditableJsonList.svelte';
 
