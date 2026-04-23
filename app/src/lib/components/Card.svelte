@@ -34,13 +34,3 @@
         {/if}
     </div>
 </div>
-
-<style>
-    .card-actions {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--b);
-    }
-</style>
