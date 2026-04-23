@@ -87,67 +87,63 @@
 	<input type="hidden" name="id" value={id} />
 	<input type="hidden" {name} value={list_stringified} />
 
-	<div class="list-container">
+	<div class="entradas">
 		{#each lista as item, i}
-			<div class="list-item">
+			<div class="entrada">
 				{#if editIndex === i}
-					<div class="inline-form">
-						{#each fields as field}
-							<label class="field-input">
-								{#if field.type === 'textarea'}
-									<span>{field.label}</span>
-									<textarea bind:value={currentItem[field.name]}></textarea>
-								{:else if field.type === 'select' && field.options}
-									<span>{field.label}</span>
-									<select bind:value={currentItem[field.name]}>
-										<option value="">Seleccionar</option>
-										{#each field.options as opt}
-											<option value={opt.value}>{opt.label}</option>
-										{/each}
-									</select>
-								{:else if field.type === 'date'}
-									<input type="hidden" bind:value={currentItem[field.name]} />
-								{:else}
-									<span>{field.label}</span>
-									<input type={field.type || 'text'} bind:value={currentItem[field.name]} />
-								{/if}
-							</label>
-						{/each}
-						<div class="form-actions">
-							<button type="button" class="butter" onclick={saveItem}>Guardar</button>
-							<!-- <button type="button" class="btn-icon" onclick={() => removeItem(i)}>🗑️</button> -->
-							<button type="button" class="close-btn" onclick={cancel}>X</button>
-						</div>
+					{#each fields as field}
+						<label class="field-input">
+							{#if field.type === 'textarea'}
+								<span>{field.label}</span>
+								<textarea bind:value={currentItem[field.name]}></textarea>
+							{:else if field.type === 'select' && field.options}
+								<span>{field.label}</span>
+								<select bind:value={currentItem[field.name]}>
+									<option value="">Seleccionar</option>
+									{#each field.options as opt}
+										<option value={opt.value}>{opt.label}</option>
+									{/each}
+								</select>
+							{:else if field.type === 'date'}
+								<input type="hidden" bind:value={currentItem[field.name]} />
+							{:else}
+								<span>{field.label}</span>
+								<input type={field.type || 'text'} bind:value={currentItem[field.name]} />
+							{/if}
+						</label>
+					{/each}
+					<div class="form-actions">
+						<button type="button" class="butter" onclick={saveItem}>Guardar</button>
+						<!-- <button type="button" class="btn-icon" onclick={() => removeItem(i)}>🗑️</button> -->
+						<button type="button" class="close-btn" onclick={cancel}>X</button>
 					</div>
 				{:else}
-					<div class="item-content">
-						<div class="item-text">
-							{#each fields as field, fIndex}
-								{#if fIndex === 0}
-									{#if field.type === 'date'}
-										<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
-									{:else}
-										<b>{item[field.name]}: </b>
-									{/if}
-								{:else}
-									<span>{item[field.name]}</span>
-								{/if}
-							{/each}
-						</div>
-						<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
-					</div>
+					<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
+					{#each fields as field, fIndex}
+						{#if fIndex === 0}
+							{#if field.type === 'date'}
+								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
+							{:else}
+								<b>{item[field.name]}: </b>
+							{/if}
+						{:else}
+							<span>{item[field.name]}</span>
+						{/if}
+					{/each}
 				{/if}
 			</div>
 		{/each}
 
 		{#if isAdding}
-			<div class="list-item inline-form">
+			<div class="entrada">
 				{#each fields as field}
-					<label class="field-input">
-						{#if field.type === 'textarea'}
+					{#if field.type === 'textarea'}
+						<label class="field-input">
 							<span>{field.label}</span>
 							<textarea bind:value={currentItem[field.name]}></textarea>
-						{:else if field.type === 'select' && field.options}
+						</label>
+					{:else if field.type === 'select' && field.options}
+						<label class="field-input">
 							<span>{field.label}</span>
 							<select bind:value={currentItem[field.name]}>
 								<option value="">Seleccionar</option>
@@ -155,17 +151,19 @@
 									<option value={opt.value}>{opt.label}</option>
 								{/each}
 							</select>
-						{:else if field.type === 'date'}
-							<input type="hidden" bind:value={currentItem[field.name]} />
-						{:else}
+						</label>
+					{:else if field.type === 'date'}
+						<input type="hidden" bind:value={currentItem[field.name]} />
+					{:else}
+						<label class="field-input">
 							<span>{field.label}</span>
 							<input type={field.type || 'text'} bind:value={currentItem[field.name]} />
-						{/if}
-					</label>
+						</label>
+					{/if}
 				{/each}
 				<div class="form-actions">
 					<button type="button" class="butter" onclick={saveItem}>Guardar</button>
-					<button type="button" class="close-btn" onclick={cancel}>X</button>
+					<button type="button" class="butter" onclick={cancel}>Cancelar</button>
 				</div>
 			</div>
 		{/if}
@@ -177,47 +175,19 @@
 </form>
 
 <style>
-	.list-container {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a, 8px);
-	}
-
-	.list-item {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.item-content {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		gap: 8px;
-	}
-
-	.item-text {
-		word-break: break-word;
-	}
-
-	.inline-form {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
+	.entradas {
 		padding: 8px;
 		border: 1px solid var(--color-contrast, #ccc);
 		border-radius: 8px;
 	}
-
 	.field-input {
 		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		font-size: 14px;
+		flex-grow: 1;
 	}
 
 	.form-actions {
 		display: flex;
-		align-items: center;
+		align-self: flex-end;
 		justify-content: flex-end;
 		gap: 8px;
 		margin-top: 4px;

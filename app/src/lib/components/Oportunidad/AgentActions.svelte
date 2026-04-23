@@ -23,6 +23,10 @@
 	let nuevaObeservacion = $state('');
 	let monto_oc = $state('');
 
+	let necesidad = $state('');
+	let potencial_venta = $state('');
+	let objetivo = $state('');
+
 	let isSubmitting = $state(false);
 	let isOpen = $state(false);
 	let submit = $state(false);
@@ -70,7 +74,32 @@
 		{#if isOpen}
 			<div class="actions">
 				{#if submit}
-					{#if currentPhase == 2}
+					{#if currentPhase == 1}
+						<FormInput
+							label="Necesidad"
+							name="necesidad"
+							bind:value={necesidad}
+							placeholder={fasePlaceholder}
+							type="textarea"
+							required
+						/>
+						<FormInput
+							label="Necesidad"
+							name="necesidad"
+							bind:value={necesidad}
+							placeholder="Requerimiento técnico u operacional detectados"
+							type="textarea"
+							required
+						/>
+						<FormInput
+							label="Potencial de venta"
+							name="potencial_venta"
+							bind:value={potencial_venta}
+							placeholder="Producto o servicio que tiene mayor probabilidad de venta"
+							type="textarea"
+							required
+						/>
+					{:else if currentPhase == 2}
 						<FormSelectMotivo
 							title="Especificar Motivo"
 							list={motivosOportunidad}

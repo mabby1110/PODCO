@@ -40,7 +40,7 @@
 
 <div class="form-content">
 	<div class="form-group">
-		<FormSelectInput list={motivosOportunidad} disableCustom={false} />
+		<FormSelectInput list={motivosOportunidad}/>
 		<FormSelectAgente agentes={data.agentes} bind:selected={selectedAgent} />
 	</div>
 

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { slide } from 'svelte/transition';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
@@ -8,8 +7,7 @@
 	import AgentActions from '$lib/components/Oportunidad/AgentActions.svelte';
 	import OperActions from '$lib/components/Oportunidad/OperActions.svelte';
 	import Card from '$lib/components/Card.svelte';
-	import EditableJsonList from '$lib/components/EditableJsonList.svelte';
-	import { formatDate, formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
+	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
 
 	let { data } = $props();
 
@@ -46,13 +44,13 @@
 			style: getStyleForPhase(event.fase)
 		};
 	});
-	let currentFase = $derived(eventData?.fase?.id_fase == 6 ? 'w' : '');
+	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 </script>
 
 {#if eventData}
 	<Card headerStyle={eventData.style}>
 		{#snippet header()}
-			<button onclick={() => history.back()} class="close {currentFase}" aria-label="Cerrar">
+			<button onclick={() => history.back()} class="close {currentFase==6?'w':''}" aria-label="Cerrar">
 				✕
 			</button>
 			<div class="title">
@@ -120,7 +118,7 @@
 		{/snippet}
 		{#snippet actions()}
 			{#if $profile?.isAdmin}
-				{#if eventData.fase.id_fase < 4}
+				{#if currentFase < 4}
 					<AgentActions {eventData} />
 				{:else}
 					<OperActions {eventData} />

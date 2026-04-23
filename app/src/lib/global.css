@@ -78,6 +78,7 @@ body {
 	background-color: var(--color-background);
 }
 
+/* +PAGE */
 .page-container {
 	width: 100%;
 	height: 100%;
@@ -201,15 +202,20 @@ body {
 	padding: var(--a) 0 0;
 }
 
-.card-full .entradas {
+.entradas {
 	display: flex;
 	flex-direction: column;
 	gap: var(--b);
 }
 
-.card-full .entrada {
+.entradas .entrada {
 	display: flex;
+	align-items: center;
 	gap: var(--a);
+	width: 100%;
+}
+.entradas .butter {
+	width: var(--d);
 }
 
 .card-list-preview {
