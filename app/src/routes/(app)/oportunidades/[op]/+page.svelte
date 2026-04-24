@@ -8,6 +8,7 @@
 	import OperActions from '$lib/components/Oportunidad/OperActions.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
+	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
 
 	let { data } = $props();
 
@@ -23,8 +24,7 @@
 		if (!event) return null;
 		return {
 			id: event.id,
-			razon_social:
-				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
+			cliente: clientes?.find((c: { id: any }) => c.id == event.id_cliente),
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
@@ -50,12 +50,16 @@
 {#if eventData}
 	<Card headerStyle={eventData.style}>
 		{#snippet header()}
-			<button onclick={() => history.back()} class="close {currentFase==6?'w':''}" aria-label="Cerrar">
+			<button
+				onclick={() => history.back()}
+				class="close {currentFase == 6 ? 'w' : ''}"
+				aria-label="Cerrar"
+			>
 				✕
 			</button>
 			<div class="title">
 				<h1>{eventData.motivo}</h1>
-				<h3>{eventData.razon_social}</h3>
+				<h3>{eventData.cliente.razon_social}</h3>
 			</div>
 			<div class="meta">
 				<p class="date">{eventData.inicio}</p>
@@ -66,6 +70,13 @@
 		{#snippet content()}
 			<section>
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
+			</section>
+			<section>
+				<FormEditableContact
+					jsonList={eventData.cliente.contactos}
+					id={eventData.cliente.id}
+					action="/clientes?/updateClient"
+				/>
 			</section>
 			{#if eventData.monto_oc}
 				<section>
