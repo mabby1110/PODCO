@@ -71,6 +71,7 @@
 			<section>
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 			</section>
+
 			<section>
 				<FormEditableContact
 					jsonList={eventData.cliente.contactos}
@@ -78,12 +79,14 @@
 					action="/clientes?/updateClient"
 				/>
 			</section>
+
 			{#if eventData.monto_oc}
 				<section>
 					<h3>Monto</h3>
 					<h3>{eventData.monto_oc}</h3>
 				</section>
 			{/if}
+
 			{#if eventData.necesidades}
 				<section>
 					<h3>Necesidades</h3>
