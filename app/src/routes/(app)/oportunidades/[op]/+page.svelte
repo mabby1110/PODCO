@@ -71,6 +71,7 @@
 		{/snippet}
 		{#snippet content()}
 			<section>
+				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 				<EditableList
 					jsonList={eventData.etiquetas}
 					id={eventData.id}
@@ -78,9 +79,6 @@
 					name="etiquetas"
 					label="Etiqueta"
 				/>
-			</section>
-			<section>
-				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 			</section>
 
 			<section>
