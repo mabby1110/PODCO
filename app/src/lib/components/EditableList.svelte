@@ -1,166 +1,150 @@
 <script lang="ts">
-    import { enhance } from '$app/forms';
+	import { enhance } from '$app/forms';
 
-    let {
-        jsonList = $bindable(),
-        id,
-        action = '?/updateList',
-        name,
-        label = 'Etiqueta'
-    }: {
-        jsonList: string;
-        id: string;
-        action?: string;
-        name?: string;
-        label?: string;
-    } = $props();
+	let {
+		jsonList = $bindable(),
+		id,
+		action = '?/updateList',
+		name,
+		label = 'Etiqueta',
+		options = ['bombas', 'sellos']
+	}: {
+		jsonList: string;
+		id: string;
+		action?: string;
+		name?: string;
+		label?: string;
+		options?: string[];
+	} = $props();
 
-    let lista = $state<string[]>(
-        jsonList && jsonList !== '' ? JSON.parse(jsonList) : []
-    );
-    let editIndex = $state<number | null>(null);
-    let isAdding = $state(false);
-    let currentString = $state<string>('');
+	let lista = $state<string[]>(jsonList && jsonList !== '' ? JSON.parse(jsonList) : []);
+	let isAdding = $state(false);
+	let currentString = $state<string>('');
 
-    let list_stringified = $derived(JSON.stringify(lista));
-    let formEl = $state<HTMLFormElement | null>(null);
+	let edit = $state(false);
+	let list_stringified = $derived(JSON.stringify(lista));
+	let formEl = $state<HTMLFormElement | null>(null);
 
-    function openNewItem() {
-        isAdding = true;
-        editIndex = null;
-        currentString = '';
-    }
+	function openNewItem() {
+		isAdding = true;
+		currentString = '';
+	}
 
-    function editItem(i: number) {
-        editIndex = i;
-        isAdding = false;
-        currentString = lista[i];
-    }
+	function cancel() {
+		isAdding = false;
+	}
 
-    function cancel() {
-        editIndex = null;
-        isAdding = false;
-    }
+	function saveItem() {
+		const val = currentString.trim();
+		if (!val) {
+			cancel();
+			return;
+		}
 
-    function saveItem() {
-        const val = currentString.trim();
-        if (!val) return;
+		lista = [...lista, val];
+		jsonList = list_stringified;
+		cancel();
+		queueMicrotask(() => formEl?.requestSubmit());
+	}
 
-        if (editIndex !== null) {
-            lista[editIndex] = val;
-        } else if (isAdding) {
-            lista = [...lista, val];
-        }
-        jsonList = list_stringified;
-        cancel();
-        queueMicrotask(() => formEl?.requestSubmit());
-    }
+	function removeItem(i: number) {
+		if (!confirm('¿Eliminar elemento?')) return;
+		lista = lista.filter((_, idx) => idx !== i);
+		jsonList = list_stringified;
+		cancel();
+		queueMicrotask(() => formEl?.requestSubmit());
+	}
 
-    function removeItem(i: number) {
-        if (!confirm('¿Eliminar elemento?')) return;
-        lista = lista.filter((_, idx) => idx !== i);
-        jsonList = list_stringified;
-        cancel();
-        queueMicrotask(() => formEl?.requestSubmit());
-    }
-
-    function handleSubmit() {
-        return async ({ update }: any) => {
-            await update();
-        };
-    }
+	function handleSubmit() {
+		return async ({ update }: any) => {
+			await update();
+		};
+	}
 </script>
 
-<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
-    <input type="hidden" name="id" value={id} />
-    <input type="hidden" {name} value={list_stringified} />
+{#if edit}
+	<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
+		<input type="hidden" name="id" value={id} />
+		<input type="hidden" {name} value={list_stringified} />
 
-    <div class="entradas">
-        {#each lista as item, i}
-            <div class="entrada">
-                {#if editIndex === i}
-                    <label class="field-input">
-                        <span>{label}</span>
-                        <input type="text" bind:value={currentString} />
-                    </label>
-                    <div class="form-actions">
-                        <button type="button" class="butter" onclick={saveItem}>Guardar</button>
-                        <button type="button" class="close-btn" onclick={cancel}>X</button>
-                    </div>
-                {:else}
-                    <div class="item-display">
-                        <span>{item}</span>
-                        <div class="form-actions">
-                            <button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
-                            <button type="button" class="btn-icon" onclick={() => removeItem(i)}>🗑️</button>
-                        </div>
-                    </div>
-                {/if}
-            </div>
-        {/each}
+		<div class="chip-container">
+			<button type="button" class="close-btn" onclick={() => (edit = false)}>✕</button>
+			{#each lista as item, i}
+				<div class="chip butter">
+					<span>{item}</span>
+					<button type="button" class="btn-icon" onclick={() => removeItem(i)}>🗑️</button>
+				</div>
+			{/each}
 
-        {#if isAdding}
-            <div class="entrada">
-                <label class="field-input">
-                    <span>{label}</span>
-                    <input type="text" bind:value={currentString} />
-                </label>
-                <div class="form-actions">
-                    <button type="button" class="butter" onclick={saveItem}>Guardar</button>
-                    <button type="button" class="butter" onclick={cancel}>Cancelar</button>
-                </div>
-            </div>
-        {/if}
-
-        {#if editIndex === null && !isAdding}
-            <button type="button" class="butter" onclick={openNewItem}>+ Agregar {label.toLowerCase()}</button>
-        {/if}
-    </div>
-</form>
+			{#if isAdding}
+				<div class="chip-edit butter">
+					<select bind:value={currentString} autofocus>
+						<option value="" disabled>Seleccionar...</option>
+						{#each options as opt}
+							<option value={opt}>{opt}</option>
+						{/each}
+					</select>
+					<button type="button" class="btn-icon" onclick={saveItem}>✓</button>
+					<button type="button" class="btn-icon" onclick={cancel}>✕</button>
+				</div>
+			{:else}
+				<button type="button" class="chip-add butter" onclick={openNewItem}>+ Agregar</button>
+			{/if}
+		</div>
+	</form>
+{:else}
+	<div class="chip-container">
+		{#each lista as item, i}
+			<div class="chip">
+				<span>{item}</span>
+			</div>
+		{/each}
+		<button type="button" class="chip-add" onclick={() => (edit = true)}>+ editar</button>
+	</div>
+{/if}
 
 <style>
-    .entradas {
-        padding: 8px;
-        border: 1px solid var(--color-contrast, #ccc);
-        border-radius: 8px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-    .entrada {
-        padding: 4px;
-        border-bottom: 1px dashed var(--color-contrast, #eee);
-    }
-    .entrada:last-child {
-        border-bottom: none;
-    }
-    .item-display {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .field-input {
-        display: flex;
-        flex-grow: 1;
-        gap: 8px;
-        align-items: center;
-    }
-    .form-actions {
-        display: flex;
-        align-self: flex-end;
-        justify-content: flex-end;
-        gap: 8px;
-        margin-top: 4px;
-    }
-    .btn-icon {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        padding: 4px;
-        opacity: 0.7;
-    }
-    .btn-icon:hover {
-        opacity: 1;
-    }
+	.chip-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		align-items: center;
+		border-radius: 8px;
+	}
+	.chip {
+		background-color: var(--color-secondary);
+	}
+	.chip-edit {
+		display: flex;
+        gap: var(--a);
+		align-items: center;
+	}
+	.chip-edit select {
+		border: none;
+		background: transparent;
+	}
+	.chip-add {
+		background: none;
+		border: 1px dashed var(--color-contrast);
+		border-radius: 16px;
+		padding: 4px 12px;
+		cursor: pointer;
+		font-size: 14px;
+		color: var(--color-muted);
+	}
+	.chip-add:hover {
+		color: var(--color-primary);
+		background-color: var(--color-contrast);
+	}
+	.btn-icon {
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 12px;
+		padding: 2px;
+		opacity: 0.6;
+	}
+	.btn-icon:hover {
+		opacity: 1;
+	}
 </style>

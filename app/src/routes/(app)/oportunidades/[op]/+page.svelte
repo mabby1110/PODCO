@@ -9,6 +9,7 @@
 	import Card from '$lib/components/Card.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
 	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
+	import EditableList from '$lib/components/EditableList.svelte';
 
 	let { data } = $props();
 
@@ -41,6 +42,7 @@
 			documentos: event.documentos,
 			objetivo: event.objetivo,
 			monto_oc: formatCurrency(event.monto_oc, 'USD'),
+			etiquetas: event.etiquetas,
 			style: getStyleForPhase(event.fase)
 		};
 	});
@@ -68,6 +70,15 @@
 			</div>
 		{/snippet}
 		{#snippet content()}
+			<section>
+				<EditableList
+					jsonList={eventData.etiquetas}
+					id={eventData.id}
+					action="/oportunidades?/updateOp"
+					name="etiquetas"
+					label="Etiqueta"
+				/>
+			</section>
 			<section>
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 			</section>

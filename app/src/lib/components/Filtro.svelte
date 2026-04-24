@@ -146,14 +146,6 @@
 		gap: var(--a);
 		width: 100%;
 	}
-	.chip {
-		background-color: var(--color-highlight);
-		padding: 4px var(--a);
-		border-radius: 16px;
-		display: flex;
-		align-items: center;
-		gap: 0.4rem;
-	}
 	.chop {
 		background-color: var(--color-error);
 		padding: 4px var(--a);

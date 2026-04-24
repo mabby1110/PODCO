@@ -363,6 +363,14 @@ body {
 	background-color: var(--color-muted);
 }
 
+.chip {
+	background-color: var(--color-highlight);
+	padding: 4px var(--a);
+	border-radius: 16px;
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+}
 /* Webkit (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
 	width: 8px;
