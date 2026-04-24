@@ -77,7 +77,7 @@
 			{/each}
 
 			{#if isAdding}
-				<div class="chip-edit butter">
+				<div class="chip-edit">
 					<select bind:value={currentString} autofocus>
 						<option value="" disabled>Seleccionar...</option>
 						{#each options as opt}
@@ -120,7 +120,6 @@
 		align-items: center;
 	}
 	.chip-edit select {
-		border: none;
 		background: transparent;
 	}
 	.chip-add {
