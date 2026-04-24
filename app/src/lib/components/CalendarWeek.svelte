@@ -307,11 +307,10 @@
 
 	.event-wrapper:hover {
 		z-index: 999 !important;
-		width: 150% !important;
+		width: 350% !important;
 		max-width: 80vw;
 		min-height: var(--g) !important;
 		height: auto !important;
-		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 		transition-delay: 0.15s;
 	}
 	.event-wrapper:active {

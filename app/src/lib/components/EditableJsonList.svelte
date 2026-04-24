@@ -68,13 +68,13 @@
 		queueMicrotask(() => formEl?.requestSubmit());
 	}
 
-	function removeItem(i: number) {
-		if (!confirm('¿Eliminar elemento?')) return;
-		lista = lista.filter((_, idx) => idx !== i);
-		jsonList = list_stringified;
-		cancel();
-		queueMicrotask(() => formEl?.requestSubmit());
-	}
+	// function removeItem(i: number) {
+	// 	if (!confirm('¿Eliminar elemento?')) return;
+	// 	lista = lista.filter((_, idx) => idx !== i);
+	// 	jsonList = list_stringified;
+	// 	cancel();
+	// 	queueMicrotask(() => formEl?.requestSubmit());
+	// }
 
 	function handleSubmit() {
 		return async ({ update }: any) => {
@@ -92,11 +92,13 @@
 			<div class="entrada">
 				{#if editIndex === i}
 					{#each fields as field}
-						<label class="field-input">
-							{#if field.type === 'textarea'}
+						{#if field.type === 'textarea'}
+							<label class="field-input">
 								<span>{field.label}</span>
 								<textarea bind:value={currentItem[field.name]}></textarea>
-							{:else if field.type === 'select' && field.options}
+							</label>
+						{:else if field.type === 'select' && field.options}
+							<label class="field-input">
 								<span>{field.label}</span>
 								<select bind:value={currentItem[field.name]}>
 									<option value="">Seleccionar</option>
@@ -104,13 +106,15 @@
 										<option value={opt.value}>{opt.label}</option>
 									{/each}
 								</select>
-							{:else if field.type === 'date'}
-								<input type="hidden" bind:value={currentItem[field.name]} />
-							{:else}
+							</label>
+						{:else if field.type === 'date'}
+							<input type="hidden" bind:value={currentItem[field.name]} />
+						{:else}
+							<label class="field-input">
 								<span>{field.label}</span>
 								<input type={field.type || 'text'} bind:value={currentItem[field.name]} />
-							{/if}
-						</label>
+							</label>
+						{/if}
 					{/each}
 					<div class="form-actions">
 						<button type="button" class="butter" onclick={saveItem}>Guardar</button>
@@ -184,7 +188,6 @@
 		display: flex;
 		flex-grow: 1;
 	}
-
 	.form-actions {
 		display: flex;
 		align-self: flex-end;

@@ -16,46 +16,9 @@
 	let duracion = $state(10);
 	let observaciones = $state('');
 	let requisitos = $state('');
-	let fecha = $state('');
-	let hora = $state('08:00');
 	let inicio = $state('');
 	let fin = $state('');
 	let agenteSeleccionado = $state<string>('');
-	function setCustomEnd(fechaCompromiso: Date, duracion: number = 10) {
-		const next = addMinutes(new Date(fechaCompromiso), duracion);
-
-		const yyyy = next.getFullYear();
-		const mm = String(next.getMonth() + 1).padStart(2, '0');
-		const dd = String(next.getDate()).padStart(2, '0');
-		const hh = String(next.getHours()).padStart(2, '0');
-		const mi = String(next.getMinutes()).padStart(2, '0');
-
-		return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
-	}
-	function generarHoras() {
-		const horas = [];
-		let actual = 8 * 60; // 08:00
-		const limite = 18 * 60; // 18:00
-
-		while (actual <= limite) {
-			const hh = String(Math.floor(actual / 60)).padStart(2, '0');
-			const mm = String(actual % 60).padStart(2, '0');
-			horas.push(`${hh}:${mm}`);
-			actual += 10;
-		}
-
-		return horas;
-	}
-	$effect(() => {
-		if (fecha && hora) {
-			const base = `${fecha} ${hora}`;
-			inicio = base;
-			fin = setCustomEnd(new Date(`${fecha}T${hora}`), duracion);
-		} else {
-			inicio = '';
-			fin = '';
-		}
-	});
 </script>
 
 {#if $appState.ModalActivity}

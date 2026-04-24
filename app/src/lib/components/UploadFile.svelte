@@ -84,10 +84,10 @@
 
 <style>
     .upload-container {
-        width: 100%;
         display: flex;
         flex-direction: column;
         gap: var(--a);
+        width: 100%;
     }
 
     .file-input {

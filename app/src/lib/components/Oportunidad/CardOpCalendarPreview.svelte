@@ -39,25 +39,23 @@
 		<div class="preview-header">
 			<p class="header-date">{eventData?.inicio.split(' ')[1]}</p>
 			<b class="header-title">{eventData?.razon_social}</b>
-			<div class="header-meta">
+			<div class="meta">
 				<b>{eventData?.agente?.nombre}</b>
 				<p>{event?.motivo}</p>
+				<p class="motivo">{event?.objetivo}</p>
 			</div>
-		</div>
-		<div class="meta">
-			<p class="motivo">{event?.objetivo}</p>
-			<p class="motivo">{event?.historia}</p>
 		</div>
 	{:else}
 		<div class="preview-header">
 			<b class="header-title">{eventData?.razon_social}</b>
-			<div class="header-meta">
+			<div class="meta-min">
 				<b>{eventData?.agente?.nombre}</b>
 				<p>{event?.motivo}</p>
+				<p class="motivo">{event?.objetivo}</p>
 			</div>
 		</div>
 	{/if}
-	</a>
+</a>
 
 <style>
 	.preview-header {
@@ -68,13 +66,10 @@
 		gap: var(--b);
 		width: 100%;
 	}
-	.header-title {
-		width: 80%;
-	}
-	.header-meta {
+	.meta-min {
 		display: flex;
+		flex-direction: column;
 		font-size: smaller;
-		gap: var(--a);
 	}
 	.header-date {
 		position: absolute;

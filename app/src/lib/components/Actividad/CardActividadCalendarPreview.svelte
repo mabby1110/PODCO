@@ -39,10 +39,7 @@
 			<div class="header-meta">
 				<b>{eventData?.agente?.nombre}</b>
 			</div>
-		</div>
-		<div class="meta">
 			<p class="motivo">{event?.objetivo}</p>
-			<p class="motivo">{event?.historia}</p>
 		</div>
 	{:else}
 		<div class="preview-header">
@@ -50,6 +47,7 @@
 			<div class="header-meta">
 				<b>{eventData?.agente?.nombre}</b>
 			</div>
+			<p class="motivo">{event?.objetivo}</p>
 		</div>
 	{/if}
 </a>

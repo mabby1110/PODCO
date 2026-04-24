@@ -231,9 +231,7 @@
 							{/if}
 							{#if currentPhase == 3}
 								<FormOptionalInput title="+Nueva cotizacion">
-									<div class="cotizacion">
-										<UploadFile label="Nueva Cotización" name="quoteFile" required />
-									</div>
+									<UploadFile label="Nueva Cotización" name="quoteFile" required />
 								</FormOptionalInput>
 							{/if}
 							<FormOptionalInput title="+Objetivo">
@@ -383,6 +381,16 @@
 							label="Observaciones"
 							name="observaciones"
 							value={eventData.observaciones}
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+Agregar requisitos">
+						<FormInput
+							label="Requisitos"
+							name="requisitos"
+							value={eventData.requisitos}
+							placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
 							type="textarea"
 							required
 						/>
