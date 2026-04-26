@@ -3,7 +3,7 @@
 	import { dropzone } from '$lib/actions/dnd';
 	import { calendarStore } from '$lib/stores/calendarStore.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { invalidate } from '$app/navigation';
+	import { invalidate, invalidateAll } from '$app/navigation';
 	import {
 		getWeekDates,
 		isSameDay,
@@ -78,7 +78,7 @@
 		} else {
 			await fetch('/actividades?/updateActivity', { method: 'POST', body: formData });
 		}
-		await invalidate('app:calendar');
+		await invalidateAll();
 	}
 
 	function getEventsForSlot(hour: number, minute: number, targetDate: Date) {

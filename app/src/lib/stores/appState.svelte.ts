@@ -6,7 +6,6 @@ interface AppState {
 	dnd: boolean;
 	panelMinimized: boolean;
 	calendarCards: boolean;
-	calendarView: boolean;
 	ModalActivity: boolean;
 	ModalOp: boolean;
 	ModalClient: boolean;
@@ -20,7 +19,6 @@ const defaultState: AppState = {
 	dnd: false,
 	panelMinimized: false,
 	calendarCards: false,
-	calendarView: false,
 	ModalActivity: false,
 	ModalOp: false,
 	ModalClient: false,
@@ -53,33 +51,9 @@ function createAppState() {
 				saveToCookie(newState);
 				return newState;
 			}),
-		setPanelPosition: (x: number, y: number) =>
-			update((state) => {
-				const newState = { ...state, panelPosition: { x, y } };
-				saveToCookie(newState);
-				return newState;
-			}),
-		resetPanelPosition: () =>
-			update((state) => {
-				const newState = { ...state, panelPosition: { x: 0, y: 0 } };
-				saveToCookie(newState);
-				return newState;
-			}),
-		togglePanelMinimized: () =>
-			update((state) => {
-				const newState = { ...state, panelMinimized: !state.panelMinimized };
-				saveToCookie(newState);
-				return newState;
-			}),
 		toggleMinimizedCalendarCards: () =>
 			update((state) => {
 				const newState = { ...state, calendarCards: !state.calendarCards };
-				saveToCookie(newState);
-				return newState;
-			}),
-		toggleCalendarView: () =>
-			update((state) => {
-				const newState = { ...state, calendarView: !state.calendarView };
 				saveToCookie(newState);
 				return newState;
 			}),
@@ -104,12 +78,6 @@ function createAppState() {
 		togglePageActions: () =>
 			update((state) => {
 				const newState = { ...state, pageActions: !state.pageActions };
-				saveToCookie(newState);
-				return newState;
-			}),
-		setPageActions: (value: boolean) =>
-			update((state) => {
-				const newState = { ...state, pageActions: value };
 				saveToCookie(newState);
 				return newState;
 			}),
