@@ -85,12 +85,12 @@
 				hint="Asignar responsable"
 			/>
 		{:else}
-			<div class="detail-block">
+			<section class="detail-block">
 				<h3 class="label">Agente:</h3>
 				<div class="detail-body">
 					<p class="value">{$profile?.nombre}</p>
 				</div>
-			</div>
+			</section>
 		{/if}
 
 		<FormEditableContact
@@ -159,7 +159,7 @@
 		gap: var(--b);
 		flex-wrap: wrap;
 		border-top: 1px solid var(--color-secondary);
-		padding: var(--c) var(--a) var(--f);
+		padding: var(--c) var(--a);
 		margin-top: var(--c);
 	}
 	.op-list {
