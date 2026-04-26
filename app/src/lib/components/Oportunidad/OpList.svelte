@@ -9,14 +9,14 @@
 
     let { listaAgrupada } = $props();
 
-    let show = $state(true);
+    let show = $derived($appState.min);
 </script>
 
 <div class="view-container">
     <div class="controls">
         <Reload />
         <button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-        <button onclick={() => (show = !show)} class="butter">
+        <button onclick={appState.toggleMin} class="butter">
             {show ? 'min' : 'max'}
         </button>
         

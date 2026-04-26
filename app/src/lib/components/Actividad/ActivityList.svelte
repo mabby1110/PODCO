@@ -9,7 +9,7 @@
 
     let { listaAgrupada } = $props();
 
-    let show = $state(true);
+    let show = $derived($appState.min);
 
     const steps = [
         { label: 'Programada', color: 'var(--color-secondary)' },
@@ -21,7 +21,7 @@
     <div class="controls">
         <Reload />
         <button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-        <button onclick={() => (show = !show)} class="butter">
+        <button onclick={appState.toggleMin} class="butter">
             {show ? 'min' : 'max'}
         </button>
         

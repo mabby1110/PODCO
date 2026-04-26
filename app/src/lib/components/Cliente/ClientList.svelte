@@ -8,14 +8,14 @@
 
     let { listaAgrupada } = $props<{ listaAgrupada: any[] }>();
 
-    let show = $state(true);
+    let show = $derived($appState.min);
 </script>
 
 <div class="view-container">
     <div class="controls">
         <Reload />
         <button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-        <button onclick={() => (show = !show)} class="butter">
+        <button onclick={appState.toggleMin} class="butter">
             {show ? "min" : "max"}
         </button>
         <Filtro 

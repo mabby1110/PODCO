@@ -10,6 +10,7 @@ interface AppState {
 	ModalOp: boolean;
 	ModalClient: boolean;
 	pageActions: boolean;
+	min: boolean;
 }
 
 const COOKIE_NAME = 'appState';
@@ -22,7 +23,8 @@ const defaultState: AppState = {
 	ModalActivity: false,
 	ModalOp: false,
 	ModalClient: false,
-	pageActions: false
+	pageActions: false,
+	min: false,
 };
 
 function getInitialState(): AppState {
@@ -78,6 +80,12 @@ function createAppState() {
 		togglePageActions: () =>
 			update((state) => {
 				const newState = { ...state, pageActions: !state.pageActions };
+				saveToCookie(newState);
+				return newState;
+			}),
+		toggleMin: () =>
+			update((state) => {
+				const newState = { ...state, min: !state.min };
 				saveToCookie(newState);
 				return newState;
 			}),
