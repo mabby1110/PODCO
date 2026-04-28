@@ -18,7 +18,7 @@ export function filtrarDatos<T>(
 	return result.filter((item) =>
 		searchFilters.every((f) => {
 			const val = getNestedValue(item, f.column.key);
-            
+
 			switch (f.action) {
 				case 'contains':
 					return String(val || '')
@@ -26,14 +26,15 @@ export function filtrarDatos<T>(
 						.includes(String(f.value || '').toLowerCase());
 				case 'isNull':
 					return (
-						val === null ||
-						val === undefined ||
+						val == null ||
 						val === '' ||
+						val === 0 ||
+						val === '0' ||
 						(Array.isArray(val) && val.length === 0)
 					);
 				case 'hasData':
 					if (Array.isArray(val)) return val.length > 0;
-					return val !== null && val !== undefined && val !== '';
+					return val != null && val !== '' && val !== 0 && val !== '0';
 				default:
 					return true;
 			}

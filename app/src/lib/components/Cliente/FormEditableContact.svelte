@@ -135,9 +135,6 @@
 		<h3 class="label">Contactos:</h3>
 	</div>
 	<div class="detail-body">
-		{#if lista.length === 0}
-			<p class="value">Sin información</p>
-		{/if}
 		<div class="contact-list">
 			{#each lista as persona, i}
 				<div class="person-card">
@@ -169,6 +166,8 @@
 					<button type="button" class="butter" onclick={cancelAll}>Cerrar edición</button>
 					<button type="submit" class="butter">Guardar cambios</button>
 				</div>
+			{:else if lista.length === 0}
+				<p class="value">Sin información</p>
 			{/if}
 		</div>
 		{#if showPersonForm}

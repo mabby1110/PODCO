@@ -21,20 +21,20 @@
 			});
 		});
 	});
-	beforeNavigate(({ from, to }) => {
-		// Evitar ejecución en la carga inicial
-		if (!from || !to) return;
+	// beforeNavigate(({ from, to }) => {
+	// 	// Evitar ejecución en la carga inicial
+	// 	if (!from || !to) return;
 
-		// Extraer el segmento principal de la ruta (ej. 'oportunidades' de '/oportunidades/123')
-		const fromBase = from.url.pathname.split('/')[1];
-		const toBase = to.url.pathname.split('/')[1];
+	// 	// Extraer el segmento principal de la ruta (ej. 'oportunidades' de '/oportunidades/123')
+	// 	const fromBase = from.url.pathname.split('/')[1];
+	// 	const toBase = to.url.pathname.split('/')[1];
 
-		// Limpiar el store solo si el segmento principal cambia
-		if (fromBase !== toBase) {
-			selectedGroupStore.clearGroup();
-			globalFilterStore.clearFilters();
-		}
-	});
+	// 	// Limpiar el store solo si el segmento principal cambia
+	// 	if (fromBase !== toBase) {
+	// 		selectedGroupStore.clearGroup();
+	// 		globalFilterStore.clearFilters();
+	// 	}
+	// });
 	$effect(() => {
 		profile.set(data.profile);
 	});
