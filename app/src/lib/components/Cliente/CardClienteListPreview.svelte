@@ -5,4 +5,5 @@
 <a href="./clientes/{client.id}" class="card-list-preview">
 	<b>{client.razon_social}</b>
 	<p>oportunidades abiertas: {client.op ?? 0}</p>
+	<p>visitas: {client.visitas ?? 0}</p>
 </a>

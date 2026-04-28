@@ -97,7 +97,8 @@ export const columnasCliente = [
 	{ key: 'ciudad', label: 'Ciudad' },
 	{ key: 'estado', label: 'Estado' },
 	{ key: 'tipo_prospeccion', label: 'Origen/Prospección' },
-	{ key: 'op', label: 'Oportunidades abiertas' }
+	{ key: 'op', label: 'Oportunidades abiertas' },
+	{ key: 'visitas', label: 'Visitas' },
 ];
 
 // AGRUPACIONES

@@ -11,6 +11,7 @@ interface AppState {
 	ModalClient: boolean;
 	pageActions: boolean;
 	min: boolean;
+	BI: boolean;
 }
 
 const COOKIE_NAME = 'appState';
@@ -25,6 +26,7 @@ const defaultState: AppState = {
 	ModalClient: false,
 	pageActions: false,
 	min: false,
+	BI: false,
 };
 
 function getInitialState(): AppState {
@@ -86,6 +88,12 @@ function createAppState() {
 		toggleMin: () =>
 			update((state) => {
 				const newState = { ...state, min: !state.min };
+				saveToCookie(newState);
+				return newState;
+			}),
+		toggleBI: () =>
+			update((state) => {
+				const newState = { ...state, BI: !state.BI };
 				saveToCookie(newState);
 				return newState;
 			}),
