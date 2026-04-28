@@ -134,24 +134,23 @@
 		{/if}
 		<h3 class="label">Contactos:</h3>
 	</div>
-
 	<div class="detail-body">
+		{#if lista.length === 0}
+			<p class="value">Sin información</p>
+		{/if}
 		<div class="contact-list">
-			{#if lista.length === 0}
-				<p class="value">Sin información</p>
-			{/if}
-
 			{#each lista as persona, i}
 				<div class="person-card">
 					<div class="contact-row">
 						{#if isEditing}
-						<div class="row-actions">
-							<button type="button" class="btn-edit-small" onclick={() => editPersona(i)}>✏️</button
-							>
-							<button type="button" class="btn-del-small" onclick={() => confirmRemovePersona(i)}
-								>🗑️</button
-							>
-						</div>
+							<div class="row-actions">
+								<button type="button" class="btn-edit-small" onclick={() => editPersona(i)}
+									>✏️</button
+								>
+								<button type="button" class="btn-del-small" onclick={() => confirmRemovePersona(i)}
+									>🗑️</button
+								>
+							</div>
 						{/if}
 						<strong>{persona.nombre}</strong>
 						{#if persona.puesto}
@@ -242,9 +241,10 @@
 	}
 
 	.detail-body {
+		padding-left: var(--a);
 		display: flex;
-		flex-direction: column;
-		gap: var(--b);
+		gap: var(--a);
+		flex-wrap: wrap;
 	}
 	.contact-list {
 		display: flex;

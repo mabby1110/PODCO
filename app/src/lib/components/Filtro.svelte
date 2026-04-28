@@ -19,13 +19,11 @@
 		calendar?: boolean;
 	}>();
 
-	// UI State
 	let selectedColumnKey = $state<string>(columns[0]?.key || '');
 	let selectedAction = $state<FilterAction>('contains');
 	let inputValue = $state<string>('');
 	let show = $state(false);
 
-	// Derived from stores
 	let filterCount = $derived(globalFilterStore.activeFilters.length);
 
 	function handleAdd() {
@@ -33,7 +31,8 @@
 		if (!column) return;
 		if (selectedAction === 'contains' && !inputValue.trim()) return;
 
-		globalFilterStore.addFilter(column, selectedAction, inputValue.trim().toLowerCase());
+		const valueToAdd = selectedAction === 'contains' ? inputValue.trim().toLowerCase() : '';
+		globalFilterStore.addFilter(column, selectedAction, valueToAdd);
 		inputValue = '';
 	}
 </script>
@@ -68,8 +67,10 @@
 
 						<select bind:value={selectedAction}>
 							<option value="contains">Contiene</option>
-							<option value="asc">Asc</option>
-							<option value="desc">Desc</option>
+							<option value="asc">Mas antiguo</option>
+							<option value="desc">Mas reciente</option>
+							<option value="isNull">Es nulo</option>
+							<option value="hasData">Contiene datos</option>
 						</select>
 
 						{#if selectedAction === 'contains'}
@@ -93,8 +94,14 @@
 							{filter.column.label}
 							{#if filter.action === 'contains'}
 								contiene "{filter.value}"
-							{:else}
-								({filter.action})
+							{:else if filter.action === 'asc'}
+								(Mas antiguo)
+							{:else if filter.action === 'desc'}
+								(Mas reciente)
+							{:else if filter.action === 'isNull'}
+								(Es nulo)
+							{:else if filter.action === 'hasData'}
+								(Con datos)
 							{/if}
 							<span class="close-chip">×</span>
 						</button>

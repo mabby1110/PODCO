@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
 	import ClientList from '$lib/components/Cliente/ClientList.svelte';
-	import GraficaClientes from '$lib/components/BI/GraficaClientes.svelte';
-	import { procesarProporcionOportunidades, procesarProporcionVisitas } from '$lib/utils/BI';
 	import ClientesBI from '$lib/components/BI/ClientesBI.svelte';
 
 	let { data } = $props();

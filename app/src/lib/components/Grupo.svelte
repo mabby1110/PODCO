@@ -4,7 +4,7 @@
 </script>
 
 <button class="group-header" onclick={() => (show = !show)}>
-	<h3 class="dia-header">{agrupacion.grupo}</h3>
+	<h3 class="dia-header">{agrupacion.grupo} ({agrupacion.elementos.length})</h3>
 </button>
 <hr>
 {#if show}

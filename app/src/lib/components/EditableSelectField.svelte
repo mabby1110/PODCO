@@ -60,10 +60,10 @@
 
 	<section class="detail-block">
 		<div class="detail-header">
-			<h3>{label}:</h3>
 			{#if !isEditing && $profile?.isAdmin}
 				<button type="button" class="btn-edit-small" onclick={toggleEdit}>✏️</button>
 			{/if}
+			<h3>{label}:</h3>
 		</div>
 
 		<div class="detail-body">
@@ -103,10 +103,9 @@
 	.detail-header {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
 	}
 	.detail-body {
-		padding-left: var(--b);
+		padding-left: var(--a);
 		display: flex;
 		gap: var(--a);
 		flex-wrap: wrap;

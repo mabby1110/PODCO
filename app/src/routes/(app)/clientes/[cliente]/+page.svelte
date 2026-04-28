@@ -93,11 +93,13 @@
 			</section>
 		{/if}
 
-		<FormEditableContact
-			jsonList={cliente.contactos}
-			id={cliente.id}
-			action="/clientes?/updateClient"
-		/>
+		<section>
+			<FormEditableContact
+				jsonList={cliente.contactos}
+				id={cliente.id}
+				action="/clientes?/updateClient"
+			/>
+		</section>
 
 		<div class="system">
 			<div class="detail-block">

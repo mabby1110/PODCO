@@ -99,6 +99,7 @@ export const columnasCliente = [
 	{ key: 'tipo_prospeccion', label: 'Origen/Prospección' },
 	{ key: 'op', label: 'Oportunidades abiertas' },
 	{ key: 'visitas', label: 'Visitas' },
+	{ key: 'contactos', label: 'Contactos' },
 ];
 
 // AGRUPACIONES
