@@ -12,10 +12,6 @@
 	let selectedDataItem = $state(null);
 	// --- Pickers separados ---
 	let razon_social = $state('');
-	let fecha = $state<string>('');
-	let hora = $state<string>('08:00');
-	let inicio = $state<string>('');
-	let fin = $state<string>('');
 	let matches = $derived(
 		razon_social.trim().length > 0
 			? (clientes?.filter((c: any) =>
@@ -25,44 +21,6 @@
 	);
 
 	let isDuplicate = $state(false);
-
-	function setCustomEnd(fechaCompromiso: Date) {
-		const next = addMinutes(new Date(fechaCompromiso), 10);
-
-		const yyyy = next.getFullYear();
-		const mm = String(next.getMonth() + 1).padStart(2, '0');
-		const dd = String(next.getDate()).padStart(2, '0');
-		const hh = String(next.getHours()).padStart(2, '0');
-		const mi = String(next.getMinutes()).padStart(2, '0');
-
-		return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
-	}
-
-	function generarHoras() {
-		const horas = [];
-		let actual = 8 * 60; // 08:00
-		const limite = 18 * 60; // 18:00
-
-		while (actual <= limite) {
-			const hh = String(Math.floor(actual / 60)).padStart(2, '0');
-			const mm = String(actual % 60).padStart(2, '0');
-			horas.push(`${hh}:${mm}`);
-			actual += 10;
-		}
-
-		return horas;
-	}
-
-	$effect(() => {
-		if (fecha && hora) {
-			const base = `${fecha} ${hora}`;
-			inicio = base;
-			fin = setCustomEnd(new Date(`${fecha}T${hora}`));
-		} else {
-			inicio = '';
-			fin = '';
-		}
-	});
 </script>
 
 {#if $appState.ModalClient}
@@ -104,24 +62,6 @@
 				<FormSelectAgente agentes={data.agentes} />
 
 				<FormNewClient bind:isDuplicate/>
-
-				<!-- <label>
-					<span>Programar primer contacto</span>
-					<div class="datetime-split">
-						<input type="date" bind:value={fecha} min={getToday()} required />
-
-						<select bind:value={hora} required>
-							{#each generarHoras() as h}
-								<option value={h}>{h}</option>
-							{/each}
-						</select>
-					</div>
-
-					<input type="hidden" name="fase" value={1} />
-					<input type="hidden" name="inicio" bind:value={inicio} />
-					<input type="hidden" name="fin" bind:value={fin} />
-					<input type="hidden" name="id_agente" value={$profile?.id} />
-				</label> -->
 
 				<div class="actions">
 					<button

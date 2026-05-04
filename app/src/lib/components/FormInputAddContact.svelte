@@ -18,7 +18,9 @@
 
 	// Array para que FormEditableJsonList pueda leerlo directamente
 	let contacto_compuesto = $derived(
-		JSON.stringify([{ nombre: contact_name, puesto: contact_position, contactos }] satisfies ContactData[])
+		JSON.stringify([
+			{ nombre: contact_name, puesto: contact_position, contactos }
+		] satisfies ContactData[])
 	);
 
 	function addContacto() {
@@ -34,18 +36,20 @@
 
 <input type="hidden" name="contactos" value={contacto_compuesto} required />
 
-<label>
-	<span>Primer contacto</span>
-	<input bind:value={contact_name} required placeholder="Nombre completo" />
-</label>
 <div class="contact-row">
 	<label>
-		<span>Contacto</span>
-		<input bind:value={contact_value} placeholder="3322558174 o correo@empresa.com" />
+		<span>Primer contacto</span>
+		<input bind:value={contact_name} required placeholder="Nombre completo" />
 	</label>
 	<label class="field">
 		<span>Puesto</span>
 		<input bind:value={contact_position} />
+	</label>
+</div>
+<div class="contact-row">
+	<label>
+		<span>Contacto</span>
+		<input bind:value={contact_value} placeholder="3322558174 o correo@empresa.com" />
 	</label>
 
 	<label>
