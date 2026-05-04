@@ -2,11 +2,13 @@
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
 	import ClientList from '$lib/components/Cliente/ClientList.svelte';
 	import ClientesBI from '$lib/components/BI/ClientesBI.svelte';
+	import { page } from '$app/state';
 
 	let { data } = $props();
 
-	// Derivación atómica para evitar parpadeos
-	const listaAgrupada = $derived.by(() => procesarDatosReactivos(data.clientes ?? []));
+    let currentRoute = $derived(page.url.pathname);
+    
+    const listaAgrupada = $derived.by(() => procesarDatosReactivos(data.clientes, currentRoute));
 </script>
 
 <ClientesBI {listaAgrupada} />

@@ -6,10 +6,7 @@
 	import { profile } from '$lib/stores/profileStore.svelte.js';
 
 	let { children, data } = $props();
-	import { beforeNavigate, onNavigate } from '$app/navigation';
-	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte.js';
-	import { globalFilterStore } from '$lib/stores/globalFilterStore.svelte.js';
-
+	import { onNavigate } from '$app/navigation';
 	onNavigate((navigation) => {
 		// Verificamos si el navegador soporta esta tecnología (Safari 18+, Chrome, Edge)
 		if (!document.startViewTransition) return;
@@ -21,20 +18,6 @@
 			});
 		});
 	});
-	// beforeNavigate(({ from, to }) => {
-	// 	// Evitar ejecución en la carga inicial
-	// 	if (!from || !to) return;
-
-	// 	// Extraer el segmento principal de la ruta (ej. 'oportunidades' de '/oportunidades/123')
-	// 	const fromBase = from.url.pathname.split('/')[1];
-	// 	const toBase = to.url.pathname.split('/')[1];
-
-	// 	// Limpiar el store solo si el segmento principal cambia
-	// 	if (fromBase !== toBase) {
-	// 		selectedGroupStore.clearGroup();
-	// 		globalFilterStore.clearFilters();
-	// 	}
-	// });
 	$effect(() => {
 		profile.set(data.profile);
 	});

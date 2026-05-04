@@ -1,125 +1,128 @@
 <script lang="ts">
-	import {
-		globalFilterStore,
-		type ColumnDef,
-		type FilterAction
-	} from '$lib/stores/globalFilterStore.svelte';
-	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
-	import { slide } from 'svelte/transition';
-	import FiltroAgente from './FiltroAgente.svelte';
-	import Select from './Select.svelte';
+    import {
+	filtroStore,
+        type ColumnDef,
+        type FilterAction
+    } from '$lib/stores/filtroStore.svelte';
+    import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
+    import { slide } from 'svelte/transition';
+    import FiltroAgente from './FiltroAgente.svelte';
+    import Select from './Select.svelte';
+    import { page } from '$app/stores';
 
-	let {
-		columns,
-		agrupaciones,
-		calendar = false
-	} = $props<{
-		columns: ColumnDef[];
-		agrupaciones: any;
-		calendar?: boolean;
-	}>();
+    let {
+        columns,
+        agrupaciones,
+        calendar = false
+    } = $props<{
+        columns: ColumnDef[];
+        agrupaciones: any;
+        calendar?: boolean;
+    }>();
 
-	let selectedColumnKey = $state<string>(columns[0]?.key || '');
-	let selectedAction = $state<FilterAction>('contains');
-	let inputValue = $state<string>('');
-	let show = $state(false);
+    let selectedColumnKey = $state<string>(columns[0]?.key || '');
+    let selectedAction = $state<FilterAction>('contains');
+    let inputValue = $state<string>('');
+    let show = $state(false);
 
-	let filterCount = $derived(globalFilterStore.activeFilters.length);
+    let currentRoute = $derived($page.url.pathname);
+    let activeFilters = $derived(filtroStore.filtersByRoute[currentRoute] || []);
+    let filterCount = $derived(activeFilters.length);
 
-	function handleAdd() {
-		const column = columns.find((c: any) => c.key === selectedColumnKey);
-		if (!column) return;
-		if (selectedAction === 'contains' && !inputValue.trim()) return;
+    function handleAdd() {
+        const column = columns.find((c: any) => c.key === selectedColumnKey);
+        if (!column) return;
+        if (selectedAction === 'contains' && !inputValue.trim()) return;
 
-		const valueToAdd = selectedAction === 'contains' ? inputValue.trim().toLowerCase() : '';
-		globalFilterStore.addFilter(column, selectedAction, valueToAdd);
-		inputValue = '';
-	}
+        const valueToAdd = selectedAction === 'contains' ? inputValue.trim().toLowerCase() : '';
+        filtroStore.addFilter(currentRoute, column, selectedAction, valueToAdd);
+        inputValue = '';
+    }
 </script>
 
 {#if show}
-	<div class="filter-container" in:slide>
-		<div class="panel">
-			<button class="close" type="button" onclick={() => (show = false)}>x</button>
-			<div class="filter-options">
-				<span>Agrupar</span>
-				<div class="options">
-					<FiltroAgente />
-					{#if !calendar}
-						<Select
-							options={agrupaciones}
-							defaultOption="Agrupar todos"
-							bind:selected={selectedGroupStore.selectedGroup}
-						/>
-					{/if}
-				</div>
-			</div>
+    <div class="filter-container" in:slide>
+        <div class="panel">
+            <button class="close" type="button" onclick={() => (show = false)}>x</button>
+            <div class="filter-options">
+                <span>Agrupar</span>
+                <div class="options">
+                    <FiltroAgente />
+                    {#if !calendar}
+                        <Select
+                            options={agrupaciones}
+                            defaultOption="Agrupar todos"
+                            bind:selected={selectedGroupStore.selectedGroup}
+                        />
+                    {/if}
+                </div>
+            </div>
 
-			{#if !calendar}
-				<div class="filter-options">
-					<span>Filtrar</span>
-					<div class="options">
-						<select bind:value={selectedColumnKey}>
-							{#each columns as col}
-								<option value={col.key}>{col.label}</option>
-							{/each}
-						</select>
+            {#if !calendar}
+                <div class="filter-options">
+                    <span>Filtrar</span>
+                    <div class="options">
+                        <select bind:value={selectedColumnKey}>
+                            {#each columns as col}
+                                <option value={col.key}>{col.label}</option>
+                            {/each}
+                        </select>
 
-						<select bind:value={selectedAction}>
-							<option value="contains">Contiene</option>
-							<option value="asc">Mas antiguo</option>
-							<option value="desc">Mas reciente</option>
-							<option value="isNull">Es nulo</option>
-							<option value="hasData">Contiene datos</option>
-						</select>
+                        <select bind:value={selectedAction}>
+                            <option value="contains">Contiene</option>
+                            <option value="asc">Mas antiguo</option>
+                            <option value="desc">Mas reciente</option>
+                            <option value="isNull">Es nulo</option>
+                            <option value="hasData">Contiene datos</option>
+                        </select>
 
-						{#if selectedAction === 'contains'}
-							<input
-								type="text"
-								bind:value={inputValue}
-								placeholder="Escribe la palabra clave..."
-								onkeydown={(e) => e.key === 'Enter' && handleAdd()}
-							/>
-						{/if}
+                        {#if selectedAction === 'contains'}
+                            <input
+                                type="text"
+                                bind:value={inputValue}
+                                placeholder="Escribe la palabra clave..."
+                                onkeydown={(e) => e.key === 'Enter' && handleAdd()}
+                            />
+                        {/if}
 
-						<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
-					</div>
-				</div>
-			{/if}
+                        <button class="butter" type="button" onclick={handleAdd}>Agregar</button>
+                    </div>
+                </div>
+            {/if}
 
-			{#if globalFilterStore.activeFilters.length > 0}
-				<div class="active-filters">
-					{#each globalFilterStore.activeFilters as filter (filter.id)}
-						<button class="chip butter" onclick={() => globalFilterStore.removeFilter(filter.id)}>
-							{filter.column.label}
-							{#if filter.action === 'contains'}
-								contiene "{filter.value}"
-							{:else if filter.action === 'asc'}
-								(Mas antiguo)
-							{:else if filter.action === 'desc'}
-								(Mas reciente)
-							{:else if filter.action === 'isNull'}
-								(Es nulo)
-							{:else if filter.action === 'hasData'}
-								(Con datos)
-							{/if}
-							<span class="close-chip">×</span>
-						</button>
-					{/each}
+            {#if activeFilters.length > 0}
+                <div class="active-filters">
+                    {#each activeFilters as filter (filter.id)}
+                        <button class="chip butter" onclick={() => filtroStore.removeFilter(currentRoute, filter.id)}>
+                            {filter.column.label}
+                            {#if filter.action === 'contains'}
+                                contiene "{filter.value}"
+                            {:else if filter.action === 'asc'}
+                                (Mas antiguo)
+                            {:else if filter.action === 'desc'}
+                                (Mas reciente)
+                            {:else if filter.action === 'isNull'}
+                                (Es nulo)
+                            {:else if filter.action === 'hasData'}
+                                (Con datos)
+                            {/if}
+                            <span class="close-chip">×</span>
+                        </button>
+                    {/each}
 
-					{#if globalFilterStore.activeFilters.length > 1}
-						<button class="chop butter" onclick={() => globalFilterStore.clearFilters()}>
-							Limpiar todo
-						</button>
-					{/if}
-				</div>
-			{/if}
-		</div>
-	</div>
+                    {#if activeFilters.length > 1}
+                        <button class="chop butter" onclick={() => filtroStore.clearFilters(currentRoute)}>
+                            Limpiar todo
+                        </button>
+                    {/if}
+                </div>
+            {/if}
+        </div>
+    </div>
 {:else}
-	<button class="butter" onclick={() => (show = true)}>
-		+Filtros {filterCount > 0 ? `(${filterCount})` : ''}
-	</button>
+    <button class="butter" onclick={() => (show = true)}>
+        +Filtros {filterCount > 0 ? `(${filterCount})` : ''}
+    </button>
 {/if}
 
 <style>

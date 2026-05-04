@@ -1,4 +1,5 @@
-import { globalFilterStore } from '$lib/stores/globalFilterStore.svelte';
+// lib/util/filtro.ts
+import { filtroStore } from '$lib/stores/filtroStore.svelte';
 import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
 
 export const getNestedValue = (obj: any, path: string): any => {
@@ -84,21 +85,21 @@ export function agruparDatos<T>(
 	}));
 }
 
-export function procesarDatosReactivos(actividades: any[]) {
-	if (!actividades || !Array.isArray(actividades)) return [];
+export function procesarDatosReactivos(actividades: any[], currentRoute: string) {
+    if (!actividades || !Array.isArray(actividades)) return [];
 
-	const activeFilters = globalFilterStore.activeFilters || [];
+    const activeFilters = filtroStore.filtersByRoute[currentRoute] || [];
 
-	const FILTER_ACTIONS = ['contains', 'isNull', 'hasData'];
+    const FILTER_ACTIONS = ['contains', 'isNull', 'hasData'];
 
-	const searchFilters = activeFilters.filter((f) => FILTER_ACTIONS.includes(f.action));
-	const sortFilters = activeFilters.filter((f) => !FILTER_ACTIONS.includes(f.action));
+    const searchFilters = activeFilters.filter((f) => FILTER_ACTIONS.includes(f.action));
+    const sortFilters = activeFilters.filter((f) => !FILTER_ACTIONS.includes(f.action));
 
-	const agenteId = selectedGroupStore.selectedAgent ?? '';
-	const grupoSeleccionado = selectedGroupStore.selectedGroup ?? '';
+    const agenteId = selectedGroupStore.selectedAgent ?? '';
+    const grupoSeleccionado = selectedGroupStore.selectedGroup ?? '';
 
-	const filtrados = filtrarDatos(actividades, agenteId, searchFilters);
-	const ordenados = ordenarDatos(filtrados, sortFilters);
+    const filtrados = filtrarDatos(actividades, agenteId, searchFilters);
+    const ordenados = ordenarDatos(filtrados, sortFilters);
 
-	return agruparDatos(ordenados, grupoSeleccionado);
+    return agruparDatos(ordenados, grupoSeleccionado);
 }
