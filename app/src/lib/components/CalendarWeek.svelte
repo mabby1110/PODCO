@@ -172,7 +172,7 @@
                                                     z-index: {10 + index};
                                                 "
 											>
-												{#if event.id_cliente}
+												{#if event.id.toLowerCase().includes('op')}
 													<CardOpCalendarPreview {event} style="height: 100%; width: 100%;" />
 												{:else}
 													<CardActividadCalendarPreview

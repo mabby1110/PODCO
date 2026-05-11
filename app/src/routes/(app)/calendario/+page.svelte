@@ -5,8 +5,9 @@
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));
+    let currentRoute = $derived(page.url.pathname);
 	
-	const listaAgrupada = $derived.by(() => procesarDatosReactivos(allActivities));
+	const listaAgrupada = $derived.by(() => procesarDatosReactivos(allActivities, currentRoute));
 
 </script>
 

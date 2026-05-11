@@ -14,6 +14,7 @@
 		if (!event) return null;
 
 		return {
+			id: event.id,
 			razon_social:
 				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,

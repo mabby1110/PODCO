@@ -41,6 +41,19 @@
 		selectedItem = item;
 		keyword = '';
 	}
+	function handleInput(e: Event) {
+		const target = e.target as HTMLInputElement;
+		const value = target.value;
+
+		// Elimina espacios al inicio preservando la posición del cursor
+		if (value.startsWith(' ')) {
+			const cleaned = value.trimStart();
+			target.value = cleaned;
+			keyword = cleaned;
+		} else {
+			keyword = value;
+		}
+	}
 </script>
 
 <div class="search-container">
@@ -65,7 +78,14 @@
 			{#if isOpen}
 				<FormNewClient bind:isDuplicate />
 			{:else}
-				<input class="butter" type="text" bind:value={keyword} placeholder="Buscar..." required />
+				<input
+					class="butter"
+					type="text"
+					value={keyword}
+					oninput={handleInput}
+					placeholder="Buscar..."
+					required
+				/>
 				{#if keyword}
 					<div class="results" transition:slide>
 						{#if filteredData.length > 0}

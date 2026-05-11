@@ -10,7 +10,9 @@
 	import FormConditionalInput from '../FormConditionalInput.svelte';
 	import { opModalStore } from '$lib/stores/opModalStore.svelte';
 
-	let data = $derived(page.data);
+	let data = $derived(page.data);let {
+        isValid = $bindable()
+    } = $props();
 	let { cliente } = $derived(page.data);
 	let clientes = $derived(data.clientes ?? []);
 
@@ -36,11 +38,20 @@
 			selectedClient = null;
 		}
 	});
+	$effect(() => {
+		const baseValid = !!(objetivo && selectedClient && selectedAgent);
+
+		if (isOpen) {
+			isValid = baseValid && !!(necesidad && potencial_venta);
+		} else {
+			isValid = baseValid;
+		}
+	});
 </script>
 
 <div class="form-content">
 	<div class="form-group">
-		<FormSelectInput list={motivosOportunidad}/>
+		<FormSelectInput list={motivosOportunidad} />
 		<FormSelectAgente agentes={data.agentes} bind:selected={selectedAgent} />
 	</div>
 
@@ -84,6 +95,7 @@
 	{#if isOpen}
 		<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
 	{/if}
+
 	{#if selectedClient}
 		<input type="hidden" name="id_cliente" value={selectedClient?.id} required />
 	{/if}

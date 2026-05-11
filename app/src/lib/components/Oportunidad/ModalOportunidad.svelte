@@ -4,7 +4,8 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { opModalStore } from '$lib/stores/opModalStore.svelte';
 	import FormOportunidad from './FormOportunidad.svelte';
-	
+
+	let canSubmit = $state(false);
 </script>
 
 {#if $appState.ModalOp}
@@ -36,10 +37,10 @@
 					};
 				}}
 			>
-				<FormOportunidad />
+				<FormOportunidad bind:isValid={canSubmit} />
 
 				<div class="actions">
-					<button class="butter success" type="submit">Agregar</button>
+					<button class="butter success" type="submit" disabled={!canSubmit}>Agregar</button>
 				</div>
 			</form>
 		</div>
@@ -102,5 +103,15 @@
 		justify-content: flex-end;
 		padding-top: 1rem;
 		border-top: 1px solid #e5e5e5;
+	}
+	.butter:hover:not(:disabled) {
+		transform: translateY(-2px);
+	}
+	.butter:active:not(:disabled) {
+		transform: translateY(0);
+	}
+	.butter:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
 	}
 </style>
