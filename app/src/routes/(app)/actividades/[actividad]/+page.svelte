@@ -111,8 +111,8 @@
 						{#each JSON.parse(eventData.historia) as item, index}
 							<div class="entrada">
 								{#if item.id_op}
-									<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
-									<a href="/oportunidades/{item.id_op}">{item.entrada}</a>
+									<a href="/oportunidades/{item.id_op}"> <b>{formatDateFull(parseDateTimeLocal(item.fecha))}</b> oportunidad:</a>
+									<p>{item.entrada}</p>
 								{:else}
 									<button class="butter" onclick={() => handleHotOp(item.entrada, index)}>+</button>
 									<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
