@@ -16,7 +16,7 @@
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
-			inicio: event?.inicio.split(" ")[0],
+			inicio: event?.inicio.split(' ')[0],
 			fin: event?.fin,
 			historia: event.historia,
 			requisitos: event.requisitos,
@@ -32,11 +32,7 @@
 	});
 </script>
 
-<a
-	href="/oportunidades/{event.id}"
-	class="card-list-preview"
-	style={eventData?.style}
->
+<a href="/oportunidades/{event.id}" class="card-list-preview" style={eventData?.style}>
 	<p class="date">{eventData?.inicio}</p>
 	<div class="title">
 		<h3>{eventData?.motivo}</h3>
@@ -48,5 +44,11 @@
 			<b>Objetivo</b>
 			<p>{eventData?.objetivo}</p>
 		</div>
-	{/if}
+	{/if}aaa
 </a>
+
+<style>
+.brief {
+    overflow: hidden;
+}
+</style>
