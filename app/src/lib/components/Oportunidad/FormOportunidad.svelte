@@ -25,6 +25,7 @@
 	let fase = $derived(isOpen ? 2 : 1);
 	let selectedAgent = $derived(data.profile?.isAdmin ? '' : data.profile.id);
 	let selectedClient = $derived(cliente ? cliente : null);
+	let newClient = $state(false);
 	let clientesFiltrados = $derived(
 		data.profile?.isAdmin
 			? selectedAgent
@@ -39,7 +40,7 @@
 		}
 	});
 	$effect(() => {
-		const baseValid = !!(objetivo && selectedClient && selectedAgent);
+		const baseValid = !!(objetivo && (selectedClient||newClient) && selectedAgent);
 
 		if (isOpen) {
 			isValid = baseValid && !!(necesidad && potencial_venta);
@@ -59,6 +60,7 @@
 		data={clientesFiltrados}
 		keyColumns={['razon_social']}
 		bind:selectedItem={selectedClient}
+		bind:newClient
 	/>
 
 	<FormInput

@@ -10,15 +10,17 @@
 	let {
 		data = [],
 		keyColumns = ['motivo'],
-		selectedItem = $bindable()
+		selectedItem = $bindable(),
+		newClient = $bindable()
 	}: {
 		data: DataItem[];
 		keyColumns: string[];
 		selectedItem: DataItem | null;
+		newClient: boolean;
 	} = $props();
 
 	let keyword = $state('');
-	let isDuplicate = $derived(false);
+	let isDuplicate = $state(false);
 	let isOpen = $state(false);
 
 	const eventList = $derived(data?.length ? data : []);
@@ -54,6 +56,11 @@
 			keyword = value;
 		}
 	}
+	$effect(()=>{
+		if(isOpen){
+			newClient = !isDuplicate;
+		}
+	})
 </script>
 
 <div class="search-container">
@@ -75,6 +82,7 @@
 	{:else}
 		<label>
 			<span>Buscar Cliente</span>
+			{isDuplicate},{newClient}
 			{#if isOpen}
 				<FormNewClient bind:isDuplicate />
 			{:else}
