@@ -33,7 +33,6 @@
 </script>
 
 <a href="/oportunidades/{event.id}" class="card-list-preview" style={eventData?.style}>
-	<p class="date">{eventData?.inicio}</p>
 	<div class="title">
 		<h3>{eventData?.motivo}</h3>
 		<p>{eventData?.razon_social}</p>
@@ -45,6 +44,11 @@
 			<p>{eventData?.objetivo}</p>
 		</div>
 	{/if}
+	<div class="meta">
+		<p class="id">{eventData?.id}</p>
+		<p>{eventData?.agente.nombre}</p>
+		<p>{eventData?.inicio}</p>
+	</div>
 </a>
 
 <style>
