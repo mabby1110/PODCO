@@ -311,7 +311,6 @@ body {
 	align-self: end;
 	position: sticky;
 	bottom: 0;
-	backdrop-filter: blur(16px);
 	border-radius: var(--a) var(--a) 0 0;
 	padding-left: var(--e);
 }

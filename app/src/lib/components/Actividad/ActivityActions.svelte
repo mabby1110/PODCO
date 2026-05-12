@@ -8,6 +8,7 @@
 	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import EditableJsonList from '../EditableJsonList.svelte';
+	import FormActions from '../FormActions.svelte';
 
 	let { eventData } = $props();
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
@@ -25,37 +26,15 @@
 	let newOp = $state(false);
 
 	let style = $derived(getStyleForPhase(currentPhase + 5));
-
-	function handleSubmit() {
-		return async ({ result, update }: any) => {
-			isSubmitting = false;
-
-			if (result.type === 'success') {
-				// Reiniciar estado reactivo vinculado (bind:value)
-				nuevoRequisito = '';
-				nuevaHistoria = '';
-
-				// Reiniciar modificadores de UI
-				isOpen = false;
-
-				await update({ reset: true });
-			}
-
-			await invalidateAll();
-		};
+	function handleSuccess() {
+		nuevoRequisito = '';
+		nuevaHistoria = '';
 	}
 </script>
 
-<form
-	method="POST"
-	action="/actividades?/updateActivity"
-	use:enhance={() => {
-		isSubmitting = true;
-		return handleSubmit();
-	}}
->
-	{#if currentPhase != 0  && currentPhase != 6}
-		{#if isOpen}
+{#if currentPhase != 0 && currentPhase != 6}
+	<FormActions action="/oportunidades?/updateOp" bind:isOpen onSuccess={handleSuccess}>
+		{#snippet fieldsContent()}
 			<div class="actions">
 				{#if submit}
 					{#if currentPhase == 1}
@@ -148,8 +127,8 @@
 					/>
 				{/if}
 			</div>
-
-			<!-- datos para el sistema -->
+		{/snippet}
+		{#snippet hiddenContent()}
 			<input type="hidden" name="id" value={eventData.id} />
 			{#if nuevaHistoria}
 				<input
@@ -178,34 +157,36 @@
 			{#if !newOp}
 				<input type="hidden" name="id_agente" value={eventData?.agente?.id} />
 			{/if}
-		{/if}
-		<div class="submit">
-			<ActivityOptionalSubmit
-				nextFase={eventData.fase.accion}
-				bind:isOpen
-				bind:submit
-				bind:submitUpdate
-				bind:submitCancel
-			/>
+		{/snippet}
+		{#snippet submitContent()}
+			<div class="submit">
+				<ActivityOptionalSubmit
+					nextFase={eventData.fase.accion}
+					bind:isOpen
+					bind:submit
+					bind:submitUpdate
+					bind:submitCancel
+				/>
 
-			{#if submit}
-				<input type="hidden" name="fase" value={nextPhase} />
-				<button type="submit" class="butter" {style} disabled={isSubmitting}>
-					{isSubmitting ? 'Procesando...' : 'Finzalizar'}
-				</button>
-			{:else if submitUpdate}
-				<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
-			{:else if newOp}
-				<button type="submit" class="butter" {style} disabled={isSubmitting}>
-					{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
-				</button>
-			{:else if submitCancel}
-				<input type="hidden" name="fase" value={0} />
-				<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
-			{/if}
-		</div>
-	{/if}
-</form>
+				{#if submit}
+					<input type="hidden" name="fase" value={nextPhase} />
+					<button type="submit" class="butter" {style} disabled={isSubmitting}>
+						{isSubmitting ? 'Procesando...' : 'Finzalizar'}
+					</button>
+				{:else if submitUpdate}
+					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
+				{:else if newOp}
+					<button type="submit" class="butter" {style} disabled={isSubmitting}>
+						{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
+					</button>
+				{:else if submitCancel}
+					<input type="hidden" name="fase" value={0} />
+					<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
+				{/if}
+			</div>
+		{/snippet}
+	</FormActions>
+{/if}
 
 <style>
 	.butter:hover:not(:disabled) {

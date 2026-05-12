@@ -46,6 +46,8 @@
 	{#if eventData?.objetivo}
 		<div class="brief">
 			<b>Objetivo</b>
+		</div>
+		<div class="brief">
 			<p>{eventData?.objetivo}</p>
 		</div>
 	{/if}
