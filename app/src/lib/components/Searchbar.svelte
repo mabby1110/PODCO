@@ -82,7 +82,6 @@
 	{:else}
 		<label>
 			<span>Buscar Cliente</span>
-			{isDuplicate},{newClient}
 			{#if isOpen}
 				<FormNewClient bind:isDuplicate />
 			{:else}
