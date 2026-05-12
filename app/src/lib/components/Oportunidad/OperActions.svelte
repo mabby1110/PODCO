@@ -155,28 +155,16 @@
 						<h3>Editar informacion</h3>
 						<div class="opcional">
 							<div class="opciones">
-								{#if !eventData.historia}
-									<FormOptionalInput title="+Historia">
-										<FormInput
-											label="Historia"
-											name="nuevaHistoria"
-											bind:value={nuevaHistoria}
-											type="textarea"
-											required
-										/>
-									</FormOptionalInput>
-								{:else}
-									<EditableJsonList
-										jsonList={eventData.historia}
-										action="/oportunidades?/updateOp"
-										name={'historia'}
-										id={eventData.id}
-										fields={[
-											{ name: 'fecha', label: 'Fecha', type: 'date' },
-											{ name: 'entrada', label: 'Entrada', type: 'textarea' }
-										]}
-									/>
-								{/if}
+								<EditableJsonList
+									jsonList={eventData.historia}
+									action="/oportunidades?/updateOp"
+									name={'historia'}
+									id={eventData.id}
+									fields={[
+										{ name: 'fecha', label: 'Fecha', type: 'date' },
+										{ name: 'entrada', label: 'Entrada', type: 'textarea' }
+									]}
+								/>
 								<FormOptionalInput title="+Objetivo">
 									<FormInput
 										label="Objetivo"

@@ -60,7 +60,7 @@
 
 	function saveItem() {
 		// Inyección de la propiedad
-		currentItem['nombre_perfil'] = $profile.nombre;
+		currentItem['nombre_perfil'] = $profile?.nombre;
 
 		if (editIndex !== null) {
 			lista[editIndex] = { ...currentItem };
@@ -126,14 +126,16 @@
 						<button type="button" class="close-btn" onclick={cancel}>X</button>
 					</div>
 				{:else}
-					<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
+					{#if item.nombre_perfil === $profile?.nombre || !item.nombre_perfil}
+						<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
+					{/if}
 					{#each fields as field, fIndex}
 						{#if fIndex === 0}
 							{#if field.type === 'date'}
 								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
 
 								{#if item.nombre_perfil}
-									<p class="profile">{item.nombre_perfil}, </p>
+									<p class="profile">{item.nombre_perfil},</p>
 								{/if}
 							{:else}
 								<b>{item[field.name]}: </b>
