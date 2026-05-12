@@ -24,7 +24,7 @@
 	let monto_oc = $state('');
 
 	let necesidad = $state('');
-	let potencial_venta = $state('');
+	let potencial_venta = $state(eventData.potencial_venta || '');
 	let objetivo = $state('');
 
 	let isSubmitting = $state(false);
@@ -75,14 +75,6 @@
 			<div class="actions">
 				{#if submit}
 					{#if currentPhase == 1}
-						<FormInput
-							label="Necesidad"
-							name="necesidad"
-							bind:value={necesidad}
-							placeholder={fasePlaceholder}
-							type="textarea"
-							required
-						/>
 						<FormInput
 							label="Necesidad"
 							name="necesidad"
@@ -207,28 +199,16 @@
 					<h3>Editar informacion</h3>
 					<div class="opcional">
 						<div class="opciones">
-							{#if !eventData.historia}
-								<FormOptionalInput title="+Historia">
-									<FormInput
-										label="Historia"
-										name="nuevaHistoria"
-										bind:value={nuevaHistoria}
-										type="textarea"
-										required
-									/>
-								</FormOptionalInput>
-							{:else}
-								<EditableJsonList
-									jsonList={eventData.historia}
-									action="/oportunidades?/updateOp"
-									name={'historia'}
-									id={eventData.id}
-									fields={[
-										{ name: 'fecha', label: 'Fecha', type: 'date' },
-										{ name: 'entrada', label: 'Entrada', type: 'textarea' }
-									]}
-								/>
-							{/if}
+							<EditableJsonList
+								jsonList={eventData.historia}
+								action="/oportunidades?/updateOp"
+								name={'historia'}
+								id={eventData.id}
+								fields={[
+									{ name: 'fecha', label: 'Fecha', type: 'date' },
+									{ name: 'entrada', label: 'Entrada', type: 'textarea' }
+								]}
+							/>
 							{#if currentPhase == 3}
 								<FormOptionalInput title="+Nueva cotizacion">
 									<UploadFile label="Nueva Cotización" name="quoteFile" required />
