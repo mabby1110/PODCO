@@ -44,7 +44,7 @@
 			<b>Objetivo</b>
 			<p>{eventData?.objetivo}</p>
 		</div>
-	{/if}aaa
+	{/if}
 </a>
 
 <style>
