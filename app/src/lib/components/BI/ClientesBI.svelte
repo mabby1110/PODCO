@@ -28,6 +28,6 @@
 		overflow: auto;
         width: 100%;
         padding: 0;
-        max-height: 40vh;
+        max-height: 60vh;
 	}
 </style>
