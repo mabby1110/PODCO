@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import DatePicker from '$lib/components/DatePicker.svelte';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import FormInput from '../FormInput.svelte';
-	import { invalidateAll } from '$app/navigation';
 	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import EditableJsonList from '../EditableJsonList.svelte';
@@ -33,7 +31,7 @@
 </script>
 
 {#if currentPhase != 0 && currentPhase != 6}
-	<FormActions action="/oportunidades?/updateOp" bind:isOpen onSuccess={handleSuccess}>
+	<FormActions action="/actividades?/updateActivity" bind:isOpen onSuccess={handleSuccess}>
 		{#snippet fieldsContent()}
 			<div class="actions">
 				{#if submit}

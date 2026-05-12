@@ -10,9 +10,8 @@
 	import FormConditionalInput from '../FormConditionalInput.svelte';
 	import { opModalStore } from '$lib/stores/opModalStore.svelte';
 
-	let data = $derived(page.data);let {
-        isValid = $bindable()
-    } = $props();
+	let data = $derived(page.data);
+	let { isValid = $bindable() } = $props();
 	let { cliente } = $derived(page.data);
 	let clientes = $derived(data.clientes ?? []);
 
@@ -25,6 +24,7 @@
 	let fase = $derived(isOpen ? 2 : 1);
 	let selectedAgent = $derived(data.profile?.isAdmin ? '' : data.profile.id);
 	let selectedClient = $derived(cliente ? cliente : null);
+	let newCLient = $state(false);
 	let clientesFiltrados = $derived(
 		data.profile?.isAdmin
 			? selectedAgent
@@ -39,13 +39,16 @@
 		}
 	});
 	$effect(() => {
-		const baseValid = !!(objetivo && selectedClient && selectedAgent);
+		const baseValid = !!(objetivo && (selectedClient || newCLient) && selectedAgent);
 
 		if (isOpen) {
 			isValid = baseValid && !!(necesidad && potencial_venta);
 		} else {
 			isValid = baseValid;
 		}
+	});
+	$effect(() => {
+		console.log(newCLient);
 	});
 </script>
 
@@ -59,6 +62,7 @@
 		data={clientesFiltrados}
 		keyColumns={['razon_social']}
 		bind:selectedItem={selectedClient}
+		bind:newCLient
 	/>
 
 	<FormInput

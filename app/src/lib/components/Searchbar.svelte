@@ -10,11 +10,13 @@
 	let {
 		data = [],
 		keyColumns = ['motivo'],
-		selectedItem = $bindable()
+		selectedItem = $bindable(),
+		newCLient = $bindable()
 	}: {
 		data: DataItem[];
 		keyColumns: string[];
 		selectedItem: DataItem | null;
+		newCLient: boolean;
 	} = $props();
 
 	let keyword = $state('');
@@ -54,6 +56,11 @@
 			keyword = value;
 		}
 	}
+	$effect(() => {
+		if(!isDuplicate) {
+			newCLient = isOpen;
+		}
+	});
 </script>
 
 <div class="search-container">
