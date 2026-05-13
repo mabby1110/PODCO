@@ -22,7 +22,6 @@
 	let nuevaObeservacion = $state('');
 
 	let isOpen = $state(false);
-	let canSubmit = $derived(nue);
 	let submit = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
