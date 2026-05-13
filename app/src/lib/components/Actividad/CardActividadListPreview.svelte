@@ -11,6 +11,7 @@
 		if (!event) return null;
 
 		return {
+			id: event.id,
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
@@ -24,7 +25,6 @@
 </script>
 
 <a href="/actividades/{event.id}" class="card-list-preview" style={eventData?.style}>
-	<p class="date">{eventData?.inicio}</p>
 	<div class="title">
 		<h3>{eventData?.motivo}</h3>
 	</div>
@@ -34,4 +34,9 @@
 			<p>{eventData?.objetivo}</p>
 		</div>
 	{/if}
+	<div class="meta">
+		<p class="id">{eventData?.id}</p>
+		<p>{eventData?.agente.nombre}</p>
+		<p>{eventData?.inicio}</p>
+	</div>
 </a>

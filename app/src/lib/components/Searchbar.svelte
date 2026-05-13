@@ -20,7 +20,7 @@
 	} = $props();
 
 	let keyword = $state('');
-	let isDuplicate = $derived(false);
+	let isDuplicate = $state(false);
 	let isOpen = $state(false);
 
 	const eventList = $derived(data?.length ? data : []);

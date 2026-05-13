@@ -215,6 +215,7 @@ body {
 	gap: var(--a);
 	width: 100%;
 }
+
 .entradas .butter {
 	width: var(--d);
 }
@@ -250,15 +251,23 @@ body {
 	flex-grow: 1;
 	width: 100%;
 	overflow: hidden;
+	pointer-events: none;
 }
 
-.card-list-preview .date {
-	position: absolute;
-	top: 4px;
-	right: 4px;
+.card-list-preview .meta {
+	display: flex;
+	gap: var(--a);
+	margin-top: var(--a);
 	font-size: smaller;
-	max-width: 30%;
-	text-align: end;
+	width: 100%;
+}
+.card-list-preview .meta .id{
+	flex-grow: 1;
+}
+
+.card-list-preview .brief p,
+.card-list-preview .brief b {
+	pointer-events: none;
 }
 
 .card-calendar-preview {
@@ -370,6 +379,7 @@ body {
 	align-items: center;
 	gap: 0.4rem;
 }
+
 /* Webkit (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
 	width: 8px;

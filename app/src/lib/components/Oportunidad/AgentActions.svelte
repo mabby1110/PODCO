@@ -23,7 +23,7 @@
 	let monto_oc = $state('');
 
 	let necesidad = $state('');
-	let potencial_venta = $state('');
+	let potencial_venta = $state(eventData.potencial_venta || '');
 	let objetivo = $state('');
 
 	let isOpen = $state(false);

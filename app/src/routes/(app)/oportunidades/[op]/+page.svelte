@@ -33,6 +33,7 @@
 			fin: event?.fin,
 			historia: event.historia,
 			necesidades: event.necesidades,
+			potencial_venta: event.potencial_venta,
 			requisitos: event.requisitos,
 			observaciones: event.observaciones,
 			cotizaciones_ganadas: event.cotizaciones_ganadas,
@@ -96,6 +97,12 @@
 				</section>
 			{/if}
 
+			{#if eventData.potencial_venta}
+				<section>
+					<h3>Potencial Venta</h3>
+					<p>{eventData.potencial_venta}</p>
+				</section>
+			{/if}
 			{#if eventData.necesidades}
 				<section>
 					<h3>Necesidades</h3>
@@ -131,6 +138,9 @@
 						{#each JSON.parse(eventData?.historia) as item}
 							<div class="entrada">
 								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
+								{#if item.nombre_perfil}
+									<p class="profile">{item.nombre_perfil},</p>
+								{/if}
 								<p>{item.entrada}</p>
 							</div>
 						{/each}

@@ -50,6 +50,13 @@
 	}
 </script>
 
-<div class="grafica">
+<div class="chart-wrapper">
 	<canvas use:renderChart={config}></canvas>
 </div>
+
+<style>
+  /* Si el contenedor padre hereda altura mediante flexbox, asegúrese de usar flex-grow */
+  .chart-wrapper {
+    flex-grow: 1; /* Útil si el padre superior es flex-direction: column */
+  }
+</style>
