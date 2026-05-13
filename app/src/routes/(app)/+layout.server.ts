@@ -39,7 +39,12 @@ export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
 		agentes = (await getAllProfilesAdmin(supabaseAdmin)).filter((a) => !a.isOper);
 
 		oportunidades = ordenarDatos(
-			oportunidades?.filter((a: any) => a.id_agente === profile?.id) ?? [],
+			oportunidades?.filter((a: any) => a.fase >= 3) ?? [],
+			filtrosOrden
+		);
+
+		actividades = ordenarDatos(
+			actividades?.filter((a: any) => a.id_agente === profile?.id) ?? [],
 			filtrosOrden
 		);
 	} else {

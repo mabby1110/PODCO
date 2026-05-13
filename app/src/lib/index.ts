@@ -146,7 +146,7 @@ export const fases = [
 		id_fase: 1,
 		actual: 'Oportunidad',
 		accion: 'Analizar',
-		placeholder: 'Registrar datos iniciales y detectar una necesidad real'
+		placeholder: 'Actividad con un cliente especifico.'
 	},
 	{
 		id_fase: 2,
@@ -164,18 +164,30 @@ export const fases = [
 		id_fase: 4,
 		actual: 'Ganada',
 		accion: 'Proceso de envío',
-		placeholder: 'Preparar productos y documentación para entrega'
+		placeholder: 'O.C BMS a proveedor (y reconocimiento si hay) y documentos logistica'
 	},
 	{
 		id_fase: 5,
-		actual: 'En proceso de envío',
-		accion: 'Finalizar',
-		placeholder: 'Dar seguimiento a logística, entrega o ejecución del servicio'
+		actual: 'En proceso de entrega',
+		accion: 'En transito',
+		placeholder: 'Proceso de logística, reunir el material vendido, esperar material pedido al proveedor y corroborar condiciones'
 	},
 	{
 		id_fase: 6,
+		actual: 'En transito',
+		accion: 'Pedido entregado',
+		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes'
+	},
+	{
+		id_fase: 7,
+		actual: 'Pedido entregado',
+		accion: 'Pendiente por cobrar',
+		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes'
+	},
+	{
+		id_fase: 8,
 		actual: 'Oportunidad finalizada',
-		accion: 'Analizar',
+		accion: '',
 		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes'
 	},
 	{

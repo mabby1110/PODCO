@@ -231,12 +231,12 @@ export const actions: Actions = {
 		}
 
 		// ---------- DOCUMENTOS OPERACION ----------
-		if (formData.get('docOpFile')) {
+		if (formData.get('docOperFile')) {
 			try {
-				const docOpFiles = formData.getAll('docOpFile') as File[];
+				const docOperFiles = formData.getAll('docOperFile') as File[];
 				const docsOpRaw = formData.get('documentos_operacion');
 				const updatedDocsOp = await processAttachments(
-					docOpFiles,
+					docOperFiles,
 					agenteNombre,
 					opFolder,
 					docsOpRaw

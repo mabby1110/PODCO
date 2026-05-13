@@ -28,6 +28,7 @@
 
 	let isOpen = $state(false);
 	let submit = $state(false);
+	let canSubmit = $state(false);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 	let style = $derived(getStyleForPhase(currentPhase + 1));
@@ -56,8 +57,16 @@
 						disableCustom={false}
 					/>
 					<FormInput
+						label="Objetivo"
+						name="objetivo"
+						bind:value={objetivo}
+						placeholder="Especificar Objetivo"
+						type="text"
+						required
+					/>
+					<FormInput
 						label="Necesidad"
-						name="necesidad"
+						name="necesidades"
 						bind:value={necesidad}
 						placeholder="Requerimiento técnico u operacional detectados"
 						type="textarea"
@@ -329,15 +338,15 @@
 
 				{#if submit}
 					<input type="hidden" name="fase" value={nextPhase} />
-					<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					<button type="submit" class="butter" {style} disabled={isSubmitting || canSubmit}>
 						{isSubmitting ? 'Procesando...' : eventData.fase.accion}
 					</button>
 				{:else if submitUpdate}
 					<input type="hidden" name="fase" value={currentPhase} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
+					<button type="submit" class="butter" disabled={isSubmitting || canSubmit}>Actualizar</button>
 				{:else if submitCancel}
 					<input type="hidden" name="fase" value={0} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Perder</button>
+					<button type="submit" class="butter" disabled={isSubmitting || canSubmit}>Perder</button>
 				{/if}
 			</div>
 		{/snippet}
