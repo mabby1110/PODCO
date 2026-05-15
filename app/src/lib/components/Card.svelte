@@ -34,3 +34,10 @@
         {/if}
     </div>
 </div>
+
+<style>
+    .card-actions {
+        height: 100%;
+        flex-grow: 1;
+    }
+</style>

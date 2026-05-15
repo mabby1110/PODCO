@@ -154,7 +154,7 @@
 			<FilePreview title="Orden de compra" data={eventData.oc_cliente} />
 			<FilePreview title="Documentos de operacion" data={eventData.documentos_operacion} />
 			<FilePreview title="Adjuntos" data={eventData.documentos} />
-		{/snippet}
+		{/snippet}a
 		{#snippet actions()}
 			{#if $profile?.isAdmin}
 				{#if currentFase < 4}
