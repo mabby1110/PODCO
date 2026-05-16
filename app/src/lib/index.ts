@@ -64,7 +64,7 @@ export type Cliente = {
 };
 
 // FILTROS
-export const columnasActividad = [
+export const categoriasActividad = [
 	{ key: 'motivo', label: 'Motivo' },
 	{ key: 'objetivo', label: 'Objetivo' },
 	{ key: 'inicio', label: 'Fecha Inicio' },
@@ -72,17 +72,17 @@ export const columnasActividad = [
 	{ key: 'historia', label: 'Historia' }
 ];
 
-export const columnasOportunidad = [
+export const categoriasOportunidad = [
 	{ key: 'motivo', label: 'Motivo de Op.' },
 	{ key: 'historia', label: 'Historia' },
 	{ key: 'potencial_venta', label: 'Potencial de venta' },
 	{ key: 'fase', label: 'Fase' },
 	{ key: 'inicio', label: 'Fecha Inicio' },
 	{ key: 'necesidades', label: 'Necesidades' },
-	{ key: 'objetivo', label: 'Objetivo Comercial' }
+	{ key: 'objetivo', label: 'Objetivo' }
 ];
 
-export const columnasCalendario = [
+export const categoriasCalendario = [
 	{ key: 'motivo', label: 'Motivo' },
 	{ key: 'objetivo', label: 'Objetivo' },
 	{ key: 'inicio', label: 'Fecha Inicio' },
@@ -90,7 +90,7 @@ export const columnasCalendario = [
 	{ key: 'historia', label: 'Historia' }
 ];
 
-export const columnasCliente = [
+export const categoriasCliente = [
 	{ key: 'razon_social', label: 'Razón Social' },
 	{ key: 'nombre_comercial', label: 'Nombre Comercial' },
 	{ key: 'sector', label: 'Sector/Industria' },

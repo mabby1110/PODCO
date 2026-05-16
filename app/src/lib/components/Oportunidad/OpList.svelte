@@ -2,39 +2,46 @@
     import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
     import Filtro from '$lib/components/Filtro.svelte';
     import { appState } from '$lib/stores/appState.svelte';
-    import Leyenda from '../Leyenda.svelte';
     import Reload from '../Reload.svelte';
-    import { agrupacionesOportunidades, columnasOportunidad } from '$lib';
-    import Grupo from '../Grupo.svelte';
+    import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
+	import Agrupaciones from '../Agrupaciones.svelte';
+	import Leyenda from '../Leyenda.svelte';
 
     let { listaAgrupada } = $props();
 
     let show = $derived($appState.min);
+
+    let agrupaciones = $derived(listaAgrupada.map((e) => {
+        return {grupo: e.grupo, tamaño: e.elementos.length}
+    }));
+
+    let agrupacionesSeleccionadas: string[] = $state([]);
+
+    let listaFiltrada = $derived(
+        agrupacionesSeleccionadas.length === 0
+            ? listaAgrupada
+            : listaAgrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
+    );
 </script>
 
 <div class="view-container">
     <div class="controls">
-        <Reload />
         <button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
         <button onclick={appState.toggleMin} class="butter">
             {show ? 'min' : 'max'}
         </button>
-        
-        <Filtro
-            columns={columnasOportunidad}
-            agrupaciones={agrupacionesOportunidades}
-        />
+
+        <Filtro categorias={categoriasOportunidad}/>
+        <Agrupaciones categorias={agrupacionesOportunidades} bind:agrupacionesSeleccionadas {agrupaciones}/>
     </div>
 
-    <Leyenda />
-
-    {#each listaAgrupada as agrupacion (agrupacion.grupo)}
+	<!-- <Leyenda /> -->
+    
+    {#each listaFiltrada as agrupacion (agrupacion.grupo)}
         <div class="grupo-dia">
-            <Grupo {agrupacion} showByDefault={show}>
-                {#each agrupacion.elementos as event (event.id)}
-                    <CardOpListPreview {event} />
-                {/each}
-            </Grupo>
+            {#each agrupacion.elementos as event (event.id)}
+                <CardOpListPreview {event} />
+            {/each}
         </div>
     {:else}
         <div class="no-results">

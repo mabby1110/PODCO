@@ -36,7 +36,7 @@
 	{/if}
 	<div class="meta">
 		<p class="id">{eventData?.id}</p>
-		<p>{eventData?.agente.nombre}</p>
+		<p>{eventData?.agente?.nombre}</p>
 		<p>{eventData?.inicio}</p>
 	</div>
 </a>

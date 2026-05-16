@@ -1,15 +1,26 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-import { getActividades, getClientes, getOportunidades } from '$lib/server/google/cachedQueries';
+import {
+	getActividades,
+	getClientes,
+	getOportunidades,
+	invalidateCache
+} from '$lib/server/google/cachedQueries';
 import { supabaseAdmin } from '$lib/server/supabaseAdmin';
 import { getAllProfilesAdmin } from '$lib/utils/supabase';
 import { ordenarDatos } from '$lib/utils/filtro';
 
-export const load: LayoutServerLoad = async ({ depends, url, locals }) => {
+export const load: LayoutServerLoad = async ({ depends, url, locals, isDataRequest }) => {
 	console.log('Cargando Layout Data (Root)');
 	depends('app:data');
 
+	if (!isDataRequest) {
+		console.log('Recarga completa detectada (F5). Invalidando caché...');
+		invalidateCache('clientes');
+		invalidateCache('oportunidades');
+		invalidateCache('actividades');
+	}
 	if (!locals.session) {
 		throw redirect(303, '/auth');
 	}

@@ -6,7 +6,7 @@
 	--color-contrast: rgba(0, 0, 105, 0.8);
 	--color-title: #000000;
 	--color-text: #000000;
-	--color-text-ob: #d8d3d3;
+	--color-text-ob: #eeeeee;
 	--color-error: #ff0000bb;
 	--color-success: #05a941bb;
 	--color-muted: #babababb;
@@ -116,7 +116,7 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--a);
-	align-items: center;
+	align-items: flex-start;
 	position: sticky;
 	top: 0;
 	z-index: 1;
