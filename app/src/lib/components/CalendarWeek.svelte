@@ -21,32 +21,35 @@
 	import Reload from './Reload.svelte';
 	import FiltroAgente from './FiltroAgente.svelte';
 
-	// Se recibe la lista procesada atómicamente desde el +page.svelte
 	let { listaAgrupada } = $props<{
 		listaAgrupada: any[];
 	}>();
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
-	const hoursRangePerDay = { start: 8, end: 19 };
 
-	const PIXELS_PER_HOUR = 120;
-	let SLOT_MINUTES = $state(10);
+	const hoursRangePerDay = { start: 8, end: 19 };
+	const totalHours = hoursRangePerDay.end - hoursRangePerDay.start;
+
+	let SLOT_MINUTES = $derived($appState.calendarCards ? 10 : 60);
+
+	let calendarHeight = $state(0);
+
+	const PIXELS_PER_HOUR = $derived(
+		$appState.calendarCards ? 120 : calendarHeight > 0 ? (calendarHeight - 60) / totalHours : 60
+	);
+
 	let CELL_HEIGHT = $derived((PIXELS_PER_HOUR / 60) * SLOT_MINUTES);
 
 	const hours = $derived(
-		Array.from(
-			{ length: ((hoursRangePerDay.end - hoursRangePerDay.start) * 60) / SLOT_MINUTES },
-			(_, i) => {
-				const total = hoursRangePerDay.start * 60 + i * SLOT_MINUTES;
-				return {
-					hour: Math.floor(total / 60),
-					minute: total % 60
-				};
-			}
-		)
+		Array.from({ length: (totalHours * 60) / SLOT_MINUTES }, (_, i) => {
+			const total = hoursRangePerDay.start * 60 + i * SLOT_MINUTES;
+			return {
+				hour: Math.floor(total / 60),
+				minute: total % 60
+			};
+		})
 	);
 
-	// Se extraen todos los elementos de los grupos para posicionarlos en la matriz Día/Hora
 	const eventList = $derived(listaAgrupada.flatMap((agrupacion: any) => agrupacion.elementos));
 
 	const weekDates = $derived(getWeekDates(calendarStore.weekOffset));
@@ -127,8 +130,7 @@
 			{$appState.calendarCards ? '📏 Min' : '📐 Max'}
 		</button>
 	</div>
-
-	<div class="calendar" style="--dynamic-cell-height: {CELL_HEIGHT}px;">
+	<div class="calendar" bind:clientHeight={calendarHeight} style="--dynamic-cell-height: {CELL_HEIGHT}px;">
 		<table>
 			<thead>
 				<tr>
@@ -169,6 +171,7 @@
                                                     width: {100 / totalConcurrentes}%;
                                                     left: {(100 / totalConcurrentes) * index}%;
                                                     height: {slots * CELL_HEIGHT}px;
+													min-height: var(--d);
                                                     z-index: {10 + index};
                                                 "
 											>
@@ -307,7 +310,7 @@
 
 	.event-wrapper:hover {
 		z-index: 999 !important;
-		width: 350% !important;
+		width: 250% !important;
 		max-width: 80vw;
 		min-height: var(--g) !important;
 		height: auto !important;

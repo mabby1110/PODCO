@@ -1,11 +1,8 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
 	import CardActividadListPreview from '$lib/components/Actividad/CardActividadListPreview.svelte';
-	import Leyenda from '../Leyenda.svelte';
-	import Reload from '../Reload.svelte';
 	import Filtro from '../Filtro.svelte';
 	import { categoriasActividad, agrupacionesActividades } from '$lib';
-	import Grupo from '../Grupo.svelte';
 	import Agrupaciones from '../Agrupaciones.svelte';
 
 	let { listaAgrupada } = $props();
