@@ -1,13 +1,19 @@
 <script lang="ts">
-	import { categoriasCliente } from '$lib';
+	import { agrupacionesCliente, categoriasCliente } from '$lib';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
+	import Agrupaciones from '../Agrupaciones.svelte';
 	import Filtro from '../Filtro.svelte';
 	import Grupo from '../Grupo.svelte';
 	import Reload from '../Reload.svelte';
 
 	let { listaAgrupada } = $props<{ listaAgrupada: any[] }>();
-
+	let agrupaciones = $derived(
+		listaAgrupada.map((e) => {
+			return { grupo: e.grupo, tamaño: e.elementos.length };
+		})
+	);
+	let agrupacionesSeleccionadas: string[] = $state([]);
 	let show = $derived($appState.min);
 </script>
 
@@ -18,15 +24,20 @@
 		<button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
-		<button onclick={appState.toggleBI} class="butter">BI</button>
+		<!-- <button onclick={appState.toggleBI} class="butter">BI</button> -->
 		<Filtro categorias={categoriasCliente} />
+		<Agrupaciones
+			categorias={agrupacionesCliente}
+			bind:agrupacionesSeleccionadas
+			{agrupaciones}
+		/>
 	</div>
 
 	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
 		<div class="grupo-dia">
 			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as elemento (elemento.id)}
-				<CardClienteListPreview client={elemento} />
+					<CardClienteListPreview client={elemento} />
 				{/each}
 			</Grupo>
 		</div>
@@ -43,13 +54,6 @@
 		flex-direction: column;
 		gap: var(--a);
 		padding-bottom: var(--f);
-	}
-
-	.controls {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-		align-items: center;
 	}
 
 	.no-results {

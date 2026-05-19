@@ -58,13 +58,6 @@
         padding-bottom: var(--f);
     }
 
-    .controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--a);
-        align-items: center;
-    }
-
     .no-results {
         text-align: center;
         padding: 2rem;
