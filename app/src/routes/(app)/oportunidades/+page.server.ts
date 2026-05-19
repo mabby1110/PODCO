@@ -138,7 +138,7 @@ export const actions: Actions = {
 			fecha_transito: 'AC',
 			fecha_entrega: 'AD',
 		};
-
+		
 		const newValues = mapFormDataToColumns(formData, updateFieldMap);
 		const agenteNombre = formData.get('agente') as string;
 		const opFolder = `${id}`;

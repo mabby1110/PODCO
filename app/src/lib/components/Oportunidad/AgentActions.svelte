@@ -185,28 +185,16 @@
 				<h3>Editar informacion</h3>
 				<div class="opcional">
 					<div class="opciones">
-						{#if !eventData.historia}
-							<FormOptionalInput title="+Historia">
-								<FormInput
-									label="Historia"
-									name="nuevaHistoria"
-									bind:value={nuevaHistoria}
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-						{:else}
-							<EditableJsonList
-								jsonList={eventData.historia}
-								action="/oportunidades?/updateOp"
-								name={'historia'}
-								id={eventData.id}
-								fields={[
-									{ name: 'fecha', label: 'Fecha', type: 'date' },
-									{ name: 'entrada', label: 'Entrada', type: 'textarea' }
-								]}
-							/>
-						{/if}
+						<EditableJsonList
+							jsonList={eventData.historia}
+							action="/oportunidades?/updateOp"
+							name={'historia'}
+							id={eventData.id}
+							fields={[
+								{ name: 'fecha', label: 'Fecha', type: 'date' },
+								{ name: 'entrada', label: 'Entrada', type: 'textarea' }
+							]}
+						/>
 						{#if currentPhase == 3}
 							<FormOptionalInput title="+Nueva cotizacion">
 								<UploadFile label="Nueva Cotización" name="quoteFile" required />
@@ -343,7 +331,9 @@
 					</button>
 				{:else if submitUpdate}
 					<input type="hidden" name="fase" value={currentPhase} />
-					<button type="submit" class="butter" disabled={isSubmitting || canSubmit}>Actualizar</button>
+					<button type="submit" class="butter" disabled={isSubmitting || canSubmit}
+						>Actualizar</button
+					>
 				{:else if submitCancel}
 					<input type="hidden" name="fase" value={0} />
 					<button type="submit" class="butter" disabled={isSubmitting || canSubmit}>Perder</button>
