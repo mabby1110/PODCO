@@ -151,7 +151,6 @@
 			<FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />
 			<FilePreview title="Cotizaciones Presentadas" data={eventData.cotizaciones_presentadas} />
 			<FilePreview title="Orden de compra" data={eventData.oc_cliente} />
-			<FilePreview title="Orden de compra" data={eventData.oc_cliente} />
 			<FilePreview title="Documentos de operacion" data={eventData.documentos_operacion} />
 			<FilePreview title="Adjuntos" data={eventData.documentos} />
 		{/snippet}a
