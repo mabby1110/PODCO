@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { agrupacionesCliente, columnasCliente } from '$lib';
+	import { categoriasCliente } from '$lib';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import Filtro from '../Filtro.svelte';
@@ -19,7 +19,7 @@
 			{show ? 'min' : 'max'}
 		</button>
 		<button onclick={appState.toggleBI} class="butter">BI</button>
-		<Filtro columns={columnasCliente} agrupaciones={agrupacionesCliente} />
+		<Filtro categorias={categoriasCliente} />
 	</div>
 
 	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
