@@ -51,7 +51,6 @@
 	);
 
 	const eventList = $derived(listaAgrupada.flatMap((agrupacion: any) => agrupacion.elementos));
-
 	const weekDates = $derived(getWeekDates(calendarStore.weekOffset));
 	const weekRangeText = $derived(formatWeekRange(weekDates));
 
@@ -310,11 +309,9 @@
 
 	.event-wrapper:hover {
 		z-index: 999 !important;
-		width: 250% !important;
+		width: 120% !important;
 		max-width: 80vw;
-		min-height: var(--g) !important;
-		height: auto !important;
-		transition-delay: 0.15s;
+		min-height: 40vh !important;
 	}
 	.event-wrapper:active {
 		z-index: 999 !important;

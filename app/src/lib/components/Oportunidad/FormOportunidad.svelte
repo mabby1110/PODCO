@@ -11,6 +11,7 @@
 	import { opModalStore } from '$lib/stores/opModalStore.svelte';
 
 	let data = $derived(page.data);
+	
 	let { isValid = $bindable() } = $props();
 	let { cliente } = $derived(page.data);
 	let clientes = $derived(data.clientes ?? []);

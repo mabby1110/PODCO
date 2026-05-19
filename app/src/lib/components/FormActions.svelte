@@ -23,7 +23,6 @@
 	let actionsElement = $state<HTMLElement | null>(null);
 	let formElement = $state<HTMLFormElement | null>(null);
 
-	// Ejemplo de acceso analítico
 	function getInputs() {
 		if (!formElement) return [];
 		return Array.from(formElement.elements);
