@@ -38,63 +38,58 @@
 		<div class="panel">
 			<button class="close" type="button" onclick={() => (show = false)}>x</button>
 			{#if !calendar}
-				<div class="filter-options">
-					<div class="options">
-						<select bind:value={selectedColumnKey}>
-							{#each categorias as col}
-								<option value={col.key}>{col.label}</option>
-							{/each}
-						</select>
+				<div class="options">
+					<select bind:value={selectedColumnKey}>
+						{#each categorias as col}
+							<option value={col.key}>{col.label}</option>
+						{/each}
+					</select>
 
-						<select bind:value={selectedAction}>
-							<option value="contains">Contiene</option>
-							<option value="asc">Mas antiguo</option>
-							<option value="desc">Mas reciente</option>
-							<option value="isNull">Es nulo</option>
-							<option value="hasData">Contiene datos</option>
-						</select>
+					<select bind:value={selectedAction}>
+						<option value="contains">Contiene</option>
+						<option value="asc">Mas antiguo</option>
+						<option value="desc">Mas reciente</option>
+						<option value="isNull">Es nulo</option>
+						<option value="hasData">Contiene datos</option>
+					</select>
 
-						{#if selectedAction === 'contains'}
-							<input
-								type="text"
-								bind:value={inputValue}
-								placeholder="Escribe la palabra clave..."
-								onkeydown={(e) => e.key === 'Enter' && handleAdd()}
-							/>
+					{#if selectedAction === 'contains'}
+						<input
+							type="text"
+							bind:value={inputValue}
+							placeholder="Escribe la palabra clave..."
+							onkeydown={(e) => e.key === 'Enter' && handleAdd()}
+						/>
+					{/if}
+
+					<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
+					{#if activeFilters.length > 0}
+						{#each activeFilters as filter (filter.id)}
+							<button
+								class="chip butter"
+								onclick={() => filtroStore.removeFilter(currentRoute, filter.id)}
+							>
+								{filter.column.label}
+								{#if filter.action === 'contains'}
+									contiene "{filter.value}"
+								{:else if filter.action === 'asc'}
+									(Mas antiguo)
+								{:else if filter.action === 'desc'}
+									(Mas reciente)
+								{:else if filter.action === 'isNull'}
+									(Es nulo)
+								{:else if filter.action === 'hasData'}
+									(Con datos)
+								{/if}
+								<span class="close-chip">×</span>
+							</button>
+						{/each}
+
+						{#if activeFilters.length > 1}
+							<button class="chop butter" onclick={() => filtroStore.clearFilters(currentRoute)}>
+								Limpiar todo
+							</button>
 						{/if}
-
-						<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
-					</div>
-				</div>
-			{/if}
-
-			{#if activeFilters.length > 0}
-				<div class="active-filters">
-					{#each activeFilters as filter (filter.id)}
-						<button
-							class="chip butter"
-							onclick={() => filtroStore.removeFilter(currentRoute, filter.id)}
-						>
-							{filter.column.label}
-							{#if filter.action === 'contains'}
-								contiene "{filter.value}"
-							{:else if filter.action === 'asc'}
-								(Mas antiguo)
-							{:else if filter.action === 'desc'}
-								(Mas reciente)
-							{:else if filter.action === 'isNull'}
-								(Es nulo)
-							{:else if filter.action === 'hasData'}
-								(Con datos)
-							{/if}
-							<span class="close-chip">×</span>
-						</button>
-					{/each}
-
-					{#if activeFilters.length > 1}
-						<button class="chop butter" onclick={() => filtroStore.clearFilters(currentRoute)}>
-							Limpiar todo
-						</button>
 					{/if}
 				</div>
 			{/if}
@@ -108,15 +103,8 @@
 
 <style>
 	.filter-container {
-		flex-grow: 1;
-		width: 100%;
-		max-width: 80vw;
 		order: 1;
-	}
-	.filter-options {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
+		width: 100%;
 	}
 	.options {
 		display: flex;
@@ -128,12 +116,6 @@
 		flex-wrap: wrap;
 		gap: var(--a);
 		width: fit-content;
-	}
-	.active-filters {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-		width: 100%;
 	}
 	.chop {
 		background-color: var(--color-error);

@@ -4,6 +4,7 @@
 	import Filtro from '../Filtro.svelte';
 	import { categoriasActividad, agrupacionesActividades } from '$lib';
 	import Agrupaciones from '../Agrupaciones.svelte';
+	import Grupo from '../Grupo.svelte';
 
 	let { listaAgrupada } = $props();
 
@@ -46,17 +47,19 @@
 
 	<!-- <Leyenda {steps} /> -->
 
-    {#each listaFiltrada as agrupacion (agrupacion.grupo)}
-        <div class="grupo-dia">
-            {#each agrupacion.elementos as event (event.id)}
-                <CardActividadListPreview {event} />
-            {/each}
-        </div>
-    {:else}
-        <div class="no-results">
-            <p>No se encontraron oportunidades con los filtros actuales.</p>
-        </div>
-    {/each}
+	{#each listaFiltrada as agrupacion (agrupacion.grupo)}
+		<div class="grupo-dia">
+			<Grupo {agrupacion} showByDefault={show}>
+				{#each agrupacion.elementos as event (event.id)}
+					<CardActividadListPreview {event} />
+				{/each}
+			</Grupo>
+		</div>
+	{:else}
+		<div class="no-results">
+			<p>No se encontraron oportunidades con los filtros actuales.</p>
+		</div>
+	{/each}
 </div>
 
 <style>

@@ -8,13 +8,18 @@
 	import Reload from '../Reload.svelte';
 
 	let { listaAgrupada } = $props<{ listaAgrupada: any[] }>();
+	let show = $derived($appState.min);
 	let agrupaciones = $derived(
 		listaAgrupada.map((e) => {
 			return { grupo: e.grupo, tamaño: e.elementos.length };
 		})
 	);
 	let agrupacionesSeleccionadas: string[] = $state([]);
-	let show = $derived($appState.min);
+	let listaFiltrada = $derived(
+		agrupacionesSeleccionadas.length === 0
+			? listaAgrupada
+			: listaAgrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
+	);
 </script>
 
 <div class="view-container">
@@ -26,14 +31,10 @@
 		</button>
 		<!-- <button onclick={appState.toggleBI} class="butter">BI</button> -->
 		<Filtro categorias={categoriasCliente} />
-		<Agrupaciones
-			categorias={agrupacionesCliente}
-			bind:agrupacionesSeleccionadas
-			{agrupaciones}
-		/>
+		<Agrupaciones categorias={agrupacionesCliente} bind:agrupacionesSeleccionadas {agrupaciones} />
 	</div>
 
-	{#each listaAgrupada as agrupacion (agrupacion.grupo)}
+	{#each listaFiltrada as agrupacion (agrupacion.grupo)}
 		<div class="grupo-dia">
 			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as elemento (elemento.id)}

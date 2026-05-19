@@ -63,9 +63,6 @@
 
 <style>
 	.container {
-		flex-grow: 1;
-		width: 100%;
-		max-width: 80vw;
 		order: 1;
 	}
 	.panel {
