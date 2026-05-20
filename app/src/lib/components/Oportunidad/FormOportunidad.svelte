@@ -50,15 +50,12 @@
 			isValid = baseValid;
 		}
 	});
-	$effect(() => {
-		console.log(newCLient);
-	});
 </script>
 
 <div class="form-content">
 	<div class="form-group">
 		<FormSelectInput list={motivosOportunidad} />
-		<FormSelectAgente agentes={data.agentes} bind:selected={selectedAgent} />
+		<FormSelectAgente bind:selected={selectedAgent} />
 	</div>
 
 	<Searchbar

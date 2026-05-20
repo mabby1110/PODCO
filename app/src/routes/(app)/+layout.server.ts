@@ -59,7 +59,7 @@ export const load: LayoutServerLoad = async ({ depends, url, locals, isDataReque
 			filtrosOrden
 		);
 	} else {
-		clientes = clientes?.filter((c: any) => c.id_agente === profile?.id) ?? [];
+		// clientes = clientes?.filter((c: any) => c.id_agente === profile?.id) ?? [];
 
 		oportunidades = ordenarDatos(
 			oportunidades?.filter((a: any) => a.id_agente === profile?.id) ?? [],

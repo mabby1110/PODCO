@@ -61,6 +61,17 @@
 			newCLient = isOpen;
 		}
 	});
+	let input = $state<HTMLElement | null>(null);
+	
+
+	$effect(() => {
+		if (isOpen && input) {
+			input.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start'
+			});
+		}
+	});
 </script>
 
 <div class="search-container">
@@ -80,8 +91,8 @@
 			</div>
 		</label>
 	{:else}
-		<label>
-			<span>Buscar Cliente</span>
+		<label bind:this={input}>
+			<h3>Buscar Cliente</h3>
 			{#if isOpen}
 				<FormNewClient bind:isDuplicate />
 			{:else}

@@ -1,11 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	
 	let agentes = $derived(page.data.agentes);
-	type Agente = {
-		id: string | number;
-		nombre: string;
-	};
 
 	let {
 		selected = $bindable<string>()

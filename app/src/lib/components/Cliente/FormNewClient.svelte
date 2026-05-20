@@ -8,7 +8,7 @@
 	}: {
 		isDuplicate: boolean;
 	} = $props();
-	let { clientes, agentes } = $derived(page.data);
+	let { clientes } = $derived(page.data);
 
 	// --- Pickers separados ---
 	let razon_social = $state('');
@@ -20,7 +20,7 @@
 				) ?? [])
 			: []
 	);
-	
+
 	$effect(() => {
 		isDuplicate = razon_social.trim() === '' || matches.length > 0;
 	});
@@ -50,7 +50,11 @@
 		</ul>
 	{/if}
 
-	<FormSelectMotivo title="Tipo de prospeccion" name={'tipo_prospeccion'} list={motivosProspeccion} />
+	<FormSelectMotivo
+		title="Tipo de prospeccion"
+		name={'tipo_prospeccion'}
+		list={motivosProspeccion}
+	/>
 
 	<label>
 		<span>Ubicacion</span>
