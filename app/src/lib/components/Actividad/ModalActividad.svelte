@@ -104,27 +104,6 @@
 		padding: 1rem;
 	}
 
-	.modal {
-		background: white;
-		border-radius: 8px;
-		max-width: 600px;
-		max-height: 80vh;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-		position: relative;
-		z-index: 10000;
-	}
-
-	.modal-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 1.5rem;
-		border-bottom: 1px solid #e5e5e5;
-	}
-
 	.close {
 		background: none;
 		border: none;
@@ -132,14 +111,6 @@
 		width: 2rem;
 		height: 2rem;
 		border-radius: 4px;
-	}
-
-	form {
-		padding: 1.5rem;
-		overflow-y: auto;
-		display: flex;
-		flex-direction: column;
-		gap: var(--b);
 	}
 
 	input {

@@ -33,7 +33,7 @@
 
 <ModalActividad />
 <ModalOportunidad />
-<ModalCliente {data} />
+<ModalCliente />
 
 <style>
 	.nav-container {
