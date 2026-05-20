@@ -93,7 +93,7 @@
 	}
 
 	.card-list-preview .title {
-		min-width: 60%;
+		width: 100%;
 	}
 
 	.acciones {
