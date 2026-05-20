@@ -6,7 +6,7 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
 
-	let { event, style } = $props();
+	let { event } = $props();
 	const { clientes, agentes } = $derived(page.data);
 	const isDndEnabled = $derived($appState.dnd);
 
@@ -27,7 +27,7 @@
 			historia: event.historia || 'Sin historial registrado',
 			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
 			documentos: event.documentos || 'Sin documentos',
-			style: getStyleForPhase(event.fase) + style
+			style: getStyleForPhase(event.fase)
 		};
 	});
 

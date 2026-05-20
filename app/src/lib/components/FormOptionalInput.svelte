@@ -4,7 +4,8 @@
 	let { title, children }: { title: string; children?: Snippet } = $props();
 
 	let isOpen = $state(false);
-
+	let input = $state<HTMLElement | null>(null);
+		
 	function open() {
 		isOpen = true;
 	}
@@ -12,6 +13,15 @@
 	function close() {
 		isOpen = false;
 	}
+
+	$effect(() => {
+		if (isOpen && input) {
+			input.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start'
+			});
+		}
+	});
 </script>
 
 {#if !isOpen}
@@ -19,7 +29,7 @@
 		{title}
 	</button>
 {:else}
-	<div class="optional-input">
+	<div class="optional-input" bind:this={input}>
 		<button class="close-btn" type="button" onclick={close}>✕</button>
 		{#if children}
 			{@render children()}
@@ -31,7 +41,6 @@
 	.optional-input {
 		display: flex;
 		flex-grow: 1;
-		order: 1;
 		width: 100%;
 		gap: var(--a);
 		align-items: flex-start;

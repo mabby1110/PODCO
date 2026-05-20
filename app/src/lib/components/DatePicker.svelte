@@ -188,9 +188,6 @@
 							class="event-block"
 							style="top: {evento._top}%; height: {evento._height}%; width: {evento._width}%; left: {evento._left}%;"
 						>
-							<!-- <p>
-								{evento.motivo}, {evento.objetivo}
-							</p> -->
 							<DatePickerCard event={evento} />
 						</div>
 					{/each}

@@ -9,9 +9,10 @@
 	import DatePicker from '../DatePicker.svelte';
 	import FormConditionalInput from '../FormConditionalInput.svelte';
 	import { opModalStore } from '$lib/stores/opModalStore.svelte';
+	import FormOptionalInput from '../FormOptionalInput.svelte';
 
 	let data = $derived(page.data);
-	
+
 	let { isValid = $bindable() } = $props();
 	let { cliente } = $derived(page.data);
 	let clientes = $derived(data.clientes ?? []);
@@ -19,6 +20,7 @@
 	let necesidad = $state('');
 	let potencial_venta = $state('');
 	let objetivo = $state(opModalStore.objetivo || '');
+	let observaciones = $state('');
 
 	let isOpen = $state(false);
 
@@ -75,6 +77,15 @@
 		hint="ej. levantamiento técnico en sitio,  o presentar cotización"
 		required
 	/>
+	<FormOptionalInput title="+Observaciones">
+		<FormInput
+			label="Observaciones"
+			name="observaciones"
+			value={observaciones}
+			type="textarea"
+			required
+		/>
+	</FormOptionalInput>
 	<FormConditionalInput bind:isOpen titleOpen="+Necesidad detectada">
 		<FormInput
 			label="Necesidad"

@@ -4,12 +4,14 @@
 
 	let {
 		header,
+		resume,
 		content,
 		meta,
 		href = '/',
 		style = ''
 	}: {
 		header?: Snippet;
+		resume?: Snippet;
 		content?: Snippet;
 		meta?: Snippet;
 		href?: string;
@@ -25,11 +27,9 @@
 		show = !show;
 	}
 
-	// Importante para la accesibilidad y navegación por teclado
 	function handleKeydown(e: KeyboardEvent) {
-		// Ejecuta el clic si se presiona Enter o la barra Espaciadora
 		if (e.key === 'Enter' || e.key === ' ') {
-			e.preventDefault(); // Evita que la barra espaciadora haga un salto en la página
+			e.preventDefault();
 			handleClick();
 		}
 	}
@@ -49,8 +49,14 @@
 		</div>
 	{/if}
 
+	{#if resume}
+		<div class="content" transition:slide>
+			{@render resume()}
+		</div>
+	{/if}
+
 	{#if content && show}
-		<div class="brief" transition:slide>
+		<div class="content" transition:slide>
 			{@render content()}
 		</div>
 	{/if}
@@ -94,22 +100,30 @@
 		display: flex;
 		gap: var(--a);
 	}
-	.card-list-preview .brief {
+	.acciones button {
+		height: fit-content;
+		flex-grow: 1;
+		min-width: var(--e);
+		max-width: var(--f);
+	}
+	.card-list-preview .content {
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		gap: var(--a);
 		flex-grow: 1;
 		width: 100%;
 		overflow: hidden;
 		pointer-events: none;
 	}
-
+	.acciones {
+		flex-grow: 1;
+		justify-content: space-between;
+		align-items: flex-end;
+	}
 	.card-list-preview .meta {
 		display: flex;
+		gap: 0 var(--a);
 		flex-wrap: wrap;
 		font-size: smaller;
-	}
-	.card-list-preview .meta .id {
-		width: 100%;
 	}
 </style>

@@ -44,10 +44,12 @@
 h1 {
 	font-size: 1.6rem;
 }
+
 h2 {
 	font-weight: 400;
 	font-size: 1.4rem;
 }
+
 h3 {
 	font-weight: 400;
 	font-size: 1.2rem;
@@ -211,7 +213,7 @@ body {
 .entradas {
 	display: flex;
 	flex-direction: column;
-	gap: var(--b);
+	gap: var(--a);
 }
 
 .entradas .entrada {
@@ -246,6 +248,14 @@ body {
 	pointer-events: auto;
 	cursor: pointer;
 }
+
+.card-list-preview .brief {
+	display: flex;
+	flex-direction: column;
+	gap: var(--a);
+	padding-left: var(--a);
+}
+
 .card-content section {
 	padding: 0 var(--a);
 	display: flex;
@@ -261,6 +271,7 @@ body {
 	gap: var(--b);
 	border-top: 1px solid var(--color-secondary);
 }
+
 .card-actions .submit {
 	display: flex;
 	flex-wrap: wrap;
@@ -306,6 +317,7 @@ body {
 	color: #000;
 	transition: all 0.2s;
 	align-self: flex-end;
+	aspect-ratio: 1/1;
 }
 
 .close-btn:hover {

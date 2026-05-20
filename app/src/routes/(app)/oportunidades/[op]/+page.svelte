@@ -73,21 +73,18 @@
 		{#snippet content()}
 			<section>
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
-				<EditableList
-					jsonList={eventData.etiquetas}
-					id={eventData.id}
-					action="/oportunidades?/updateOp"
-					name="etiquetas"
-					label="Etiqueta"
-				/>
-			</section>
-
-			<section>
 				<FormEditableContact
 					jsonList={eventData.cliente.contactos}
 					id={eventData.cliente.id}
 					action="/clientes?/updateClient"
 				/>
+				<!-- <EditableList
+					jsonList={eventData.etiquetas}
+					id={eventData.id}
+					action="/oportunidades?/updateOp"
+					name="etiquetas"
+					label="Etiqueta"
+				/> -->
 			</section>
 
 			{#if eventData.monto_oc}

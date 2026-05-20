@@ -3,6 +3,7 @@
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
+	import ListPreview from '../ListPreview.svelte';
 
 	let { event } = $props();
 	const { agentes } = $derived(page.data);
@@ -24,19 +25,23 @@
 	});
 </script>
 
-<a href="/actividades/{event.id}" class="card-list-preview" style={eventData?.style}>
-	<div class="title">
-		<h3>{eventData?.motivo}</h3>
-	</div>
-	{#if eventData?.objetivo}
-		<div class="brief">
-			<b>Objetivo</b>
-			<p>{eventData?.objetivo}</p>
-		</div>
-	{/if}
-	<div class="meta">
+<ListPreview href="/actividades/{event.id}" style={eventData?.style}>
+	{#snippet header()}
+		<h2>{eventData?.motivo}</h2>
+	{/snippet}
+
+	{#snippet resume()}
+		{#if eventData?.objetivo}
+			<div class="brief">
+				<b>Objetivo</b>
+				<p>{eventData?.objetivo}</p>
+			</div>
+		{/if}
+	{/snippet}
+
+	{#snippet meta()}
 		<p class="id">{eventData?.id}</p>
 		<p>{eventData?.agente?.nombre}</p>
 		<p>{eventData?.inicio}</p>
-	</div>
-</a>
+	{/snippet}
+</ListPreview>

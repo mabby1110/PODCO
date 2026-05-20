@@ -49,17 +49,19 @@
 		{/if}
 
 		{#if eventData?.historia}
-			<h3>Historia</h3>
-			<div class="entradas">
-				{#each JSON.parse(eventData?.historia) as item}
-					<div class="entrada">
-						<p>{formatDateFull(parseDateTimeLocal(item.fecha))}:</p>
-						{#if item.nombre_perfil}
-							<p class="profile">{item.nombre_perfil},</p>
-						{/if}
-						<p>{item.entrada}</p>
-					</div>
-				{/each}
+			<div class="brief">
+				<h3>Historia</h3>
+				<div class="entradas">
+					{#each JSON.parse(eventData?.historia) as item}
+						<div class="entrada">
+							<p>{formatDateFull(parseDateTimeLocal(item.fecha))}:</p>
+							{#if item.nombre_perfil}
+								<p class="profile">{item.nombre_perfil},</p>
+							{/if}
+							<p>{item.entrada}</p>
+						</div>
+					{/each}
+				</div>
 			</div>
 		{/if}
 	{/snippet}
