@@ -3,12 +3,12 @@
 	// Al usar $props(), permitimos que este array sea sobreescrito si lo necesitas en el futuro.
 	let {
 		steps = [
-			{ label: 'Actividad (1)', color: 'var(--color-secondary)' },
+			{ label: 'Prospecto (1)', color: 'var(--color-secondary)' },
 			{ label: 'Oportunidad (2)', color: '#5ca8ff99' },
 			{ label: 'Negociación (3)', color: '#ffd70099' },
 			{ label: 'Ganada (4)', color: '#34d76a99' },
-			{ label: 'Enviar (5)', color: '#6575ff99' },
-			{ label: 'Finalizar (6)', color: '#000000ee' }
+			// { label: 'Enviar (5)', color: '#6575ff99' },
+			// { label: 'Finalizar (6)', color: '#000000ee' }
 		]
 	} = $props();
 	let show = $state(false);

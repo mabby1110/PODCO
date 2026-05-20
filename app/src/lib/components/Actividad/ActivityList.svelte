@@ -5,13 +5,14 @@
 	import { categoriasActividad, agrupacionesActividades } from '$lib';
 	import Agrupaciones from '../Agrupaciones.svelte';
 	import Grupo from '../Grupo.svelte';
+	import Leyenda from '../Leyenda.svelte';
 
 	let { listaAgrupada } = $props();
 
 	let show = $derived($appState.min);
 
 	const steps = [
-		{ label: 'Programada', color: 'var(--color-secondary)' },
+		{ label: 'Actividad programada', color: 'var(--color-secondary)' },
 		{ label: 'Finalizada', color: '#000000ee' }
 	];
 
@@ -45,7 +46,7 @@
 		/>
 	</div>
 
-	<!-- <Leyenda {steps} /> -->
+	<Leyenda {steps} />
 
 	{#each listaFiltrada as agrupacion (agrupacion.grupo)}
 		<div class="grupo-dia">

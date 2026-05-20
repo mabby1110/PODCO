@@ -5,6 +5,7 @@
 	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
 	import Agrupaciones from '../Agrupaciones.svelte';
 	import Grupo from '../Grupo.svelte';
+	import Leyenda from '../Leyenda.svelte';
 
 	let { listaAgrupada } = $props();
 
@@ -39,7 +40,7 @@
 		/>
 	</div>
 
-	<!-- <Leyenda /> -->
+	<Leyenda />
 
 	{#each listaFiltrada as agrupacion (agrupacion.grupo)}
 		<div class="grupo-dia">
