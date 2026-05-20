@@ -42,12 +42,15 @@
 }
 
 h1 {
-	font-size: 28px;
+	font-size: 1.6rem;
 }
-
+h2 {
+	font-weight: 400;
+	font-size: 1.4rem;
+}
 h3 {
 	font-weight: 400;
-	font-size: 20px;
+	font-size: 1.2rem;
 }
 
 label {
@@ -220,56 +223,6 @@ body {
 
 .entradas .butter {
 	width: var(--d);
-}
-
-.card-list-preview {
-	text-decoration: none;
-	color: inherit;
-	position: relative;
-	padding: var(--a);
-	background-color: var(--color-secondary);
-	backdrop-filter: blur(16px);
-	width: 100%;
-	min-height: var(--e);
-	display: flex;
-	gap: var(--a);
-	flex-wrap: wrap;
-	align-items: center;
-	text-align: left;
-	border-style: none;
-	border-width: 0;
-	border-radius: var(--a);
-	cursor: pointer;
-}
-
-.card-list-preview .title {
-	min-width: 60%;
-}
-
-.card-list-preview .brief {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
-	flex-grow: 1;
-	width: 100%;
-	overflow: hidden;
-	pointer-events: none;
-}
-
-.card-list-preview .meta {
-	display: flex;
-	gap: var(--a);
-	margin-top: var(--a);
-	font-size: smaller;
-	width: 100%;
-}
-.card-list-preview .meta .id {
-	flex-grow: 1;
-}
-
-.card-list-preview .brief p,
-.card-list-preview .brief b {
-	pointer-events: none;
 }
 
 .card-calendar-preview {

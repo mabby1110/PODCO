@@ -31,7 +31,6 @@
 		<button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
-
 		<Filtro categorias={categoriasOportunidad} />
 		<Agrupaciones
 			categorias={agrupacionesOportunidades}

@@ -2,7 +2,9 @@
 	import { page } from '$app/state';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { getStyleForPhase } from '$lib/utils/util';
+	import ListPreview from '../ListPreview.svelte';
 
 	let { event } = $props();
 	const { clientes, agentes } = $derived(page.data);
@@ -16,7 +18,7 @@
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
-			inicio: event?.inicio.split(" ")[0],
+			inicio: event?.inicio.split(' ')[0],
 			fin: event?.fin,
 			historia: event.historia,
 			requisitos: event.requisitos,
@@ -32,23 +34,39 @@
 	});
 </script>
 
-<a
-	href="/oportunidades/{event.id}"
-	class="card-list-preview"
-	style={eventData?.style}
->
-	<p class="date">{eventData?.inicio}</p>
-	<div class="title">
-		<h3>{eventData?.motivo}</h3>
-		<p>{eventData?.razon_social}</p>
-	</div>
+<ListPreview href="/oportunidades/{event.id}" style={eventData?.style}>
+	{#snippet header()}
+		<h1>{eventData?.razon_social}</h1>
+		<h2>{eventData?.motivo}</h2>
+	{/snippet}
 
-	{#if eventData?.objetivo}
-		<div class="brief">
-			<b>Objetivo</b>
-		</div>
-		<div class="brief">
-			<p>{eventData?.objetivo}</p>
-		</div>
-	{/if}
-</a>
+	{#snippet content()}
+		{#if eventData?.objetivo}
+			<div class="brief">
+				<h3>Objetivo</h3>
+				<p>{eventData?.objetivo}</p>
+			</div>
+		{/if}
+
+		{#if eventData?.historia}
+			<h3>Historia</h3>
+			<div class="entradas">
+				{#each JSON.parse(eventData?.historia) as item}
+					<div class="entrada">
+						<p>{formatDateFull(parseDateTimeLocal(item.fecha))}:</p>
+						{#if item.nombre_perfil}
+							<p class="profile">{item.nombre_perfil},</p>
+						{/if}
+						<p>{item.entrada}</p>
+					</div>
+				{/each}
+			</div>
+		{/if}
+	{/snippet}
+
+	{#snippet meta()}
+		<p class="id">{eventData?.id}</p>
+		<p>{eventData?.agente?.nombre}</p>
+		<p>{eventData?.inicio}</p>
+	{/snippet}
+</ListPreview>
