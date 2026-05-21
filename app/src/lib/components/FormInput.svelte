@@ -101,20 +101,15 @@
 	.field-block {
 		display: flex;
 		flex-direction: column;
+		height: 100%;
 		gap: 8px;
 		width: 100%;
 	}
 
 	.field-header {
 		display: flex;
-		align-items: center;
-	}
-
-	.hint {
-		font-size: 14px;
-		opacity: 0.7;
-		margin: 0;
-		margin-left: var(--b);
+		align-items: flex-end;
+		flex-grow: 1;
 	}
 
 	textarea,

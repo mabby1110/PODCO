@@ -23,7 +23,7 @@
 			</div>
 			<form
 				method="POST"
-				action="/oportunidades?/addOp"
+				action="/oportunidades?/add"
 				use:enhance={() => {
 					appState.toggleModalOp();
 					return async ({ result, update }) => {

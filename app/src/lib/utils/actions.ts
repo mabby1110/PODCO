@@ -1,5 +1,4 @@
 import { deserialize } from '$app/forms';
-import type { ActionResult } from '@sveltejs/kit';
 
 export async function postActivityUpdate(id: string, data: Record<string, any>, url: string) {
     console.log('PostUpdate', data);

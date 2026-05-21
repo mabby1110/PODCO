@@ -47,7 +47,7 @@
 </script>
 
 {#if currentPhase <= 3 && currentPhase != 0 && currentPhase != 6}
-	<FormActions action="/oportunidades?/updateOp" bind:isOpen onSuccess={handleSuccess}>
+	<FormActions action="/oportunidades?/update" bind:isOpen onSuccess={handleSuccess}>
 		{#snippet fieldsContent()}
 			{#if submit}
 				{#if currentPhase == 1}

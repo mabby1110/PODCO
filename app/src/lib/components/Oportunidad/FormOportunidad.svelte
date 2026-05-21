@@ -17,7 +17,7 @@
 	let { cliente } = $derived(page.data);
 	let clientes = $derived(data.clientes ?? []);
 
-	let necesidad = $state('');
+	let necesidades = $state('');
 	let potencial_venta = $state('');
 	let objetivo = $state(opModalStore.objetivo || '');
 	let observaciones = $state('');
@@ -45,7 +45,7 @@
 		const baseValid = !!(objetivo && (selectedClient || newCLient) && selectedAgent);
 
 		if (isOpen) {
-			isValid = baseValid && !!(necesidad && potencial_venta);
+			isValid = baseValid && !!(necesidades && potencial_venta);
 		} else {
 			isValid = baseValid;
 		}
@@ -86,8 +86,8 @@
 	<FormConditionalInput bind:isOpen titleOpen="+Necesidad detectada">
 		<FormInput
 			label="Necesidad"
-			name="necesidad"
-			bind:value={necesidad}
+			name="necesidades"
+			bind:value={necesidades}
 			placeholder="Requerimiento técnico u operacional detectados"
 			type="textarea"
 			required

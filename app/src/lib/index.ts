@@ -71,14 +71,14 @@ export type Historial = {
 	id_objeto: string;
 	accion: string;
 	cambios: any;
-}
+};
 export type Notificacion = {
 	id: string;
 	fecha_creacion: string | Date;
 	id_agente: string;
 	id_historial: string;
 	visto: boolean;
-}
+};
 
 // MAPEO CON SHEETS
 export const clienteFieldMap = {
@@ -105,7 +105,37 @@ export const historialFieldMap = {
 	accion: 'F',
 	cambios: 'G'
 };
-
+export const opFieldMap = {
+	fecha_creacion: 'B',
+	historial_cambios: 'C',
+	inicio: 'D',
+	fin: 'E',
+	fecha_cierre: 'F',
+	id_agente: 'G',
+	fase: 'H',
+	documentos: 'I',
+	historia: 'J',
+	motivo: 'K',
+	objetivo: 'L',
+	requisitos: 'M',
+	observaciones: 'N',
+	necesidades: 'O',
+	potencial_venta: 'P',
+	id_cliente: 'Q',
+	cotizaciones_presentadas: 'R',
+	cotizaciones_ganadas: 'S',
+	oc_cliente: 'T',
+	documentos_operacion: 'U',
+	motivo_inicial: 'V',
+	etiquetas: 'W',
+	monto_oc: 'X',
+	fecha_analisis: 'Y',
+	fecha_negociacion: 'Z',
+	fecha_pedido: 'AA',
+	fecha_proceso_entrega: 'AB',
+	fecha_transito: 'AC',
+	fecha_entrega: 'AD'
+};
 // FILTROS
 export const categoriasActividad = [
 	{ key: 'motivo', label: 'Motivo' },
@@ -142,7 +172,7 @@ export const categoriasCliente = [
 	{ key: 'tipo_prospeccion', label: 'Origen/Prospección' },
 	{ key: 'op', label: 'Oportunidades abiertas' },
 	{ key: 'visitas', label: 'Visitas' },
-	{ key: 'contactos', label: 'Contactos' },
+	{ key: 'contactos', label: 'Contactos' }
 ];
 
 // AGRUPACIONES
@@ -151,7 +181,7 @@ export const agrupacionesCliente = [
 	{ value: 'ciudad', label: 'Ciudad' },
 	{ value: 'sector', label: 'Sector' },
 	{ value: 'tipo_prospeccion', label: 'Tipo_prospeccion' },
-	{ value: 'clasificacion', label: 'Clasificacion' },
+	{ value: 'clasificacion', label: 'Clasificacion' }
 ];
 
 export const agrupacionesActividades = [
@@ -171,7 +201,7 @@ export const agrupacionesOportunidades = [
 	{ value: 'inicio', label: 'inicio' },
 	{ value: 'fecha_cierre', label: 'fecha_cierre' },
 	{ value: 'fase', label: 'fase' },
-	
+
 	// de la actividad
 	{ value: 'motivo', label: 'motivo' },
 	{ value: 'requisitos', label: 'requisitos' },
@@ -180,7 +210,7 @@ export const agrupacionesOportunidades = [
 
 export const agrupacionesCalendario = [
 	{ value: 'fase', label: 'fase' },
-	{ value: 'motivo', label: 'motivo' },
+	{ value: 'motivo', label: 'motivo' }
 ];
 
 // FASES
@@ -213,7 +243,8 @@ export const fases = [
 		id_fase: 5,
 		actual: 'En proceso de entrega',
 		accion: 'En transito',
-		placeholder: 'Proceso de logística, reunir el material vendido, esperar material pedido al proveedor y corroborar condiciones'
+		placeholder:
+			'Proceso de logística, reunir el material vendido, esperar material pedido al proveedor y corroborar condiciones'
 	},
 	{
 		id_fase: 6,
