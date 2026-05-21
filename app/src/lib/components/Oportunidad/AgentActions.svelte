@@ -22,7 +22,7 @@
 	let nuevaObeservacion = $state('');
 	let monto_oc = $state('');
 
-	let necesidad = $state('');
+	let necesidades = $state('');
 	let potencial_venta = $state(eventData.potencial_venta || '');
 	let objetivo = $state('');
 
@@ -67,7 +67,7 @@
 					<FormInput
 						label="Necesidad"
 						name="necesidades"
-						bind:value={necesidad}
+						bind:value={necesidades}
 						placeholder="Requerimiento técnico u operacional detectados"
 						type="textarea"
 						required

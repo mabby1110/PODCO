@@ -10,6 +10,7 @@
 	import { opModalStore } from '$lib/stores/opModalStore.svelte.js';
 	import { postActivityUpdate } from '$lib/utils/actions.js';
 	import { invalidateAll } from '$app/navigation';
+	import EditableJsonList from '$lib/components/EditableJsonList.svelte';
 
 	let { data } = $props();
 	const event = $derived(data.actividad);
@@ -104,33 +105,16 @@
 				</section>
 			{/if}
 
-			{#if eventData.historia}
-				<section>
-					<h3>Historia</h3>
-					<div class="entradas">
-						{#each JSON.parse(eventData.historia) as item, index}
-							<div class="entrada">
-								{#if item.id_op}
-									<a href="/oportunidades/{item.id_op}">
-										<b>{formatDateFull(parseDateTimeLocal(item.fecha))}</b> oportunidad:</a
-									>
-									{#if item.nombre_perfil}
-										<p class="profile">{item.nombre_perfil},</p>
-									{/if}
-									<p>{item.entrada}</p>
-								{:else}
-									<button class="butter" onclick={() => handleHotOp(item.entrada, index)}>+</button>
-									<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
-									{#if item.nombre_perfil}
-										<p class="profile">{item.nombre_perfil},</p>
-									{/if}
-									<p>{item.entrada}</p>
-								{/if}
-							</div>
-						{/each}
-					</div>
-				</section>
-			{/if}
+			<EditableJsonList
+				jsonList={eventData.historia}
+				action="/actividades?/update"
+				name={'historia'}
+				id={eventData.id}
+				fields={[
+					{ name: 'fecha', label: 'Fecha', type: 'date' },
+					{ name: 'entrada', label: 'Entrada', type: 'textarea' }
+				]}
+			/>
 		{/snippet}
 
 		{#snippet actions()}

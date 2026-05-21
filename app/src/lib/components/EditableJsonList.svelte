@@ -90,6 +90,7 @@
 <form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
 	<input type="hidden" name="id" value={id} />
 	<input type="hidden" {name} value={list_stringified} />
+	<input type="hidden" name="id_agente" value={$profile?.id} />
 
 	<div class="entradas">
 		{#each lista as item, i}

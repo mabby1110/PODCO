@@ -81,6 +81,14 @@ export type Notificacion = {
 };
 
 // MAPEO CON SHEETS
+export const historialFieldMap = {
+	fecha_creacion: 'B',
+	id_agente: 'C',
+	tipo_objeto: 'D',
+	id_objeto: 'E',
+	accion: 'F',
+	cambios: 'G'
+};
 export const clienteFieldMap = {
 	fecha_creacion: 'B',
 	historial_cambios: 'C',
@@ -96,14 +104,6 @@ export const clienteFieldMap = {
 	historial: 'M',
 	tipo_prospeccion: 'N',
 	observaciones: 'O'
-};
-export const historialFieldMap = {
-	fecha_creacion: 'B',
-	id_agente: 'C',
-	tipo_objeto: 'D',
-	id_objeto: 'E',
-	accion: 'F',
-	cambios: 'G'
 };
 export const opFieldMap = {
 	fecha_creacion: 'B',
@@ -135,6 +135,21 @@ export const opFieldMap = {
 	fecha_proceso_entrega: 'AB',
 	fecha_transito: 'AC',
 	fecha_entrega: 'AD'
+};
+export const actFieldMap = {
+	fecha_creacion: 'B',
+	historial_cambios: 'C',
+	inicio: 'D',
+	fin: 'E',
+	fecha_cierre: 'F',
+	id_agente: 'G',
+	fase: 'H',
+	documentos: 'I',
+	historia: 'J',
+	motivo: 'K',
+	objetivo: 'L',
+	requisitos: 'M',
+	observaciones: 'N'
 };
 // FILTROS
 export const categoriasActividad = [

@@ -1,10 +1,7 @@
 import {
-	mapFormDataToColumns,
 	updateRowById,
-	type FieldColumnMap
 } from '$lib/server/google/sheets';
 import { fail, type Actions } from '@sveltejs/kit';
-import { processAttachments } from '$lib/server/google/drive';
 import { invalidateCache } from '$lib/server/google/cachedQueries';
 import { actualizarOportunidad, crearCliente, crearOportunidad } from '$lib/server/actions';
 

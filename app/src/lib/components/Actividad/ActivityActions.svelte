@@ -31,7 +31,7 @@
 </script>
 
 {#if currentPhase != 0 && currentPhase != 6}
-	<FormActions action="/actividades?/updateActivity" bind:isOpen onSuccess={handleSuccess}>
+	<FormActions action="/actividades?/update" bind:isOpen onSuccess={handleSuccess}>
 		{#snippet fieldsContent()}
 			<div class="actions">
 				{#if submit}
@@ -49,16 +49,6 @@
 					<h3>Editar informacion</h3>
 					<div class="opcional">
 						<div class="opciones">
-							<EditableJsonList
-								jsonList={eventData.historia}
-								action="/actividades?/updateActivity"
-								name={'historia'}
-								id={eventData.id}
-								fields={[
-									{ name: 'fecha', label: 'Fecha', type: 'date' },
-									{ name: 'entrada', label: 'Entrada', type: 'textarea' }
-								]}
-							/>
 							<FormOptionalInput title="+Observaciones">
 								<FormInput
 									label="Observaciones"
@@ -137,7 +127,7 @@
 					value={concatStrings(eventData.observaciones, nuevaObservacion)}
 				/>
 			{/if}
-			{#if nextPhase == 6}
+			{#if nextPhase == 6 && submit}
 				<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 			{/if}
 			{#if !newOp}

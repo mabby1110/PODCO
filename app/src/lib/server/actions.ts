@@ -1,4 +1,11 @@
-import { clienteFieldMap, historialFieldMap, opFieldMap, type Cliente, type Historial } from '$lib';
+import {
+	actFieldMap,
+	clienteFieldMap,
+	historialFieldMap,
+	opFieldMap,
+	type Cliente,
+	type Historial
+} from '$lib';
 import { processAttachments } from './google/drive';
 import { appendRow, mapObjectToColumns, updateRowById } from './google/sheets';
 
@@ -74,7 +81,7 @@ export async function actualizarCliente(id: string, formData: FormData) {
 // OPORTUNIDADES
 export async function crearOportunidad(formData: FormData) {
 	const getStr = (key: string) => (formData.get(key) as string) || '';
-	console.log(formData);
+
 	const oportunidad = {
 		fecha_creacion: new Date().toISOString(),
 		inicio: getStr('inicio'),
@@ -98,7 +105,7 @@ export async function crearOportunidad(formData: FormData) {
 	// 2. Crear el registro en el Historial Global
 	const historial: Historial = {
 		fecha_creacion: new Date().toISOString(),
-		id_agente: getStr('id_agente') || '1',
+		id_agente: getStr('id_agente'),
 		tipo_objeto: 'oportunidad',
 		id_objeto: nuevaOp.id,
 		accion: 'create',
@@ -196,7 +203,7 @@ export async function actualizarOportunidad(id: string, formData: FormData) {
 	// 4. ---------- UPDATE SHEET OPORTUNIDADES ------------
 	await updateRowById(id, newValues, 'oportunidades!A:AD');
 
-	// 5. ---------- REGISTRO EN HISTORIAL GLOBAL ----------
+	// 5. ---------- REGISTRO EN HISTORIAL ----------
 	const historial: Historial = {
 		fecha_creacion: new Date().toISOString(),
 		id_agente: (formData.get('id_agente') as string) || '1',
@@ -213,3 +220,106 @@ export async function actualizarOportunidad(id: string, formData: FormData) {
 }
 
 // ACTIVIDADES
+export async function crearActividad(formData: FormData) {
+	const getStr = (key: string) => (formData.get(key) as string) || '';
+	console.log(formData);
+
+	const actividad = {
+		fecha_creacion: new Date().toISOString(),
+		inicio: getStr('inicio'),
+		fin: getStr('fin'),
+		id_agente: getStr('id_agente'),
+		fase: getStr('fase'),
+		motivo: getStr('motivo'),
+		motivo_inicial: getStr('motivo'),
+		objetivo: getStr('objetivo'),
+		requisitos: getStr('requisitos'),
+		observaciones: getStr('observaciones')
+	};
+
+	const mapActividad = mapObjectToColumns(actividad, actFieldMap);
+	const nuevaAct = await appendRow('actividades!A:Z', mapActividad, 'BMS_ACT');
+
+	// 2. Crear el registro en el Historial Global
+	const historial: Historial = {
+		fecha_creacion: new Date().toISOString(),
+		id_agente: getStr('id_agente') || '1',
+		tipo_objeto: 'actividad',
+		id_objeto: nuevaAct.id,
+		accion: 'create',
+		cambios: JSON.stringify(Object.fromEntries(formData.entries()))
+	};
+
+	await registrarHistorial(historial);
+
+	return nuevaAct.id;
+}
+
+export async function actualizarActividad(id: string, formData: FormData) {
+	const formatedFormData = Object.fromEntries(formData.entries());
+	console.log(formatedFormData);
+	let mensajeSistema = 'Se actualizó la Actividad';
+
+	// 1. Clonamos el mapa de campos para poder borrar keys de forma segura
+	const currentUpdateMap = { ...actFieldMap };
+
+	// ---------- LÓGICA DE ESCENARIOS ----------
+
+	if (formatedFormData.fase === '0') {
+		// ESCENARIO A: Cancelar actividad
+		mensajeSistema = 'Se descartó la Actividad';
+	} else if (formatedFormData.razon_social) {
+		// ESCENARIO B: Cliente Nuevo -> Oportunidad Nueva
+		const nuevoClienteId = await crearCliente(formData);
+
+		// Enlazamos el cliente al form antes de crear la op
+		formData.set('id_cliente', nuevoClienteId);
+
+		// Guardamos la fase real de la actividad y la forzamos a 2 para la OP
+		const faseActividad = formData.get('fase') as string;
+		formData.set('fase', '1');
+		const nuevaOpId = await crearOportunidad(formData);
+		formData.set('fase', faseActividad); // Restauramos la fase para la actividad
+
+		mensajeSistema = `Se creó Cliente ${nuevoClienteId} y Oportunidad ${nuevaOpId}`;
+
+		// Eliminamos campos del mapa clonado para no sobreescribir la actividad
+		['motivo', 'objetivo', 'observaciones', 'requisitos', 'inicio', 'fin'].forEach(
+			(key) => delete currentUpdateMap[key]
+		);
+	} else if (formatedFormData.id_cliente) {
+		// ESCENARIO C: Cliente Existente -> Oportunidad Nueva
+		const faseActividad = formData.get('fase') as string;
+		formData.set('fase', '1');
+		const nuevaOpId = await crearOportunidad(formData);
+		formData.set('fase', faseActividad);
+
+		mensajeSistema = `Se creó Oportunidad ${nuevaOpId} desde Actividad`;
+
+		// Eliminamos campos del mapa clonado
+		['motivo', 'objetivo', 'observaciones', 'requisitos', 'inicio', 'fin'].forEach(
+			(key) => delete currentUpdateMap[key]
+		);
+	}
+
+	// ---------- ACTUALIZAR ACTIVIDAD ----------
+
+	// Usamos nuestro mapa clonado (que podría tener campos eliminados)
+	const newValues = mapObjectToColumns(formatedFormData, currentUpdateMap);
+
+	await updateRowById(id, newValues, 'actividades!A:Z');
+
+	const historial: Historial = {
+		fecha_creacion: new Date().toISOString(),
+		id_agente: (formData.get('id_agente') as string),
+		tipo_objeto: 'oportunidad',
+		id_objeto: id,
+		accion: 'update',
+		// Guardamos todo lo que se envió en la petición
+		cambios: JSON.stringify(formatedFormData)
+	};
+
+	await registrarHistorial(historial);
+
+	return id;
+}
