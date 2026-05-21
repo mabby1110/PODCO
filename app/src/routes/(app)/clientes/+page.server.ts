@@ -1,84 +1,78 @@
-import {
-	appendRow,
-	mapFormDataToColumns,
-	updateRowById,
-	type FieldColumnMap
-} from '$lib/server/google/sheets';
+import { appendRow, mapObjectToColumns, updateRowById } from '$lib/server/google/sheets';
 import { fail, type Actions } from '@sveltejs/kit';
 import { invalidateCache } from '$lib/server/google/cachedQueries';
+import { clienteFieldMap, historialFieldMap, type Cliente, type Historial } from '$lib';
 
 export const actions: Actions = {
-	addClient: async ({ request }) => {
-		console.log('\nActividades addClient\n');
+	add: async ({ request }) => {
+		console.log('\nCliente nuevo\n');
 		const formData = await request.formData();
 
-		let historial_cambios = [{ fecha: new Date().toISOString(), entrada: 'Cliente creado' }];
+		const getStr = (key: string) => (formData.get(key) as string) || '';
 
-		const cliente = [
-			new Date().toISOString(),
-			JSON.stringify(historial_cambios),
-			null,
-			formData.get('id_agente') || 1,
-			formData.get('razon_social') || null,
-			formData.get('nombre_comercial') || null,
-			formData.get('sector') || null,
-			formData.get('estado') || null,
-			formData.get('ciudad') || null,
-			formData.get('ubicacion') || null,
-			formData.get('contactos') || null,
-			formData.get('historial') || null,
-			formData.get('tipo_prospeccion') || null
-		];
-		await appendRow('clientes!A:Z', cliente, 'BMS_CLI');
+		// NUEVO CLIENTE
+		const cliente: Cliente = {
+			fecha_creacion: new Date().toISOString(),
+			id_agente: getStr('id_agente'),
+			razon_social: getStr('razon_social'),
+			nombre_comercial: getStr('nombre_comercial'),
+			ubicacion: getStr('ubicacion'),
+			estado: getStr('estado'),
+			ciudad: getStr('ciudad'),
+			sector: getStr('sector'),
+			contactos: getStr('contactos'),
+			tipo_prospeccion: getStr('tipo_prospeccion'),
+			historial: getStr('historial')
+		};
+
+		const mapCliente = mapObjectToColumns(cliente, clienteFieldMap);
+		const nuevoCliente = await appendRow('clientes!A:Z', mapCliente, 'BMS_CLI');
+
+		// HISTORIAL
+		let historial: Historial = {
+			fecha_creacion: new Date().toISOString(),
+			id_agente: String(formData.get('id_agente')),
+			tipo_objeto: 'cliente',
+			id_objeto: nuevoCliente.id,
+			accion: 'update',
+			cambios: JSON.stringify(Object.fromEntries(formData.entries()))
+		};
+
+		const MapHistorial = mapObjectToColumns(historial, historialFieldMap);
+		let nuevoHistorial = await appendRow('historial!A:Z', MapHistorial, 'BMS_LOG');
 
 		invalidateCache('clientes');
-
 		return { success: true };
 	},
-
-	updateClient: async ({ request }) => {
-		console.log('\nActividades updateClient\n');
+	update: async ({ request }) => {
+		console.log('\nCliente actualizado\n');
 		const formData = await request.formData();
-		const id = formData.get('id');
 		console.log('formdata: ', formData);
 
+		const id = formData.get('id_cliente');
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
 
-		const updateFieldMap: FieldColumnMap = {
-			fecha_creacion: 'B',
-			historial_cambios: 'C',
-			id_contpaqi: 'D',
-			id_agente: 'E',
-			razon_social: 'F',
-			nombre_comercial: 'G',
-			sector: 'H',
-			estado: 'I',
-			ciudad: 'J',
-			ubicacion: 'K',
-			contactos: 'L',
-			historial: 'M',
-			tipo_prospeccion: 'N',
-			observaciones: 'O'
+		// ACTUALIZAR CLIENTE
+		const formatedFormData = Object.fromEntries(formData.entries());
+		const mapCliente = mapObjectToColumns(formatedFormData, clienteFieldMap);
+		await updateRowById(id as string, mapCliente, 'clientes!A:Z');
+
+		// HISTORIAL
+		let historial: Historial = {
+			fecha_creacion: new Date().toISOString(),
+			id_agente: formData.get('id_agente') as string,
+			tipo_objeto: 'cliente',
+			id_objeto: id as string,
+			accion: 'update',
+			cambios: JSON.stringify(Object.fromEntries(formData.entries()))
 		};
 
-		// se actualiza el historial de cambios de la actividad
-		let nuevas_entradas = [
-			{
-				fecha: new Date().toISOString(),
-				entrada: `se Actualizó Cliente`
-			}
-		];
-		let historial_string = formData.get('historial_cambios') as string;
-		let historial = historial_string ? JSON.parse(historial_string) : [];
-		historial = historial.concat(nuevas_entradas);
-		formData.set('historial_cambios', JSON.stringify(historial));
+		const MapHistorial = mapObjectToColumns(historial, historialFieldMap);
+		let nuevoHistorial = await appendRow('historial!A:Z', MapHistorial, 'BMS_LOG');
 
-		const newValues = mapFormDataToColumns(formData, updateFieldMap);
-		await updateRowById(id as string, newValues, 'clientes!A:Z');
 		invalidateCache('clientes');
-
 		return { success: true };
 	},
 	reload: async () => {
@@ -88,7 +82,6 @@ export const actions: Actions = {
 
 		return { success: true };
 	},
-
 	delete: async ({ request }) => {
 		const formData = await request.formData();
 		const id = formData.get('id');

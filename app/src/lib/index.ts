@@ -1,3 +1,4 @@
+// OBJETOS
 export type Actividad = {
 	// del sistema
 	id: string;
@@ -45,10 +46,10 @@ export type Oportunidad = {
 	documentos_operacion: string | null;
 };
 export type Cliente = {
-	id: string;
+	id?: string;
 	fecha_creacion: string | Date;
-	historial_cambios: string;
-	id_contpaqi: string;
+	historial_cambios?: string;
+	id_contpaqi?: string;
 	id_agente: string;
 	razon_social: string;
 	nombre_comercial: string;
@@ -58,9 +59,51 @@ export type Cliente = {
 	sector: string;
 	contactos: string;
 	tipo_prospeccion: string;
-	ultima_actualizacion: string | Date;
+	ultima_actualizacion?: string | Date;
 	historial: string;
-	observaciones: string;
+	observaciones?: string;
+};
+export type Historial = {
+	id?: string;
+	fecha_creacion: string | Date;
+	id_agente: string;
+	tipo_objeto: string;
+	id_objeto: string;
+	accion: string;
+	cambios: any;
+}
+export type Notificacion = {
+	id: string;
+	fecha_creacion: string | Date;
+	id_agente: string;
+	id_historial: string;
+	visto: boolean;
+}
+
+// MAPEO CON SHEETS
+export const clienteFieldMap = {
+	fecha_creacion: 'B',
+	historial_cambios: 'C',
+	id_contpaqi: 'D',
+	id_agente: 'E',
+	razon_social: 'F',
+	nombre_comercial: 'G',
+	sector: 'H',
+	estado: 'I',
+	ciudad: 'J',
+	ubicacion: 'K',
+	contactos: 'L',
+	historial: 'M',
+	tipo_prospeccion: 'N',
+	observaciones: 'O'
+};
+export const historialFieldMap = {
+	fecha_creacion: 'B',
+	id_agente: 'C',
+	tipo_objeto: 'D',
+	id_objeto: 'E',
+	accion: 'F',
+	cambios: 'G'
 };
 
 // FILTROS

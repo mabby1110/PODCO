@@ -141,23 +141,73 @@ export async function updateRowById(
 // APPEND
 // ======================
 
+// export async function appendRow(
+// 	range: string = 'historial_actividades!A:C',
+// 	values: any[],
+// 	prefix: string = 'BMS'
+// ) {
+// 	const id = generateId(prefix);
+
+// 	const response = await sheets.spreadsheets.values.append({
+// 		spreadsheetId: GOOGLE_SHEET_ID,
+// 		range,
+// 		valueInputOption: 'USER_ENTERED',
+// 		requestBody: {
+// 			values: [[id, ...values]]
+// 		}
+// 	});
+
+// 	return { id, response: response.data };
+// }
+// 1. Función auxiliar para calcular índices (A=0, Z=25, AA=26, etc.)
+function colToIndex(colLetter: string): number {
+    let index = 0;
+    for (let i = 0; i < colLetter.length; i++) {
+        // Multiplicamos por 26 por cada nueva letra y sumamos el valor de la letra actual (A=1, B=2)
+        index = index * 26 + colLetter.toUpperCase().charCodeAt(i) - 64;
+    }
+    return index - 1; // Restamos 1 para que 'A' sea el índice 0
+}
+
 export async function appendRow(
-	range: string = 'historial_actividades!A:C',
-	values: any[],
-	prefix: string = 'BMS'
+    range: string = 'historial_actividades!A:C',
+    data: { [key: string]: any }, 
+    prefix: string = 'BMS'
 ) {
-	const id = generateId(prefix);
+    const id = generateId(prefix);
+    
+    // 2. Inicializamos el arreglo. La posición 0 (Columna A) siempre es nuestro ID.
+    const rowValues: any[] = [];
+    rowValues[0] = id;
 
-	const response = await sheets.spreadsheets.values.append({
-		spreadsheetId: GOOGLE_SHEET_ID,
-		range,
-		valueInputOption: 'USER_ENTERED',
-		requestBody: {
-			values: [[id, ...values]]
-		}
-	});
+    // 3. Acomodamos cada valor en su posición exacta sin importar si es Z o ZZZ
+    for (const [colLetter, val] of Object.entries(data)) {
+        const index = colToIndex(colLetter);
+        
+        // Evitamos sobreescribir la columna A (índice 0) por accidente
+        if (index > 0) {
+            rowValues[index] = val;
+        }
+    }
 
-	return { id, response: response.data };
+    // 4. Rellenamos los huecos vacíos con strings en blanco
+    for (let i = 0; i < rowValues.length; i++) {
+        if (rowValues[i] === undefined) {
+            rowValues[i] = "";
+        }
+    }
+
+    // 5. Enviamos a Google Sheets
+    const response = await sheets.spreadsheets.values.append({
+        spreadsheetId: GOOGLE_SHEET_ID,
+        range,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: {
+            values: [rowValues]
+        }
+    });
+
+    return { id, response: response.data };
 }
 // ======================
 // FORM MAPPING
@@ -181,7 +231,21 @@ export function mapFormDataToColumns(
 
 	return values;
 }
+export function mapObjectToColumns(
+    data: Record<string, any>, // Solo acepta objetos planos
+    fieldColumnMap: Record<string, string>
+): { [key: string]: any } {
+    const values: { [key: string]: any } = {};
 
+    for (const [fieldName, columnLetter] of Object.entries(fieldColumnMap)) {
+        // Buscamos si la llave existe en el objeto
+        if (fieldName in data) {
+            values[columnLetter] = data[fieldName];
+        }
+    }
+
+    return values;
+}
 // ======================
 // UPDATE PHASE + HISTORY
 // ======================

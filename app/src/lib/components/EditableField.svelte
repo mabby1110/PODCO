@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { invalidate } from '$app/navigation';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let {
 		label,
@@ -62,8 +63,8 @@
 </script>
 
 <form method="POST" {action} use:enhance={handleSubmit}>
-	<input type="hidden" name="id" value={id} />
-	<input type="hidden" name="field" value={name} />
+	<input type="hidden" name="id_agente" value={$profile?.id} />
+	<input type="hidden" name="id_cliente" value={id} />
 
 	<section class="detail-block">
 		<div class="detail-header">

@@ -42,7 +42,7 @@
 			name="razon_social"
 			value={cliente.razon_social}
 			id={cliente.id}
-			action="/clientes?/updateClient"
+			action="/clientes?/update"
 			placeholder="Nombre de la empresa"
 		/>
 
@@ -52,7 +52,7 @@
 				name="estado"
 				value={cliente.estado}
 				id={cliente.id}
-				action="/clientes?/updateClient"
+				action="/clientes?/update"
 				placeholder="Estado"
 			/>
 			<EditableField
@@ -60,7 +60,7 @@
 				name="ciudad"
 				value={cliente.ciudad}
 				id={cliente.id}
-				action="/clientes?/updateClient"
+				action="/clientes?/update"
 				placeholder="Ciudad"
 			/>
 		</div>
@@ -70,7 +70,7 @@
 			name="sector"
 			value={cliente.sector}
 			id={cliente.id}
-			action="/clientes?/updateClient"
+			action="/clientes?/update"
 			placeholder="Sector económico"
 		/>
 
@@ -81,7 +81,7 @@
 				id={cliente.id}
 				value={cliente.id_agente}
 				options={agentes}
-				action="/clientes?/updateClient"
+				action="/clientes?/update"
 				hint="Asignar responsable"
 			/>
 		{:else}
@@ -97,7 +97,7 @@
 			<FormEditableContact
 				jsonList={cliente.contactos}
 				id={cliente.id}
-				action="/clientes?/updateClient"
+				action="/clientes?/update"
 			/>
 		</section>
 

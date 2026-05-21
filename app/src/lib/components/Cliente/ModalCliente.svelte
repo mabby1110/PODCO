@@ -37,7 +37,7 @@
 			</div>
 			<form
 				method="POST"
-				action="?/addClient"
+				action="?/add"
 				use:enhance={() => {
 					appState.toggleModalClient();
 					selectedDataItem = null;
