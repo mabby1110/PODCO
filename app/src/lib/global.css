@@ -214,6 +214,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: var(--a);
+	padding: var(--b) var(--a);
 }
 
 .entradas .entrada {
@@ -318,6 +319,22 @@ body {
 	border-bottom: 1px solid #e5e5e5;
 }
 
+.block-header {
+	display: flex;
+	align-items: center;
+	gap: var(--a);
+}
+
+.block-content {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 100%;
+}
+.block-content .butter {
+	width: fit-content;
+}
+
 .optional {
 	display: flex;
 	gap: var(--b) var(--a);
@@ -334,6 +351,15 @@ body {
 	background-color: var(--color-background);
 	backdrop-filter: blur(16px);
 	cursor: pointer;
+}
+
+.btn-icon {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 16px;
+	padding: 4px;
+	opacity: 0.7;
 }
 
 .close-btn {

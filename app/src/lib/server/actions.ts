@@ -312,7 +312,7 @@ export async function actualizarActividad(id: string, formData: FormData) {
 	const historial: Historial = {
 		fecha_creacion: new Date().toISOString(),
 		id_agente: (formData.get('id_agente') as string),
-		tipo_objeto: 'oportunidad',
+		tipo_objeto: 'actividad',
 		id_objeto: id,
 		accion: 'update',
 		// Guardamos todo lo que se envió en la petición

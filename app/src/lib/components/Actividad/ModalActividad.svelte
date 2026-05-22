@@ -36,14 +36,14 @@
 			</div>
 			<form
 				method="POST"
-				action="/actividades?/addActivity"
+				action="/actividades?/add"
 				use:enhance={() => {
 					appState.toggleModalActivity();
 					alert('creado con exito!');
 				}}
 			>
 				<!-- si es admin queda el input oculto -->
-				<FormSelectAgente agentes={data.agentes} bind:selected={agenteSeleccionado} />
+				<FormSelectAgente bind:selected={agenteSeleccionado} />
 
 				<FormSelectInput list={motivosActividades} disableCustom />
 

@@ -10,6 +10,7 @@
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
 	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
 	import EditableList from '$lib/components/EditableList.svelte';
+	import Entradas from '$lib/components/Entradas.svelte';
 
 	let { data } = $props();
 
@@ -48,6 +49,7 @@
 		};
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
+	let isEditing = $state(false);
 </script>
 
 {#if eventData}
@@ -128,22 +130,52 @@
 				</section>
 			{/if}
 
-			{#if eventData.historia}
-				<section>
-					<h3>Historia</h3>
-					<div class="entradas">
-						{#each JSON.parse(eventData?.historia) as item}
-							<div class="entrada">
-								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
-								{#if item.nombre_perfil}
-									<p class="profile">{item.nombre_perfil},</p>
-								{/if}
-								<p>{item.entrada}</p>
+			<section>
+				<div class="block-header">
+					{#if isEditing}
+						<button type="button" class="close-btn" onclick={() => (isEditing = false)}>✕</button>
+					{/if}
+					<h2>Historia</h2>
+				</div>
+				<div class="block-content">
+					{#if !isEditing}
+						{#if eventData.historia}
+							<div class="entradas">
+								{#each JSON.parse(eventData.historia) as item, index}
+									<div class="entrada">
+										{#if item.id_op}
+											<a href="/oportunidades/{item.id_op}">
+												<b>{formatDateFull(parseDateTimeLocal(item.fecha))}</b> oportunidad:</a
+											>
+											{#if item.nombre_perfil}
+												<p class="profile">{item.nombre_perfil},</p>
+											{/if}
+											<p>{item.entrada}</p>
+										{:else}
+											<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
+											{#if item.nombre_perfil}
+												<p class="profile">{item.nombre_perfil},</p>
+											{/if}
+											<p>{item.entrada}</p>
+										{/if}
+									</div>
+								{/each}
 							</div>
-						{/each}
-					</div>
-				</section>
-			{/if}
+						{:else}
+							<p>No hay entradas</p>
+						{/if}
+					{:else}
+						<Entradas
+							historia={eventData.historia}
+							objId={eventData.id}
+							action={'/oportunidades?/update'}
+						/>
+					{/if}
+					{#if !isEditing}
+						<button type="button" class="butter" onclick={() => (isEditing = true)}>Nueva Entrada</button>
+					{/if}
+				</div>
+			</section>
 
 			<FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />
 			<FilePreview title="Cotizaciones Presentadas" data={eventData.cotizaciones_presentadas} />

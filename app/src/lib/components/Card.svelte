@@ -6,7 +6,7 @@
         header,
         content,
         actions,
-        headerStyle = ''
+        headerStyle
     }: {
         header?: Snippet;
         content?: Snippet;

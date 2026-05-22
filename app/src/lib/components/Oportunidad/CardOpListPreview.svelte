@@ -36,8 +36,8 @@
 
 <ListPreview href="/oportunidades/{event.id}" style={eventData?.style}>
 	{#snippet header()}
-		<h1>{eventData?.razon_social}</h1>
-		<h2>{eventData?.motivo}</h2>
+		<h2>{eventData?.razon_social}</h2>
+		<h3>{eventData?.motivo}</h3>
 	{/snippet}
 
 	{#snippet content()}

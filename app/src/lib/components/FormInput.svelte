@@ -101,7 +101,6 @@
 	.field-block {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
 		gap: 8px;
 		width: 100%;
 	}

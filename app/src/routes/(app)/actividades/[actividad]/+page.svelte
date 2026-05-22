@@ -10,7 +10,8 @@
 	import { opModalStore } from '$lib/stores/opModalStore.svelte.js';
 	import { postActivityUpdate } from '$lib/utils/actions.js';
 	import { invalidateAll } from '$app/navigation';
-	import EditableJsonList from '$lib/components/EditableJsonList.svelte';
+	import { untrack } from 'svelte';
+	import Entradas from '$lib/components/Entradas.svelte';
 
 	let { data } = $props();
 	const event = $derived(data.actividad);
@@ -36,33 +37,37 @@
 
 	let currentFase = $derived(eventData?.fase?.id_fase == 6 ? 'w' : '');
 
+	let isEditing = $state(false);
 	let activeHistoriaIndex = $state<number | null>(null);
 	function handleHotOp(objetivo: string, index: number) {
+		console.log(objetivo, index);
 		activeHistoriaIndex = index;
 		opModalStore.objetivo = objetivo;
 		appState.toggleModalOp();
 	}
 
 	$effect(() => {
-		if (opModalStore.succeded && activeHistoriaIndex !== null && eventData) {
-			console.log('modificar actividad', opModalStore.id_op);
+		if (opModalStore.succeded) {
+			untrack(() => {
+				if (activeHistoriaIndex !== null && eventData) {
+					let historiaArray = JSON.parse(eventData.historia || '[]');
 
-			let historiaArray = JSON.parse(eventData.historia || '[]');
+					if (historiaArray[activeHistoriaIndex]) {
+						historiaArray[activeHistoriaIndex].id_op = opModalStore.id_op;
+					}
 
-			if (historiaArray[activeHistoriaIndex]) {
-				historiaArray[activeHistoriaIndex].id_op = opModalStore.id_op;
-			}
+					const updatedHistoria = JSON.stringify(historiaArray);
 
-			const updatedHistoria = JSON.stringify(historiaArray);
-
-			postActivityUpdate(
-				eventData.id,
-				{ id: eventData.id, historia: updatedHistoria },
-				'/actividades?/updateActivity'
-			).then(() => {
-				activeHistoriaIndex = null;
-				opModalStore.clearStore();
-				invalidateAll();
+					postActivityUpdate(
+						eventData.id,
+						{ id: eventData.id, historia: updatedHistoria },
+						'/actividades?/update'
+					).then(() => {
+						activeHistoriaIndex = null;
+						opModalStore.clearStore(); // Debe restablecer succeded a false
+						invalidateAll();
+					});
+				}
 			});
 		}
 	});
@@ -105,16 +110,57 @@
 				</section>
 			{/if}
 
-			<EditableJsonList
-				jsonList={eventData.historia}
-				action="/actividades?/update"
-				name={'historia'}
-				id={eventData.id}
-				fields={[
-					{ name: 'fecha', label: 'Fecha', type: 'date' },
-					{ name: 'entrada', label: 'Entrada', type: 'textarea' }
-				]}
-			/>
+			<section>
+				<div class="block-header">
+					{#if isEditing}
+						<button type="button" class="close-btn" onclick={() => (isEditing = false)}>✕</button>
+					{/if}
+					<h2>Historia</h2>
+				</div>
+				<div class="block-content">
+					{#if !isEditing}
+						{#if eventData.historia}
+							<div class="entradas">
+								{#each JSON.parse(eventData.historia) as item, index}
+									<div class="entrada">
+										{#if item.id_op}
+											<a href="/oportunidades/{item.id_op}">
+												<b>{formatDateFull(parseDateTimeLocal(item.fecha))}</b> oportunidad:</a
+											>
+											{#if item.nombre_perfil}
+												<p class="profile">{item.nombre_perfil},</p>
+											{/if}
+											<p>{item.entrada}</p>
+										{:else}
+											<button class="butter" onclick={() => handleHotOp(item.entrada, index)}
+												>+</button
+											>
+											<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
+											{#if item.nombre_perfil}
+												<p class="profile">{item.nombre_perfil},</p>
+											{/if}
+											<p>{item.entrada}</p>
+										{/if}
+									</div>
+								{/each}
+							</div>
+						{:else}
+							<p>No hay entradas</p>
+						{/if}
+					{:else}
+						<Entradas
+							historia={eventData.historia}
+							objId={eventData.id}
+							action={'/actividades?/update'}
+						/>
+					{/if}
+					{#if !isEditing}
+						<button type="button" class="butter" onclick={() => (isEditing = true)}
+							>Nueva Entrada</button
+						>
+					{/if}
+				</div>
+			</section>
 		{/snippet}
 
 		{#snippet actions()}

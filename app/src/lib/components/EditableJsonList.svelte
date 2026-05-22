@@ -207,15 +207,6 @@
 		margin-top: 4px;
 	}
 
-	.btn-icon {
-		background: none;
-		border: none;
-		cursor: pointer;
-		font-size: 16px;
-		padding: 4px;
-		opacity: 0.7;
-	}
-
 	.btn-icon:hover {
 		opacity: 1;
 	}

@@ -25,7 +25,7 @@
 </script>
 
 {#if !isOpen}
-	<button class="butter" type="button" onclick={open}>
+	<button class="butter optional-button" type="button" onclick={open}>
 		{title}
 	</button>
 {:else}
@@ -44,5 +44,8 @@
 		width: 100%;
 		gap: var(--a);
 		align-items: flex-start;
+	}
+	.optional-button {
+		order: 1;
 	}
 </style>
