@@ -5,7 +5,6 @@
 	import FormInput from '../FormInput.svelte';
 	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
-	import EditableJsonList from '../EditableJsonList.svelte';
 	import FormActions from '../FormActions.svelte';
 
 	let { eventData } = $props();

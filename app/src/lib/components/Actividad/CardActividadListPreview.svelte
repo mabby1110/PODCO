@@ -2,13 +2,13 @@
 	import { page } from '$app/state';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import ListPreview from '../ListPreview.svelte';
 
 	let { event } = $props();
 	const { agentes } = $derived(page.data);
 
-	console.log(event.id);
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 
@@ -36,6 +36,24 @@
 			<div class="brief">
 				<b>Objetivo</b>
 				<p>{eventData?.objetivo}</p>
+			</div>
+		{/if}
+	{/snippet}
+	{#snippet content()}
+		{#if eventData?.historia}
+			<div class="brief">
+				<h3>Historia</h3>
+				<div class="entradas">
+					{#each JSON.parse(eventData?.historia) as item}
+						<div class="entrada">
+							<p>{formatDateFull(parseDateTimeLocal(item.fecha))}:</p>
+							{#if item.nombre_perfil}
+								<p class="profile">{item.nombre_perfil},</p>
+							{/if}
+							<p>{item.entrada}</p>
+						</div>
+					{/each}
+				</div>
 			</div>
 		{/if}
 	{/snippet}

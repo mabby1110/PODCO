@@ -50,7 +50,7 @@
 	{/if}
 
 	{#if resume}
-		<div class="content" transition:slide>
+		<div class="content {show?'':'resume'}" transition:slide>
 			{@render resume()}
 		</div>
 	{/if}
@@ -90,6 +90,7 @@
 		border-width: 0;
 		border-radius: var(--a);
 		cursor: pointer;
+		white-space: pre-wrap;
 	}
 
 	.card-list-preview .title {
@@ -125,5 +126,8 @@
 		gap: 0 var(--a);
 		flex-wrap: wrap;
 		font-size: smaller;
+	}
+	.resume {
+		max-height: 180px;
 	}
 </style>

@@ -40,4 +40,7 @@
         height: 100%;
         flex-grow: 1;
     }
+    .card-content {
+		white-space: pre-wrap;
+    }
 </style>

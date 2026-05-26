@@ -219,9 +219,8 @@ body {
 
 .entradas .entrada {
 	display: flex;
-	align-items: baseline;
 	gap: var(--a);
-	width: 100%;
+	flex-wrap: wrap;
 }
 
 .entradas .butter {
