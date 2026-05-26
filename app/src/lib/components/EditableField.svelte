@@ -109,6 +109,7 @@
 
 <style>
 	form {
+		grid-column: span 2;
 		width: 100%;
 	}
 	.detail-block {

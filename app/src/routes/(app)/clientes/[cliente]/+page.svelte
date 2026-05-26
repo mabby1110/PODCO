@@ -56,6 +56,13 @@
 			</section>
 		{/if}
 
+		<section>
+			<FormEditableContact
+				jsonList={cliente.contactos}
+				id={cliente.id}
+				action="/clientes?/update"
+			/>
+		</section>
 		<div class="card-grid">
 			<EditableField
 				label="Razón Social"
@@ -139,14 +146,6 @@
 			/>
 		</div>
 
-		<section>
-			<FormEditableContact
-				jsonList={cliente.contactos}
-				id={cliente.id}
-				action="/clientes?/update"
-			/>
-		</section>
-
 		<div class="system">
 			<div class="detail-block">
 				<span class="label">Tipo de Prospección:</span>
@@ -215,7 +214,7 @@
 	}
 	.card-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-		gap: var(--a);
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: var(--c) var(--a);
 	}
 </style>
