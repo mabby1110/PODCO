@@ -45,7 +45,4 @@
 		gap: var(--a);
 		align-items: flex-start;
 	}
-	.optional-button {
-		order: 1;
-	}
 </style>

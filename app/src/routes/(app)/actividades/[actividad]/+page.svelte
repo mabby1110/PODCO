@@ -10,8 +10,8 @@
 	import { opModalStore } from '$lib/stores/opModalStore.svelte.js';
 	import { postActivityUpdate } from '$lib/utils/actions.js';
 	import { invalidateAll } from '$app/navigation';
-	import { untrack } from 'svelte';
 	import Entradas from '$lib/components/Entradas.svelte';
+	// 💡 NOTA: Se eliminó 'untrack' ya que no lo necesitamos en eventos
 
 	let { data } = $props();
 	const event = $derived(data.actividad);
@@ -39,39 +39,39 @@
 
 	let isEditing = $state(false);
 	let activeHistoriaIndex = $state<number | null>(null);
+
 	function handleHotOp(objetivo: string, index: number) {
-		console.log(objetivo, index);
 		activeHistoriaIndex = index;
 		opModalStore.objetivo = objetivo;
 		appState.toggleModalOp();
 	}
 
-	$effect(() => {
-		if (opModalStore.succeded) {
-			untrack(() => {
-				if (activeHistoriaIndex !== null && eventData) {
-					let historiaArray = JSON.parse(eventData.historia || '[]');
+	function handleModalSuccess(e: Event) {
+		const customEvent = e as CustomEvent<{ id_op: string }>;
+		const id_op = customEvent.detail.id_op;
+		if (activeHistoriaIndex !== null && eventData) {
+			let historiaArray = JSON.parse(eventData.historia || '[]');
 
-					if (historiaArray[activeHistoriaIndex]) {
-						historiaArray[activeHistoriaIndex].id_op = opModalStore.id_op;
-					}
+			if (historiaArray[activeHistoriaIndex]) {
+				historiaArray[activeHistoriaIndex].id_op = id_op;
+			}
 
-					const updatedHistoria = JSON.stringify(historiaArray);
+			const updatedHistoria = JSON.stringify(historiaArray);
 
-					postActivityUpdate(
-						eventData.id,
-						{ id: eventData.id, historia: updatedHistoria },
-						'/actividades?/update'
-					).then(() => {
-						activeHistoriaIndex = null;
-						opModalStore.clearStore(); // Debe restablecer succeded a false
-						invalidateAll();
-					});
-				}
+			postActivityUpdate(
+				eventData.id,
+				{ id: eventData.id, historia: updatedHistoria },
+				'/actividades?/update'
+			).then(() => {
+				activeHistoriaIndex = null;
+				opModalStore.clearStore();
+				invalidateAll();
 			});
 		}
-	});
+	}
 </script>
+
+<svelte:window onmodalOpSuccess={handleModalSuccess} />
 
 {#if eventData}
 	<Card headerStyle={eventData.style}>
@@ -111,12 +111,7 @@
 			{/if}
 
 			<section>
-				<div class="block-header">
-					{#if isEditing}
-						<button type="button" class="close-btn" onclick={() => (isEditing = false)}>✕</button>
-					{/if}
-					<h2>Historia</h2>
-				</div>
+				<h2>Historia</h2>
 				<div class="block-content">
 					{#if !isEditing}
 						{#if eventData.historia}
@@ -154,11 +149,16 @@
 							action={'/actividades?/update'}
 						/>
 					{/if}
-					{#if !isEditing}
-						<button type="button" class="butter" onclick={() => (isEditing = true)}
-							>Nueva Entrada</button
-						>
-					{/if}
+					<div class="block-action">
+						{#if !isEditing}
+							<button type="button" class="butter" onclick={() => (isEditing = true)}
+								>Nueva Entrada</button
+							>
+						{/if}
+						{#if isEditing}
+							<button type="button" class="close-btn" onclick={() => (isEditing = false)}>✕</button>
+						{/if}
+					</div>
 				</div>
 			</section>
 		{/snippet}

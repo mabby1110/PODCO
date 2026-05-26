@@ -84,22 +84,24 @@
 		/>
 	</FormOptionalInput>
 	<FormConditionalInput bind:isOpen titleOpen="+Necesidad detectada">
-		<FormInput
-			label="Necesidad"
-			name="necesidades"
-			bind:value={necesidades}
-			placeholder="Requerimiento técnico u operacional detectados"
-			type="textarea"
-			required
-		/>
-		<FormInput
-			label="Potencial de venta"
-			name="potencial_venta"
-			bind:value={potencial_venta}
-			placeholder="Producto o servicio que tiene mayor probabilidad de venta"
-			type="textarea"
-			required
-		/>
+		<div class="form-group">
+			<FormInput
+				label="Necesidad"
+				name="necesidades"
+				bind:value={necesidades}
+				placeholder="Requerimiento técnico u operacional detectados"
+				type="textarea"
+				required
+			/>
+			<FormInput
+				label="Potencial de venta"
+				name="potencial_venta"
+				bind:value={potencial_venta}
+				placeholder="Producto o servicio que tiene mayor probabilidad de venta"
+				type="textarea"
+				required
+			/>
+		</div>
 	</FormConditionalInput>
 
 	<div class="form-group">
@@ -127,10 +129,5 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-	}
-	input {
-		padding: 0.5rem;
-		border: 1px solid #d1d5db;
-		border-radius: 4px;
 	}
 </style>

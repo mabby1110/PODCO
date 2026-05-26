@@ -25,13 +25,16 @@
 				method="POST"
 				action="/oportunidades?/add"
 				use:enhance={() => {
-					appState.toggleModalOp();
 					return async ({ result, update }) => {
 						if (result.type === 'success' && result.data?.op) {
-							const id = result.data.op;
-							opModalStore.succeded = true;
-							opModalStore.id_op = id;
-							invalidateAll();
+							// Emitimos un evento global
+							window.dispatchEvent(
+								new CustomEvent('modalOpSuccess', {
+									detail: { id_op: result.data.op }
+								})
+							);
+
+							appState.toggleModalOp();
 							await update({ reset: true });
 						}
 					};

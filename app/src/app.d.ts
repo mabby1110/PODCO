@@ -16,7 +16,12 @@ declare global {
 		interface PageData {
 			session?: Session | null;
 		}
+
 	}
 }
-
+declare module 'svelte/elements' {
+	export interface SvelteWindowAttributes {
+		onmodalOpSuccess?: (e: CustomEvent<{ id_op: string }>) => void;
+	}
+}
 export {};

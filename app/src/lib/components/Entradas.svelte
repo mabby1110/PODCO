@@ -27,6 +27,7 @@
 
 	let list_stringified = $derived(JSON.stringify(lista));
 	let formEl = $state<HTMLFormElement | null>(null);
+	let formInput = $state<HTMLFormElement | null>(null);
 
 	function initNewData() {
 		newData = {
@@ -77,8 +78,8 @@
 	}
 
 	$effect(() => {
-		if (formEl) {
-			formEl.scrollIntoView({
+		if (formInput) {
+			formInput.scrollIntoView({
 				behavior: 'smooth',
 				block: 'start'
 			});
@@ -123,7 +124,7 @@
 		<div class="entrada form-permanente">
 			<label class="field-input">
 				<span>Nueva Entrada</span>
-				<textarea bind:value={newData.entrada}></textarea>
+				<textarea bind:value={newData.entrada} bind:this={formInput}></textarea>
 			</label>
 			<div class="form-actions">
 				<button type="button" class="butter" onclick={saveNew}>Guardar</button>
@@ -133,9 +134,6 @@
 </form>
 
 <style>
-	.entradas {
-		padding: var(--a);
-	}
 	.empty-msg {
 		font-style: italic;
 		margin-bottom: 16px;
