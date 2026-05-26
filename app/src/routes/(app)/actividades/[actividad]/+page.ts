@@ -5,7 +5,6 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = async ({ params, parent }) => {
     const actId = params.actividad;
 
-    // Obtenemos los datos cargados en /oportunidades
     const parentData = await parent();
     const actividades = parentData.actividades || []; 
 

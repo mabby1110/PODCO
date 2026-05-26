@@ -118,24 +118,26 @@
 							<div class="entradas">
 								{#each JSON.parse(eventData.historia) as item, index}
 									<div class="entrada">
-										{#if item.id_op}
-											<a href="/oportunidades/{item.id_op}">
-												<b>{formatDateFull(parseDateTimeLocal(item.fecha))}</b> oportunidad:</a
-											>
+										<div class="titulo-entrada">
+											{#if item.id_op}
+												<a href="/oportunidades/{item.id_op}">
+													<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b></a
+												>
+											{:else}
+												<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
+											{/if}
 											{#if item.nombre_perfil}
-												<p class="profile">{item.nombre_perfil},</p>
+												<p>{item.nombre_perfil}:</p>
+											{/if}
+										</div>
+										<div class="contenido-entrada">
+											{#if !item.id_op}
+												<button class="butter" onclick={() => handleHotOp(item.entrada, index)}
+													>+</button
+												>
 											{/if}
 											<p>{item.entrada}</p>
-										{:else}
-											<button class="butter" onclick={() => handleHotOp(item.entrada, index)}
-												>+</button
-											>
-											<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
-											{#if item.nombre_perfil}
-												<p class="profile">{item.nombre_perfil},</p>
-											{/if}
-											<p>{item.entrada}</p>
-										{/if}
+										</div>
 									</div>
 								{/each}
 							</div>

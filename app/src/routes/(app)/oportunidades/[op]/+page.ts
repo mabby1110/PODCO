@@ -4,13 +4,10 @@ import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params, parent }) => {
     const opId = params.op;
-
-    // Obtenemos los datos cargados en /oportunidades
     const parentData = await parent();
     const oportunidades = parentData.oportunidades || []; 
-
     const opEncontrada = oportunidades.find((o: any) => o.id === opId);
-
+    
     if (!opEncontrada) {
         throw error(404, {
             message: 'Oportunidad no encontrada'

@@ -184,7 +184,8 @@ body {
 	padding: 0 var(--a);
 	margin-top: var(--b);
 }
-.actions .optional-button{
+
+.actions .optional-button {
 	order: 1;
 }
 
@@ -223,10 +224,21 @@ body {
 	display: flex;
 	gap: var(--a);
 	flex-wrap: wrap;
+	margin-bottom: var(--b);
+}
+.titulo-entrada {
+	display: flex;
+	gap: var(--a);
+}
+.contenido-entrada {
+	width: 100%;
+	display: flex;
+	gap: var(--a);
+	align-items: center;
 }
 
 .entradas .butter {
-	width: var(--d);
+	aspect-ratio: 1 / 1;
 }
 
 .card-calendar-preview {
@@ -332,6 +344,7 @@ body {
 	gap: 8px;
 	width: 100%;
 }
+
 .block-content .butter {
 	width: fit-content;
 }
