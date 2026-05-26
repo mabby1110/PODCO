@@ -17,7 +17,7 @@ export const actions: Actions = {
 	update: async ({ request }) => {
 		console.log('\nCliente actualizado\n');
 		const formData = await request.formData();
-
+		console.log(formData);
 		// 1. Validación (se queda en la Action)
 		const id = formData.get('id_cliente') as string;
 		if (!id) {
