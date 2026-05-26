@@ -101,9 +101,11 @@ export const clienteFieldMap = {
 	ciudad: 'J',
 	ubicacion: 'K',
 	contactos: 'L',
-	historial: 'M',
+	descripcion: 'M',
 	tipo_prospeccion: 'N',
-	observaciones: 'O'
+	observaciones: 'O',
+	cp: 'P',
+	pagina_web: 'Q'
 };
 export const opFieldMap = {
 	fecha_creacion: 'B',

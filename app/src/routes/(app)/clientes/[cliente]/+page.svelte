@@ -37,43 +37,6 @@
 	{/snippet}
 
 	{#snippet content()}
-		<EditableField
-			label="Razón Social"
-			name="razon_social"
-			value={cliente.razon_social}
-			id={cliente.id}
-			action="/clientes?/update"
-			placeholder="Nombre de la empresa"
-		/>
-
-		<div class="grid-fields">
-			<EditableField
-				label="Estado"
-				name="estado"
-				value={cliente.estado}
-				id={cliente.id}
-				action="/clientes?/update"
-				placeholder="Estado"
-			/>
-			<EditableField
-				label="Ciudad"
-				name="ciudad"
-				value={cliente.ciudad}
-				id={cliente.id}
-				action="/clientes?/update"
-				placeholder="Ciudad"
-			/>
-		</div>
-
-		<EditableField
-			label="Sector"
-			name="sector"
-			value={cliente.sector}
-			id={cliente.id}
-			action="/clientes?/update"
-			placeholder="Sector económico"
-		/>
-
 		{#if $profile?.isAdmin}
 			<EditableSelectField
 				label="Agente"
@@ -92,6 +55,89 @@
 				</div>
 			</section>
 		{/if}
+
+		<div class="card-grid">
+			<EditableField
+				label="Razón Social"
+				name="razon_social"
+				value={cliente.razon_social}
+				id={cliente.id}
+				action="/clientes?/update"
+				placeholder="Razon social"
+			/>
+			<EditableField
+				label="Nombre Comercial"
+				name="nombre_comercial"
+				value={cliente.nombre_comercial}
+				id={cliente.id}
+				action="/clientes?/update"
+				placeholder="Nombre de la empresa"
+			/>
+			<EditableField
+				label="Sector"
+				name="sector"
+				value={cliente.sector}
+				id={cliente.id}
+				action="/clientes?/update"
+				placeholder="Sector económico"
+			/>
+			<EditableField
+				label="Giro comercial"
+				name="descripcion"
+				value={cliente.descripcion}
+				id={cliente.id}
+				action="/clientes?/update"
+				placeholder="El giro describe el tipo de producto o servicio exacto"
+			/>
+			<EditableField
+				label="Giro comercial"
+				name="descripcion"
+				value={cliente.descripcion}
+				id={cliente.id}
+				action="/clientes?/update"
+				placeholder="El giro describe el tipo de producto o servicio exacto"
+			/>
+			<EditableField
+				label="Estado"
+				name="estado"
+				value={cliente.estado}
+				id={cliente.id}
+				action="/clientes?/update"
+				placeholder="Estado"
+			/>
+			<EditableField
+				label="Ciudad"
+				name="ciudad"
+				value={cliente.ciudad}
+				id={cliente.id}
+				action="/clientes?/update"
+				placeholder="Ciudad"
+			/>
+			<EditableField
+				label="Ubicación"
+				name="ubicacion"
+				value={cliente.ubicacion}
+				id={cliente.id}
+				action="/clientes?/update"
+				placeholder="Ubicacion en mapa"
+			/>
+			<EditableField
+				label="Código postal"
+				name="cp"
+				value={cliente.cp}
+				id={cliente.id}
+				action="/clientes?/update"
+				placeholder="Código postal"
+			/>
+			<EditableField
+				label="Página web"
+				name="pagina_web"
+				value={cliente.pagina_web}
+				id={cliente.id}
+				action="/clientes?/update"
+				placeholder="www.bmscomponentes.com"
+			/>
+		</div>
 
 		<section>
 			<FormEditableContact
@@ -124,10 +170,10 @@
 	{/snippet}
 
 	{#snippet actions()}
+		<div class="submit">
+			<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+		</div>
 		<div class="op-list">
-			<div class="controls submit">
-				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-			</div>
 			{#if openOp.length > 0}
 				{#each openOp as op}
 					<CardOpListPreview event={op} />
@@ -151,11 +197,6 @@
 		text-decoration: none;
 		color: inherit;
 	}
-	.grid-fields {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: var(--a);
-	}
 	.system {
 		display: flex;
 		gap: var(--b);
@@ -169,5 +210,12 @@
 		flex-direction: column;
 		gap: var(--a);
 		width: 100%;
+		padding: 0 var(--a);
+		margin-bottom: var(--e);
+	}
+	.card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		gap: var(--a);
 	}
 </style>
