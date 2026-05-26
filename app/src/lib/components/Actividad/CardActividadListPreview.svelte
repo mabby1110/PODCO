@@ -8,6 +8,7 @@
 	let { event } = $props();
 	const { agentes } = $derived(page.data);
 
+	console.log(event.id);
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 

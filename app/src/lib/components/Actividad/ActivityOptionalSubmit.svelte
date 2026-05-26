@@ -44,7 +44,7 @@
 </script>
 
 {#if !isOpen}
-	<button class="butter" type="button" onclick={toggleUpdate}>Actualizar</button>
+	<button class="butter" type="button" onclick={toggleUpdate}>Editar</button>
 	<button class="butter" type="button" onclick={toggleCancel}>Descartar</button>
 	<button class="butter" type="button" onclick={toggleSubmit}> {nextFase} </button>
 {:else}
