@@ -64,7 +64,7 @@
 			</button>
 			<div class="title">
 				<h1>{eventData.motivo}</h1>
-				<h3>{eventData.cliente.razon_social}</h3>
+				<a href="/clientes?/{eventData.cliente.id}"><h3>{eventData.cliente.razon_social}</h3></a>
 			</div>
 			<div class="meta">
 				<p class="date">{eventData.inicio}</p>
