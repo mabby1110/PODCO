@@ -1,34 +1,27 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { invalidate } from '$app/navigation';
-	import { profile } from '$lib/stores/profileStore.svelte';
+	import { invalidateAll } from '$app/navigation';
 
-	type Option = {
+	type Agente = {
 		id: string | number;
 		nombre: string;
 	};
 
 	let {
-		label,
-		name,
 		id,
-		value = $bindable(),
-		options = [],
-		action = '?/updateClient',
-		hint = ''
+		id_agente = $bindable(),
+		agentes = [],
+		action = '/clientes?/update'
 	}: {
-		label: string;
-		name: string;
 		id: string;
-		value: string | number;
-		options: Option[];
+		id_agente: string | number;
+		agentes: Agente[];
 		action?: string;
-		hint?: string;
 	} = $props();
 
 	let isEditing = $state(false);
-	let editedValue = $state(String(value));
-	let originalValue = String(value);
+	let editedValue = $state(String(id_agente));
+	let originalValue = String(id_agente);
 
 	function toggleEdit(e: Event) {
 		e.stopPropagation();
@@ -41,41 +34,36 @@
 			if (result.type === 'success') {
 				isEditing = false;
 				originalValue = editedValue;
-				value = editedValue;
-				await invalidate('app:data');
+				id_agente = editedValue;
+				await invalidateAll();
 			}
 		};
 	}
 
 	const currentLabel = $derived(
-		!value
+		!id_agente
 			? 'Sin asignar'
-			: (options.find((o) => String(o.id) === String(value))?.nombre ?? 'Sin información')
+			: (agentes.find((a) => String(a.id) === String(id_agente))?.nombre ?? 'Sin información')
 	);
 </script>
 
 <form method="POST" {action} use:enhance={handleSubmit}>
-	<input type="hidden" name="id" value={id} />
-	<input type="hidden" name="field" value={name} />
+	<input type="hidden" name="id_cliente" value={id} />
 
 	<section class="detail-block">
 		<div class="detail-header">
-			{#if !isEditing && $profile?.isAdmin}
+			{#if !isEditing}
 				<button type="button" class="btn-edit-small" onclick={toggleEdit}>✏️</button>
 			{/if}
-			<h3>{label}:</h3>
+			<h3>Agente:</h3>
 		</div>
 
 		<div class="detail-body">
-			{#if hint && !isEditing}
-				<p class="hint">{hint}</p>
-			{/if}
-
-			{#if isEditing && $profile?.isAdmin}
-				<select {name} bind:value={editedValue} class="select">
+			{#if isEditing}
+				<select name="id_agente" bind:value={editedValue} class="select">
 					<option value="">— Sin asignar —</option>
-					{#each options as opt}
-						<option value={String(opt.id)}>{opt.nombre}</option>
+					{#each agentes as agente}
+						<option value={agente.id}>{agente.nombre}</option>
 					{/each}
 				</select>
 
@@ -84,8 +72,7 @@
 					<button type="button" class="btn-cancel-small" onclick={toggleEdit}>Cancelar</button>
 				</div>
 			{:else}
-				<input type="hidden" {name} value={$profile?.isAdmin ? value : $profile?.id} />
-				<p class="value">{currentLabel}</p>
+				<p>{currentLabel}</p>
 			{/if}
 		</div>
 	</section>

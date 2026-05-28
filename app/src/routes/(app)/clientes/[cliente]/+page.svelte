@@ -39,13 +39,10 @@
 	{#snippet content()}
 		{#if $profile?.isAdmin}
 			<EditableSelectField
-				label="Agente"
-				name="id_agente"
 				id={cliente.id}
-				value={cliente.id_agente}
-				options={agentes}
+				id_agente={cliente.id_agente}
+				{agentes}
 				action="/clientes?/update"
-				hint="Asignar responsable"
 			/>
 		{:else}
 			<section class="detail-block">

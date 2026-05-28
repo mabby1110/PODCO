@@ -63,7 +63,6 @@
 </script>
 
 <form method="POST" {action} use:enhance={handleSubmit}>
-	<input type="hidden" name="id_agente" value={$profile?.id} />
 	<input type="hidden" name="id_cliente" value={id} />
 
 	<section class="detail-block">

@@ -40,7 +40,7 @@
 
 <div class="form-content">
     <label>
-        <span>Cliente (Nombre comercial o Razón social)</span>
+        <span>Cliente (Nombre comercial)</span>
         <input
             name="nombre_comercial"
             bind:value={nombre_comercial}
