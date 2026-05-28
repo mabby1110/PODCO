@@ -15,6 +15,8 @@
 			id: event.id,
 			razon_social:
 				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
+			nombre_comercial:
+				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.nombre_comercial ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
@@ -36,7 +38,7 @@
 
 <ListPreview href="/oportunidades/{event.id}" style={eventData?.style}>
 	{#snippet header()}
-		<h2>{eventData?.razon_social}</h2>
+		<h2>{eventData?.nombre_comercial || eventData?.razon_social}</h2>
 		<h3>{eventData?.motivo}</h3>
 	{/snippet}
 

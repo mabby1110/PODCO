@@ -125,7 +125,7 @@
 </script>
 
 <form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
-	<input type="hidden" name="id" value={id} />
+	<input type="hidden" name="id_cliente" value={id} />
 	<input type="hidden" name="contactos" value={contacto_compuesto} />
 
 	<div class="detail-header">

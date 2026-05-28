@@ -82,6 +82,12 @@ export async function actualizarCliente(id: string, formData: FormData) {
 export async function crearOportunidad(formData: FormData) {
 	const getStr = (key: string) => (formData.get(key) as string) || '';
 
+	// Si el form trae datos de cliente nuevo, lo creamos primero e inyectamos su ID
+	if (getStr('razon_social') || getStr('nombre_comercial')) {
+		const nuevoClienteId = await crearCliente(formData);
+		formData.set('id_cliente', nuevoClienteId);
+	}
+
 	const oportunidad = {
 		fecha_creacion: new Date().toISOString(),
 		inicio: getStr('inicio'),
@@ -95,14 +101,13 @@ export async function crearOportunidad(formData: FormData) {
 		observaciones: getStr('observaciones'),
 		necesidades: getStr('necesidades'),
 		potencial_venta: getStr('potencial_venta'),
-		id_cliente: getStr('id_cliente'),
+		id_cliente: getStr('id_cliente'), // ← ya tiene el ID si se creó un cliente nuevo
 		fecha_analisis: getStr('fecha_analisis')
 	};
 
 	const mapOportunidad = mapObjectToColumns(oportunidad, opFieldMap);
 	const nuevaOp = await appendRow('oportunidades!A:AD', mapOportunidad, 'BMS_OP');
 
-	// 2. Crear el registro en el Historial Global
 	const historial: Historial = {
 		fecha_creacion: new Date().toISOString(),
 		id_agente: getStr('id_agente'),
@@ -311,7 +316,7 @@ export async function actualizarActividad(id: string, formData: FormData) {
 
 	const historial: Historial = {
 		fecha_creacion: new Date().toISOString(),
-		id_agente: (formData.get('id_agente') as string),
+		id_agente: formData.get('id_agente') as string,
 		tipo_objeto: 'actividad',
 		id_objeto: id,
 		accion: 'update',
