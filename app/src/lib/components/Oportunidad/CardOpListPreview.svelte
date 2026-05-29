@@ -3,7 +3,7 @@
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
-	import { getStyleForPhase } from '$lib/utils/util';
+	import { formatCurrency, getStyleForPhase } from '$lib/utils/util';
 	import ListPreview from '../ListPreview.svelte';
 
 	let { event } = $props();
@@ -31,6 +31,7 @@
 			documentos_operacion: event.documentos_operacion,
 			documentos: event.documentos,
 			objetivo: event.objetivo,
+			monto_oc: formatCurrency(event.monto_oc, 'USD'),
 			style: getStyleForPhase(event.fase)
 		};
 	});
@@ -40,6 +41,9 @@
 	{#snippet header()}
 		<h2>{eventData?.nombre_comercial || eventData?.razon_social}</h2>
 		<h3>{eventData?.motivo}</h3>
+		{#if eventData?.monto_oc}
+			<p>{eventData?.monto_oc}</p>
+		{/if}
 	{/snippet}
 
 	{#snippet content()}
