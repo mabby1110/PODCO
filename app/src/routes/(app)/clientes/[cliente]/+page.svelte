@@ -94,14 +94,6 @@
 				placeholder="El giro describe el tipo de producto o servicio exacto"
 			/>
 			<EditableField
-				label="Giro comercial"
-				name="descripcion"
-				value={cliente.descripcion}
-				id={cliente.id}
-				action="/clientes?/update"
-				placeholder="El giro describe el tipo de producto o servicio exacto"
-			/>
-			<EditableField
 				label="Estado"
 				name="estado"
 				value={cliente.estado}
