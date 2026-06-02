@@ -18,7 +18,6 @@ export const actions: Actions = {
 			.select('id')
 			.single()
 
-		console.log(result, error);
 		if (error) {
 			return fail(500, { error: error.message });
 		}

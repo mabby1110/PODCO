@@ -5,7 +5,6 @@
 
     let { actividades } = $derived(page.data);
     
-	console.log(actividades.pop());
     let currentRoute = $derived(page.url.pathname);
     
     const listaAgrupada = $derived.by(() => procesarDatosReactivos(actividades, currentRoute));

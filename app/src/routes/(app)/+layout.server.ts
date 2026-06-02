@@ -17,15 +17,17 @@ export const load: LayoutServerLoad = async ({
 		throw redirect(307, '/clientes');
 	}
 
-	const { data: profile } = await supabase
-		.from('profiles')
-		.select('*')
-		.eq('id', user.id)
-		.single();
+	const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
 
 	let agentes: any[] = [];
-	let queryOportunidades = supabase.from('oportunidades').select('*').order('inicio', { ascending: false });
-	let queryActividades = supabase.from('actividades').select('*').order('inicio', { ascending: false });
+	let queryOportunidades = supabase
+		.from('oportunidades')
+		.select('*')
+		.order('inicio', { ascending: false });
+	let queryActividades = supabase
+		.from('actividades')
+		.select('*')
+		.order('inicio', { ascending: false });
 	let queryClientes = supabase.from('clientes').select('*');
 	if (profile?.isAdmin) {
 		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
@@ -41,16 +43,12 @@ export const load: LayoutServerLoad = async ({
 		queryActividades = queryActividades.eq('id_agente', profile.id);
 	}
 
-	const [
-		{ data: clientes },
-		{ data: oportunidades },
-		{ data: actividades }
-	] = await Promise.all([
+	const [{ data: clientes }, { data: oportunidades }, { data: actividades }] = await Promise.all([
 		queryClientes,
 		queryOportunidades,
 		queryActividades
 	]);
-	
+	console.log(actividades?.length);
 	return {
 		profile,
 		agentes,
