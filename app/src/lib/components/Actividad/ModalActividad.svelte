@@ -8,16 +8,10 @@
 	import { motivosActividades } from '$lib';
 	import FormSelectAgente from '../FormSelectAgente.svelte';
 	import DatePicker from '../DatePicker.svelte';
-	import { page } from '$app/state';
-
-	let data = $derived(page.data);
 
 	let objetivo = $state('');
-	let duracion = $state(10);
 	let observaciones = $state('');
 	let requisitos = $state('');
-	let inicio = $state('');
-	let fin = $state('');
 	let agenteSeleccionado = $state<string>('');
 </script>
 
@@ -28,8 +22,7 @@
 		tabindex="0"
 		onkeydown={(e) => e.key === 'Escape' && appState.toggleModalActivity()}
 	>
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" tabindex="-1">
+		<div class="modal" role="dialog" tabindex="-1">
 			<div class="modal-header">
 				<h2>Nueva Actividad</h2>
 				<button class="close" onclick={() => appState.toggleModalActivity()}>✕</button>
@@ -39,7 +32,6 @@
 				action="/actividades?/add"
 				use:enhance={() => {
 					appState.toggleModalActivity();
-					alert('creado con exito!');
 				}}
 			>
 				<!-- si es admin queda el input oculto -->
@@ -79,9 +71,7 @@
 				</div>
 
 				<DatePicker />
-
-				<input type="hidden" name="inicio" bind:value={inicio} />
-				<input type="hidden" name="fin" bind:value={fin} />
+				
 				<input type="hidden" name="fase" value={1} />
 
 				<div class="actions">
@@ -117,16 +107,6 @@
 		padding: 0.5rem;
 		border: 1px solid #d1d5db;
 		border-radius: 4px;
-	}
-
-	.datetime-split {
-		display: flex;
-		gap: var(--a);
-	}
-	.datetime-item {
-		display: flex;
-		flex-direction: column;
-		width: fit-content;
 	}
 	.actions {
 		display: flex;

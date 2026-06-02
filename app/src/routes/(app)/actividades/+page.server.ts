@@ -11,15 +11,13 @@ export const actions: Actions = {
 		const data = Object.fromEntries(formData.entries());
 		data['id'] = generateId('BMS-ACT');
 		console.log('actividad nueva', data);
-		if (user?.id) {
-			data.id_agente = user.id;
-		}
 
 		const { data: result, error } = await supabase
 			.from('actividades')
 			.insert([data])
 			.select('id')
-			.single();
+			.single()
+
 		console.log(result, error);
 		if (error) {
 			return fail(500, { error: error.message });
@@ -39,10 +37,7 @@ export const actions: Actions = {
 		const data = Object.fromEntries(formData.entries());
 		delete data.id;
 
-		const { error } = await supabase
-			.from('actividades')
-			.update(data)
-			.eq('id', id);
+		const { error } = await supabase.from('actividades').update(data).eq('id', id);
 
 		if (error) {
 			return fail(500, { error: error.message });
@@ -63,10 +58,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'ID requerido' });
 		}
 
-		const { error } = await supabase
-			.from('actividades')
-			.delete()
-			.eq('id', id);
+		const { error } = await supabase.from('actividades').delete().eq('id', id);
 
 		if (error) {
 			return fail(500, { error: error.message });

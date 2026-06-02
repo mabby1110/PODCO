@@ -5,15 +5,13 @@
 	import DatePickerCard from './DatePickerCard.svelte';
 
 	let {
-		title = '',
-		inicio = $bindable(''),
-		fin = $bindable('')
+		title = ''
 	} = $props<{
 		title?: string;
-		inicio?: string;
-		fin?: string;
 	}>();
 
+	let inicio = $state('');
+	let fin = $state('');
 	let oportunidades = $derived($page.data.oportunidades || []);
 	let actividades = $derived($page.data.actividades || []);
 
@@ -38,6 +36,19 @@
 				behavior: 'smooth',
 				block: 'start'
 			});
+		}
+	});
+	$effect(() => {
+		if (fecha && hora && duracion) {
+			// Creamos un objeto Date uniendo la fecha y la hora seleccionada
+			const fechaHora = new Date(`${fecha}T${hora}:00`);
+
+			// Asignamos a las variables bindable
+			inicio = fechaHora.toISOString();
+			fin = setCustomEnd(fechaHora, duracion);
+		} else {
+			inicio = '';
+			fin = '';
 		}
 	});
 
@@ -136,6 +147,9 @@
 </script>
 
 <div class="datepicker">
+	<input type="hidden" name="inicio" value={inicio} />
+	<input type="hidden" name="fin" value={fin} />
+
 	{#if title}
 		<h3>{title}</h3>
 	{/if}
