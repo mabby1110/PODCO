@@ -1,27 +1,15 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-
-import {
-	getActividades,
-	getClientes,
-	getOportunidades,
-	invalidateCache
-} from '$lib/server/google/cachedQueries';
 import { supabaseAdmin } from '$lib/server/supabaseAdmin';
-import { getAllProfilesAdmin } from '$lib/utils/supabase';
-import { ordenarDatos } from '$lib/utils/filtro';
 
-export const load: LayoutServerLoad = async ({ depends, url, locals, isDataRequest }) => {
-	console.log('Cargando Layout Data (Root)');
+export const load: LayoutServerLoad = async ({
+	depends,
+	url,
+	locals: { supabase, session, user }
+}) => {
 	depends('app:data');
 
-	if (!isDataRequest) {
-		console.log('Recarga completa detectada (F5). Invalidando caché...');
-		invalidateCache('clientes');
-		invalidateCache('oportunidades');
-		invalidateCache('actividades');
-	}
-	if (!locals.session) {
+	if (!session || !user) {
 		throw redirect(303, '/auth');
 	}
 
@@ -29,53 +17,45 @@ export const load: LayoutServerLoad = async ({ depends, url, locals, isDataReque
 		throw redirect(307, '/clientes');
 	}
 
-	let [profileResponse, clientes, oportunidades, actividades] = await Promise.all([
-		locals.supabase.from('profiles').select('*').eq('id', locals.user?.id).single(),
-		getClientes(),
-		getOportunidades(),
-		getActividades()
-	]);
+	const { data: profile } = await supabase
+		.from('profiles')
+		.select('*')
+		.eq('id', user.id)
+		.single();
 
-	const profile = profileResponse.data;
-	let agentes = [];
-
-	const filtrosOrden = [{ action: 'desc', column: { key: 'inicio' } }];
-
+	let agentes: any[] = [];
+	let queryOportunidades = supabase.from('oportunidades').select('*').order('inicio', { ascending: false });
+	let queryActividades = supabase.from('actividades').select('*').order('inicio', { ascending: false });
+	let queryClientes = supabase.from('clientes').select('*');
 	if (profile?.isAdmin) {
-		agentes = (await getAllProfilesAdmin(supabaseAdmin)).filter((a) => !a.isOper);
-
-		oportunidades = ordenarDatos(oportunidades ?? [], filtrosOrden);
-		actividades = ordenarDatos(actividades ?? [], filtrosOrden);
+		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
+		agentes = perfiles || [];
 	} else if (profile?.isOper) {
-		agentes = (await getAllProfilesAdmin(supabaseAdmin)).filter((a) => !a.isOper);
+		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
+		agentes = perfiles || [];
 
-		oportunidades = ordenarDatos(
-			oportunidades?.filter((a: any) => a.fase >= 3) ?? [],
-			filtrosOrden
-		);
-
-		actividades = ordenarDatos(
-			actividades?.filter((a: any) => a.id_agente === profile?.id) ?? [],
-			filtrosOrden
-		);
+		queryOportunidades = queryOportunidades.gte('fase', 3);
+		queryActividades = queryActividades.eq('id_agente', profile.id);
 	} else {
-		// clientes = clientes?.filter((c: any) => c.id_agente === profile?.id) ?? [];
-
-		oportunidades = ordenarDatos(
-			oportunidades?.filter((a: any) => a.id_agente === profile?.id) ?? [],
-			filtrosOrden
-		);
-
-		actividades = ordenarDatos(
-			actividades?.filter((a: any) => a.id_agente === profile?.id) ?? [],
-			filtrosOrden
-		);
+		queryOportunidades = queryOportunidades.eq('id_agente', profile.id);
+		queryActividades = queryActividades.eq('id_agente', profile.id);
 	}
+
+	const [
+		{ data: clientes },
+		{ data: oportunidades },
+		{ data: actividades }
+	] = await Promise.all([
+		queryClientes,
+		queryOportunidades,
+		queryActividades
+	]);
+	
 	return {
 		profile,
-		clientes: clientes ?? [],
 		agentes,
-		oportunidades,
-		actividades
+		oportunidades: oportunidades || [],
+		actividades: actividades || [],
+		clientes: clientes || []
 	};
 };

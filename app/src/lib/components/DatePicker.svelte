@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { addMinutes } from '$lib/utils/agenda';
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
-	import { page } from '$app/stores'; // <-- Importamos page
+	import { page } from '$app/stores';
 	import DatePickerCard from './DatePickerCard.svelte';
 
-	const { title = '' } = $props<{
+	let {
+		title = '',
+		inicio = $bindable(''),
+		fin = $bindable('')
+	} = $props<{
 		title?: string;
+		inicio?: string;
+		fin?: string;
 	}>();
 
 	let oportunidades = $derived($page.data.oportunidades || []);
@@ -18,12 +24,12 @@
 
 	const eventList = $derived(listaAgrupada.flatMap((agrupacion: any) => agrupacion.elementos));
 
-	let fecha = $state('');
+	// Modificación: Obtener fecha local actual en formato YYYY-MM-DD
+	const offset = new Date().getTimezoneOffset() * 60000;
+	let fecha = $state(new Date(Date.now() - offset).toISOString().slice(0, 10));
+
 	let duracion = $state<number | undefined>(undefined);
 	let hora = $state('');
-
-	let inicio = $derived(fecha && hora ? `${fecha} ${hora}` : '');
-	let fin = $derived(fecha && hora ? setCustomEnd(new Date(`${fecha}T${hora}`), duracion) : '');
 
 	let datepicker = $state<HTMLElement | null>(null);
 	$effect(() => {
@@ -34,16 +40,10 @@
 			});
 		}
 	});
+
 	function setCustomEnd(fechaCompromiso: Date, min: number = 10) {
 		const next = addMinutes(fechaCompromiso, min);
-
-		const yyyy = next.getFullYear();
-		const mm = String(next.getMonth() + 1).padStart(2, '0');
-		const dd = String(next.getDate()).padStart(2, '0');
-		const hh = String(next.getHours()).padStart(2, '0');
-		const mi = String(next.getMinutes()).padStart(2, '0');
-
-		return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+		return next.toISOString();
 	}
 
 	const horasGeneradas = (() => {
@@ -79,7 +79,6 @@
 		const targetMonth = parseInt(parts[1]) - 1;
 		const targetDate = parseInt(parts[2]);
 
-		// 1. Filtramos los del día
 		const filtrados = eventList.filter((e) => {
 			const d = new Date(e.inicio);
 			return (
@@ -87,7 +86,6 @@
 			);
 		});
 
-		// 2. Agrupamos los que inician a la misma hora
 		const gruposPorHora: Record<string, any[]> = {};
 		filtrados.forEach((ev) => {
 			const timeKey = new Date(ev.inicio).getTime().toString();
@@ -95,7 +93,6 @@
 			gruposPorHora[timeKey].push(ev);
 		});
 
-		// 3. Procesamos para añadir top, height, width y left a cada evento
 		const procesados: any[] = [];
 		for (const key in gruposPorHora) {
 			const grupo = gruposPorHora[key];
@@ -127,7 +124,6 @@
 		const startMin = startD.getHours() * 60 + startD.getMinutes();
 		const endMin = endD.getHours() * 60 + endD.getMinutes();
 
-		// Clampeamos (limitamos) los minutos para que no se desborden visualmente si hay eventos fuera de horario
 		const clampedStart = Math.max(DAY_START_MIN, Math.min(startMin, DAY_END_MIN));
 		const clampedEnd = Math.max(DAY_START_MIN, Math.min(endMin, DAY_END_MIN));
 
@@ -136,9 +132,10 @@
 
 		return { top, height };
 	}
+	$effect(() => console.log('fecha', inicio, fin));
 </script>
 
-<div class="datepicker" bind:this={datepicker}>
+<div class="datepicker">
 	{#if title}
 		<h3>{title}</h3>
 	{/if}
@@ -168,8 +165,8 @@
 		</div>
 	</div>
 
-	{#if fecha}
-		<div class="lane-container">
+	{#if fecha && duracion}
+		<div class="lane-container" bind:this={datepicker}>
 			<span class="lane-title">Disponibilidad del {fecha}</span>
 
 			<div class="lane">
@@ -202,9 +199,6 @@
 			</div>
 		</div>
 	{/if}
-
-	<input type="hidden" name="inicio" value={inicio} />
-	<input type="hidden" name="fin" value={fin} />
 </div>
 
 <style>

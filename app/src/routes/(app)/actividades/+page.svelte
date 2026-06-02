@@ -4,6 +4,8 @@
     import ActivityList from '$lib/components/Actividad/ActivityList.svelte';
 
     let { actividades } = $derived(page.data);
+    
+	console.log(actividades.pop());
     let currentRoute = $derived(page.url.pathname);
     
     const listaAgrupada = $derived.by(() => procesarDatosReactivos(actividades, currentRoute));

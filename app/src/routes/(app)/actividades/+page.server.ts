@@ -1,67 +1,76 @@
-import {
-	appendRow,
-	mapFormDataToColumns,
-	updateRowById,
-	type FieldColumnMap
-} from '$lib/server/google/sheets';
 import { fail, type Actions } from '@sveltejs/kit';
-import { invalidateCache } from '$lib/server/google/cachedQueries';
-import { actualizarActividad, crearActividad } from '$lib/server/actions';
-
+import crypto from 'crypto';
+function generateId(prefix = 'BMS') {
+	const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+	const hash = crypto.randomBytes(4).toString('hex');
+	return `${prefix}-${date}-${hash}`;
+}
 export const actions: Actions = {
-	add: async ({ request }) => {
-		console.log('Actividad nueva');
+	add: async ({ request, locals: { supabase, user } }) => {
 		const formData = await request.formData();
+		const data = Object.fromEntries(formData.entries());
+		data['id'] = generateId('BMS-ACT');
+		console.log('actividad nueva', data);
+		if (user?.id) {
+			data.id_agente = user.id;
+		}
 
-		const actId = await crearActividad(formData);
+		const { data: result, error } = await supabase
+			.from('actividades')
+			.insert([data])
+			.select('id')
+			.single();
+		console.log(result, error);
+		if (error) {
+			return fail(500, { error: error.message });
+		}
 
-		invalidateCache('actividades');
-		return { success: true, act: actId };
+		return { success: true, act: result.id };
 	},
-	update: async ({ request }) => {
-		console.log('\nActividad actualizanda\n');
-		const formData = await request.formData();
 
-		// 1. Validación de SvelteKit
+	update: async ({ request, locals: { supabase } }) => {
+		const formData = await request.formData();
 		const id = formData.get('id') as string;
+
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
 
-		// 2. Ejecutar la maquinaria pesada
-		await actualizarActividad(id, formData);
+		const data = Object.fromEntries(formData.entries());
+		delete data.id;
 
-		// 3. Limpieza de cachés
-		invalidateCache('clientes');
-		invalidateCache('oportunidades');
-		invalidateCache('actividades');
+		const { error } = await supabase
+			.from('actividades')
+			.update(data)
+			.eq('id', id);
+
+		if (error) {
+			return fail(500, { error: error.message });
+		}
 
 		return { success: true };
 	},
 
 	reload: async () => {
-		invalidateCache('clientes');
-		invalidateCache('oportunidades');
-		invalidateCache('actividades');
-
 		return { success: true };
 	},
 
-	delete: async ({ request }) => {
+	delete: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
-		const id = formData.get('id');
+		const id = formData.get('id') as string;
 
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
 
-		await updateRowById(
-			id as string,
-			{
-				L: new Date().toISOString()
-			},
-			'oportunidades!A:Z'
-		);
+		const { error } = await supabase
+			.from('actividades')
+			.delete()
+			.eq('id', id);
+
+		if (error) {
+			return fail(500, { error: error.message });
+		}
 
 		return { success: true };
 	}
