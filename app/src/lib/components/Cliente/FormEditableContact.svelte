@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	let { jsonList = $bindable(), id, action = '?/updateClient' } = $props();
+	let { lista = $bindable(), id, id_agente, action = '?/updateClient' } = $props();
 
 	type ContactItem = {
 		type: string;
@@ -13,8 +13,6 @@
 		puesto: string;
 		contactos: ContactItem[];
 	};
-
-	let lista = $state<ContactData[]>(jsonList && jsonList !== '' ? JSON.parse(jsonList) : []);
 
 	let isEditing = $state(false);
 	let showPersonForm = $state(false);
@@ -28,7 +26,7 @@
 	let editIndex = $state<number | null>(null);
 	let editPersonIndex = $state<number | null>(null);
 
-	let contacto_compuesto = $derived(JSON.stringify(lista));
+	let contacto_compuesto = $derived(lista);
 	let formEl = $state<HTMLFormElement | null>(null);
 
 	function openNewPerson() {
@@ -51,7 +49,6 @@
 	function confirmRemovePersona(i: number) {
 		if (!confirm('Eliminar persona y sus contactos?')) return;
 		lista = lista.filter((_, idx) => idx !== i);
-		jsonList = contacto_compuesto;
 		queueMicrotask(() => formEl?.requestSubmit());
 	}
 
@@ -111,7 +108,6 @@
 			lista = [...lista, persona];
 		}
 
-		jsonList = contacto_compuesto;
 		showPersonForm = false;
 		resetPersonForm();
 	}
@@ -125,8 +121,8 @@
 </script>
 
 <form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
-	<input type="hidden" name="id" value={id} />
-	<input type="hidden" name="contactos" value={contacto_compuesto} />
+	<input type="hidden" name="id_cliente" value={id} />
+	<input type="hidden" name="contactos" value={JSON.stringify(contacto_compuesto)} />
 
 	<div class="detail-header">
 		{#if !isEditing}

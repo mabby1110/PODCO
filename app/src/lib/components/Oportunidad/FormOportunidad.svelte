@@ -35,11 +35,10 @@
 				: clientes
 			: filtrarPorAgente(clientes, String(data.profile?.id))
 	);
+
 	$effect(() => {
-		if (!cliente) {
-			selectedAgent;
-			selectedClient = null;
-		}
+		selectedAgent;
+		selectedClient = null;
 	});
 	$effect(() => {
 		const baseValid = !!(objetivo && (selectedClient || newCLient) && selectedAgent);
@@ -60,7 +59,7 @@
 
 	<Searchbar
 		data={clientesFiltrados}
-		keyColumns={['razon_social']}
+		keyColumns={['razon_social', 'nombre_comercial']}
 		bind:selectedItem={selectedClient}
 		bind:newCLient
 	/>

@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { supabaseAdmin } from '$lib/server/supabaseAdmin';
+import { supabaseAdmin } from '$lib/server/supabase/supabaseAdmin';
 
 export const load: LayoutServerLoad = async ({
 	depends,

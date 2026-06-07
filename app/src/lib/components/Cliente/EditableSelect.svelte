@@ -11,7 +11,7 @@
 	let {
 		label,
 		name,
-		id,
+		id_cliente,
 		value = $bindable(),
 		options = [],
 		action = '?/updateClient',
@@ -19,7 +19,7 @@
 	}: {
 		label: string;
 		name: string;
-		id: string;
+		id_cliente: string;
 		value: string | number;
 		options: Option[];
 		action?: string;
@@ -55,7 +55,7 @@
 </script>
 
 <form method="POST" {action} use:enhance={handleSubmit}>
-	<input type="hidden" name="id" value={id} />
+	<input type="hidden" name="id_cliente" value={id_cliente} />
 	<input type="hidden" name="field" value={name} />
 
 	<section class="detail-block">

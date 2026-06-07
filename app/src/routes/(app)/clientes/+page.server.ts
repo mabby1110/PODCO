@@ -1,59 +1,88 @@
-import { appendRow, mapObjectToColumns, updateRowById } from '$lib/server/google/sheets';
+import { construirDatosCliente } from '$lib/server/supabase/util';
 import { fail, type Actions } from '@sveltejs/kit';
-import { invalidateCache } from '$lib/server/google/cachedQueries';
-import { clienteFieldMap, historialFieldMap, type Cliente, type Historial } from '$lib';
-import { actualizarCliente, crearCliente } from '$lib/server/actions';
 
 export const actions: Actions = {
-	add: async ({ request }) => {
-		console.log('\nCliente nuevo\n');
-		const formData = await request.formData();
+    add: async ({ request, locals: { supabase } }) => {
+        console.log('\nCliente nuevo\n');
+        const formData = await request.formData();
+        const data = Object.fromEntries(formData.entries());
 
-		await crearCliente(formData); // Invocamos la función reutilizable
+        // 1. Construimos los datos del cliente
+        const clienteData = construirDatosCliente(data);
 
-		invalidateCache('clientes');
-		return { success: true };
-	},
-	update: async ({ request }) => {
-		console.log('\nCliente actualizado\n');
-		const formData = await request.formData();
-		console.log(formData);
-		// 1. Validación (se queda en la Action)
-		const id = formData.get('id_cliente') as string;
-		if (!id) {
-			return fail(400, { error: 'ID requerido' });
-		}
+        // 2. Insertamos en Supabase
+        const { error } = await supabase
+            .from('clientes')
+            .insert([clienteData]);
 
-		// 2. Ejecutamos la lógica de negocio
-		await actualizarCliente(id, formData);
+        if (error) {
+            return fail(500, { error: `Error al crear cliente: ${error.message}` });
+        }
 
-		// 3. Limpieza y respuesta
-		invalidateCache('clientes');
-		return { success: true };
-	},
-	reload: async () => {
-		invalidateCache('clientes');
-		invalidateCache('oportunidades');
-		invalidateCache('actividades');
+        // Nota: invalidateCache() ya no es necesario aquí si manejas
+        // la recarga de datos nativa de SvelteKit con Supabase.
+        return { success: true };
+    },
 
-		return { success: true };
-	},
-	delete: async ({ request }) => {
-		const formData = await request.formData();
-		const id = formData.get('id');
+    update: async ({ request, locals: { supabase } }) => {
+        console.log('\nCliente actualizado\n');
+        const formData = await request.formData();
+        const data = Object.fromEntries(formData.entries());
+		console.log(data);
+        // 1. Validación del ID
+        const id = data['id_cliente'] as string;
+        if (!id) {
+            return fail(400, { error: 'ID requerido' });
+        }
 
-		if (!id) {
-			return fail(400, { error: 'ID requerido' });
-		}
+        // 2. Construimos los datos limpios (usando el ID existente)
+        const clienteData = construirDatosCliente(data, id);
+        console.log(clienteData);
+        // 3. Actualizamos en Supabase usando .eq()
+        const { error } = await supabase
+            .from('clientes')
+            .update(clienteData)
+            .eq('id', id);
 
-		await updateRowById(
-			id as string,
-			{
-				L: new Date().toISOString()
-			},
-			'oportunidades!A:Z'
-		);
+        if (error) {
+            return fail(500, { error: `Error al actualizar cliente: ${error.message}` });
+        }
 
-		return { success: true };
-	}
+        return { success: true };
+    },
+
+    delete: async ({ request, locals: { supabase } }) => {
+        console.log('\nEliminando cliente\n');
+        const formData = await request.formData();
+        const id = formData.get('id') as string;
+
+        if (!id) {
+            return fail(400, { error: 'ID requerido' });
+        }
+
+        // En tu código anterior hacias un "Soft Delete" (guardar la fecha en la columna L).
+        // Asumiendo que creaste una columna "fecha_eliminacion" en tu tabla clientes:
+        const { error } = await supabase
+            .from('clientes')
+            .update({ fecha_eliminacion: new Date().toISOString() }) 
+            .eq('id', id);
+
+        // 💡 Si en lugar de ocultarlo prefieres borrarlo físicamente de la BD (Hard Delete), usa esto:
+        // const { error } = await supabase.from('clientes').delete().eq('id', id);
+
+        if (error) {
+            return fail(500, { error: `Error al eliminar cliente: ${error.message}` });
+        }
+
+        return { success: true };
+    },
+
+    reload: async () => {
+        // Con Supabase, las invalidaciones personalizadas de caché en el servidor 
+        // rara vez son necesarias. Normalmente usas `invalidateAll()` o 
+        // `invalidate('supabase:db:clientes')` desde el frontend en tus páginas Svelte.
+        // Mantenemos la acción devolviendo success por si tienes botones en el HTML 
+        // que apunten a "?/reload", para que no se rompan.
+        return { success: true };
+    }
 };

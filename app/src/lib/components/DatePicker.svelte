@@ -143,7 +143,6 @@
 
 		return { top, height };
 	}
-	$effect(() => console.log('fecha', inicio, fin));
 </script>
 
 <div class="datepicker">

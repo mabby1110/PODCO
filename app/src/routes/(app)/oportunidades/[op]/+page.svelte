@@ -76,7 +76,7 @@
 			<section>
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 				<FormEditableContact
-					jsonList={eventData.cliente.contactos}
+					lista={eventData.cliente.contactos}
 					id={eventData.cliente.id}
 					action="/clientes?/updateClient"
 				/>

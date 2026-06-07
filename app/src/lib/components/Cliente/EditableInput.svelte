@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { invalidate } from '$app/navigation';
+	import { invalidate, invalidateAll } from '$app/navigation';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let {
@@ -10,6 +10,7 @@
 		type = 'text',
 		rows = 3,
 		id,
+		id_agente,
 		action = '/clientes?/updateClient',
 		placeholder = '',
 		hint = '',
@@ -21,6 +22,7 @@
 		type?: 'text' | 'textarea' | 'file' | 'email' | 'number' | 'date' | 'select';
 		rows?: number;
 		id: string;
+		id_agente: string;
 		action?: string;
 		placeholder?: string;
 		hint?: string;
@@ -46,7 +48,7 @@
 				isEditing = false;
 				originalValue = editedValue;
 				value = editedValue;
-				await invalidate('app:data');
+				await invalidateAll();
 			}
 		};
 	}
@@ -63,7 +65,7 @@
 </script>
 
 <form method="POST" {action} use:enhance={handleSubmit}>
-	<input type="hidden" name="id_agente" value={$profile?.id} />
+	<input type="hidden" name="id_agente" value={id_agente} />
 	<input type="hidden" name="id_cliente" value={id} />
 
 	<section class="detail-block">

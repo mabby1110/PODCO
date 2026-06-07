@@ -18,7 +18,6 @@
 		selectedItem: DataItem | null;
 		newCLient: boolean;
 	} = $props();
-
 	let keyword = $state('');
 	let isDuplicate = $state(false);
 	let isOpen = $state(false);
@@ -57,12 +56,11 @@
 		}
 	}
 	$effect(() => {
-		if(!isDuplicate) {
+		if (!isDuplicate) {
 			newCLient = isOpen;
 		}
 	});
 	let input = $state<HTMLElement | null>(null);
-	
 
 	$effect(() => {
 		if (isOpen && input) {
@@ -87,7 +85,7 @@
 						selectedItem = null;
 					}}>✕</button
 				>
-				<p>{selectedItem?.razon_social}</p>
+				<p>{selectedItem?.razon_social || selectedItem?.nombre_comercial}</p>
 			</div>
 		</label>
 	{:else}
@@ -116,7 +114,7 @@
 										selectItem(item);
 									}}
 								>
-									<span class="meta">{item.razon_social}</span>
+									<span class="meta">{item.razon_social || item.nombre_comercial}</span>
 								</button>
 							{/each}
 						{:else}
