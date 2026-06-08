@@ -13,6 +13,7 @@
 		if (!event) return null;
 		return {
 			id: event.id,
+			nombre_comercial: clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.nombre_comercial ?? '',
 			razon_social:
 				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
@@ -36,7 +37,7 @@
 
 <ListPreview href="/oportunidades/{event.id}" style={eventData?.style}>
 	{#snippet header()}
-		<h2>{eventData?.razon_social}</h2>
+		<h2>{eventData?.razon_social||eventData?.nombre_comercial}</h2>
 		<h3>{eventData?.motivo}</h3>
 	{/snippet}
 

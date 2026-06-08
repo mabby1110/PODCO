@@ -50,15 +50,18 @@ export const actions: Actions = {
 	},
 
 	update: async ({ request, locals: { supabase } }) => {
-		console.log('\nOportunidad actualizada\n');
-		const formData = await request.formData();
-		const id = formData.get('id') as string;
+        console.log('\nCliente actualizado\n');
+        const formData = await request.formData();
+        const data = Object.fromEntries(formData.entries());
+		console.log(data);
+        // 1. Validación del ID
+        const id = data['id_op'] as string;
+        if (!id) {
+            return fail(400, { error: 'ID requerido' });
+        }
 
-		if (!id) {
-			return fail(400, { error: 'ID requerido' });
-		}
-
-		const data = Object.fromEntries(formData.entries());
+        // 2. Construimos los datos limpios (usando el ID existente)
+        const clienteData = construirDatosCliente(data, id);
 		delete data.id; // Evitamos actualizar la llave primaria
 
 		const { error } = await supabase.from('oportunidades').update(data).eq('id', id);
