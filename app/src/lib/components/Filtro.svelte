@@ -8,7 +8,7 @@
 	}>();
 
 	let selectedColumnKey = $state<string>(categorias?.key || '');
-	let selectedAction = $state<FilterAction>('contains');
+	let selectedAction = $state('');
 	let inputValue = $state<string>('');
 	let show = $state(false);
 
@@ -40,12 +40,14 @@
 			{#if !calendar}
 				<div class="options">
 					<select bind:value={selectedColumnKey}>
+						<option value="" disabled>Campo</option>
 						{#each categorias as col}
 							<option value={col.key}>{col.label}</option>
 						{/each}
 					</select>
 
 					<select bind:value={selectedAction}>
+						<option value="" disabled>Condición</option>
 						<option value="contains">Contiene</option>
 						<option value="asc">Mas antiguo</option>
 						<option value="desc">Mas reciente</option>

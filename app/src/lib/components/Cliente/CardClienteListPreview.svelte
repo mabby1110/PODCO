@@ -6,7 +6,20 @@
 
 <ListPreview href="./clientes/{client.id}">
 	{#snippet header()}
-		<h3>{client.razon_social||client.nombre_comercial}</h3>
+		<h3>{client.razon_social || client.nombre_comercial}</h3>
+	{/snippet}
+	{#snippet resume()}
+		{client.sector}
+	{/snippet}
+	{#snippet content()}
+		<h3>Razón social:</h3>
+		<p>{client.razon_social}</p>
+		<h3>Gíro comercial:</h3>
+		<p>{client?.descripcion}</p>
+		<h3>Contactos:</h3>
+		{#each client.contactos as contacto}
+			{contacto.nombre}: {contacto.contactos.length} datos de contacto
+		{/each}
 	{/snippet}
 	{#snippet meta()}
 		<p>oportunidades abiertas: {client.op ?? 0}</p>

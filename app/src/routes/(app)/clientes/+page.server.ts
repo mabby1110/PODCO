@@ -75,14 +75,5 @@ export const actions: Actions = {
         }
 
         return { success: true };
-    },
-
-    reload: async () => {
-        // Con Supabase, las invalidaciones personalizadas de caché en el servidor 
-        // rara vez son necesarias. Normalmente usas `invalidateAll()` o 
-        // `invalidate('supabase:db:clientes')` desde el frontend en tus páginas Svelte.
-        // Mantenemos la acción devolviendo success por si tienes botones en el HTML 
-        // que apunten a "?/reload", para que no se rompan.
-        return { success: true };
     }
 };
