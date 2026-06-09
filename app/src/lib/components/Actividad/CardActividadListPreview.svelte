@@ -55,6 +55,10 @@
 					{/each}
 				</div>
 			</div>
+		{:else}
+		<div class="brief">
+			<p>no hay entradas</p>
+		</div>
 		{/if}
 	{/snippet}
 

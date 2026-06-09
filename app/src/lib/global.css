@@ -1,3 +1,10 @@
+
+/*
+Especiales
+
+✕ 
+
+*/
 :root {
 	--color-primary: #e1e5f2aa;
 	--color-secondary: #b8c0d999;
@@ -225,6 +232,7 @@ body {
 	gap: var(--a);
 	flex-wrap: wrap;
 	margin-bottom: var(--b);
+	align-items: center;
 }
 .titulo-entrada {
 	display: flex;
@@ -385,7 +393,6 @@ body {
 	background: #f3f4f6;
 	color: #000;
 	transition: all 0.2s;
-	align-self: flex-end;
 	aspect-ratio: 1/1;
 }
 

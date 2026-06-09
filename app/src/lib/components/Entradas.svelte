@@ -7,11 +7,13 @@
 	let {
 		historia = $bindable('[]'),
 		objId,
-		action = '?/updateHistoria'
+		action = '?/updateHistoria',
+		isEditing = false,
 	}: {
 		historia: string;
 		objId: string;
 		action?: string;
+		isEditing?: boolean;
 	} = $props();
 
 	let lista = $state<Record<string, any>[]>(
@@ -47,6 +49,7 @@
 
 	function saveEdit() {
 		editData.nombre_perfil = $profile?.nombre;
+		editData.id = $profile?.id;
 		lista[editIndex as number] = { ...editData };
 		syncAndSubmit();
 		cancelEdit();
@@ -57,7 +60,8 @@
 
 		const entry = {
 			...newData,
-			nombre_perfil: $profile?.nombre
+			nombre_perfil: $profile?.nombre,
+			id: $profile?.id
 		};
 
 		lista = [...lista, entry];
@@ -87,53 +91,68 @@
 	});
 </script>
 
-<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
-	<input type="hidden" name="id" value={objId} />
-	<input type="hidden" name="historia" value={list_stringified} />
-	<input type="hidden" name="id_agente" value={$profile?.id} />
-
-	<div class="entradas">
-		{#if lista.length === 0}
-			<p class="empty-msg">No hay entradas</p>
-		{/if}
-
-		{#each lista as item, i}
-			<div class="entrada">
-				{#if editIndex === i}
+<div class="historia">
+	{#if isEditing}
+		<button type="button" class="close-btn" onclick={() => (isEditing = false)}>✕</button>
+	{/if}
+	<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
+		<input type="hidden" name="id" value={objId} />
+		<input type="hidden" name="historia" value={list_stringified} />
+	
+		<div class="entradas">
+			{#each lista as item, i}
+				<div class="entrada">
+					{#if editIndex === i}
+						<label class="field-input">
+							<span>Editar Entrada</span>
+							<textarea bind:value={editData.entrada}></textarea>
+						</label>
+						<div class="form-actions">
+							<button type="button" class="butter" onclick={saveEdit}>Guardar</button>
+							<button type="button" class="close-btn" onclick={cancelEdit}>X</button>
+						</div>
+					{:else}
+						{#if (item.nombre_perfil === $profile?.nombre && isEditing) || (!item.nombre_perfil && isEditing)}
+							<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
+						{/if}
+						<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
+						{#if item.nombre_perfil}
+							<span class="profile">{item.nombre_perfil},</span>
+						{/if}
+						<p>{item.entrada}</p>
+					{/if}
+				</div>
+			{/each}
+	
+			<div class="entrada form-permanente">
+				{#if isEditing}
 					<label class="field-input">
-						<span>Editar Entrada</span>
-						<textarea bind:value={editData.entrada}></textarea>
+						<span>Nueva Entrada</span>
+						<textarea bind:value={newData.entrada} bind:this={formInput}></textarea>
 					</label>
 					<div class="form-actions">
-						<button type="button" class="butter" onclick={saveEdit}>Guardar</button>
-						<button type="button" class="close-btn" onclick={cancelEdit}>X</button>
+						<button type="button" class="butter" onclick={saveNew}>Guardar</button>
 					</div>
 				{:else}
-					{#if item.nombre_perfil === $profile?.nombre || !item.nombre_perfil}
-						<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
-					{/if}
-					<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
-					{#if item.nombre_perfil}
-						<span class="profile">{item.nombre_perfil},</span>
-					{/if}
-					<p>{item.entrada}</p>
+					<button type="button" class="butter" onclick={() => (isEditing = true)}
+						>Agregar Entrada</button
+					>
 				{/if}
 			</div>
-		{/each}
-
-		<div class="entrada form-permanente">
-			<label class="field-input">
-				<span>Nueva Entrada</span>
-				<textarea bind:value={newData.entrada} bind:this={formInput}></textarea>
-			</label>
-			<div class="form-actions">
-				<button type="button" class="butter" onclick={saveNew}>Guardar</button>
-			</div>
 		</div>
-	</div>
-</form>
+	</form>
+</div>
 
 <style>
+	.historia {
+		display: flex;
+		align-items: flex-start;
+		height: fit-content;
+		gap: var(--a);
+	}
+	.historia .close-btn {
+		align-self: flex-start;
+	}
 	.empty-msg {
 		font-style: italic;
 		margin-bottom: 16px;
@@ -160,5 +179,8 @@
 	}
 	.btn-icon:hover {
 		opacity: 1;
+	}
+	.butter {
+		aspect-ratio: unset;
 	}
 </style>

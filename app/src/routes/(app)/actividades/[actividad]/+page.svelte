@@ -11,6 +11,7 @@
 	import { postActivityUpdate } from '$lib/utils/actions.js';
 	import { invalidateAll } from '$app/navigation';
 	import Entradas from '$lib/components/Entradas.svelte';
+	import EditableInput from '$lib/components/EditableInput.svelte';
 	// 💡 NOTA: Se eliminó 'untrack' ya que no lo necesitamos en eventos
 
 	let { data } = $props();
@@ -91,82 +92,62 @@
 			<section>
 				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</section>
-			{#if eventData.objetivo}
-				<section>
-					<h3>Objetivos</h3>
-					<p>{eventData.objetivo}</p>
-				</section>
-			{/if}
-			{#if eventData.requisitos}
-				<section>
-					<h3>Requisitos</h3>
-					<p>{eventData.requisitos}</p>
-				</section>
-			{/if}
-			{#if eventData.observaciones}
-				<section>
-					<h3>Observaciones</h3>
-					<p>{eventData.observaciones}</p>
-				</section>
-			{/if}
+			<EditableInput
+				{isEditing}
+				id={eventData.id}
+				label="Objetivo"
+				name="objetivo"
+				type="textarea"
+				value={eventData.objetivo}
+				action="/actividades?/update"
+				placeholder="Objetivo"
+			>
+				{#snippet header()}
+					<input type="hidden" name="id" value={eventData.id} />
+				{/snippet}
+			</EditableInput>
+			<EditableInput
+				{isEditing}
+				id={eventData.id}
+				label="Requisitos"
+				name="requisitos"
+				type="textarea"
+				value={eventData.requisitos}
+				action="/actividades?/update"
+				placeholder="Requisitos"
+			>
+				{#snippet header()}
+					<input type="hidden" name="id" value={eventData.id} />
+				{/snippet}
+			</EditableInput>
+			<EditableInput
+				{isEditing}
+				id={eventData.id}
+				label="Observaciones"
+				name="observaciones"
+				type="textarea"
+				value={eventData.observaciones}
+				action="/actividades?/update"
+				placeholder="Observaciones"
+			>
+				{#snippet header()}
+					<input type="hidden" name="id" value={eventData.id} />
+				{/snippet}
+			</EditableInput>
 
 			<section>
 				<h2>Historia</h2>
-				<div class="block-content">
-					{#if !isEditing}
-						{#if eventData.historia}
-							<div class="entradas">
-								{#each JSON.parse(eventData.historia) as item, index}
-									<div class="entrada">
-										<div class="titulo-entrada">
-											{#if item.id_op}
-												<a href="/oportunidades/{item.id_op}">
-													<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b></a
-												>
-											{:else}
-												<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
-											{/if}
-											{#if item.nombre_perfil}
-												<p>{item.nombre_perfil}:</p>
-											{/if}
-										</div>
-										<div class="contenido-entrada">
-											{#if !item.id_op}
-												<button class="butter" onclick={() => handleHotOp(item.entrada, index)}
-													>+</button
-												>
-											{/if}
-											<p>{item.entrada}</p>
-										</div>
-									</div>
-								{/each}
-							</div>
-						{:else}
-							<p>No hay entradas</p>
-						{/if}
-					{:else}
-						<Entradas
-							historia={eventData.historia}
-							objId={eventData.id}
-							action={'/actividades?/update'}
-						/>
-					{/if}
-					<div class="block-action">
-						{#if !isEditing}
-							<button type="button" class="butter" onclick={() => (isEditing = true)}
-								>Nueva Entrada</button
-							>
-						{/if}
-						{#if isEditing}
-							<button type="button" class="close-btn" onclick={() => (isEditing = false)}>✕</button>
-						{/if}
-					</div>
-				</div>
+				<Entradas
+					{isEditing}
+					historia={eventData.historia}
+					objId={eventData.id}
+					action={'/actividades?/update'}
+				/>
 			</section>
 		{/snippet}
 
 		{#snippet actions()}
-			<ActivityActions {eventData} />
+			<ActivityActions {eventData} bind:isEditing />
 		{/snippet}
 	</Card>
 {/if}
@@ -178,5 +159,9 @@
 	}
 	.w {
 		color: white;
+	}
+	.nueva_entrada {
+		display: flex;
+		gap: var(--a);
 	}
 </style>

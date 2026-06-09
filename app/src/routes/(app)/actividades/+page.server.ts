@@ -27,13 +27,14 @@ export const actions: Actions = {
 
 	update: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
-		const id = formData.get('id') as string;
+		const data = Object.fromEntries(formData.entries());
 
+		const id = data['id'] as string;
+		console.log('Actualizar actividad:\n\n', data);
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
 
-		const data = Object.fromEntries(formData.entries());
 		delete data.id;
 
 		const { error } = await supabase.from('actividades').update(data).eq('id', id);

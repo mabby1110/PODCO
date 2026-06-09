@@ -6,8 +6,15 @@
 	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import FormActions from '../FormActions.svelte';
+	import type { Snippet } from 'svelte';
 
-	let { eventData } = $props();
+	let {
+		eventData,
+		isEditing = $bindable()
+	}: {
+		eventData: any;
+		isEditing?: boolean;
+	} = $props();
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
 	let nextPhase = $derived(currentPhase + 5);
 
@@ -18,7 +25,6 @@
 	let isOpen = $state(false);
 	let isSubmitting = $state(false);
 	let submit = $state(false);
-	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 	let newOp = $state(false);
 
@@ -44,53 +50,6 @@
 							required
 						/>
 					{/if}
-				{:else if submitUpdate}
-					<h3>Editar informacion</h3>
-					<div class="opcional">
-						<div class="opciones">
-							<FormOptionalInput title="+Observaciones">
-								<FormInput
-									label="Observaciones"
-									name="observaciones"
-									value={eventData.observaciones}
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+Objetivo">
-								<FormInput
-									label="Objetivo"
-									name="objetivo"
-									value={eventData.objetivo}
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+Agregar requisitos">
-								<FormInput
-									label="Requisitos"
-									name="requisitos"
-									value={eventData.requisitos}
-									placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+Postergar">
-								<div class="opciones">
-									<FormInput
-										label="Postergar"
-										name="nuevaHistoria"
-										bind:value={nuevaHistoria}
-										placeholder="Motivo de la postergación y acción a realizar"
-										type="textarea"
-										required
-									/>
-									<DatePicker title="Fecha Seguimiento" />
-								</div>
-							</FormOptionalInput>
-						</div>
-					</div>
 				{:else if submitCancel}
 					<FormInput
 						label="Justificación"
@@ -135,11 +94,15 @@
 		{/snippet}
 		{#snippet submitContent()}
 			<div class="submit">
+				{#if !submit && !submitCancel}
+					<button type="button" class="butter" onclick={() => (isEditing = !isEditing)}>
+						Editar
+					</button>
+				{/if}
 				<ActivityOptionalSubmit
 					nextFase={eventData.fase.accion}
 					bind:isOpen
 					bind:submit
-					bind:submitUpdate
 					bind:submitCancel
 				/>
 
@@ -148,8 +111,6 @@
 					<button type="submit" class="butter" {style} disabled={isSubmitting}>
 						{isSubmitting ? 'Procesando...' : 'Finzalizar'}
 					</button>
-				{:else if submitUpdate}
-					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
 				{:else if newOp}
 					<button type="submit" class="butter" {style} disabled={isSubmitting}>
 						{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}

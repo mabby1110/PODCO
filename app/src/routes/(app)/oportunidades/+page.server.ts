@@ -1,5 +1,5 @@
-import { construirDatosCliente, construirDatosOportunidad, type Oportunidad } from '$lib';
 import { generateId } from '$lib/server/google/sheets';
+import { construirDatosCliente, construirDatosOportunidad } from '$lib/server/supabase/util';
 import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
@@ -50,7 +50,7 @@ export const actions: Actions = {
 	},
 
 	update: async ({ request, locals: { supabase } }) => {
-        console.log('\nCliente actualizado\n');
+        console.log('\nOportunidad actualizada\n');
         const formData = await request.formData();
         const data = Object.fromEntries(formData.entries());
 		console.log(data);

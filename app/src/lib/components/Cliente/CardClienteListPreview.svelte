@@ -12,14 +12,20 @@
 		{client.sector}
 	{/snippet}
 	{#snippet content()}
-		<h3>Razón social:</h3>
-		<p>{client.razon_social}</p>
-		<h3>Gíro comercial:</h3>
-		<p>{client?.descripcion}</p>
-		<h3>Contactos:</h3>
-		{#each client.contactos as contacto}
-			{contacto.nombre}: {contacto.contactos.length} datos de contacto
-		{/each}
+		<div class="brief">
+			<h3>Razón social:</h3>
+			<p>{client.razon_social}</p>
+		</div>
+		<div class="brief">
+			<h3>Gíro comercial:</h3>
+			<p>{client?.descripcion}</p>
+		</div>
+		<div class="brief">
+			<h3>Contactos:</h3>
+			{#each client.contactos as contacto}
+				{contacto.nombre}: {contacto.contactos.length} datos de contacto
+			{/each}
+		</div>
 	{/snippet}
 	{#snippet meta()}
 		<p>oportunidades abiertas: {client.op ?? 0}</p>
