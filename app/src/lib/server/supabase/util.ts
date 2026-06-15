@@ -1,10 +1,66 @@
-import type { Cliente } from '$lib';
+import type { Actividad, Cliente, Oportunidad } from '$lib';
 import { generateId } from '../google/sheets';
 
-/**
- * Itera sobre un objeto y elimina las propiedades que sean undefined, null,
- * strings vacíos, arreglos vacíos u objetos sin llaves.
- */
+const CLAVES_CLIENTE: (keyof Cliente)[] = [
+	'id',
+	'fecha_creacion',
+	'historial_cambios',
+	'id_contpaqi',
+	'id_agente',
+	'razon_social',
+	'nombre_comercial',
+	'ubicacion',
+	'estado',
+	'ciudad',
+	'sector',
+	'contactos',
+	'tipo_prospeccion',
+	'ultima_actualizacion',
+	'historial',
+	'observaciones'
+];
+
+const CLAVES_ACTIVIDAD: (keyof Actividad)[] = [
+	'id',
+	'fecha_creacion',
+	'historial_cambios',
+	'inicio',
+	'fin',
+	'fecha_cierre',
+	'id_agente',
+	'fase',
+	'documentos',
+	'historia',
+	'motivo',
+	'objetivo',
+	'requisitos',
+	'observaciones'
+];
+
+const CLAVES_OPORTUNIDAD: (keyof Oportunidad)[] = [
+	'id',
+	'id_agente',
+	'fecha_creacion',
+	'historial_cambios',
+	'inicio',
+	'fin',
+	'fecha_cierre',
+	'fase',
+	'documentos',
+	'historia',
+	'motivo',
+	'objetivo',
+	'requisitos',
+	'observaciones',
+	'necesidades',
+	'potencial_venta',
+	'id_cliente',
+	'cotizaciones_presentadas',
+	'cotizaciones_ganadas',
+	'oc_cliente',
+	'documentos_operacion'
+];
+
 export function limpiarCamposVacios(obj: Record<string, any>): Record<string, any> {
 	// Creamos una copia para no mutar el objeto original
 	const resultado = { ...obj };
@@ -37,46 +93,114 @@ export function limpiarCamposVacios(obj: Record<string, any>): Record<string, an
 	return resultado;
 }
 
-export function construirDatosOportunidad(data: Record<string, any>, id?: string) {
-    // 1. Extraemos los campos que necesitan conversión, lógica especial, 
-    // o que NO queremos que lleguen a la base de datos por accidente.
-    // (Aislo 'id_oportunidad' asumiendo que tu formulario lo envía como un input oculto)
-    const { 
-        id_oportunidad, 
-        fase, 
-        fecha_creacion, 
-        ...restoDeDatos 
-    } = data;
+export function construirDatosCliente(data: Record<string, any>, id?: string): Partial<Cliente> {
+	const datosBrutos: Partial<Cliente> = {};
 
-    // 2. Construimos los datos en bruto
-    const datosBrutos = {
-        // Esparcimos todos los demás campos (historia, motivo, necesidades, id_cliente, etc.)
-        ...restoDeDatos,
+	// 2. Iteramos SOLO sobre las claves válidas de Cliente
+	for (const clave of CLAVES_CLIENTE) {
+		// Manejo especial para el ID
+		if (clave === 'id') {
+			datosBrutos.id = id ? id : generateId('BMS-CLI');
+			continue;
+		}
 
-        // Sobrescribimos y aplicamos la lógica a los campos especiales
-        id: id ? id : generateId('BMS-OP'),
-        fecha_creacion: fecha_creacion ? (fecha_creacion as string) : new Date().toISOString(),
-        fase: fase ? Number(fase) : 1,
-    };
+		// Manejo especial para los contactos
+		if (clave === 'contactos' && data.contactos !== undefined) {
+			datosBrutos.contactos =
+				typeof data.contactos === 'string' ? JSON.parse(data.contactos) : data.contactos;
+			continue;
+		}
 
-    // 3. Pasamos por nuestra función limpiadora externa. 
-    // Esto reemplaza tu bucle (Object.keys(oportunidad).forEach...)
-    return limpiarCamposVacios(datosBrutos);
+		// 3. Asignamos el resto de los datos SOLO si existen en 'data'
+		if (data[clave] !== undefined) {
+			// Usamos as any para evitar errores de tipado dinámico al asignar
+			(datosBrutos as any)[clave] = data[clave];
+		}
+	}
+
+	// 4. Retornamos pasándolo por tu función limpiadora
+	return limpiarCamposVacios(datosBrutos) as Partial<Cliente>;
 }
 
-export function construirDatosCliente(data: Record<string, any>, id?: string): Partial<Cliente> {
-    // 1. Aislamos los campos que NO queremos en la BD (como id_cliente)
-    // y agrupamos todo lo demás en la variable "restoDeDatos"
-    const { id_cliente, contactos, ...restoDeDatos } = data; 
-    
-    const datosBrutos = {
-        // 2. Esparcimos solo el resto de los datos (ya no incluye id_cliente)
-        ...restoDeDatos, 
-        
-        // 3. Asignamos los campos calculados/especiales
-        id: id ? id : generateId('BMS-CLI'),
-        contactos: contactos ? JSON.parse(contactos as string) : undefined
-    };
+// --- FUNCIONES CONSTRUCTORAS ---
+export function construirDatosActividad(
+	data: Record<string, any>,
+	id?: string
+): Partial<Actividad> {
+	const datosBrutos: Partial<Actividad> = {};
 
-    return limpiarCamposVacios(datosBrutos) as Partial<Cliente>;
+	for (const clave of CLAVES_ACTIVIDAD) {
+		// Asignación de ID
+		if (clave === 'id') {
+			datosBrutos.id = id ? id : generateId('BMS-ACT'); // Ajusta el prefijo según tu estándar
+			continue;
+		}
+
+		// Asignación de Fecha de Creación
+		if (clave === 'fecha_creacion' && !data.fecha_creacion) {
+			datosBrutos.fecha_creacion = new Date().toISOString();
+			continue;
+		}
+
+		// Conversión de Fase a Número
+		if (clave === 'fase') {
+			datosBrutos.fase = data.fase ? Number(data.fase) : 1;
+			continue;
+		}
+
+		// Asignación del resto si existen
+		if (data[clave] !== undefined) {
+			(datosBrutos as any)[clave] = data[clave];
+		}
+	}
+
+	return limpiarCamposVacios(datosBrutos) as Partial<Actividad>;
+}
+
+export function construirDatosOportunidad(
+	data: Record<string, any>,
+	id?: string
+): Partial<Oportunidad> {
+	const datosBrutos: Partial<Oportunidad> = {};
+
+	for (const clave of CLAVES_OPORTUNIDAD) {
+		// Asignación de ID
+		if (clave === 'id') {
+			datosBrutos.id = id ? id : generateId('BMS-OP');
+			continue;
+		}
+
+		// Asignación de id_agente
+		if (clave === 'id_agente') {
+			datosBrutos.id_agente = data.id_agente ?? null;
+			continue;
+		}
+
+		// Asignación de Fecha de Creación
+		if (clave === 'fecha_creacion' && !data.fecha_creacion) {
+			datosBrutos.fecha_creacion = new Date().toISOString();
+			continue;
+		}
+
+		// Conversión de Fase a Número
+		if (clave === 'fase') {
+			datosBrutos.fase = data.fase ? Number(data.fase) : 1;
+			continue;
+		}
+
+		// manejo para json
+		if (clave === 'historia' && data.historia !== undefined) {
+			datosBrutos.historia =
+				typeof data.historia === 'string' ? JSON.parse(data.historia) : data.historia;
+
+			continue;
+		}
+		console.log(datosBrutos.historia);
+		// Asignación del resto si existen
+		if (data[clave] !== undefined) {
+			(datosBrutos as any)[clave] = data[clave];
+		}
+	}
+
+	return limpiarCamposVacios(datosBrutos) as Partial<Oportunidad>;
 }

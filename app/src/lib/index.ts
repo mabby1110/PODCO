@@ -21,6 +21,7 @@ export type Actividad = {
 export type Oportunidad = {
 	// del sistema
 	id: string;
+	id_agente: string;
 	fecha_creacion: string | Date;
 	historial_cambios: string;
 	inicio: string | Date;

@@ -99,12 +99,6 @@
 						Editar
 					</button>
 				{/if}
-				<ActivityOptionalSubmit
-					nextFase={eventData.fase.accion}
-					bind:isOpen
-					bind:submit
-					bind:submitCancel
-				/>
 
 				{#if submit}
 					<input type="hidden" name="fase" value={nextPhase} />
@@ -119,6 +113,12 @@
 					<input type="hidden" name="fase" value={0} />
 					<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
 				{/if}
+				<ActivityOptionalSubmit
+					nextFase={eventData.fase.accion}
+					bind:isOpen
+					bind:submit
+					bind:submitCancel
+				/>
 			</div>
 		{/snippet}
 	</FormActions>

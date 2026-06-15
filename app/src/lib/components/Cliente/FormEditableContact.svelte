@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	let { lista = $bindable(), id, id_agente, action = '?/updateClient' } = $props();
+	// 1. Añadimos un arreglo vacío como valor por defecto en $bindable()
+	let {
+		lista = $bindable([]),
+		id,
+		id_agente,
+		isEditing = false,
+		action = '?/updateClient'
+	} = $props();
 
 	type ContactItem = {
 		type: string;
@@ -14,7 +21,6 @@
 		contactos: ContactItem[];
 	};
 
-	let isEditing = $state(false);
 	let showPersonForm = $state(false);
 
 	let contact_name = $state('');
@@ -26,7 +32,8 @@
 	let editIndex = $state<number | null>(null);
 	let editPersonIndex = $state<number | null>(null);
 
-	let contacto_compuesto = $derived(lista);
+	// Aseguramos que el valor derivado también maneje el caso de undefined
+	let contacto_compuesto = $derived(lista || []);
 	let formEl = $state<HTMLFormElement | null>(null);
 
 	function openNewPerson() {
@@ -36,7 +43,8 @@
 	}
 
 	function editPersona(i: number) {
-		const p = lista[i];
+		const currentLista = lista || [];
+		const p = currentLista[i];
 		if (!p) return;
 		isEditing = true;
 		showPersonForm = true;
@@ -48,7 +56,10 @@
 
 	function confirmRemovePersona(i: number) {
 		if (!confirm('Eliminar persona y sus contactos?')) return;
-		lista = lista.filter((_, idx) => idx !== i);
+
+		// 2. Validación de seguridad al filtrar
+		lista = (lista || []).filter((_, idx) => idx !== i);
+
 		queueMicrotask(() => formEl?.requestSubmit());
 	}
 
@@ -102,10 +113,13 @@
 		if (!contact_name) return;
 		const persona = { nombre: contact_name, puesto: contact_position, contactos };
 
+		// 3. Validación de seguridad antes de mapear o propagar
+		const currentLista = lista || [];
+
 		if (editPersonIndex !== null) {
-			lista = lista.map((p, i) => (i === editPersonIndex ? persona : p));
+			lista = currentLista.map((p, i) => (i === editPersonIndex ? persona : p));
 		} else {
-			lista = [...lista, persona];
+			lista = [...currentLista, persona];
 		}
 
 		showPersonForm = false;
@@ -120,114 +134,117 @@
 	}
 </script>
 
-<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
-	<input type="hidden" name="id_cliente" value={id} />
-	<input type="hidden" name="contactos" value={JSON.stringify(contacto_compuesto)} />
+<section>
+	<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
+		<input type="hidden" name="id_cliente" value={id} />
+		<input type="hidden" name="contactos" value={JSON.stringify(contacto_compuesto)} />
 
-	<div class="detail-header">
-		{#if !isEditing}
-			<button type="button" class="btn-edit-small" onclick={() => (isEditing = true)}>✏️</button>
-		{/if}
-		<h3 class="label">Contactos:</h3>
-	</div>
-	<div class="detail-body">
-		<div class="contact-list">
-			{#each lista as persona, i}
-				<div class="person-card">
-					<div class="contact-row">
-						{#if isEditing}
-							<div class="row-actions">
-								<button type="button" class="btn-edit-small" onclick={() => editPersona(i)}
-									>✏️</button
-								>
-								<button type="button" class="btn-del-small" onclick={() => confirmRemovePersona(i)}
-									>🗑️</button
-								>
-							</div>
-						{/if}
-						<strong>{persona.nombre}</strong>
-						{#if persona.puesto}
-							<span class="puesto-badge">{persona.puesto}</span>
-						{/if}
-					</div>
-					{#each persona.contactos as c}
-						<div>{c.type}: {c.value}</div>
-					{/each}
-				</div>
-			{/each}
-
-			{#if isEditing}
-				<div class="form-actions">
-					<button type="button" class="butter" onclick={openNewPerson}>Nueva persona</button>
-					<button type="button" class="butter" onclick={cancelAll}>Cerrar edición</button>
-					<button type="submit" class="butter">Guardar cambios</button>
-				</div>
-			{:else if lista.length === 0}
-				<p class="value">Sin información</p>
-			{/if}
+		<div class="detail-header">
+			<h3 class="label">Contactos:</h3>
 		</div>
-		{#if showPersonForm}
-			<div class="person-form">
-				<label class="field">
-					<span>Nombre</span>
-					<input bind:value={contact_name} />
-				</label>
-				<label class="field">
-					<span>Puesto</span>
-					<input bind:value={contact_position} />
-				</label>
-
-				<div class="new-contact">
-					<label class="field">
-						<span>Contacto</span>
-						<input bind:value={contact_value} />
-					</label>
-					<label class="field">
-						<span>Medio</span>
-						<select bind:value={contact_type}>
-							<option value="telefono">Teléfono</option>
-							<option value="whatsapp">WhatsApp</option>
-							<option value="email">Correo</option>
-							<option value="linkedin">LinkedIn</option>
-							<option value="otro">Otro</option>
-						</select>
-					</label>
-
-					<button type="button" class="butter" onclick={submitContacto}>
-						{editIndex !== null ? 'Actualizar contacto' : 'Agregar contacto'}
-					</button>
-
-					{#if editIndex !== null}
-						<button type="button" class="butter" onclick={resetForm}>Cancelar</button>
-					{/if}
-				</div>
-
-				<div class="contact-list">
-					{#each contactos as c, i}
-						<div class="contact-row">
-							<button type="button" class="btn-edit-small" onclick={() => editContacto(i)}
-								>✏️</button
-							>
-							<button type="button" class="btn-del-small" onclick={() => confirmRemoveContacto(i)}
-								>🗑️</button
-							>
-							<p>{c.type}: {c.value}</p>
+		<div class="detail-body">
+			<div class="contact-list">
+				{#if lista.length > 0}
+					{#each lista || [] as persona, i}
+						<div class="person-card">
+							<div class="contact-row">
+								{#if isEditing}
+									<div class="row-actions">
+										<button type="button" class="btn-edit-small" onclick={() => editPersona(i)}
+											>✏️</button
+										>
+										<button
+											type="button"
+											class="btn-del-small"
+											onclick={() => confirmRemovePersona(i)}>🗑️</button
+										>
+									</div>
+								{/if}
+								<strong>{persona.nombre}</strong>
+								{#if persona.puesto}
+									<span class="puesto-badge">{persona.puesto}</span>
+								{/if}
+							</div>
+							{#each persona.contactos as c}
+								<div>{c.type}: {c.value}</div>
+							{/each}
 						</div>
 					{/each}
-				</div>
+				{:else}
+					<p>No hay contactos registrados</p>
+				{/if}
 
-				<div class="form-actions">
-					<button type="button" class="butter" onclick={submitPersonaLocal}>
-						{editPersonIndex !== null ? 'Actualizar persona' : 'Guardar persona'}
-					</button>
-					<button type="button" class="butter" onclick={() => (showPersonForm = false)}
-						>Cancelar</button
-					>
-				</div>
+				{#if isEditing}
+					<div class="form-actions">
+						<button type="button" class="butter" onclick={openNewPerson}>Nueva persona</button>
+						<button type="button" class="butter" onclick={cancelAll}>Cerrar edición</button>
+						<button type="submit" class="butter">Guardar cambios</button>
+					</div>
+				{/if}
 			</div>
-		{/if}
-	</div>
-</form>
+			{#if showPersonForm}
+				<div class="person-form">
+					<label class="field">
+						<span>Nombre</span>
+						<input bind:value={contact_name} />
+					</label>
+					<label class="field">
+						<span>Puesto</span>
+						<input bind:value={contact_position} />
+					</label>
+
+					<div class="new-contact">
+						<label class="field">
+							<span>Contacto</span>
+							<input bind:value={contact_value} />
+						</label>
+						<label class="field">
+							<span>Medio</span>
+							<select bind:value={contact_type}>
+								<option value="telefono">Teléfono</option>
+								<option value="whatsapp">WhatsApp</option>
+								<option value="email">Correo</option>
+								<option value="linkedin">LinkedIn</option>
+								<option value="otro">Otro</option>
+							</select>
+						</label>
+
+						<button type="button" class="butter" onclick={submitContacto}>
+							{editIndex !== null ? 'Actualizar contacto' : 'Agregar contacto'}
+						</button>
+
+						{#if editIndex !== null}
+							<button type="button" class="butter" onclick={resetForm}>Cancelar</button>
+						{/if}
+					</div>
+
+					<div class="contact-list">
+						{#each contactos as c, i}
+							<div class="contact-row">
+								<button type="button" class="btn-edit-small" onclick={() => editContacto(i)}
+									>✏️</button
+								>
+								<button type="button" class="btn-del-small" onclick={() => confirmRemoveContacto(i)}
+									>🗑️</button
+								>
+								<p>{c.type}: {c.value}</p>
+							</div>
+						{/each}
+					</div>
+
+					<div class="form-actions">
+						<button type="button" class="butter" onclick={submitPersonaLocal}>
+							{editPersonIndex !== null ? 'Actualizar persona' : 'Guardar persona'}
+						</button>
+						<button type="button" class="butter" onclick={() => (showPersonForm = false)}
+							>Cancelar</button
+						>
+					</div>
+				</div>
+			{/if}
+		</div>
+	</form>
+</section>
 
 <style>
 	.detail-header {
@@ -236,7 +253,7 @@
 	}
 
 	.detail-body {
-		padding-left: var(--a);
+		padding: var(--a);
 		display: flex;
 		gap: var(--a);
 		flex-wrap: wrap;
@@ -275,6 +292,11 @@
 		gap: var(--a);
 	}
 
+	.value {
+		margin: 0;
+		white-space: pre-wrap;
+		word-break: break-word;
+	}
 	.person-form {
 		display: flex;
 		flex-direction: column;

@@ -30,14 +30,14 @@ export const actions: Actions = {
 			delete data['razon_social'];
 		}
 		// 2. Crear la oportunidad
-		data['id'] = generateId('BMS-OPP');
+		data['id'] = generateId('BMS-OP');
 
-		// 👇 3. Limpiar los datos usando lo que importamos de $lib
 		const oportunidad = construirDatosOportunidad(data);
+		console.log(oportunidad);
 
 		const { data: result, error } = await supabase
 			.from('oportunidades')
-			.insert([oportunidad]) // Insertamos el objeto limpio
+			.insert([oportunidad])
 			.select('id')
 			.single();
 
@@ -50,33 +50,28 @@ export const actions: Actions = {
 	},
 
 	update: async ({ request, locals: { supabase } }) => {
-        console.log('\nOportunidad actualizada\n');
-        const formData = await request.formData();
-        const data = Object.fromEntries(formData.entries());
+		console.log('\nOportunidaddd actualizada\n');
+		const formData = await request.formData();
+		const data = Object.fromEntries(formData.entries());
 		console.log(data);
-        // 1. Validación del ID
-        const id = data['id_op'] as string;
-        if (!id) {
-            return fail(400, { error: 'ID requerido' });
-        }
+		// 1. Validación del ID
+		const id = data['id_op'] as string || data['id'] as string;
+		if (!id) {
+			return fail(400, { error: 'ID requerido' });
+		}
 
-        // 2. Construimos los datos limpios (usando el ID existente)
-        const clienteData = construirDatosCliente(data, id);
-		delete data.id; // Evitamos actualizar la llave primaria
+		// 2. Construimos los datos limpios (usando el ID existente)
+		const oportunidad = construirDatosOportunidad(data, id);
+		console.log('oportunidad');
+		console.log('oportunidad', oportunidad);
+		delete data.id;
 
-		const { error } = await supabase.from('oportunidades').update(data).eq('id', id);
+		const { error } = await supabase.from('oportunidades').update([oportunidad]).eq('id', id);
 
 		if (error) {
 			return fail(500, { error: error.message });
 		}
 
-		return { success: true };
-	},
-
-	reload: async () => {
-		// En SvelteKit + Supabase, la invalidación de caché (invalidate('supabase:db'))
-		// suele hacerse del lado del cliente en el archivo +layout.ts o +page.svelte.
-		// Por lo tanto, el action del servidor solo necesita retornar éxito.
 		return { success: true };
 	},
 

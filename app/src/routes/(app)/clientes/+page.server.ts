@@ -28,7 +28,6 @@ export const actions: Actions = {
         console.log('\nCliente actualizado\n');
         const formData = await request.formData();
         const data = Object.fromEntries(formData.entries());
-		console.log(data);
         // 1. Validación del ID
         const id = data['id_cliente'] as string;
         if (!id) {

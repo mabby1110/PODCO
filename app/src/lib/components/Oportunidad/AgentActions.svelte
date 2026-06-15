@@ -11,7 +11,7 @@
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import FormActions from '../FormActions.svelte';
 
-	let { eventData } = $props();
+	let { eventData, isEditing = $bindable() }: { eventData: any; isEditing?: boolean } = $props();
 
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
 	let nextPhase = $derived(Number(currentPhase) + 1);
@@ -181,71 +181,6 @@
 					<DatePicker title="Seguimiento / Envío" />
 					<input type="hidden" name="fecha_pedido" value={new Date().toISOString()} />
 				{/if}
-			{:else if submitUpdate}
-				<h3>Editar informacion</h3>
-				<div class="opcional">
-					<div class="opciones">
-						<EditableJsonList
-							jsonList={eventData.historia}
-							action="/oportunidades?/updateOp"
-							name={'historia'}
-							id={eventData.id}
-							fields={[
-								{ name: 'fecha', label: 'Fecha', type: 'date' },
-								{ name: 'entrada', label: 'Entrada', type: 'textarea' }
-							]}
-						/>
-						{#if currentPhase == 3}
-							<FormOptionalInput title="+Nueva cotizacion">
-								<UploadFile label="Nueva Cotización" name="quoteFile" required />
-							</FormOptionalInput>
-						{/if}
-						<FormOptionalInput title="+Objetivo">
-							<FormInput
-								label="Objetivo"
-								name="objetivo"
-								value={eventData.objetivo}
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								value={eventData.observaciones}
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+Agregar requisitos">
-							<FormInput
-								label="Requisitos"
-								name="requisitos"
-								value={eventData.requisitos}
-								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
-						</FormOptionalInput>
-						<FormOptionalInput title="+Postergar">
-							<div class="opciones">
-								<FormInput
-									label="Postergar"
-									name="nuevaHistoria"
-									bind:value={nuevaHistoria}
-									placeholder="Motivo de la postergación y acción a realizar"
-									type="textarea"
-									required
-								/>
-								<DatePicker title="Fecha Seguimiento" />
-							</div>
-						</FormOptionalInput>
-					</div>
-				</div>
 			{:else if submitCancel}
 				<FormInput
 					label="Pérdida"
@@ -316,10 +251,14 @@
 
 		{#snippet submitContent(isSubmitting: boolean)}
 			<div class="submit">
+				{#if !submit && !submitCancel}
+					<button type="button" class="butter" onclick={() => (isEditing = !isEditing)}>
+						Editar
+					</button>
+				{/if}
 				<FormOptionalSubmit
 					nextFase={eventData.fase.accion}
 					bind:submit
-					bind:submitUpdate
 					bind:submitCancel
 					bind:isOpen
 				/>

@@ -66,6 +66,7 @@
 
 {#if value || isEditing}
 	<form method="POST" {action} use:enhance={handleSubmit}>
+		<input type="hidden" name="id" value={id} />
 		{#if header}
 			{@render header()}
 		{/if}
@@ -76,7 +77,7 @@
 			{/if}
 
 			{#if isEditing}
-				<div class="content">
+				<div class="detail-body">
 					{#if type === 'textarea'}
 						<textarea {name} bind:value={editedValue} {rows} {placeholder}></textarea>
 					{:else if type === 'file'}
@@ -93,10 +94,12 @@
 					{:else}
 						<input {type} {name} bind:value={editedValue} {placeholder} />
 					{/if}
-                    <button type="submit" class="btn-save-small butter">Guardar</button>
+					<button type="submit" class="btn-save-small butter">Guardar</button>
 				</div>
 			{:else}
-				<p class="value">{editedValue || 'Sin información'}</p>
+				<div class="detail-body">
+					<p class="value">{editedValue || 'Sin información'}</p>
+				</div>
 			{/if}
 		</section>
 	</form>
@@ -112,12 +115,11 @@
 		flex-direction: column;
 		align-items: flex-start;
 	}
-	.content {
+	.detail-body {
+		padding: var(--a);
 		display: flex;
-        flex-wrap: wrap;
-		gap: var(--a, 8px);
-		width: 100%;
-        justify-content: flex-end;
+		gap: var(--a);
+		flex-wrap: wrap;
 	}
 	.hint {
 		font-size: 14px;
@@ -149,7 +151,7 @@
 	textarea {
 		resize: vertical;
 		flex-grow: 1;
-        min-width: 200px;
+		min-width: 200px;
 	}
 	.file-input {
 		padding: 8px;
@@ -161,7 +163,7 @@
 	}
 	.btn-save-small {
 		background: var(--color-ganada, #4caf50);
-        align-self: flex-end;
+		align-self: flex-end;
 	}
 	.select {
 		width: fit-content;

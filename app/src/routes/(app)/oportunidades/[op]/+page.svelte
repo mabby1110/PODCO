@@ -11,6 +11,7 @@
 	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
 	import EditableList from '$lib/components/EditableList.svelte';
 	import Entradas from '$lib/components/Entradas.svelte';
+	import EditableInput from '$lib/components/EditableInput.svelte';
 
 	let { data } = $props();
 
@@ -64,7 +65,9 @@
 			</button>
 			<div class="title">
 				<h1>{eventData.motivo}</h1>
-				<a href="/clientes/{eventData.cliente.id}"><h3>{eventData.cliente.razon_social||eventData.cliente.nombre_comercial}</h3></a>
+				<a href="/clientes/{eventData.cliente.id}"
+					><h3>{eventData.cliente.razon_social || eventData.cliente.nombre_comercial}</h3></a
+				>
 			</div>
 			<div class="meta">
 				<p class="date">{eventData.inicio}</p>
@@ -75,44 +78,44 @@
 		{#snippet content()}
 			<section>
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
-				<FormEditableContact
-					lista={eventData.cliente.contactos}
-					id={eventData.cliente.id}
-					action="/clientes?/updateClient"
-				/>
-				<!-- <EditableList
-					jsonList={eventData.etiquetas}
-					id={eventData.id}
-					action="/oportunidades?/updateOp"
-					name="etiquetas"
-					label="Etiqueta"
-				/> -->
 			</section>
 
-			{#if eventData.monto_oc}
-				<section>
-					<h3>Monto</h3>
-					<h3>{eventData.monto_oc}</h3>
-				</section>
-			{/if}
+			<FormEditableContact
+				lista={eventData.cliente.contactos}
+				id={eventData.cliente.id}
+				id_agente={$profile?.isAdmin ? eventData.cliente.id_agente : $profile?.id}
+				action="/clientes?/update"
+				{isEditing}
+			/>
+			<EditableInput
+				{isEditing}
+				id={eventData.id}
+				label="Objetivo"
+				name="objetivo"
+				type="text"
+				value={eventData.objetivo}
+				action="/oportunidades?/update"
+				placeholder="Objetivo"
+			>
+				{#snippet header()}
+					<input type="hidden" name="id" value={eventData.id} />
+				{/snippet}
+			</EditableInput>
 
-			{#if eventData.potencial_venta}
-				<section>
-					<h3>Potencial Venta</h3>
-					<p>{eventData.potencial_venta}</p>
-				</section>
-			{/if}
+			<EditableInput
+				{isEditing}
+				id={eventData.id}
+				label="Potencial de venta"
+				name="potencial_venta"
+				type="text"
+				value={eventData.potencial_venta}
+				action="/oportunidades?/update"
+				placeholder="Potencial de venta"
+			/>
 			{#if eventData.necesidades}
 				<section>
 					<h3>Necesidades</h3>
 					<p>{eventData.necesidades}</p>
-				</section>
-			{/if}
-
-			{#if eventData.objetivo}
-				<section>
-					<h3>Objetivo</h3>
-					<p>{eventData.objetivo}</p>
 				</section>
 			{/if}
 
@@ -132,48 +135,15 @@
 
 			<section>
 				<div class="block-header">
-					{#if isEditing}
-						<button type="button" class="close-btn" onclick={() => (isEditing = false)}>✕</button>
-					{/if}
 					<h2>Historia</h2>
 				</div>
 				<div class="block-content">
-					{#if !isEditing}
-						{#if eventData.historia}
-							<div class="entradas">
-								{#each JSON.parse(eventData.historia) as item, index}
-									<div class="entrada">
-										{#if item.id_op}
-											<a href="/oportunidades/{item.id_op}">
-												<b>{formatDateFull(parseDateTimeLocal(item.fecha))}</b> oportunidad:</a
-											>
-											{#if item.nombre_perfil}
-												<p class="profile">{item.nombre_perfil},</p>
-											{/if}
-											<p>{item.entrada}</p>
-										{:else}
-											<b>{formatDateFull(parseDateTimeLocal(item.fecha))}:</b>
-											{#if item.nombre_perfil}
-												<p class="profile">{item.nombre_perfil},</p>
-											{/if}
-											<p>{item.entrada}</p>
-										{/if}
-									</div>
-								{/each}
-							</div>
-						{:else}
-							<p>No hay entradas</p>
-						{/if}
-					{:else}
-						<Entradas
-							historia={eventData.historia}
-							objId={eventData.id}
-							action={'/oportunidades?/update'}
-						/>
-					{/if}
-					{#if !isEditing}
-						<button type="button" class="butter" onclick={() => (isEditing = true)}>Nueva Entrada</button>
-					{/if}
+					<Entradas
+						{isEditing}
+						historia={eventData.historia}
+						objId={eventData.id}
+						action={'/oportunidades?/update'}
+					/>
 				</div>
 			</section>
 
@@ -186,14 +156,14 @@
 		{#snippet actions()}
 			{#if $profile?.isAdmin}
 				{#if currentFase < 4}
-					<AgentActions {eventData} />
+					<AgentActions {eventData} bind:isEditing />
 				{:else}
 					<OperActions {eventData} />
 				{/if}
 			{:else if $profile?.isOper}
 				<OperActions {eventData} />
 			{:else}
-				<AgentActions {eventData} />
+				<AgentActions {eventData}  bind:isEditing/>
 			{/if}
 		{/snippet}
 	</Card>

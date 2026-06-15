@@ -8,7 +8,7 @@
 		historia = $bindable('[]'),
 		objId,
 		action = '?/updateHistoria',
-		isEditing = false,
+		isEditing = false
 	}: {
 		historia: string;
 		objId: string;
@@ -92,40 +92,43 @@
 </script>
 
 <div class="historia">
-	{#if isEditing}
-		<button type="button" class="close-btn" onclick={() => (isEditing = false)}>✕</button>
-	{/if}
 	<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={objId} />
 		<input type="hidden" name="historia" value={list_stringified} />
-	
+
 		<div class="entradas">
-			{#each lista as item, i}
-				<div class="entrada">
-					{#if editIndex === i}
-						<label class="field-input">
-							<span>Editar Entrada</span>
-							<textarea bind:value={editData.entrada}></textarea>
-						</label>
-						<div class="form-actions">
-							<button type="button" class="butter" onclick={saveEdit}>Guardar</button>
-							<button type="button" class="close-btn" onclick={cancelEdit}>X</button>
+			<div class="detail-body">
+				{#if lista.length > 0}
+					{#each lista as item, i}
+						<div class="entrada">
+							{#if editIndex === i}
+								<label class="field-input">
+									<span>Editar Entrada</span>
+									<textarea bind:value={editData.entrada}></textarea>
+								</label>
+								<div class="form-actions">
+									<button type="button" class="butter" onclick={saveEdit}>Guardar</button>
+									<button type="button" class="close-btn" onclick={cancelEdit}>X</button>
+								</div>
+							{:else}
+								{#if (item.nombre_perfil === $profile?.nombre && isEditing) || (!item.nombre_perfil && isEditing)}
+									<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
+								{/if}
+								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
+								{#if item.nombre_perfil}
+									<span class="profile">{item.nombre_perfil},</span>
+								{/if}
+								<p>{item.entrada}</p>
+							{/if}
 						</div>
-					{:else}
-						{#if (item.nombre_perfil === $profile?.nombre && isEditing) || (!item.nombre_perfil && isEditing)}
-							<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
-						{/if}
-						<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
-						{#if item.nombre_perfil}
-							<span class="profile">{item.nombre_perfil},</span>
-						{/if}
-						<p>{item.entrada}</p>
-					{/if}
-				</div>
-			{/each}
-	
-			<div class="entrada form-permanente">
-				{#if isEditing}
+					{/each}
+				{:else}
+					<p class="empty-msg">No hay entradas</p>
+				{/if}
+			</div>
+
+			{#if isEditing}
+				<div class="entrada form-permanente">
 					<label class="field-input">
 						<span>Nueva Entrada</span>
 						<textarea bind:value={newData.entrada} bind:this={formInput}></textarea>
@@ -133,12 +136,8 @@
 					<div class="form-actions">
 						<button type="button" class="butter" onclick={saveNew}>Guardar</button>
 					</div>
-				{:else}
-					<button type="button" class="butter" onclick={() => (isEditing = true)}
-						>Agregar Entrada</button
-					>
-				{/if}
-			</div>
+				</div>
+			{/if}
 		</div>
 	</form>
 </div>
@@ -172,6 +171,12 @@
 		justify-content: flex-end;
 		gap: 8px;
 		margin-top: 8px;
+	}
+	.detail-body {
+		padding: var(--a);
+		display: flex;
+		gap: var(--a);
+		flex-wrap: wrap;
 	}
 	.profile {
 		font-style: italic;

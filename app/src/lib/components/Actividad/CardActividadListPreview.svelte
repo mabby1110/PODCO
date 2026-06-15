@@ -17,7 +17,7 @@
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
-			inicio: event?.inicio.split(' ')[0],
+			inicio: event?.inicio,
 			historia: event.historia,
 			requisitos: event.requisitos,
 			objetivo: event.objetivo,

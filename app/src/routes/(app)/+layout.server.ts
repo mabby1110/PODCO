@@ -48,7 +48,9 @@ export const load: LayoutServerLoad = async ({
 		queryOportunidades,
 		queryActividades
 	]);
-	console.log(actividades?.length);
+	console.log('actividades: ', actividades?.length);
+	console.log('oportunidades: ', oportunidades?.length);
+	console.log('clientes: ', clientes?.length);
 	return {
 		profile,
 		agentes,
