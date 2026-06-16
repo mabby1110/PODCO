@@ -69,9 +69,3 @@
 		{@render submitContent(isSubmitting)}
 	{/if}
 </form>
-
-<style>
-	form {
-		height: 100%;
-	}
-</style>

@@ -112,26 +112,45 @@
 				action="/oportunidades?/update"
 				placeholder="Potencial de venta"
 			/>
-			{#if eventData.necesidades}
-				<section>
-					<h3>Necesidades</h3>
-					<p>{eventData.necesidades}</p>
-				</section>
-			{/if}
 
-			{#if eventData.requisitos}
-				<section>
-					<h3>Requisitos</h3>
-					<p>{eventData.requisitos}</p>
-				</section>
-			{/if}
+			<EditableInput
+				{isEditing}
+				id={eventData.id}
+				label="Necesidades"
+				name="necesidades"
+				type="text"
+				value={eventData.necesidades}
+				action="/oportunidades?/update"
+				placeholder="Necesidades"
+			/>
 
-			{#if eventData.observaciones}
-				<section>
-					<h3>Observaciones</h3>
-					<p>{eventData.observaciones}</p>
-				</section>
-			{/if}
+			<EditableInput
+				{isEditing}
+				id={eventData.id}
+				label="Requisitos"
+				name="requisitos"
+				type="text"
+				value={eventData.requisitos}
+				action="/oportunidades?/update"
+				placeholder="Requisitos"
+			/>
+
+			<EditableInput
+				{isEditing}
+				id={eventData.id}
+				label="Observaciones"
+				name="observaciones"
+				type="text"
+				value={eventData.observaciones}
+				action="/oportunidades?/update"
+				placeholder="Observaciones"
+			/>
+
+			<FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />
+			<FilePreview title="Cotizaciones Presentadas" data={eventData.cotizaciones_presentadas} />
+			<FilePreview title="Orden de compra" data={eventData.oc_cliente} />
+			<FilePreview title="Documentos de operacion" data={eventData.documentos_operacion} />
+			<FilePreview title="Adjuntos" data={eventData.documentos} />
 
 			<section>
 				<div class="block-header">
@@ -146,13 +165,7 @@
 					/>
 				</div>
 			</section>
-
-			<FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />
-			<FilePreview title="Cotizaciones Presentadas" data={eventData.cotizaciones_presentadas} />
-			<FilePreview title="Orden de compra" data={eventData.oc_cliente} />
-			<FilePreview title="Documentos de operacion" data={eventData.documentos_operacion} />
-			<FilePreview title="Adjuntos" data={eventData.documentos} />
-		{/snippet}a
+		{/snippet}
 		{#snippet actions()}
 			{#if $profile?.isAdmin}
 				{#if currentFase < 4}
@@ -163,7 +176,7 @@
 			{:else if $profile?.isOper}
 				<OperActions {eventData} />
 			{:else}
-				<AgentActions {eventData}  bind:isEditing/>
+				<AgentActions {eventData} bind:isEditing />
 			{/if}
 		{/snippet}
 	</Card>

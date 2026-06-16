@@ -7,7 +7,6 @@
 	import FormSelectMotivo from '$lib/components/FormSelectMotivo.svelte';
 	import FormInput from '../FormInput.svelte';
 	import UploadFile from '$lib/components/UploadFile.svelte';
-	import EditableJsonList from '../EditableJsonList.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import FormActions from '../FormActions.svelte';
 
@@ -304,5 +303,9 @@
 		width: 100%;
 		flex-wrap: wrap;
 		gap: var(--a);
+	}
+	.submit {
+		position: fixed;
+		bottom: 0;
 	}
 </style>

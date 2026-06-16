@@ -37,13 +37,10 @@
 
 <style>
     .card-actions {
-        position: absolute;
-        bottom: 0;
-        right: 0;
         flex-grow: 1;
     }
     .card-content {
 		white-space: pre-wrap;
-        margin-bottom: var(--d);
+        margin-bottom: var(--e);
     }
 </style>

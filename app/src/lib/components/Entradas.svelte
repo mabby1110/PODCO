@@ -91,13 +91,13 @@
 	});
 </script>
 
-<div class="historia">
+<section class="historia">
 	<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={objId} />
 		<input type="hidden" name="historia" value={list_stringified} />
 
-		<div class="entradas">
-			<div class="detail-body">
+		<div class="detail-body">
+			<div class="entradas">
 				{#if lista.length > 0}
 					{#each lista as item, i}
 						<div class="entrada">
@@ -115,10 +115,14 @@
 									<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
 								{/if}
 								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
-								{#if item.nombre_perfil}
-									<span class="profile">{item.nombre_perfil},</span>
+								{#if item.entrada}
+									<div class="contenido-entrada">
+										{#if item.nombre_perfil}
+											<span class="profile">{item.nombre_perfil},</span>
+										{/if}
+										<p>{item.entrada}</p>
+									</div>
 								{/if}
-								<p>{item.entrada}</p>
 							{/if}
 						</div>
 					{/each}
@@ -126,21 +130,18 @@
 					<p class="empty-msg">No hay entradas</p>
 				{/if}
 			</div>
-
-			{#if isEditing}
-				<div class="entrada form-permanente">
-					<label class="field-input">
-						<span>Nueva Entrada</span>
-						<textarea bind:value={newData.entrada} bind:this={formInput}></textarea>
-					</label>
-					<div class="form-actions">
-						<button type="button" class="butter" onclick={saveNew}>Guardar</button>
-					</div>
-				</div>
-			{/if}
 		</div>
+		{#if isEditing}
+			<div class="entrada form-permanente">
+				<label class="field-input">
+					<span>Nueva Entrada</span>
+					<textarea bind:value={newData.entrada} bind:this={formInput}></textarea>
+				</label>
+				<button type="button" class="butter btn-save-small" onclick={saveNew}>Guardar</button>
+			</div>
+		{/if}
 	</form>
-</div>
+</section>
 
 <style>
 	.historia {
@@ -173,7 +174,6 @@
 		margin-top: 8px;
 	}
 	.detail-body {
-		padding: var(--a);
 		display: flex;
 		gap: var(--a);
 		flex-wrap: wrap;
@@ -187,5 +187,14 @@
 	}
 	.butter {
 		aspect-ratio: unset;
+	}
+	.form-permanente {
+		display: flex;
+		align-items: flex-end;
+		gap: var(--a);
+	}
+	.btn-save-small {
+		background: var(--color-ganada, #4caf50);
+		align-self: flex-end;
 	}
 </style>
