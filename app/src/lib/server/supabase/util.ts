@@ -1,4 +1,5 @@
-import type { Actividad, Cliente, Oportunidad } from '$lib';
+import type { Actividad, Cliente, Documento, Oportunidad } from '$lib';
+import { processAttachments } from '../google/drive';
 import { generateId } from '../google/sheets';
 
 const CLAVES_CLIENTE: (keyof Cliente)[] = [
@@ -35,6 +36,17 @@ const CLAVES_ACTIVIDAD: (keyof Actividad)[] = [
 	'objetivo',
 	'requisitos',
 	'observaciones'
+];
+
+const CLAVES_DOCUMENTO: (keyof Documento)[] = [
+	'id',
+	'fecha_creacion',
+	'titulo',
+	'url',
+	'preview',
+	'id_agente',
+	'id_oportunidad',
+	'id_actividad'
 ];
 
 const CLAVES_OPORTUNIDAD: (keyof Oportunidad)[] = [
@@ -183,19 +195,16 @@ export function construirDatosOportunidad(
 		}
 
 		// Conversión de Fase a Número
-		if (clave === 'fase') {
+		if (clave === 'fase' && datosBrutos.fase) {
 			datosBrutos.fase = data.fase ? Number(data.fase) : 1;
 			continue;
 		}
 
 		// manejo para json
 		if (clave === 'historia' && data.historia !== undefined) {
-			datosBrutos.historia =
-				typeof data.historia === 'string' ? JSON.parse(data.historia) : data.historia;
-
+			datosBrutos.historia = data.historia === 'string' ? JSON.parse(data.historia) : data.historia;
 			continue;
 		}
-		console.log(datosBrutos.historia);
 		// Asignación del resto si existen
 		if (data[clave] !== undefined) {
 			(datosBrutos as any)[clave] = data[clave];
@@ -203,4 +212,78 @@ export function construirDatosOportunidad(
 	}
 
 	return limpiarCamposVacios(datosBrutos) as Partial<Oportunidad>;
+}
+
+export async function construirDatosDocumentos(
+    formData: FormData,
+    id?: string, // ID base o identificador de carpeta
+    id_oportunidad?: string,
+    id_actividad?: string,
+    id_agente?: string,
+    tipo: string = 'adjunto',
+    archivo: string = 'adjuntos'
+): Promise<Partial<Documento>[]> { // Modificado: Retorna un array
+    const baseDatos: Partial<Documento> = {};
+
+    // 1. Construir datos base compartidos
+    for (const clave of CLAVES_DOCUMENTO) {
+        if (clave === 'id') continue; // Se asignará individualmente
+
+        if (clave === 'id_agente') {
+            baseDatos.id_agente = id_agente ?? (formData.get('id_agente') as string) ?? null;
+            continue;
+        }
+
+        if (clave === 'id_oportunidad') {
+            baseDatos.id_oportunidad = id_oportunidad ?? (formData.get('id_oportunidad') as string) ?? null;
+            continue;
+        }
+
+        if (clave === 'id_actividad') {
+            baseDatos.id_actividad = id_actividad ?? (formData.get('id_actividad') as string) ?? null;
+            continue;
+        }
+
+        if (formData.has(clave)) {
+            const valor = formData.get(clave);
+            (baseDatos as any)[clave] = valor !== '' ? valor : null;
+        }
+    }
+
+    if (tipo) baseDatos.tipo = tipo;
+    const datosLimpios = limpiarCamposVacios(baseDatos);
+
+    // 2. Procesar archivos e iterar
+    const quoteFile = formData.get(archivo) as File | null;
+    
+    if (quoteFile && quoteFile.size > 0) {
+        try {
+            const docFiles = formData.getAll(archivo) as File[];
+            const docsRaw = formData.get('documentos') as string;
+            const agenteNombre = formData.get('agente') as string;
+            const opFolder = `${id_oportunidad ?? id}`; // Usar ID de oportunidad para la carpeta
+
+            // Se asume que docs es un array de objetos con propiedad 'name'
+            const docs: any[] = await processAttachments(docFiles, agenteNombre, opFolder, docsRaw);
+            
+            // Generar un documento completo por cada archivo procesado
+            return docs.map(doc => ({
+                ...datosLimpios,
+                id: generateId('BMS-DOC'),
+                titulo: doc.name ?? 'sin titulo',
+                url: doc.url,
+                preview: doc.preview
+            }));
+
+        } catch (err) {
+            console.error('Error procesando documentos', err);
+            throw new Error('Fallo al procesar adjuntos');
+        }
+    }
+
+    // 3. Fallback: Retornar array con un solo documento si no se subieron archivos
+    return [{
+        ...datosLimpios,
+        id: generateId('BMS-DOC')
+    }];
 }

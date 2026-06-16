@@ -95,7 +95,7 @@
 						required
 					/>
 					<div class="cotizacion">
-						<UploadFile label="Cotizaciones" name="quoteFile" required multiple />
+						<UploadFile label="Cotizaciones" name="cotizaciones" required multiple />
 					</div>
 					<div class="opcional">
 						<h3>Informacion adicional</h3>
@@ -121,7 +121,7 @@
 								/>
 							</FormOptionalInput>
 							<FormOptionalInput title="+adjuntos">
-								<UploadFile label="Subir documentos" name="docFile" multiple />
+								<UploadFile label="Subir documentos" name="adjuntos" multiple />
 							</FormOptionalInput>
 						</div>
 					</div>
@@ -148,7 +148,7 @@
 						<UploadFile label="Cotizacion generada en Contpaqi" name="quoteWonFile" required />
 					</div>
 					<div class="oc">
-						<UploadFile label="Orden de compra del cliente" name="ocFile" required />
+						<UploadFile label="Orden de compra del cliente" name="oc_cliente" required />
 					</div>
 					<div class="opcional">
 						<h3>Informacion adicional</h3>

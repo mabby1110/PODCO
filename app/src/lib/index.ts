@@ -80,7 +80,17 @@ export type Notificacion = {
 	id_historial: string;
 	visto: boolean;
 };
-
+export type Documento = {
+	id: string;
+	fecha_creacion: string | Date;
+	titulo: string;
+	url: string;
+	preview: string;
+	id_agente: string;
+	id_oportunidad: string;
+	id_actividad: string;
+	tipo: string;
+}
 // MAPEO CON SHEETS
 export const historialFieldMap = {
 	fecha_creacion: 'B',
