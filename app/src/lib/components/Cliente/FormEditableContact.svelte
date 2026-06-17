@@ -250,9 +250,6 @@
 </section>
 
 <style>
-	form {
-		width: 100%;
-	}
 	.detail-header {
 		display: flex;
 		align-items: center;

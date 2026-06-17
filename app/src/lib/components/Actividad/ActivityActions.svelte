@@ -95,7 +95,7 @@
 		{#snippet submitContent()}
 			<div class="submit">
 				{#if !submit && !submitCancel}
-					<button type="button" class="butter" onclick={() => (isEditing = !isEditing)}>
+					<button type="button" class="butter {isEditing}" onclick={() => (isEditing = !isEditing)}>
 						Editar
 					</button>
 				{/if}
@@ -132,7 +132,9 @@
 	.butter:active:not(:disabled) {
 		transform: translateY(0);
 	}
-
+	.true {
+		background-color: var(--color-highlight);
+	}
 	.butter:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
@@ -148,5 +150,9 @@
 		width: 100%;
 		flex-wrap: wrap;
 		gap: var(--a);
+	}
+	.submit {
+		position: fixed;
+		bottom: 0;
 	}
 </style>

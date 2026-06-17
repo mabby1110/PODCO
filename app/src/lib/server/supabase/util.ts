@@ -107,6 +107,8 @@ export function limpiarCamposVacios(obj: Record<string, any>): Record<string, an
 
 export function construirDatosCliente(data: Record<string, any>, id?: string): Partial<Cliente> {
 	const datosBrutos: Partial<Cliente> = {};
+	console.log('construir cliente');
+	console.log(datosBrutos.contactos);
 
 	// 2. Iteramos SOLO sobre las claves válidas de Cliente
 	for (const clave of CLAVES_CLIENTE) {
@@ -115,11 +117,9 @@ export function construirDatosCliente(data: Record<string, any>, id?: string): P
 			datosBrutos.id = id ? id : generateId('BMS-CLI');
 			continue;
 		}
-
 		// Manejo especial para los contactos
 		if (clave === 'contactos' && data.contactos !== undefined) {
-			datosBrutos.contactos =
-				typeof data.contactos === 'string' ? JSON.parse(data.contactos) : data.contactos;
+			datosBrutos.contactos = JSON.parse(data.contactos);
 			continue;
 		}
 
@@ -215,75 +215,78 @@ export function construirDatosOportunidad(
 }
 
 export async function construirDatosDocumentos(
-    formData: FormData,
-    id?: string, // ID base o identificador de carpeta
-    id_oportunidad?: string,
-    id_actividad?: string,
-    id_agente?: string,
-    tipo: string = 'adjunto',
-    archivo: string = 'adjuntos'
-): Promise<Partial<Documento>[]> { // Modificado: Retorna un array
-    const baseDatos: Partial<Documento> = {};
+	formData: FormData,
+	id?: string, // ID base o identificador de carpeta
+	id_oportunidad?: string,
+	id_actividad?: string,
+	id_agente?: string,
+	tipo: string = 'adjunto',
+	archivo: string = 'adjuntos'
+): Promise<Partial<Documento>[]> {
+	// Modificado: Retorna un array
+	const baseDatos: Partial<Documento> = {};
 
-    // 1. Construir datos base compartidos
-    for (const clave of CLAVES_DOCUMENTO) {
-        if (clave === 'id') continue; // Se asignará individualmente
+	// 1. Construir datos base compartidos
+	for (const clave of CLAVES_DOCUMENTO) {
+		if (clave === 'id') continue; // Se asignará individualmente
 
-        if (clave === 'id_agente') {
-            baseDatos.id_agente = id_agente ?? (formData.get('id_agente') as string) ?? null;
-            continue;
-        }
+		if (clave === 'id_agente') {
+			baseDatos.id_agente = id_agente ?? (formData.get('id_agente') as string) ?? null;
+			continue;
+		}
 
-        if (clave === 'id_oportunidad') {
-            baseDatos.id_oportunidad = id_oportunidad ?? (formData.get('id_oportunidad') as string) ?? null;
-            continue;
-        }
+		if (clave === 'id_oportunidad') {
+			baseDatos.id_oportunidad =
+				id_oportunidad ?? (formData.get('id_oportunidad') as string) ?? null;
+			continue;
+		}
 
-        if (clave === 'id_actividad') {
-            baseDatos.id_actividad = id_actividad ?? (formData.get('id_actividad') as string) ?? null;
-            continue;
-        }
+		if (clave === 'id_actividad') {
+			baseDatos.id_actividad = id_actividad ?? (formData.get('id_actividad') as string) ?? null;
+			continue;
+		}
 
-        if (formData.has(clave)) {
-            const valor = formData.get(clave);
-            (baseDatos as any)[clave] = valor !== '' ? valor : null;
-        }
-    }
+		if (formData.has(clave)) {
+			const valor = formData.get(clave);
+			(baseDatos as any)[clave] = valor !== '' ? valor : null;
+		}
+	}
 
-    if (tipo) baseDatos.tipo = tipo;
-    const datosLimpios = limpiarCamposVacios(baseDatos);
+	if (tipo) baseDatos.tipo = tipo;
+	const datosLimpios = limpiarCamposVacios(baseDatos);
 
-    // 2. Procesar archivos e iterar
-    const quoteFile = formData.get(archivo) as File | null;
-    
-    if (quoteFile && quoteFile.size > 0) {
-        try {
-            const docFiles = formData.getAll(archivo) as File[];
-            const docsRaw = formData.get('documentos') as string;
-            const agenteNombre = formData.get('agente') as string;
-            const opFolder = `${id_oportunidad ?? id}`; // Usar ID de oportunidad para la carpeta
+	// 2. Procesar archivos e iterar
+	const quoteFile = formData.get(archivo) as File | null;
 
-            // Se asume que docs es un array de objetos con propiedad 'name'
-            const docs: any[] = await processAttachments(docFiles, agenteNombre, opFolder, docsRaw);
-            
-            // Generar un documento completo por cada archivo procesado
-            return docs.map(doc => ({
-                ...datosLimpios,
-                id: generateId('BMS-DOC'),
-                titulo: doc.name ?? 'sin titulo',
-                url: doc.url,
-                preview: doc.preview
-            }));
+	if (quoteFile && quoteFile.size > 0) {
+		try {
+			const docFiles = formData.getAll(archivo) as File[];
+			const docsRaw = formData.get('documentos') as string;
+			const agenteNombre = formData.get('agente') as string;
+			const opFolder = `${id_oportunidad ?? id}`; // Usar ID de oportunidad para la carpeta
 
-        } catch (err) {
-            console.error('Error procesando documentos', err);
-            throw new Error('Fallo al procesar adjuntos');
-        }
-    }
+			// Se asume que docs es un array de objetos con propiedad 'name'
+			const docs: any[] = await processAttachments(docFiles, agenteNombre, opFolder, docsRaw);
 
-    // 3. Fallback: Retornar array con un solo documento si no se subieron archivos
-    return [{
-        ...datosLimpios,
-        id: generateId('BMS-DOC')
-    }];
+			// Generar un documento completo por cada archivo procesado
+			return docs.map((doc) => ({
+				...datosLimpios,
+				id: generateId('BMS-DOC'),
+				titulo: doc.name ?? 'sin titulo',
+				url: doc.url,
+				preview: doc.preview
+			}));
+		} catch (err) {
+			console.error('Error procesando documentos', err);
+			throw new Error('Fallo al procesar adjuntos');
+		}
+	}
+
+	// 3. Fallback: Retornar array con un solo documento si no se subieron archivos
+	return [
+		{
+			...datosLimpios,
+			id: generateId('BMS-DOC')
+		}
+	];
 }

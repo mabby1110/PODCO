@@ -11,6 +11,7 @@
 		type = 'text',
 		rows = 3,
 		id,
+		id_agente,
 		action = '/clientes?/updateClient',
 		placeholder = '',
 		hint = '',
@@ -24,6 +25,7 @@
 		type?: 'text' | 'textarea' | 'file' | 'email' | 'number' | 'date' | 'select';
 		rows?: number;
 		id: string;
+		id_agente?: boolean;
 		action?: string;
 		placeholder?: string;
 		hint?: string;
@@ -67,10 +69,13 @@
 {#if value || isEditing}
 	<form method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={id} />
+		{#if id_agente}
+			<input type="hidden" name="id_agente" value={id_agente} />
+		{/if}
 		{#if header}
 			{@render header()}
 		{/if}
-		<section class="container">
+		<section class="container editable-fields-grid">
 			<h3>{label}:</h3>
 			{#if hint && !isEditing}
 				<p class="hint">{hint}</p>

@@ -15,7 +15,8 @@
 		value = $bindable(),
 		options = [],
 		action = '?/updateClient',
-		hint = ''
+		hint = '',
+		isEditing = false
 	}: {
 		label: string;
 		name: string;
@@ -24,9 +25,9 @@
 		options: Option[];
 		action?: string;
 		hint?: string;
+		isEditing: boolean;
 	} = $props();
 
-	let isEditing = $state(false);
 	let editedValue = $state(String(value));
 	let originalValue = String(value);
 
@@ -60,9 +61,6 @@
 
 	<section class="detail-block">
 		<div class="detail-header">
-			{#if !isEditing && $profile?.isAdmin}
-				<button type="button" class="btn-edit-small" onclick={toggleEdit}>✏️</button>
-			{/if}
 			<h3>{label}:</h3>
 		</div>
 
@@ -70,7 +68,6 @@
 			{#if hint && !isEditing}
 				<p class="hint">{hint}</p>
 			{/if}
-
 			{#if isEditing && $profile?.isAdmin}
 				<select {name} bind:value={editedValue} class="select">
 					<option value="">— Sin asignar —</option>
@@ -80,8 +77,7 @@
 				</select>
 
 				<div class="button-group-inline">
-					<button type="submit" class="btn-save-small">Guardar</button>
-					<button type="button" class="btn-cancel-small" onclick={toggleEdit}>Cancelar</button>
+					<button type="submit" class="butter btn-save-small">Guardar</button>
 				</div>
 			{:else}
 				<input type="hidden" {name} value={$profile?.isAdmin ? value : $profile?.id} />
