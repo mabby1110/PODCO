@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
 	import CardActividadListPreview from '$lib/components/Actividad/CardActividadListPreview.svelte';
-	import Filtro from '../Filtro.svelte';
+	import Filtro from '../App/Filtro.svelte';
 	import { categoriasActividad, agrupacionesActividades } from '$lib';
 	import Agrupaciones from '../Agrupaciones.svelte';
 	import Grupo from '../Grupo.svelte';

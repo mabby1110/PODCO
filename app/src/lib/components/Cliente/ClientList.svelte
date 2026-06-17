@@ -3,7 +3,7 @@
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import Agrupaciones from '../Agrupaciones.svelte';
-	import Filtro from '../Filtro.svelte';
+	import Filtro from '../App/Filtro.svelte';
 	import Grupo from '../Grupo.svelte';
 	import Reload from '../Reload.svelte';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
-	import Filtro from '$lib/components/Filtro.svelte';
+	import Filtro from '$lib/components/App/Filtro.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
 	import Agrupaciones from '../Agrupaciones.svelte';

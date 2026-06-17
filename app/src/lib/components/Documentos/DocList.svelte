@@ -1,11 +1,12 @@
 <script lang="ts">
 	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
-	import Filtro from '$lib/components/Filtro.svelte';
+	import Filtro from '$lib/components/App/Filtro.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agrupacionesDocumentos, categoriasDocumentos } from '$lib';
 	import Agrupaciones from '../Agrupaciones.svelte';
 	import Grupo from '../Grupo.svelte';
 	import Leyenda from '../Leyenda.svelte';
+	import CardDocPreview from './CardDocPreview.svelte';
 
 	let { listaAgrupada } = $props();
 
@@ -27,9 +28,7 @@
 </script>
 
 <div class="view-container">
-	<div class="controls">
-		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-		<button onclick={appState.toggleMin} class="butter">
+	<div class="controls"><button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
 		<Filtro categorias={categoriasDocumentos} />
@@ -46,13 +45,13 @@
 		<div class="grupo-dia">
 			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as event (event.id)}
-					<p>{event.id}</p>
+					<CardDocPreview {event}/>
 				{/each}
 			</Grupo>
 		</div>
 	{:else}
 		<div class="no-results">
-			<p>No se encontraron oportunidades con los filtros actuales.</p>
+			<p>No se encontraron documentos con los filtros actuales.</p>
 		</div>
 	{/each}
 </div>

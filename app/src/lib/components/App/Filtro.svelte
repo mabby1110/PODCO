@@ -106,7 +106,6 @@
 <style>
 	.filter-container {
 		order: 1;
-		width: 100%;
 	}
 	.options {
 		display: flex;

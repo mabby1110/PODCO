@@ -22,7 +22,7 @@ export const load: LayoutServerLoad = async ({
 	let agentes: any[] = [];
 	let queryOportunidades = supabase
 		.from('oportunidades')
-		.select('*')
+		.select(`*,documentos (*)`)
 		.order('inicio', { ascending: false });
 	let queryActividades = supabase
 		.from('actividades')
@@ -36,7 +36,7 @@ export const load: LayoutServerLoad = async ({
 	} else if (profile?.isOper) {
 		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
 		agentes = perfiles || [];
-		
+
 		queryOportunidades = queryOportunidades.gte('fase', 3);
 		queryActividades = queryActividades.eq('id_agente', profile.id);
 	} else {
@@ -45,12 +45,8 @@ export const load: LayoutServerLoad = async ({
 		queryDocumentos = queryDocumentos.eq('id_agente', profile.id);
 	}
 
-	const [{ data: clientes }, { data: oportunidades }, { data: actividades }, {data: documentos}] = await Promise.all([
-		queryClientes,
-		queryOportunidades,
-		queryActividades,
-		queryDocumentos
-	]);
+	const [{ data: clientes }, { data: oportunidades }, { data: actividades }, { data: documentos }] =
+		await Promise.all([queryClientes, queryOportunidades, queryActividades, queryDocumentos]);
 	console.log('actividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
 	console.log('clientes: ', clientes?.length);

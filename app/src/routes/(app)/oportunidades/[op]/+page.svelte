@@ -12,9 +12,9 @@
 	import EditableList from '$lib/components/EditableList.svelte';
 	import Entradas from '$lib/components/Entradas.svelte';
 	import EditableInput from '$lib/components/EditableInput.svelte';
+	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
 
 	let { data } = $props();
-
 	// 1. Extraemos los datos del padre y del hijo
 	const clientes = $derived(page.data.clientes || []);
 	const agentes = $derived(page.data.agentes || []);
@@ -147,11 +147,17 @@
 				placeholder="Observaciones"
 			/>
 
-			<FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />
+			{#if eventData.documentos.length > 0}
+				{#each eventData.documentos as documento}
+					<CardDocPreview event={documento} />
+				{/each}
+			{/if}
+
+			<!-- <FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />
 			<FilePreview title="Cotizaciones Presentadas" data={eventData.cotizaciones_presentadas} />
 			<FilePreview title="Orden de compra" data={eventData.oc_cliente} />
 			<FilePreview title="Documentos de operacion" data={eventData.documentos_operacion} />
-			<FilePreview title="Adjuntos" data={eventData.documentos} />
+			<FilePreview title="Adjuntos" data={eventData.documentos} /> -->
 
 			<section>
 				<div class="block-header">
