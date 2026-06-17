@@ -203,6 +203,18 @@ export const categoriasCliente = [
 	{ key: 'contactos', label: 'Contactos' }
 ];
 
+export const categoriasDocumentos = [
+	// {key: 'id', label:'id'},
+	{key: 'fecha_creacion', label:'fecha_creacion'},
+	{key: 'titulo', label:'titulo'},
+	// {key: 'url', label:'url'},
+	// {key: 'preview', label:'preview'},
+	{key: 'id_agente', label:'id_agente'},
+	{key: 'id_oportunidad', label:'id_oportunidad'},
+	{key: 'id_actividad', label:'id_actividad'},
+	{key: 'tipo', label:'tipo'},
+]
+
 // AGRUPACIONES
 export const agrupacionesCliente = [
 	{ value: 'estado', label: 'Estado' },
@@ -239,6 +251,17 @@ export const agrupacionesOportunidades = [
 export const agrupacionesCalendario = [
 	{ value: 'fase', label: 'fase' },
 	{ value: 'motivo', label: 'motivo' }
+];
+export const agrupacionesDocumentos = [
+	// {value: 'id', label:'id'},
+	{value: 'fecha_creacion', label:'fecha_creacion'},
+	{value: 'titulo', label:'titulo'},
+	// {value: 'url', label:'url'},
+	// {value: 'preview', label:'preview'},
+	{value: 'id_agente', label:'id_agente'},
+	{value: 'id_oportunidad', label:'id_oportunidad'},
+	{value: 'id_actividad', label:'id_actividad'},
+	{value: 'tipo', label:'tipo'},
 ];
 
 // FASES

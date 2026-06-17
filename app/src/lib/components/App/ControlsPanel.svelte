@@ -33,6 +33,15 @@
 			👨‍💼 Clientes
 		</a>
 		<a
+			href="/documentos"
+			onclick={() => {
+				appState.togglePageActions();
+			}}
+			class="butter"
+		>
+			📄 Documentos
+		</a>
+		<a
 			href="/actividades"
 			onclick={() => {
 				appState.togglePageActions();

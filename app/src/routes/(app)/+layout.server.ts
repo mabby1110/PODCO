@@ -29,33 +29,39 @@ export const load: LayoutServerLoad = async ({
 		.select('*')
 		.order('inicio', { ascending: false });
 	let queryClientes = supabase.from('clientes').select('*');
+	let queryDocumentos = supabase.from('documentos').select('*');
 	if (profile?.isAdmin) {
 		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
 		agentes = perfiles || [];
 	} else if (profile?.isOper) {
 		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
 		agentes = perfiles || [];
-
+		
 		queryOportunidades = queryOportunidades.gte('fase', 3);
 		queryActividades = queryActividades.eq('id_agente', profile.id);
 	} else {
 		queryOportunidades = queryOportunidades.eq('id_agente', profile.id);
 		queryActividades = queryActividades.eq('id_agente', profile.id);
+		queryDocumentos = queryDocumentos.eq('id_agente', profile.id);
 	}
 
-	const [{ data: clientes }, { data: oportunidades }, { data: actividades }] = await Promise.all([
+	const [{ data: clientes }, { data: oportunidades }, { data: actividades }, {data: documentos}] = await Promise.all([
 		queryClientes,
 		queryOportunidades,
-		queryActividades
+		queryActividades,
+		queryDocumentos
 	]);
 	console.log('actividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
 	console.log('clientes: ', clientes?.length);
+	console.log('documentos: ', documentos?.length);
+
 	return {
 		profile,
 		agentes,
 		oportunidades: oportunidades || [],
 		actividades: actividades || [],
-		clientes: clientes || []
+		clientes: clientes || [],
+		documentos: documentos || []
 	};
 };
