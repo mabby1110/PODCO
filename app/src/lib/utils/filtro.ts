@@ -1,6 +1,7 @@
 // lib/util/filtro.ts
 import { filtroStore } from '$lib/stores/filtroStore.svelte';
 import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
+import { formatDateFull, parseDateTimeLocal } from './agenda';
 
 export const getNestedValue = (obj: any, path: string): any => {
 	return path.split('.').reduce((acc, part) => acc && acc[part], obj);
@@ -71,7 +72,14 @@ export function agruparDatos<T>(
 
 	for (const item of items) {
 		const valor = (item as any)[campo];
-		const nombreGrupo = valor ? String(valor) : valorPorDefecto;
+		const nombreGrupo =
+			['inicio', 'fecha_creacion', 'fecha_cierre'].includes(campo as string)
+				? valor
+					? String(formatDateFull(parseDateTimeLocal(valor)))
+					: valorPorDefecto
+				: valor
+					? String(valor)
+					: valorPorDefecto;
 
 		if (!grupos.has(nombreGrupo)) {
 			grupos.set(nombreGrupo, []);
@@ -86,19 +94,19 @@ export function agruparDatos<T>(
 }
 
 export function procesarDatosReactivos(actividades: any[], currentRoute: string) {
-    if (!actividades || !Array.isArray(actividades)) return [];
+	if (!actividades || !Array.isArray(actividades)) return [];
 
-    const activeFilters = filtroStore.filtersByRoute[currentRoute] || [];
-    const FILTER_ACTIONS = ['contains', 'isNull', 'hasData'];
-	
-    const searchFilters = activeFilters.filter((f) => FILTER_ACTIONS.includes(f.action));
-    const sortFilters = activeFilters.filter((f) => !FILTER_ACTIONS.includes(f.action));
+	const activeFilters = filtroStore.filtersByRoute[currentRoute] || [];
+	const FILTER_ACTIONS = ['contains', 'isNull', 'hasData'];
 
-    const agenteId = selectedGroupStore.selectedAgent ?? '';
-    const grupoSeleccionado = selectedGroupStore.selectedGroup ?? '';
+	const searchFilters = activeFilters.filter((f) => FILTER_ACTIONS.includes(f.action));
+	const sortFilters = activeFilters.filter((f) => !FILTER_ACTIONS.includes(f.action));
 
-    const filtrados = filtrarDatos(actividades, agenteId, searchFilters);
-    const ordenados = ordenarDatos(filtrados, sortFilters);
+	const agenteId = selectedGroupStore.selectedAgent ?? '';
+	const grupoSeleccionado = selectedGroupStore.selectedGroup ?? '';
 
-    return agruparDatos(ordenados, grupoSeleccionado);
+	const filtrados = filtrarDatos(actividades, agenteId, searchFilters);
+	const ordenados = ordenarDatos(filtrados, sortFilters);
+
+	return agruparDatos(ordenados, grupoSeleccionado);
 }

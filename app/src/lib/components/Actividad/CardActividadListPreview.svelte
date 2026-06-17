@@ -56,15 +56,13 @@
 				</div>
 			</div>
 		{:else}
-		<div class="brief">
 			<p>no hay entradas</p>
-		</div>
 		{/if}
 	{/snippet}
 
 	{#snippet meta()}
 		<p class="id">{eventData?.id}</p>
 		<p>{eventData?.agente?.nombre}</p>
-		<p>{eventData?.inicio}</p>
+		<p>{formatDateFull(parseDateTimeLocal(eventData?.inicio))}</p>
 	{/snippet}
 </ListPreview>
