@@ -120,6 +120,8 @@
 		display: flex;
 		gap: var(--a);
 		flex-wrap: wrap;
+		width: 100%;
+		max-width: 1000px;
 	}
 	.hint {
 		font-size: 14px;
@@ -131,10 +133,13 @@
 		white-space: pre-wrap;
 		word-break: break-word;
 	}
-
+	input {
+		flex-grow: 1;
+	}
 	select {
 		cursor: pointer;
 		transition: all 0.2s;
+		flex-grow: 1;
 	}
 
 	select:hover {
@@ -160,10 +165,6 @@
 		background: rgba(255, 255, 255, 0.1);
 		color: inherit;
 		cursor: pointer;
-	}
-	.btn-save-small {
-		background: var(--color-ganada, #4caf50);
-		align-self: flex-end;
 	}
 	.select {
 		width: fit-content;

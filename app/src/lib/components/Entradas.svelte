@@ -130,16 +130,15 @@
 					<p class="empty-msg">No hay entradas</p>
 				{/if}
 			</div>
+			{#if isEditing}
+				<div class="entrada form-permanente">
+					<label class="field-input">
+						<textarea bind:value={newData.entrada} bind:this={formInput} placeholder="Nueva Entrada"></textarea>
+					</label>
+					<button type="button" class="butter btn-save-small" onclick={saveNew}>Guardar</button>
+				</div>
+			{/if}
 		</div>
-		{#if isEditing}
-			<div class="entrada form-permanente">
-				<label class="field-input">
-					<span>Nueva Entrada</span>
-					<textarea bind:value={newData.entrada} bind:this={formInput}></textarea>
-				</label>
-				<button type="button" class="butter btn-save-small" onclick={saveNew}>Guardar</button>
-			</div>
-		{/if}
 	</form>
 </section>
 
@@ -155,7 +154,7 @@
 	}
 	.empty-msg {
 		font-style: italic;
-		margin-bottom: 16px;
+		margin: 16px 0;
 	}
 	.field-input {
 		display: flex;
@@ -174,9 +173,12 @@
 		margin-top: 8px;
 	}
 	.detail-body {
+		padding: var(--a);
 		display: flex;
 		gap: var(--a);
 		flex-wrap: wrap;
+		width: 100%;
+		max-width: 1000px;
 	}
 	.profile {
 		font-style: italic;
@@ -192,6 +194,7 @@
 		display: flex;
 		align-items: flex-end;
 		gap: var(--a);
+		width: 100%;
 	}
 	.btn-save-small {
 		background: var(--color-ganada, #4caf50);

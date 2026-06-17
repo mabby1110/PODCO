@@ -144,7 +144,7 @@
 		</div>
 		<div class="detail-body">
 			<div class="contact-list">
-				{#if lista.length > 0}
+				{#if (lista || []).length > 0}
 					{#each lista || [] as persona, i}
 						<div class="person-card">
 							<div class="contact-row">
@@ -173,73 +173,76 @@
 				{:else}
 					<p>No hay contactos registrados</p>
 				{/if}
-
-				{#if isEditing}
-					<div class="form-actions">
-						<button type="button" class="butter" onclick={openNewPerson}>Nueva persona</button>
-						<button type="button" class="butter" onclick={cancelAll}>Cerrar edición</button>
-						<button type="submit" class="butter">Guardar cambios</button>
-					</div>
-				{/if}
 			</div>
-			{#if showPersonForm}
-				<div class="person-form">
-					<label class="field">
-						<span>Nombre</span>
-						<input bind:value={contact_name} />
-					</label>
-					<label class="field">
-						<span>Puesto</span>
-						<input bind:value={contact_position} />
-					</label>
+			{#if isEditing}
+				<div class="form-persona">
+					{#if showPersonForm}
+						<div class="person-form">
+							<label class="field">
+								<span>Nombre</span>
+								<input bind:value={contact_name} />
+							</label>
+							<label class="field">
+								<span>Puesto</span>
+								<input bind:value={contact_position} />
+							</label>
 
-					<div class="new-contact">
-						<label class="field">
-							<span>Contacto</span>
-							<input bind:value={contact_value} />
-						</label>
-						<label class="field">
-							<span>Medio</span>
-							<select bind:value={contact_type}>
-								<option value="telefono">Teléfono</option>
-								<option value="whatsapp">WhatsApp</option>
-								<option value="email">Correo</option>
-								<option value="linkedin">LinkedIn</option>
-								<option value="otro">Otro</option>
-							</select>
-						</label>
+							<div class="new-contact">
+								<label class="field">
+									<span>Dato De Contacto</span>
+									<input bind:value={contact_value} />
+								</label>
+								<label class="field">
+									<span>Medio</span>
+									<select bind:value={contact_type}>
+										<option value="telefono">Teléfono</option>
+										<option value="whatsapp">WhatsApp</option>
+										<option value="email">Correo</option>
+										<option value="linkedin">LinkedIn</option>
+										<option value="otro">Otro</option>
+									</select>
+								</label>
 
-						<button type="button" class="butter" onclick={submitContacto}>
-							{editIndex !== null ? 'Actualizar contacto' : 'Agregar contacto'}
-						</button>
+								<button type="button" class="butter" onclick={submitContacto}>
+									{editIndex !== null ? 'Actualizar contacto' : 'Agregar contacto'}
+								</button>
 
-						{#if editIndex !== null}
-							<button type="button" class="butter" onclick={resetForm}>Cancelar</button>
-						{/if}
-					</div>
-
-					<div class="contact-list">
-						{#each contactos as c, i}
-							<div class="contact-row">
-								<button type="button" class="btn-edit-small" onclick={() => editContacto(i)}
-									>✏️</button
-								>
-								<button type="button" class="btn-del-small" onclick={() => confirmRemoveContacto(i)}
-									>🗑️</button
-								>
-								<p>{c.type}: {c.value}</p>
+								{#if editIndex !== null}
+									<button type="button" class="butter" onclick={resetForm}>Cancelar</button>
+								{/if}
 							</div>
-						{/each}
-					</div>
 
-					<div class="form-actions">
-						<button type="button" class="butter" onclick={submitPersonaLocal}>
-							{editPersonIndex !== null ? 'Actualizar persona' : 'Guardar persona'}
-						</button>
-						<button type="button" class="butter" onclick={() => (showPersonForm = false)}
-							>Cancelar</button
-						>
-					</div>
+							<div class="contact-list">
+								{#each contactos as c, i}
+									<div class="contact-row">
+										<button type="button" class="btn-edit-small" onclick={() => editContacto(i)}
+											>✏️</button
+										>
+										<button
+											type="button"
+											class="btn-del-small"
+											onclick={() => confirmRemoveContacto(i)}>🗑️</button
+										>
+										<p>{c.type}: {c.value}</p>
+									</div>
+								{/each}
+							</div>
+
+							<div class="form-actions">
+								<button type="button" class="butter" onclick={() => (showPersonForm = false)}>
+									Cancelar
+								</button>
+								<button type="button" class="butter btn-save-small" onclick={submitPersonaLocal}>
+									{editPersonIndex !== null ? 'Actualizar persona' : 'Guardar'}
+								</button>
+							</div>
+						</div>
+					{:else}
+						<div class="form-actions">
+							<button type="button" class="butter" onclick={openNewPerson}>Nueva persona</button>
+							<button type="submit" class="butter btn-save-small">Guardar</button>
+						</div>
+					{/if}
 				</div>
 			{/if}
 		</div>
@@ -247,6 +250,9 @@
 </section>
 
 <style>
+	form {
+		width: 100%;
+	}
 	.detail-header {
 		display: flex;
 		align-items: center;
@@ -257,13 +263,20 @@
 		display: flex;
 		gap: var(--a);
 		flex-wrap: wrap;
+		width: 100%;
+		max-width: 1000px;
 	}
 	.contact-list {
+		flex-grow: 5;
 		display: flex;
 		flex-direction: column;
+		min-width: 200px;
 		gap: var(--a);
 	}
-
+	.form-persona {
+		flex-grow: 3;
+		align-self: flex-end;
+	}
 	.person-card {
 		display: flex;
 		flex-direction: column;
@@ -280,6 +293,7 @@
 	}
 	.new-contact {
 		display: flex;
+		flex-wrap: wrap;
 		gap: var(--a);
 		align-items: flex-end;
 	}
@@ -308,8 +322,10 @@
 
 	.form-actions {
 		display: flex;
+		flex-wrap: wrap;
 		gap: var(--a);
 		margin-top: var(--a);
+		justify-content: flex-end;
 	}
 
 	.puesto-badge {

@@ -87,12 +87,13 @@
 				action="/clientes?/update"
 				{isEditing}
 			/>
+
 			<EditableInput
 				{isEditing}
 				id={eventData.id}
 				label="Objetivo"
 				name="objetivo"
-				type="text"
+				type="textarea"
 				value={eventData.objetivo}
 				action="/oportunidades?/update"
 				placeholder="Objetivo"

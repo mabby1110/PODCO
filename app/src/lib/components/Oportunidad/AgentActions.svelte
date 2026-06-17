@@ -251,7 +251,7 @@
 		{#snippet submitContent(isSubmitting: boolean)}
 			<div class="submit">
 				{#if !submit && !submitCancel}
-					<button type="button" class="butter" onclick={() => (isEditing = !isEditing)}>
+					<button type="button" class="butter {isEditing}" onclick={() => (isEditing = !isEditing)}>
 						Editar
 					</button>
 				{/if}
@@ -297,6 +297,9 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
+	}
+	.true {
+		background-color: var(--color-highlight);
 	}
 	.opciones {
 		display: flex;

@@ -1,4 +1,3 @@
-
 /*
 Especiales
 
@@ -399,6 +398,10 @@ body {
 	aspect-ratio: 1/1;
 }
 
+.btn-save-small {
+	background: var(--color-ganada, #4caf50);
+	align-self: flex-end;
+}
 .close-btn:hover {
 	background-color: var(--color-error);
 }
@@ -442,8 +445,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
 	background: rgba(136, 136, 136, 0.65);
 }
-
-/* Más visible en móvil */
 @media (max-width: 768px) {
 	::-webkit-scrollbar {
 		width: 10px;
