@@ -6,41 +6,65 @@ function generateId(prefix = 'BMS') {
 	return `${prefix}-${date}-${hash}`;
 }
 export const actions: Actions = {
-	add: async ({ request, locals: { supabase, user } }) => {
+	add: async ({ request, locals: { supabase } }) => {
+		console.log('CREANDO DOCUMENTO');
 		const formData = await request.formData();
-		const data = Object.fromEntries(formData.entries());
-		data['id'] = generateId('BMS-ACT');
-		console.log('actividad nueva', data);
+		console.log(formData);
+		const entity = formData.get('entity');
 
-		const { data: result, error } = await supabase
-			.from('actividades')
-			.insert([data])
-			.select('id')
-			.single()
+		const TABLES = {
+			cotizaciones: 'docs_cotizaciones',
+			adjuntos: 'adjuntos',
+			oc_cliente: 'oc_cliente',
+			oc_proveedor: 'oc_proveedor',
+			gastos: 'gastos'
+		} as const;
 
-		if (error) {
-			return fail(500, { error: error.message });
+		if (typeof entity !== 'string' || !(entity in TABLES)) {
+			return fail(400, {
+				error: 'Entidad inválida'
+			});
 		}
 
-		return { success: true, act: result.id };
-	},
+		const table = TABLES[entity as keyof typeof TABLES];
 
-	update: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const data = Object.fromEntries(formData.entries());
+		const files = formData.getAll('files') as File[];
+		const amounts = formData.getAll('amounts');
 
-		const id = data['id'] as string;
-		console.log('Actualizar actividad:\n\n', data);
-		if (!id) {
-			return fail(400, { error: 'ID requerido' });
+		const id_oportunidad = formData.get('id_oportunidad') as string;
+
+		const id_cliente = formData.get('id_cliente') as string;
+
+		const id_agente = formData.get('id_agente') as string;
+
+		if (!id_oportunidad) {
+			return fail(400, {
+				error: 'id_oportunidad requerido'
+			});
 		}
 
-		delete data.id;
+		for (let i = 0; i < files.length; i++) {
+			const file = files[i];
+			const amount = Number(amounts[i] ?? 0);
 
-		const { error } = await supabase.from('actividades').update(data).eq('id', id);
+			// subir archivo a Storage
+			// const archivo_url = ...
 
-		if (error) {
-			return fail(500, { error: error.message });
+			const registro = {
+				id_oportunidad,
+				id_cliente,
+				id_agente,
+				total: amount
+				// archivo_url
+			};
+
+			const { error } = await supabase.from(table).insert(registro);
+
+			if (error) {
+				return fail(500, {
+					error: error.message
+				});
+			}
 		}
 
 		return { success: true };

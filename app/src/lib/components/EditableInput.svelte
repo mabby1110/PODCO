@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { invalidate, invalidateAll } from '$app/navigation';
-	import { profile } from '$lib/stores/profileStore.svelte';
+	import { invalidateAll } from '$app/navigation';
 	import type { Snippet } from 'svelte';
 
 	let {

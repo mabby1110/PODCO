@@ -96,7 +96,18 @@
 						required
 					/>
 					<div class="cotizacion">
-						<CotizacionNueva label="Cotizaciones" required bind:cotizaciones />
+						<CotizacionNueva
+							label="Cotizaciones"
+							name="cotizaciones"
+							amountLabel="Total cotizado"
+							amountName="totales"
+							id_oportunidad={eventData.id}
+							id_cliente={eventData.cliente.id}
+							id_agente={eventData.agente.id}
+							action="/oportunidades?/createCotizaciones"
+							required
+							multiple
+						/>
 					</div>
 					<div class="opcional">
 						<h3>Informacion adicional</h3>

@@ -13,9 +13,10 @@
 	import Entradas from '$lib/components/Entradas.svelte';
 	import EditableInput from '$lib/components/EditableInput.svelte';
 	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
+	import CotizacionNueva from '$lib/components/Documentos/CotizacionNueva.svelte';
 
 	let { data } = $props();
-	
+
 	const clientes = $derived(page.data.clientes || []);
 	const agentes = $derived(page.data.agentes || []);
 	const event = $derived(data.oportunidad);
@@ -47,7 +48,7 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let isEditing = $state(false);
-	
+
 	console.log(eventData);
 </script>
 
@@ -158,6 +159,20 @@
 				</section>
 			{/if}
 
+			<div class="cotizacion">
+				<CotizacionNueva
+					label="Cotizaciones"
+					name="docs_cotizaciones"
+					amountLabel="Total cotizado"
+					amountName="totales"
+					id_oportunidad={eventData.id}
+					id_cliente={eventData.cliente.id}
+					id_agente={eventData.agente.id}
+					action="/documentos?/add"
+					required
+					multiple
+				/>
+			</div>
 			<!-- <FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />
 			<FilePreview title="Cotizaciones Presentadas" data={eventData.cotizaciones_presentadas} />
 			<FilePreview title="Orden de compra" data={eventData.oc_cliente} />
