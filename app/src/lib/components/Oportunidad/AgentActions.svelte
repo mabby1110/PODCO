@@ -10,6 +10,8 @@
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import FormActions from '../FormActions.svelte';
 
+	import { profile } from '$lib/stores/profileStore.svelte';
+
 	let { eventData, isEditing = $bindable() }: { eventData: any; isEditing?: boolean } = $props();
 
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
@@ -224,7 +226,7 @@
 				<input
 					type="hidden"
 					name="historia"
-					value={agregarEntrada(eventData.historia, nuevaHistoria)}
+					value={agregarEntrada(eventData.historia, nuevaHistoria, $profile)}
 				/>
 			{/if}
 			{#if nuevoRequisito}
