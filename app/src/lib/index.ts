@@ -80,13 +80,14 @@ export type Notificacion = {
 	id_historial: string;
 	visto: boolean;
 };
-export type Documento = {
+export type Cotizacion = {
 	id: string;
 	fecha_creacion: string | Date;
 	titulo: string;
 	url: string;
 	preview: string;
 	id_agente: string;
+	id_cliente: string;
 	id_oportunidad: string;
 	id_actividad: string;
 	tipo: string;

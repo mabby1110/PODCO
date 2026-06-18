@@ -9,12 +9,9 @@
 	let {
 		label = 'Archivos',
 		name = 'files',
-		amountLabel = 'Monto',
 		amountName = 'amounts',
-		entity = '',
-		id_oportunidad,
-		id_cliente,
-		id_agente,
+		id_nodo_p,
+		agente,
 		action = '',
 		required = false,
 		disabled = false,
@@ -26,10 +23,9 @@
 		name?: string;
 		amountLabel?: string;
 		amountName?: string;
-		entity?: string;
-		id_oportunidad?: string;
-		id_cliente?: string;
-		id_agente?: string;
+		id_nodo_p?: string;
+		cliente?: any;
+		agente?: any;
 		action?: string;
 		required?: boolean;
 		disabled?: boolean;
@@ -82,10 +78,7 @@
 
 			items.forEach((item) => {
 				formData.append(name, item.file);
-				formData.append(
-					amountName,
-					String(item.amount ?? 0)
-				);
+				formData.append(amountName, String(item.amount ?? 0));
 			});
 
 			const response = await fetch(action, {
@@ -118,50 +111,21 @@
 	bind:this={formEl}
 	method="POST"
 	enctype="multipart/form-data"
-	action={action}
+	{action}
 	onsubmit={handleSubmit}
 >
-	{#if entity}
-		<input
-			type="hidden"
-			name="entity"
-			value={entity}
-		/>
+	<input type="hidden" name="entity" value={name} />
+
+	{#if id_nodo_p}
+		<input type="hidden" name="id_nodo_p" value={id_nodo_p} />
 	{/if}
 
-	{#if id_oportunidad}
-		<input
-			type="hidden"
-			name="id_oportunidad"
-			value={id_oportunidad}
-		/>
-	{/if}
-
-	{#if id_cliente}
-		<input
-			type="hidden"
-			name="id_cliente"
-			value={id_cliente}
-		/>
-	{/if}
-
-	{#if id_agente}
-		<input
-			type="hidden"
-			name="id_agente"
-			value={id_agente}
-		/>
+	{#if agente}
+		<input type="hidden" name="id_agente" value={agente.id} />
+		<input type="hidden" name="agente" value={agente.nombre} />
 	{/if}
 
 	<div class="upload-container">
-		{#if label}
-			<h3>{label}</h3>
-		{/if}
-
-		{#if hint}
-			<p class="hint">{hint}</p>
-		{/if}
-
 		<input
 			bind:this={inputEl}
 			type="file"
@@ -186,40 +150,17 @@
 			<div class="files">
 				{#each items as item, i}
 					<div class="item">
-						<button
-							type="button"
-							class="close-btn"
-							onclick={() => removeItem(i)}
-						>
-							×
-						</button>
+						<button type="button" class="close-btn" onclick={() => removeItem(i)}> × </button>
 
 						<div class="info">
 							<p class="filename">
 								{item.file.name}
 							</p>
-
-							<label>
-								{amountLabel}
-							</label>
-
-							<input
-								type="number"
-								bind:value={item.amount}
-								placeholder={amountLabel}
-								min="0"
-								step="0.01"
-								required
-							/>
 						</div>
 					</div>
 				{/each}
 
-				<button
-					type="submit"
-					class="btn-save-small butter"
-					disabled={isSubmitting}
-				>
+				<button type="submit" class="btn-save-small butter" disabled={isSubmitting}>
 					{#if isSubmitting}
 						Guardando...
 					{:else}
@@ -243,14 +184,9 @@
 		width: 100%;
 	}
 
-	.hint {
-		font-size: 14px;
-		opacity: 0.7;
-		margin: 0;
-	}
-
 	.file-input {
 		width: 100%;
+		max-width: 800px;
 		padding: var(--c);
 		border: 1px dashed #d4d4d8;
 		border-radius: 6px;
@@ -307,11 +243,7 @@
 		margin: 0;
 		word-break: break-word;
 	}
-
-	.info input[type='number'] {
-		max-width: 250px;
-	}
-
+	
 	.close-btn {
 		border: none;
 		cursor: pointer;

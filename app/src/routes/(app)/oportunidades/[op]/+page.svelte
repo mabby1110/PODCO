@@ -3,17 +3,15 @@
 	import { formatCurrency, getStyleForPhase } from '$lib/utils/util';
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import FilePreview from '$lib/components/FilePreview.svelte';
 	import AgentActions from '$lib/components/Oportunidad/AgentActions.svelte';
 	import OperActions from '$lib/components/Oportunidad/OperActions.svelte';
 	import Card from '$lib/components/Card.svelte';
-	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
 	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
-	import EditableList from '$lib/components/EditableList.svelte';
 	import Entradas from '$lib/components/Entradas.svelte';
 	import EditableInput from '$lib/components/EditableInput.svelte';
 	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
-	import CotizacionNueva from '$lib/components/Documentos/CotizacionNueva.svelte';
+	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
+	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';
 
 	let { data } = $props();
 
@@ -24,6 +22,8 @@
 		if (!event) return null;
 		return {
 			id: event.id,
+			cotizaciones: event.docs_cotizaciones,
+			adjuntos: event.docs_adjuntos,
 			cliente: clientes?.find((c: { id: any }) => c.id == event.id_cliente),
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
@@ -39,7 +39,6 @@
 			cotizaciones_presentadas: event.cotizaciones_presentadas,
 			oc_cliente: event.oc_cliente,
 			documentos_operacion: event.documentos_operacion,
-			documentos: event.docs_adjuntos,
 			objetivo: event.objetivo,
 			monto_oc: formatCurrency(event.monto_oc, 'USD'),
 			etiquetas: event.etiquetas,
@@ -48,8 +47,7 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let isEditing = $state(false);
-
-	console.log(eventData);
+	console.log('Oportunidad: ', eventData);
 </script>
 
 {#if eventData}
@@ -145,39 +143,78 @@
 				action="/oportunidades?/update"
 				placeholder="Observaciones"
 			/>
-
-			{#if eventData.documentos.length > 0}
-				<section>
+			{#if currentFase >= 2 && currentFase <= 3 && eventData.cotizaciones.length <= 0}
+				<section class="adjunto">
+					<SubirCotizacion
+						name="docs_cotizaciones"
+						amountLabel="Total cotizado"
+						amountName="totales"
+						id_nodo_p={eventData.id}
+						cliente={eventData.cliente}
+						agente={eventData.agente}
+						action="/documentos?/add"
+						required
+						multiple
+					/>
+				</section>
+			{:else if eventData.cotizaciones.length > 0}
+				<section class="cotizacion">
 					<div class="block-header">
-						<h2>Documentos</h2>
+						<h2>Cotizaciones</h2>
 					</div>
 					<div class="block-content">
-						{#each eventData.documentos as documento}
+						{#each eventData.cotizaciones as documento}
+							<CardDocPreview event={documento} />
+						{/each}
+					</div>
+					<SubirCotizacion
+						name="docs_cotizaciones"
+						amountLabel="Total cotizado"
+						amountName="totales"
+						id_nodo_p={eventData.id}
+						cliente={eventData.cliente}
+						agente={eventData.agente}
+						action="/documentos?/add"
+						required
+						multiple
+					/>
+				</section>
+			{/if}
+
+			{#if isEditing}
+				<section class="adjunto">
+					<div class="block-header">
+						<h2>Adjuntos</h2>
+					</div>
+					<SubirAdjunto
+						label="Adjuntos"
+						name="docs_adjuntos"
+						amountName="totales"
+						id_nodo_p={eventData.id}
+						cliente={eventData.cliente}
+						agente={eventData.agente}
+						action="/documentos?/add"
+						required
+						multiple
+					/>
+					<div class="block-content">
+						{#each eventData.adjuntos as documento}
+							<CardDocPreview event={documento} />
+						{/each}
+					</div>
+				</section>
+			{:else if eventData.adjuntos.length > 0}
+				<section>
+					<div class="block-header">
+						<h2>Adjuntos</h2>
+					</div>
+					<div class="block-content">
+						{#each eventData.adjuntos as documento}
 							<CardDocPreview event={documento} />
 						{/each}
 					</div>
 				</section>
 			{/if}
-
-			<div class="cotizacion">
-				<CotizacionNueva
-					label="Cotizaciones"
-					name="docs_cotizaciones"
-					amountLabel="Total cotizado"
-					amountName="totales"
-					id_oportunidad={eventData.id}
-					id_cliente={eventData.cliente.id}
-					id_agente={eventData.agente.id}
-					action="/documentos?/add"
-					required
-					multiple
-				/>
-			</div>
-			<!-- <FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />
-			<FilePreview title="Cotizaciones Presentadas" data={eventData.cotizaciones_presentadas} />
-			<FilePreview title="Orden de compra" data={eventData.oc_cliente} />
-			<FilePreview title="Documentos de operacion" data={eventData.documentos_operacion} />
-			<FilePreview title="Adjuntos" data={eventData.documentos} /> -->
 
 			<section>
 				<div class="block-header">

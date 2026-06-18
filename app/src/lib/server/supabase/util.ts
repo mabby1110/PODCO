@@ -1,4 +1,4 @@
-import type { Actividad, Cliente, Documento, Oportunidad } from '$lib';
+import type { Actividad, Cliente, Cotizacion, Oportunidad } from '$lib';
 import { processAttachments } from '../google/drive';
 import { generateId } from '../google/sheets';
 
@@ -38,13 +38,14 @@ const CLAVES_ACTIVIDAD: (keyof Actividad)[] = [
 	'observaciones'
 ];
 
-const CLAVES_DOCUMENTO: (keyof Documento)[] = [
+const CLAVES_DOCUMENTO: (keyof Cotizacion)[] = [
 	'id',
 	'fecha_creacion',
 	'titulo',
 	'url',
 	'preview',
 	'id_agente',
+	'id_cliente',
 	'id_oportunidad',
 	'id_actividad'
 ];
@@ -214,37 +215,17 @@ export function construirDatosOportunidad(
 	return limpiarCamposVacios(datosBrutos) as Partial<Oportunidad>;
 }
 
-export async function construirDatosDocumentos(
+export async function procesarDocumentos(
 	formData: FormData,
-	id?: string, // ID base o identificador de carpeta
-	id_oportunidad?: string,
-	id_actividad?: string,
-	id_agente?: string,
-	tipo: string = 'adjunto',
+	id_nodo_p: string, // padre
 	archivo: string = 'adjuntos'
-): Promise<Partial<Documento>[]> {
+): Promise<Partial<Cotizacion>[]> {
 	// Modificado: Retorna un array
-	const baseDatos: Partial<Documento> = {};
+	const baseDatos: Partial<Cotizacion> = {};
 
-	// 1. Construir datos base compartidos
+	// 1. Construir datos compartidos 
 	for (const clave of CLAVES_DOCUMENTO) {
 		if (clave === 'id') continue; // Se asignará individualmente
-
-		if (clave === 'id_agente') {
-			baseDatos.id_agente = id_agente ?? (formData.get('id_agente') as string) ?? null;
-			continue;
-		}
-
-		if (clave === 'id_oportunidad') {
-			baseDatos.id_oportunidad =
-				id_oportunidad ?? (formData.get('id_oportunidad') as string) ?? null;
-			continue;
-		}
-
-		if (clave === 'id_actividad') {
-			baseDatos.id_actividad = id_actividad ?? (formData.get('id_actividad') as string) ?? null;
-			continue;
-		}
 
 		if (formData.has(clave)) {
 			const valor = formData.get(clave);
@@ -252,21 +233,18 @@ export async function construirDatosDocumentos(
 		}
 	}
 
-	if (tipo) baseDatos.tipo = tipo;
 	const datosLimpios = limpiarCamposVacios(baseDatos);
 
-	// 2. Procesar archivos e iterar
+	// 2. Procesar archivos e iterar para subir a drive
 	const quoteFile = formData.get(archivo) as File | null;
 
 	if (quoteFile && quoteFile.size > 0) {
 		try {
 			const docFiles = formData.getAll(archivo) as File[];
-			const docsRaw = formData.get('documentos') as string;
 			const agenteNombre = formData.get('agente') as string;
-			const opFolder = `${id_oportunidad ?? id}`; // Usar ID de oportunidad para la carpeta
+			const opFolder = `${id_nodo_p}`;
 
-			// Se asume que docs es un array de objetos con propiedad 'name'
-			const docs: any[] = await processAttachments(docFiles, agenteNombre, opFolder, docsRaw);
+			const docs: any[] = await processAttachments(docFiles, agenteNombre, opFolder);
 
 			// Generar un documento completo por cada archivo procesado
 			return docs.map((doc) => ({

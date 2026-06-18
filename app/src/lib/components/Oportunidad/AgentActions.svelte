@@ -9,7 +9,6 @@
 	import UploadFile from '$lib/components/UploadFile.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import FormActions from '../FormActions.svelte';
-	import CotizacionNueva from '../Documentos/CotizacionNueva.svelte';
 
 	let { eventData, isEditing = $bindable() }: { eventData: any; isEditing?: boolean } = $props();
 
@@ -21,15 +20,13 @@
 	let nuevaCotizacion = $state('');
 	let nuevaObeservacion = $state('');
 	let monto_oc = $state('');
-	let cotizaciones = $state([]);
-
 	let necesidades = $state('');
 	let potencial_venta = $state(eventData.potencial_venta || '');
 	let objetivo = $state('');
 
 	let isOpen = $state(false);
 	let submit = $state(false);
-	let canSubmit = $state(false);
+	let canSubmit = $derived((eventData.cotizaciones || []).length === 0);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 	let style = $derived(getStyleForPhase(currentPhase + 1));
@@ -95,19 +92,17 @@
 						type="textarea"
 						required
 					/>
-					<div class="cotizacion">
-						<CotizacionNueva
-							label="Cotizaciones"
-							name="cotizaciones"
-							amountLabel="Total cotizado"
-							amountName="totales"
-							id_oportunidad={eventData.id}
-							id_cliente={eventData.cliente.id}
-							id_agente={eventData.agente.id}
-							action="/oportunidades?/createCotizaciones"
-							required
-							multiple
-						/>
+					<div class="opcional">
+						<h3>Cotizacion(es)</h3>
+						<div class="opciones">
+							{#if eventData.cotizaciones.length > 0}
+								{#each eventData.cotizaciones as documento}
+									<p>{documento.titulo}</p>
+								{/each}
+							{:else}
+								<p>Subir cotizacion para avanzar fase</p>
+							{/if}
+						</div>
 					</div>
 					<div class="opcional">
 						<h3>Informacion adicional</h3>

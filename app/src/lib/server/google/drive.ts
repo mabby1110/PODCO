@@ -122,7 +122,7 @@ export async function processAttachments(
 	files: File[],
 	agenteNombre: string,
 	opFolder: string,
-	existingJson: FormDataEntryValue | null
+	existingJson?: FormDataEntryValue | null
 ) {
 	let docs: any[] = [];
 

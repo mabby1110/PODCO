@@ -1,3 +1,4 @@
+import { procesarDocumentos } from '$lib/server/supabase/util';
 import { fail, type Actions } from '@sveltejs/kit';
 import crypto from 'crypto';
 function generateId(prefix = 'BMS') {
@@ -10,56 +11,43 @@ export const actions: Actions = {
 		console.log('CREANDO DOCUMENTO');
 		const formData = await request.formData();
 		console.log(formData);
-		const entity = formData.get('entity');
+		const entity = formData.get('entity') as string;
 
-		const TABLES = {
-			cotizaciones: 'docs_cotizaciones',
-			adjuntos: 'adjuntos',
-			oc_cliente: 'oc_cliente',
-			oc_proveedor: 'oc_proveedor',
-			gastos: 'gastos'
-		} as const;
+		const id_nodo_p = formData.get('id_nodo_p') as string;
 
-		if (typeof entity !== 'string' || !(entity in TABLES)) {
+		if (!id_nodo_p) {
 			return fail(400, {
-				error: 'Entidad inválida'
+				error: 'id_nodo_p requerido'
 			});
 		}
 
-		const table = TABLES[entity as keyof typeof TABLES];
+		// subir archivo a Storage
+		if (entity == 'docs_cotizaciones') {
+			let docs = await procesarDocumentos(formData, id_nodo_p, entity);
+			const totales = formData.getAll('totales');
+			const documentos = docs.map((doc, i) => ({
+				...doc,
+				total: totales[i],
+				id_oportunidad: id_nodo_p
+			}));
 
-		const files = formData.getAll('files') as File[];
-		const amounts = formData.getAll('amounts');
+			const { data: result, error } = await supabase.from(entity).insert(documentos);
 
-		const id_oportunidad = formData.get('id_oportunidad') as string;
-
-		const id_cliente = formData.get('id_cliente') as string;
-
-		const id_agente = formData.get('id_agente') as string;
-
-		if (!id_oportunidad) {
-			return fail(400, {
-				error: 'id_oportunidad requerido'
-			});
+			if (error) {
+				return fail(500, {
+					error: error.message
+				});
+			}
 		}
+		if (entity == 'docs_adjuntos') {
+			let docs = await procesarDocumentos(formData, id_nodo_p, entity);
+			const documentos = docs.map((doc, i) => ({
+				...doc,
+				id_oportunidad: id_nodo_p
+			}));
 
-		for (let i = 0; i < files.length; i++) {
-			const file = files[i];
-			const amount = Number(amounts[i] ?? 0);
-
-			// subir archivo a Storage
-			// const archivo_url = ...
-
-			const registro = {
-				id_oportunidad,
-				id_cliente,
-				id_agente,
-				total: amount
-				// archivo_url
-			};
-
-			const { error } = await supabase.from(table).insert(registro);
-
+			const { data: result, error } = await supabase.from(entity).insert(documentos);
+			console.log(result, error);
 			if (error) {
 				return fail(500, {
 					error: error.message

@@ -3,38 +3,27 @@
 	import { fases } from '$lib';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
-	import { getStyleForPhase } from '$lib/utils/util';
+	import { formatCurrency, getStyleForPhase } from '$lib/utils/util';
 	import ListPreview from '../ListPreview.svelte';
+	import DocListPreview from './DocListPreview.svelte';
 
 	let { event } = $props();
-	const { clientes, agentes } = $derived(page.data);
-
-	const eventData = $derived.by(() => {
-		if (!event) return null;
-		return {
-			id: event.id,
-			fecha_creacion: event.fecha_creacion,
-			titulo: event.titulo,
-			url: event.url,
-			preview: event.preview,
-			id_agente: event.id_agente,
-			id_oportunidad: event.id_oportunidad,
-			id_actividad: event.id_actividad,
-			tipo: event.tipo
-		};
-	});
+	console.log(event);
 </script>
 
-<ListPreview href="/oportunidades/{event.id}">
+<DocListPreview href="/oportunidades/{event.id}">
 	{#snippet header()}
-		<h2>{eventData?.titulo}</h2>
+		<p>{event?.titulo}</p>
 	{/snippet}
-
+	{#snippet meta()}
+		<p>{formatCurrency(event.total, 'USD')}</p>
+		<p>{formatDateFull(parseDateTimeLocal(event.fecha_creacion))}</p>
+	{/snippet}
 	{#snippet content()}
-		{#if eventData?.preview}
+		{#if event?.preview}
 			<div class="brief">
 				<iframe
-					src={eventData.preview}
+					src={event.preview}
 					class="iframe"
 					title="Descripción del documento"
 					loading="lazy"
@@ -49,7 +38,7 @@
 		<p>{eventData?.agente?.nombre}</p>
 		<p>{eventData?.inicio}</p>
 	{/snippet} -->
-</ListPreview>
+</DocListPreview>
 
 <style>
 	.brief {
