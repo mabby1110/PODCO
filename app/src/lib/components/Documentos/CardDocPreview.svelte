@@ -8,7 +8,6 @@
 	import DocListPreview from './DocListPreview.svelte';
 
 	let { event } = $props();
-	console.log(event);
 </script>
 
 <DocListPreview href="/oportunidades/{event.id}">

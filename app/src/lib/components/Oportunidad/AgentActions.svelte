@@ -28,7 +28,7 @@
 
 	let isOpen = $state(false);
 	let submit = $state(false);
-	let canSubmit = $derived((eventData.cotizaciones || []).length === 0);
+	let canSubmit = $derived(eventData.cotizaciones.length > 0 && eventData.occ.length > 0);
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 	let style = $derived(getStyleForPhase(currentPhase + 1));
@@ -153,11 +153,17 @@
 						type="number"
 						required
 					/>
-					<div class="oc">
-						<UploadFile label="Cotizacion generada en Contpaqi" name="quoteWonFile" required />
-					</div>
-					<div class="oc">
-						<UploadFile label="Orden de compra del cliente" name="oc_cliente" required />
+					<div class="opcional">
+						<h3>Orden de compra</h3>
+						<div class="opciones">
+							{#if eventData.occ.length > 0}
+								{#each eventData.occ as documento}
+									<p>{documento.titulo}</p>
+								{/each}
+							{:else}
+								<p>Subir Orden(es) de compra para avanzar fase</p>
+							{/if}
+						</div>
 					</div>
 					<div class="opcional">
 						<h3>Informacion adicional</h3>
@@ -271,20 +277,19 @@
 					bind:submitCancel
 					bind:isOpen
 				/>
-
 				{#if submit}
 					<input type="hidden" name="fase" value={nextPhase} />
-					<button type="submit" class="butter" {style} disabled={isSubmitting || canSubmit}>
+					<button type="submit" class="butter" {style} disabled={isSubmitting || !canSubmit}>
 						{isSubmitting ? 'Procesando...' : eventData.fase.accion}
 					</button>
 				{:else if submitUpdate}
 					<input type="hidden" name="fase" value={currentPhase} />
-					<button type="submit" class="butter" disabled={isSubmitting || canSubmit}
+					<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}
 						>Actualizar</button
 					>
 				{:else if submitCancel}
 					<input type="hidden" name="fase" value={0} />
-					<button type="submit" class="butter" disabled={isSubmitting || canSubmit}>Perder</button>
+					<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}>Perder</button>
 				{/if}
 			</div>
 		{/snippet}

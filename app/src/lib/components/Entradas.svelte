@@ -91,12 +91,12 @@
 	});
 </script>
 
-<section class="historia">
+<section class="historia" >
 	<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={objId} />
 		<input type="hidden" name="historia" value={list_stringified} />
 
-		<div class="detail-body">
+		<div class="detail-body" >
 			<div class="entradas">
 				{#if lista.length > 0}
 					{#each lista as item, i}

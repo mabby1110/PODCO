@@ -24,6 +24,8 @@
 			id: event.id,
 			cotizaciones: event.docs_cotizaciones,
 			adjuntos: event.docs_adjuntos,
+			occ: event.docs_occ,
+			ocp: event.docs_ocp,
 			cliente: clientes?.find((c: { id: any }) => c.id == event.id_cliente),
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
@@ -76,14 +78,6 @@
 			<section>
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 			</section>
-
-			<FormEditableContact
-				lista={eventData.cliente.contactos}
-				id={eventData.cliente.id}
-				id_agente={$profile?.isAdmin ? eventData.cliente.id_agente : $profile?.id}
-				action="/clientes?/update"
-				{isEditing}
-			/>
 
 			<EditableInput
 				{isEditing}
@@ -143,41 +137,67 @@
 				action="/oportunidades?/update"
 				placeholder="Observaciones"
 			/>
-			{#if currentFase >= 2 && currentFase <= 3 && eventData.cotizaciones.length <= 0}
-				<section class="adjunto">
-					<SubirCotizacion
-						name="docs_cotizaciones"
-						amountLabel="Total cotizado"
-						amountName="totales"
-						id_nodo_p={eventData.id}
-						cliente={eventData.cliente}
-						agente={eventData.agente}
-						action="/documentos?/add"
-						required
-						multiple
-					/>
-				</section>
-			{:else if eventData.cotizaciones.length > 0}
+
+			<FormEditableContact
+				lista={eventData.cliente.contactos}
+				id={eventData.cliente.id}
+				id_agente={$profile?.isAdmin ? eventData.cliente.id_agente : $profile?.id}
+				action="/clientes?/update"
+				{isEditing}
+			/>
+
+			{#if currentFase >= 2}
 				<section class="cotizacion">
 					<div class="block-header">
 						<h2>Cotizaciones</h2>
 					</div>
-					<div class="block-content">
-						{#each eventData.cotizaciones as documento}
-							<CardDocPreview event={documento} />
-						{/each}
+					{#if eventData.cotizaciones.length > 0}
+						<div class="block-content">
+							{#each eventData.cotizaciones as documento}
+								<CardDocPreview event={documento} />
+							{/each}
+						</div>
+						{#if currentFase == 2 && (eventData.cotizaciones.length <= 0 || isEditing)}
+							<SubirCotizacion
+								name="docs_cotizaciones"
+								amountLabel="Total cotizado"
+								amountName="totales"
+								id_nodo_p={eventData.id}
+								cliente={eventData.cliente}
+								agente={eventData.agente}
+								action="/documentos?/add"
+								required
+								multiple
+							/>
+						{/if}
+					{/if}
+				</section>
+			{/if}
+			{#if currentFase >= 3}
+				<section class="occ">
+					<div class="block-header">
+						<h2>Orden de compra</h2>
 					</div>
-					<SubirCotizacion
-						name="docs_cotizaciones"
-						amountLabel="Total cotizado"
-						amountName="totales"
-						id_nodo_p={eventData.id}
-						cliente={eventData.cliente}
-						agente={eventData.agente}
-						action="/documentos?/add"
-						required
-						multiple
-					/>
+					{#if eventData.occ.length > 0}
+						<div class="block-content">
+							{#each eventData.occ as documento}
+								<CardDocPreview event={documento} />
+							{/each}
+						</div>
+						{#if currentFase == 3 && (eventData.occ.length <= 0 || isEditing)}
+							<SubirCotizacion
+								name="docs_occ"
+								amountLabel="Total cotizado"
+								amountName="totales"
+								id_nodo_p={eventData.id}
+								cliente={eventData.cliente}
+								agente={eventData.agente}
+								action="/documentos?/add"
+								required
+								multiple
+							/>
+						{/if}
+					{/if}
 				</section>
 			{/if}
 
