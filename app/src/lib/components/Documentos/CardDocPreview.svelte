@@ -53,6 +53,6 @@
 
 <style>
 	.brief {
-		height: 80vh;
+		height: 60vh;
 	}
 </style>

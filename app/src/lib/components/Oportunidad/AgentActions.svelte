@@ -9,6 +9,7 @@
 	import UploadFile from '$lib/components/UploadFile.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import FormActions from '../FormActions.svelte';
+	import CotizacionNueva from '../Documentos/CotizacionNueva.svelte';
 
 	let { eventData, isEditing = $bindable() }: { eventData: any; isEditing?: boolean } = $props();
 
@@ -20,6 +21,7 @@
 	let nuevaCotizacion = $state('');
 	let nuevaObeservacion = $state('');
 	let monto_oc = $state('');
+	let cotizaciones = $state([]);
 
 	let necesidades = $state('');
 	let potencial_venta = $state(eventData.potencial_venta || '');
@@ -94,7 +96,7 @@
 						required
 					/>
 					<div class="cotizacion">
-						<UploadFile label="Cotizaciones" name="cotizaciones" required multiple />
+						<CotizacionNueva label="Cotizaciones" required bind:cotizaciones />
 					</div>
 					<div class="opcional">
 						<h3>Informacion adicional</h3>

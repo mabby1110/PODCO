@@ -15,14 +15,10 @@
 	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
 
 	let { data } = $props();
-	// 1. Extraemos los datos del padre y del hijo
+	
 	const clientes = $derived(page.data.clientes || []);
 	const agentes = $derived(page.data.agentes || []);
-
-	// 2. Determinamos la oportunidad activa (Store vs URL)
 	const event = $derived(data.oportunidad);
-	// 3. Formateamos los datos para la vista (tu eventData original adaptado)
-
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 		return {
@@ -42,7 +38,7 @@
 			cotizaciones_presentadas: event.cotizaciones_presentadas,
 			oc_cliente: event.oc_cliente,
 			documentos_operacion: event.documentos_operacion,
-			documentos: event.documentos,
+			documentos: event.docs_adjuntos,
 			objetivo: event.objetivo,
 			monto_oc: formatCurrency(event.monto_oc, 'USD'),
 			etiquetas: event.etiquetas,
@@ -51,6 +47,8 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let isEditing = $state(false);
+	
+	console.log(eventData);
 </script>
 
 {#if eventData}
@@ -148,9 +146,16 @@
 			/>
 
 			{#if eventData.documentos.length > 0}
-				{#each eventData.documentos as documento}
-					<CardDocPreview event={documento} />
-				{/each}
+				<section>
+					<div class="block-header">
+						<h2>Documentos</h2>
+					</div>
+					<div class="block-content">
+						{#each eventData.documentos as documento}
+							<CardDocPreview event={documento} />
+						{/each}
+					</div>
+				</section>
 			{/if}
 
 			<!-- <FilePreview title="Cotizaciones Ganadas" data={eventData.cotizaciones_ganadas} />

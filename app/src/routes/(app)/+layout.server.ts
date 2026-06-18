@@ -22,14 +22,14 @@ export const load: LayoutServerLoad = async ({
 	let agentes: any[] = [];
 	let queryOportunidades = supabase
 		.from('oportunidades')
-		.select(`*,documentos (*)`)
+		.select(`*,docs_adjuntos (*)`)
 		.order('inicio', { ascending: false });
 	let queryActividades = supabase
 		.from('actividades')
 		.select('*')
 		.order('inicio', { ascending: false });
 	let queryClientes = supabase.from('clientes').select('*');
-	let queryDocumentos = supabase.from('documentos').select('*');
+	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
 	if (profile?.isAdmin) {
 		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
 		agentes = perfiles || [];
