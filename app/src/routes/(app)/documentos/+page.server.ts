@@ -21,7 +21,6 @@ export const actions: Actions = {
 			});
 		}
 
-		// subir archivo a Storage
 		if (entity == 'docs_cotizaciones') {
 			let docs = await procesarDocumentos(formData, id_nodo_p, entity);
 			const totales = formData.getAll('totales');
@@ -33,6 +32,23 @@ export const actions: Actions = {
 
 			const { data: result, error } = await supabase.from(entity).insert(documentos);
 
+			if (error) {
+				return fail(500, {
+					error: error.message
+				});
+			}
+		}
+		if (entity == 'docs_occ') {
+			let docs = await procesarDocumentos(formData, id_nodo_p, entity);
+			const totales = formData.getAll('totales');
+			const documentos = docs.map((doc, i) => ({
+				...doc,
+				total: totales[i],
+				id_oportunidad: id_nodo_p
+			}));
+
+			const { data: result, error } = await supabase.from(entity).insert(documentos);
+			console.log(result, error)
 			if (error) {
 				return fail(500, {
 					error: error.message

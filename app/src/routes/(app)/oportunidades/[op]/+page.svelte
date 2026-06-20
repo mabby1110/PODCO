@@ -12,6 +12,7 @@
 	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
 	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
 	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';
+	import SubirOcc from '$lib/components/Documentos/SubirOcc.svelte';
 
 	let { data } = $props();
 
@@ -157,19 +158,19 @@
 								<CardDocPreview event={documento} />
 							{/each}
 						</div>
-						{#if currentFase == 2 && (eventData.cotizaciones.length <= 0 || isEditing)}
-							<SubirCotizacion
-								name="docs_cotizaciones"
-								amountLabel="Total cotizado"
-								amountName="totales"
-								id_nodo_p={eventData.id}
-								cliente={eventData.cliente}
-								agente={eventData.agente}
-								action="/documentos?/add"
-								required
-								multiple
-							/>
-						{/if}
+					{/if}
+					{#if currentFase >= 2 && currentFase <= 3 && (eventData.cotizaciones.length <= 0 || isEditing)}
+						<SubirCotizacion
+							name="docs_cotizaciones"
+							amountLabel="Total cotizado"
+							amountName="totales"
+							id_nodo_p={eventData.id}
+							cliente={eventData.cliente}
+							agente={eventData.agente}
+							action="/documentos?/add"
+							required
+							multiple
+						/>
 					{/if}
 				</section>
 			{/if}
@@ -184,19 +185,19 @@
 								<CardDocPreview event={documento} />
 							{/each}
 						</div>
-						{#if currentFase == 3 && (eventData.occ.length <= 0 || isEditing)}
-							<SubirCotizacion
-								name="docs_occ"
-								amountLabel="Total cotizado"
-								amountName="totales"
-								id_nodo_p={eventData.id}
-								cliente={eventData.cliente}
-								agente={eventData.agente}
-								action="/documentos?/add"
-								required
-								multiple
-							/>
-						{/if}
+					{/if}
+					{#if currentFase == 3 && (eventData.occ.length <= 0 || isEditing)}
+						<SubirOcc
+							name="docs_occ"
+							amountLabel="Total"
+							amountName="totales"
+							id_nodo_p={eventData.id}
+							cliente={eventData.cliente}
+							agente={eventData.agente}
+							action="/documentos?/add"
+							required
+							multiple
+						/>
 					{/if}
 				</section>
 			{/if}

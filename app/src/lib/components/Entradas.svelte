@@ -91,12 +91,12 @@
 	});
 </script>
 
-<section class="historia" >
+<section class="historia">
 	<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={objId} />
 		<input type="hidden" name="historia" value={list_stringified} />
 
-		<div class="detail-body" >
+		<div class="detail-body">
 			<div class="entradas">
 				{#if lista.length > 0}
 					{#each lista as item, i}
@@ -130,14 +130,13 @@
 					<p class="empty-msg">No hay entradas</p>
 				{/if}
 			</div>
-			{#if isEditing}
-				<div class="entrada form-permanente">
-					<label class="field-input">
-						<textarea bind:value={newData.entrada} bind:this={formInput} placeholder="Nueva Entrada"></textarea>
-					</label>
-					<button type="button" class="butter btn-save-small" onclick={saveNew}>Guardar</button>
-				</div>
-			{/if}
+			<div class="entrada form-permanente">
+				<label class="field-input">
+					<textarea bind:value={newData.entrada} bind:this={formInput} placeholder="Nueva Entrada"
+					></textarea>
+				</label>
+				<button type="button" class="butter btn-save-small" onclick={saveNew}>Guardar</button>
+			</div>
 		</div>
 	</form>
 </section>
