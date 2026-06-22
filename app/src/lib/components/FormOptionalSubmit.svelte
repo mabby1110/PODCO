@@ -16,10 +16,6 @@
 		isOpen = true;
 		submit = true;
 	}
-	function toggleUpdate() {
-		close();
-		isOpen = true;
-	}
 	function toggleCancel() {
 		close();
 		isOpen = true;

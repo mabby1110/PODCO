@@ -21,7 +21,6 @@
 	let nuevaHistoria = $state('');
 	let nuevaCotizacion = $state('');
 	let nuevaObeservacion = $state('');
-	let monto_oc = $state('');
 	let necesidades = $state('');
 	let potencial_venta = $state(eventData.potencial_venta || '');
 	let objetivo = $state('');
@@ -145,14 +144,6 @@
 						type="textarea"
 						required
 					/>
-					<FormInput
-						label="Monto"
-						name="monto_oc"
-						value={monto_oc}
-						placeholder="Monto especificado en la orden de compra"
-						type="number"
-						required
-					/>
 					<div class="opcional">
 						<h3>Orden de compra</h3>
 						<div class="opciones">
@@ -187,9 +178,6 @@
 									type="textarea"
 									required
 								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+adjuntos">
-								<UploadFile label="Subir documentos" name="docFile" multiple />
 							</FormOptionalInput>
 						</div>
 					</div>

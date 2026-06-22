@@ -49,9 +49,6 @@
 						type="textarea"
 						required
 					/>
-					<div class="oc">
-						<UploadFile label="Documentos de operacion" name="docOperFile" required />
-					</div>
 					<div class="opcional">
 						<h3>Informacion adicional</h3>
 						<div class="opciones">
@@ -78,6 +75,18 @@
 							<FormOptionalInput title="+adjuntos">
 								<UploadFile label="Subir documentos" name="docFile" multiple />
 							</FormOptionalInput>
+						</div>
+					</div>
+					<div class="opcional">
+						<h3>Documentos de operación</h3>
+						<div class="opciones">
+							{#if eventData.adjuntos.length > 0}
+								{#each eventData.adjuntos as documento}
+									<p>{documento.titulo}</p>
+								{/each}
+							{:else}
+								<p>Subir cotizacion para avanzar fase</p>
+							{/if}
 						</div>
 					</div>
 					<DatePicker title="Salida de paquete" />
@@ -125,83 +134,6 @@
 					<DatePicker title="Salida de paquete" />
 					<input type="hidden" name="fecha_transito" value={new Date().toISOString()} />
 				{/if}
-			{:else if submitUpdate}
-				<div class="opcional">
-					<h3>Editar informacion</h3>
-					<div class="opcional">
-						<div class="opciones">
-							{#if !eventData.historia}
-								<FormOptionalInput title="+Historia">
-									<FormInput
-										label="Historia"
-										name="nuevaHistoria"
-										bind:value={nuevaHistoria}
-										type="textarea"
-										required
-									/>
-								</FormOptionalInput>
-							{:else}
-								<EditableJsonList
-									jsonList={eventData.historia}
-									action="/oportunidades?/updateOp"
-									name={'historia'}
-									id={eventData.id}
-									fields={[
-										{ name: 'fecha', label: 'Fecha', type: 'date' },
-										{ name: 'entrada', label: 'Entrada', type: 'textarea' }
-									]}
-								/>
-							{/if}
-							<FormOptionalInput title="+Objetivo">
-								<FormInput
-									label="Objetivo"
-									name="objetivo"
-									value={eventData.objetivo}
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+documentos de operación">
-								<UploadFile label="Documentos de operacion" name="docOperFile" required />
-							</FormOptionalInput>
-							<FormOptionalInput title="+Observaciones">
-								<FormInput
-									label="Observaciones"
-									name="observaciones"
-									value={eventData.observaciones}
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+Agregar requisitos">
-								<FormInput
-									label="Requisitos"
-									name="requisitos"
-									value={eventData.requisitos}
-									placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+adjuntos">
-								<UploadFile label="Subir documentos" name="docFile" multiple />
-							</FormOptionalInput>
-							<FormOptionalInput title="+Postergar">
-								<div class="opciones">
-									<FormInput
-										label="Postergar"
-										name="nuevaHistoria"
-										bind:value={nuevaHistoria}
-										placeholder="Motivo de la postergación y acción a realizar"
-										type="textarea"
-										required
-									/>
-									<DatePicker title="Fecha Seguimiento" />
-								</div>
-							</FormOptionalInput>
-						</div>
-					</div>
-				</div>
 			{:else if submitCancel}
 				<FormInput
 					label="Pérdida"
@@ -276,7 +208,6 @@
 					nextFase={eventData.fase.accion}
 					bind:isOpen
 					bind:submit
-					bind:submitUpdate
 					bind:submitCancel
 				/>
 

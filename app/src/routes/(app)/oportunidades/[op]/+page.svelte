@@ -41,7 +41,6 @@
 			cotizaciones_ganadas: event.cotizaciones_ganadas,
 			cotizaciones_presentadas: event.cotizaciones_presentadas,
 			oc_cliente: event.oc_cliente,
-			documentos_operacion: event.documentos_operacion,
 			objetivo: event.objetivo,
 			monto_oc: formatCurrency(event.monto_oc, 'USD'),
 			etiquetas: event.etiquetas,
@@ -50,7 +49,6 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let isEditing = $state(false);
-	console.log('Oportunidad: ', eventData);
 </script>
 
 {#if eventData}
@@ -161,7 +159,7 @@
 					{/if}
 					{#if currentFase >= 2 && currentFase <= 3 && (eventData.cotizaciones.length <= 0 || isEditing)}
 						<SubirCotizacion
-							name="docs_cotizaciones"
+							name={$profile?.isOper?'docs_adjuntos':'docs_cotizaciones'}
 							amountLabel="Total cotizado"
 							amountName="totales"
 							id_nodo_p={eventData.id}
@@ -186,7 +184,7 @@
 							{/each}
 						</div>
 					{/if}
-					{#if currentFase == 3 && (eventData.occ.length <= 0 || isEditing)}
+					{#if !$profile?.isOper && currentFase == 3 && (eventData.occ.length <= 0 || isEditing)}
 						<SubirOcc
 							name="docs_occ"
 							amountLabel="Total"

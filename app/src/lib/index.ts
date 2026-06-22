@@ -289,7 +289,7 @@ export const fases = [
 		id_fase: 4,
 		actual: 'Ganada',
 		accion: 'Proceso de envío',
-		placeholder: 'O.C BMS a proveedor (y reconocimiento si hay) y documentos logistica'
+		placeholder: 'O.C BMS a proveedor (reconocimiento si hay) y documentos logistica'
 	},
 	{
 		id_fase: 5,
