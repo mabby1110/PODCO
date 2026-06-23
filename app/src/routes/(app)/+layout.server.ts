@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { supabaseAdmin } from '$lib/server/supabase/supabaseAdmin';
+import { generateId } from '$lib/server/google/sheets';
 
 export const load: LayoutServerLoad = async ({
 	depends,
@@ -19,6 +20,10 @@ export const load: LayoutServerLoad = async ({
 
 	const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
 
+	console.log('perfil:');
+	console.log('\nadmin: ', profile?.isAdmin);
+	console.log('\noper: ', profile?.isOper);
+
 	let agentes: any[] = [];
 	let queryOportunidades = supabase
 		.from('oportunidades')
@@ -30,9 +35,8 @@ export const load: LayoutServerLoad = async ({
 		.order('inicio', { ascending: false });
 	let queryClientes = supabase.from('clientes').select('*');
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
-	console.log('perfil:');
-	console.log('\nadmin: ', profile?.isAdmin);
-	console.log('\noper: ', profile?.isOper);
+	let queryInventario = supabase.from('inventario').select('*');
+
 	if (profile?.isAdmin) {
 		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
 		agentes = perfiles || [];
@@ -45,21 +49,29 @@ export const load: LayoutServerLoad = async ({
 		queryOportunidades = queryOportunidades.eq('id_agente', profile.id);
 		queryActividades = queryActividades.eq('id_agente', profile.id);
 		queryDocumentos = queryDocumentos.eq('id_agente', profile.id);
+		queryInventario = queryInventario.eq('id_agente', profile.id);
 	}
 
-	const [{ data: clientes }, { data: oportunidades }, { data: actividades }, { data: documentos }] =
-		await Promise.all([queryClientes, queryOportunidades, queryActividades, queryDocumentos]);
+	const [{ data: clientes }, { data: oportunidades }, { data: actividades }, { data: documentos }, { data: inventario }] =
+		await Promise.all([queryClientes, queryOportunidades, queryActividades, queryDocumentos, queryInventario]);
 	console.log('actividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
 	console.log('clientes: ', clientes?.length);
 	console.log('documentos: ', documentos?.length);
+	console.log('inventario: ', inventario?.length);
 
+	let ides = []
+	for(let i = 0; i<674;i++){
+		ides.push(generateId('BMS-P'));
+	}
+	console.log(JSON.stringify(ides))
 	return {
 		profile,
 		agentes,
 		oportunidades: oportunidades || [],
 		actividades: actividades || [],
 		clientes: clientes || [],
-		documentos: documentos || []
+		documentos: documentos || [],
+		inventario: inventario || [],
 	};
 };

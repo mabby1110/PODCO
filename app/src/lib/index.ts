@@ -91,7 +91,7 @@ export type Cotizacion = {
 	id_oportunidad: string;
 	id_actividad: string;
 	tipo: string;
-}
+};
 // MAPEO CON SHEETS
 export const historialFieldMap = {
 	fecha_creacion: 'B',
@@ -165,16 +165,18 @@ export const actFieldMap = {
 	requisitos: 'M',
 	observaciones: 'N'
 };
+
 // FILTROS
 export const categoriasActividad = [
+	{ key: 'id', label: 'id' },
 	{ key: 'motivo', label: 'Motivo' },
 	{ key: 'objetivo', label: 'Objetivo' },
 	{ key: 'inicio', label: 'Fecha Inicio' },
 	{ key: 'fase', label: 'Fase' },
 	{ key: 'historia', label: 'Historia' }
 ];
-
 export const categoriasOportunidad = [
+	{ key: 'id', label: 'id' },
 	{ key: 'motivo', label: 'Motivo de Op.' },
 	{ key: 'historia', label: 'Historia' },
 	{ key: 'potencial_venta', label: 'Potencial de venta' },
@@ -183,16 +185,16 @@ export const categoriasOportunidad = [
 	{ key: 'necesidades', label: 'Necesidades' },
 	{ key: 'objetivo', label: 'Objetivo' }
 ];
-
 export const categoriasCalendario = [
+	{ key: 'id', label: 'id' },
 	{ key: 'motivo', label: 'Motivo' },
 	{ key: 'objetivo', label: 'Objetivo' },
 	{ key: 'inicio', label: 'Fecha Inicio' },
 	{ key: 'fase', label: 'Fase' },
 	{ key: 'historia', label: 'Historia' }
 ];
-
 export const categoriasCliente = [
+	{ key: 'id', label: 'id' },
 	{ key: 'razon_social', label: 'Razón Social' },
 	{ key: 'nombre_comercial', label: 'Nombre Comercial' },
 	{ key: 'sector', label: 'Sector/Industria' },
@@ -203,18 +205,24 @@ export const categoriasCliente = [
 	{ key: 'visitas', label: 'Visitas' },
 	{ key: 'contactos', label: 'Contactos' }
 ];
-
 export const categoriasDocumentos = [
-	// {key: 'id', label:'id'},
-	{key: 'fecha_creacion', label:'fecha_creacion'},
-	{key: 'titulo', label:'titulo'},
+	{ key: 'id', label: 'id' },
+	{ key: 'fecha_creacion', label: 'fecha_creacion' },
+	{ key: 'titulo', label: 'titulo' },
 	// {key: 'url', label:'url'},
 	// {key: 'preview', label:'preview'},
-	{key: 'id_agente', label:'id_agente'},
-	{key: 'id_oportunidad', label:'id_oportunidad'},
-	{key: 'id_actividad', label:'id_actividad'},
-	{key: 'tipo', label:'tipo'},
-]
+	{ key: 'id_agente', label: 'id_agente' },
+	{ key: 'id_oportunidad', label: 'id_oportunidad' },
+	{ key: 'id_actividad', label: 'id_actividad' },
+	{ key: 'tipo', label: 'tipo' }
+];
+export const categoriasInventario = [
+	{ key: 'id', label: 'id' },
+	{ key: 'categorias', label: 'categorias' },
+	{ key: 'codigo', label: 'codigo' },
+	{ key: 'descripcion', label: 'descripcion' },
+	{ key: 'ubicacion_fisica', label: 'ubicacion_fisica' },
+];
 
 // AGRUPACIONES
 export const agrupacionesCliente = [
@@ -224,7 +232,6 @@ export const agrupacionesCliente = [
 	{ value: 'tipo_prospeccion', label: 'Tipo_prospeccion' },
 	{ value: 'clasificacion', label: 'Clasificacion' }
 ];
-
 export const agrupacionesActividades = [
 	// del sistema
 	{ value: 'fecha_creacion', label: 'fecha_creacion' },
@@ -235,7 +242,6 @@ export const agrupacionesActividades = [
 	// de la actividad
 	{ value: 'motivo', label: 'motivo' }
 ];
-
 export const agrupacionesOportunidades = [
 	// del sistema
 	{ value: 'fecha_creacion', label: 'fecha_creacion' },
@@ -248,21 +254,25 @@ export const agrupacionesOportunidades = [
 	{ value: 'requisitos', label: 'requisitos' },
 	{ value: 'id_cliente', label: 'id_cliente' }
 ];
-
 export const agrupacionesCalendario = [
 	{ value: 'fase', label: 'fase' },
 	{ value: 'motivo', label: 'motivo' }
 ];
+export const agrupacionesInventario = [
+	// {value: 'id', label:'id'},
+	{ value: 'categorias', label: 'categorias' },
+	{ value: 'ubicacion_fisica', label: 'ubicacion_fisica' },
+];
 export const agrupacionesDocumentos = [
 	// {value: 'id', label:'id'},
-	{value: 'fecha_creacion', label:'fecha_creacion'},
-	{value: 'titulo', label:'titulo'},
+	{ value: 'fecha_creacion', label: 'fecha_creacion' },
+	{ value: 'titulo', label: 'titulo' },
 	// {value: 'url', label:'url'},
 	// {value: 'preview', label:'preview'},
-	{value: 'id_agente', label:'id_agente'},
-	{value: 'id_oportunidad', label:'id_oportunidad'},
-	{value: 'id_actividad', label:'id_actividad'},
-	{value: 'tipo', label:'tipo'},
+	{ value: 'id_agente', label: 'id_agente' },
+	{ value: 'id_oportunidad', label: 'id_oportunidad' },
+	{ value: 'id_actividad', label: 'id_actividad' },
+	{ value: 'tipo', label: 'tipo' }
 ];
 
 // FASES

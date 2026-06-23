@@ -42,6 +42,15 @@
 			📄 Documentos
 		</a>
 		<a
+			href="/inventario"
+			onclick={() => {
+				appState.togglePageActions();
+			}}
+			class="butter"
+		>
+			📦 Inventario
+		</a>
+		<a
 			href="/actividades"
 			onclick={() => {
 				appState.togglePageActions();

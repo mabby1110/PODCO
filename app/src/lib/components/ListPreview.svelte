@@ -82,8 +82,8 @@
 		width: 100%;
 		min-height: var(--e);
 		display: flex;
-		gap: var(--a);
 		flex-wrap: wrap;
+		gap: var(--a);
 		align-items: center;
 		text-align: left;
 		border-style: none;
@@ -94,12 +94,20 @@
 	}
 
 	.card-list-preview .title {
-		width: 100%;
+		flex-grow: 1;
+		min-width: var(--g);
+		display: flex;
+		gap: var(--a);
+		align-items: last baseline;
+		flex-wrap: wrap;
 	}
 
 	.acciones {
+		width: 100%;
 		display: flex;
 		gap: var(--a);
+		justify-content: space-between;
+		align-items: flex-end;
 	}
 	.acciones button {
 		height: fit-content;
@@ -108,18 +116,10 @@
 		max-width: var(--f);
 	}
 	.card-list-preview .content {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
 		flex-grow: 1;
 		width: 100%;
 		overflow: hidden;
 		pointer-events: none;
-	}
-	.acciones {
-		flex-grow: 1;
-		justify-content: space-between;
-		align-items: flex-end;
 	}
 	.card-list-preview .meta {
 		display: flex;
