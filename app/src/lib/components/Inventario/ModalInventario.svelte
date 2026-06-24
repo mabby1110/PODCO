@@ -1,25 +1,32 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
+	import { page } from '$app/state';
+	import { categoriasInventario } from '$lib';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { opModalStore } from '$lib/stores/opModalStore.svelte';
-	import FormOportunidad from './FormInventario.svelte';
+	import Searchbar from '../App/Searchbar.svelte';
+	import FormInventario from './FormInventario.svelte';
 
+	let data = $derived(page.data);
+
+	let inventario = $derived(data.inventario ?? []);
+	
+	let lenght = $state(0);
+	let unique = $state(false);
 	let canSubmit = $state(false);
 </script>
 
-{#if $appState.ModalOp}
+{#if $appState.ModalInventario}
 	<div
 		class="overlay"
 		role="button"
 		tabindex="0"
-		onkeydown={(e) => e.key === 'Escape' && appState.toggleModalOp()}
+		onkeydown={(e) => e.key === 'Escape' && appState.toggleModalInventario()}
 	>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" tabindex="-1">
 			<div class="modal-header">
-				<h2>Nueva Oportunidad</h2>
-				<button class="close" onclick={() => appState.toggleModalOp()}>✕</button>
+				<h2>Nuevo producto</h2>
+				<button class="close" onclick={() => appState.toggleModalInventario()}>✕</button>
 			</div>
 			<form
 				method="POST"
@@ -34,13 +41,22 @@
 								})
 							);
 
-							appState.toggleModalOp();
+							appState.toggleModalInventario();
 							await update({ reset: true });
 						}
 					};
 				}}
 			>
-				<FormOportunidad bind:isValid={canSubmit} />
+				<Searchbar
+					label="Buscar existencia por serie, codigo o descripcion"
+					data={inventario}
+					keyColumns={['serie', 'codigo', 'descripcion']}
+					bind:lenght
+					bind:unique
+				/>
+				{#if lenght == 0 && unique}
+					<FormInventario bind:isValid={canSubmit} />
+				{/if}
 
 				<div class="actions">
 					<button class="butter success" type="submit" disabled={!canSubmit}>Agregar</button>

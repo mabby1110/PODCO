@@ -2,10 +2,11 @@
 	import Filtro from '$lib/components/App/Filtro.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agrupacionesInventario, categoriasInventario } from '$lib';
-	import Agrupaciones from '../Agrupaciones.svelte';
 	import Grupo from '../Grupo.svelte';
 	import Leyenda from '../Leyenda.svelte';
 	import PreviewListaProducto from './PreviewListaProducto.svelte';
+	import Agrupaciones from '../App/Agrupaciones.svelte';
+	import PanelFiltros from '../App/PanelFiltros.svelte';
 
 	let { listaAgrupada } = $props();
 
@@ -28,33 +29,38 @@
 
 <div class="view-container">
 	<div class="controls">
-		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+		<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
 		<button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
-		<Filtro categorias={categoriasInventario} />
-		<Agrupaciones
-			categorias={agrupacionesInventario}
-			bind:agrupacionesSeleccionadas
-			{agrupaciones}
-		/>
+		<PanelFiltros>
+			{#snippet controles()}
+				<!-- <div class="panel">
+					<Leyenda />
+				</div> -->
+				<Agrupaciones
+					categorias={agrupacionesInventario}
+					bind:agrupacionesSeleccionadas
+					{agrupaciones}
+				/>
+				<Filtro categorias={categoriasInventario} />
+			{/snippet}
+		</PanelFiltros>
 	</div>
 
-	<Leyenda />
-
-	{#each listaFiltrada as agrupacion (agrupacion.grupo)}
-		<div class="grupo-dia">
+	<div class="view-content">
+		{#each listaFiltrada as agrupacion (agrupacion.grupo)}
 			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as event (event.id)}
 					<PreviewListaProducto {event} />
 				{/each}
 			</Grupo>
-		</div>
-	{:else}
-		<div class="no-results">
-			<p>No se encontraron oportunidades con los filtros actuales.</p>
-		</div>
-	{/each}
+		{:else}
+			<div class="no-results">
+				<p>No se encontraron oportunidades con los filtros actuales.</p>
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style>
@@ -64,16 +70,9 @@
 		gap: var(--a);
 		padding-bottom: var(--f);
 	}
-
 	.no-results {
 		text-align: center;
 		padding: 2rem;
 		color: #64748b;
-	}
-
-	.grupo-dia {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
 	}
 </style>

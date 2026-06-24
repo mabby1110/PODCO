@@ -60,11 +60,6 @@ export const load: LayoutServerLoad = async ({
 	console.log('documentos: ', documentos?.length);
 	console.log('inventario: ', inventario?.length);
 
-	let ides = []
-	for(let i = 0; i<674;i++){
-		ides.push(generateId('BMS-P'));
-	}
-	console.log(JSON.stringify(ides))
 	return {
 		profile,
 		agentes,

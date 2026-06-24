@@ -1,77 +1,66 @@
 <script lang="ts">
-	import Searchbar from '$lib/components/Searchbar.svelte';
-	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
-	import { motivosOportunidad } from '$lib';
 	import FormInput from '$lib/components/FormInput.svelte';
-	import FormSelectAgente from '../FormSelectAgente.svelte';
-	import { filtrarPorAgente } from '$lib/utils/util';
 	import { page } from '$app/state';
-	import DatePicker from '../DatePicker.svelte';
-	import FormConditionalInput from '../FormConditionalInput.svelte';
-	import { opModalStore } from '$lib/stores/opModalStore.svelte';
 	import FormOptionalInput from '../FormOptionalInput.svelte';
+	import { slide } from 'svelte/transition';
 
 	let data = $derived(page.data);
 
 	let { isValid = $bindable() } = $props();
-	let { cliente } = $derived(page.data);
-	let clientes = $derived(data.clientes ?? []);
-
-	let necesidades = $state('');
-	let potencial_venta = $state('');
-	let objetivo = $state(opModalStore.objetivo || '');
+	let ubicacion_fisica = $state('');
+	let categorias = $state('');
+	let cantidad = $state(1);
+	let descripcion = $state('');
+	let codigo = $state('');
 	let observaciones = $state('');
+	let serie = $state('');
 
-	let isOpen = $state(false);
-
-	let fase = $derived(isOpen ? 2 : 1);
-	let selectedAgent = $derived(data.profile?.isAdmin ? '' : data.profile.id);
-	let selectedClient = $derived(cliente ? cliente : null);
-	let newCLient = $state(false);
-	let clientesFiltrados = $derived(
-		data.profile?.isAdmin
-			? selectedAgent
-				? filtrarPorAgente(clientes, selectedAgent)
-				: clientes
-			: filtrarPorAgente(clientes, String(data.profile?.id))
-	);
-
-	$effect(() => {
-		selectedAgent;
-		selectedClient = null;
-	});
-	$effect(() => {
-		const baseValid = !!(objetivo && (selectedClient || newCLient) && selectedAgent);
-
-		if (isOpen) {
-			isValid = baseValid && !!(necesidades && potencial_venta);
-		} else {
-			isValid = baseValid;
-		}
-	});
 </script>
 
-<div class="form-content">
-	<div class="form-group">
-		<FormSelectInput list={motivosOportunidad} />
-		<FormSelectAgente bind:selected={selectedAgent} />
-	</div>
-
-	<Searchbar
-		data={clientesFiltrados}
-		keyColumns={['razon_social', 'nombre_comercial']}
-		bind:selectedItem={selectedClient}
-		bind:newCLient
-	/>
-
+<div class="form-content" out:slide>
 	<FormInput
-		label="Objetivo"
-		name="objetivo"
-		bind:value={objetivo}
-		placeholder="Resultado concreto a conseguir"
+		label="Código"
+		name="codigo"
+		bind:value={codigo}
+		placeholder="Codigo que identifica al producto"
+		type="text"
+	/>
+	<FormOptionalInput title="+Serie">
+		<FormInput
+			label="Serie"
+			name="serie"
+			value={serie}
+			type="textarea"
+			required
+		/>
+	</FormOptionalInput>
+	<FormInput
+		label="Descripción"
+		name="descripcion"
+		bind:value={descripcion}
+		placeholder="descripcion del producto"
 		type="textarea"
-		hint="ej. levantamiento técnico en sitio,  o presentar cotización"
-		required
+	/>
+	<FormInput
+		label="Ubicacion física"
+		name="ubicacion_fisica"
+		bind:value={ubicacion_fisica}
+		placeholder="ubicacion fisica del producto ej. A304"
+		type="text"
+	/>
+	<FormInput
+		label="Cantidad"
+		name="cantidad"
+		bind:value={cantidad}
+		placeholder="cantidad de piezas"
+		type="number"
+	/>
+	<FormInput
+		label="Categorias"
+		name="categorias"
+		bind:value={categorias}
+		placeholder="categoria del producto"
+		type="text"
 	/>
 	<FormOptionalInput title="+Observaciones">
 		<FormInput
@@ -82,38 +71,6 @@
 			required
 		/>
 	</FormOptionalInput>
-	<FormConditionalInput bind:isOpen titleOpen="+Necesidad detectada">
-		<div class="form-group">
-			<FormInput
-				label="Necesidad"
-				name="necesidades"
-				bind:value={necesidades}
-				placeholder="Requerimiento técnico u operacional detectados"
-				type="textarea"
-				required
-			/>
-			<FormInput
-				label="Potencial de venta"
-				name="potencial_venta"
-				bind:value={potencial_venta}
-				placeholder="Producto o servicio que tiene mayor probabilidad de venta"
-				type="textarea"
-				required
-			/>
-		</div>
-	</FormConditionalInput>
-
-	<div class="form-group">
-		<DatePicker title="Fecha de seguimiento" />
-	</div>
-	{#if isOpen}
-		<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
-	{/if}
-
-	{#if selectedClient}
-		<input type="hidden" name="id_cliente" value={selectedClient?.id} required />
-	{/if}
-	<input type="hidden" name="fase" bind:value={fase} />
 </div>
 
 <style>
@@ -122,11 +79,5 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--b);
-	}
-	.form-group {
-		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
 	}
 </style>

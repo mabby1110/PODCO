@@ -3,10 +3,11 @@
 	import Filtro from '$lib/components/App/Filtro.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agrupacionesDocumentos, categoriasDocumentos } from '$lib';
-	import Agrupaciones from '../Agrupaciones.svelte';
+	import Agrupaciones from '../App/Agrupaciones.svelte';
 	import Grupo from '../Grupo.svelte';
 	import Leyenda from '../Leyenda.svelte';
 	import CardDocPreview from './CardDocPreview.svelte';
+	import PanelFiltros from '../App/PanelFiltros.svelte';
 
 	let { listaAgrupada } = $props();
 
@@ -28,32 +29,37 @@
 </script>
 
 <div class="view-container">
-	<div class="controls"><button onclick={appState.toggleMin} class="butter">
+	<div class="controls">
+		<button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
-		<Filtro categorias={categoriasDocumentos} />
-		<Agrupaciones
-			categorias={agrupacionesDocumentos}
-			bind:agrupacionesSeleccionadas
-			{agrupaciones}
-		/>
+
+		<PanelFiltros>
+			{#snippet controles()}
+				<Filtro categorias={categoriasDocumentos} />
+				<Agrupaciones
+					categorias={agrupacionesDocumentos}
+					bind:agrupacionesSeleccionadas
+					{agrupaciones}
+				/>
+				<Leyenda />
+			{/snippet}
+		</PanelFiltros>
 	</div>
 
-	<Leyenda />
-
-	{#each listaFiltrada as agrupacion (agrupacion.grupo)}
-		<div class="grupo-dia">
+	<div class="view-content">
+		{#each listaFiltrada as agrupacion (agrupacion.grupo)}
 			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as event (event.id)}
-					<CardDocPreview {event}/>
+					<CardDocPreview {event} />
 				{/each}
 			</Grupo>
-		</div>
-	{:else}
-		<div class="no-results">
-			<p>No se encontraron documentos con los filtros actuales.</p>
-		</div>
-	{/each}
+		{:else}
+			<div class="no-results">
+				<p>No se encontraron documentos con los filtros actuales.</p>
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style>

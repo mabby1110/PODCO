@@ -7,6 +7,7 @@
 
 	let { children, data } = $props();
 	import { onNavigate } from '$app/navigation';
+	import ModalInventario from '$lib/components/Inventario/ModalInventario.svelte';
 	onNavigate((navigation) => {
 		// Verificamos si el navegador soporta esta tecnología (Safari 18+, Chrome, Edge)
 		if (!document.startViewTransition) return;
@@ -34,6 +35,7 @@
 <ModalActividad />
 <ModalOportunidad />
 <ModalCliente />
+<ModalInventario />
 
 <style>
 	.nav-container {

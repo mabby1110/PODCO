@@ -20,7 +20,7 @@
 <ListPreview href="/oportunidades/{event.id}" style={eventData?.style}>
 	{#snippet header()}
 		<p class="codigo">{eventData?.codigo}</p>
-		<b>{eventData?.descripcion}</b>
+		<b  class="descripcion">{eventData?.descripcion}</b>
 	{/snippet}
 
 	{#snippet content()}
@@ -41,5 +41,8 @@
 <style>
 	.codigo {
 		min-width: 15%;
+	}
+	.descripcion {
+		min-width: var(--h);
 	}
 </style>

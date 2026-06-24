@@ -12,7 +12,7 @@
 	}: {
 		label: string;
 		name: string;
-		value: string | File | null;
+		value: string | File | null | number;
 		type?: 'text' | 'textarea' | 'file' | 'email' | 'number' | 'date';
 		rows?: number;
 		placeholder?: string;

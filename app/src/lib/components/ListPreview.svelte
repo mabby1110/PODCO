@@ -83,7 +83,6 @@
 		min-height: var(--e);
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--a);
 		align-items: center;
 		text-align: left;
 		border-style: none;

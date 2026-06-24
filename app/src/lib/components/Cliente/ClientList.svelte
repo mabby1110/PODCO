@@ -2,8 +2,9 @@
 	import { agrupacionesCliente, categoriasCliente } from '$lib';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import Agrupaciones from '../Agrupaciones.svelte';
+	import Agrupaciones from '../App/Agrupaciones.svelte';
 	import Filtro from '../App/Filtro.svelte';
+	import PanelFiltros from '../App/PanelFiltros.svelte';
 	import Grupo from '../Grupo.svelte';
 	import Reload from '../Reload.svelte';
 
@@ -24,29 +25,36 @@
 
 <div class="view-container">
 	<div class="controls">
-		<Reload />
 		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 		<button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
 		<!-- <button onclick={appState.toggleBI} class="butter">BI</button> -->
-		<Filtro categorias={categoriasCliente} />
-		<Agrupaciones categorias={agrupacionesCliente} bind:agrupacionesSeleccionadas {agrupaciones} />
+		<PanelFiltros>
+			{#snippet controles()}
+				<Filtro categorias={categoriasCliente} />
+				<Agrupaciones
+					categorias={agrupacionesCliente}
+					bind:agrupacionesSeleccionadas
+					{agrupaciones}
+				/>
+			{/snippet}
+		</PanelFiltros>
 	</div>
 
-	{#each listaFiltrada as agrupacion (agrupacion.grupo)}
-		<div class="grupo-dia">
+	<div class="view-content">
+		{#each listaFiltrada as agrupacion (agrupacion.grupo)}
 			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as elemento (elemento.id)}
 					<CardClienteListPreview client={elemento} />
 				{/each}
 			</Grupo>
-		</div>
-	{:else}
-		<div class="no-results">
-			<p>No se encontraron clientes con los filtros actuales.</p>
-		</div>
-	{/each}
+		{:else}
+			<div class="no-results">
+				<p>No se encontraron clientes con los filtros actuales.</p>
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style>
@@ -61,11 +69,5 @@
 		text-align: center;
 		padding: 2rem;
 		color: #64748b;
-	}
-
-	.grupo-dia {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
 	}
 </style>

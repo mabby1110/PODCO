@@ -1,6 +1,5 @@
 <script lang="ts">
-	import FiltroAgente from './FiltroAgente.svelte';
-	import Select from './Select.svelte';
+	import Select from '../Select.svelte';
 	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
 
 	let {
@@ -22,47 +21,28 @@
 			agrupacionesSeleccionadas.push(e);
 		}
 	}
-	function handleKeyDown(event) {
-		if (event.key === 'Escape') {
-			show = false;
-		}
-	}
 </script>
 
-<svelte:window onkeydown={handleKeyDown} />
-{#if show}
-	<div class="container">
-		<div class="panel">
-			<button class="close" type="button" onclick={() => (show = false)}>x</button>
-			<FiltroAgente />
-			<Select
-				options={categorias}
-				defaultOption="Agrupar todos"
-				bind:selected={selectedGroupStore.selectedGroup}
-			/>
-			<div class="agrupaciones">
-				{#each agrupaciones as agrupacion}
-					<button
-						class="butter"
-						class:seleccionado={agrupacionesSeleccionadas.includes(agrupacion.grupo)}
-						onclick={() => seleccionarAgrupacion(agrupacion.grupo)}
-					>
-						{agrupacion.grupo}
-					</button>
-				{/each}
-			</div>
-		</div>
+<div class="panel">
+	<Select
+		options={categorias}
+		defaultOption="Agrupar todos"
+		bind:selected={selectedGroupStore.selectedGroup}
+	/>
+	<div class="agrupaciones">
+		{#each agrupaciones as agrupacion}
+			<button
+				class="butter"
+				class:seleccionado={agrupacionesSeleccionadas.includes(agrupacion.grupo)}
+				onclick={() => seleccionarAgrupacion(agrupacion.grupo)}
+			>
+				{agrupacion.grupo}
+			</button>
+		{/each}
 	</div>
-{:else}
-	<button class="butter" onclick={() => (show = true)}>
-		+Agrupar {agrupacionesSeleccionadas.length > 0 ? `(${agrupacionesSeleccionadas.length})` : ''}
-	</button>
-{/if}
+</div>
 
 <style>
-	.container {
-		order: 1;
-	}
 	.panel {
 		display: flex;
 		flex-wrap: wrap;

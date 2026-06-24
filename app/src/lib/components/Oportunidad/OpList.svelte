@@ -3,9 +3,10 @@
 	import Filtro from '$lib/components/App/Filtro.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
-	import Agrupaciones from '../Agrupaciones.svelte';
+	import Agrupaciones from '../App/Agrupaciones.svelte';
 	import Grupo from '../Grupo.svelte';
 	import Leyenda from '../Leyenda.svelte';
+	import PanelFiltros from '../App/PanelFiltros.svelte';
 
 	let { listaAgrupada } = $props();
 
@@ -32,29 +33,35 @@
 		<button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
-		<Filtro categorias={categoriasOportunidad} />
-		<Agrupaciones
-			categorias={agrupacionesOportunidades}
-			bind:agrupacionesSeleccionadas
-			{agrupaciones}
-		/>
+
+		<PanelFiltros>
+			{#snippet controles()}
+				<div class="panel">
+					<Leyenda />
+				</div>
+				<Filtro categorias={categoriasOportunidad} />
+				<Agrupaciones
+					categorias={agrupacionesOportunidades}
+					bind:agrupacionesSeleccionadas
+					{agrupaciones}
+				/>
+			{/snippet}
+		</PanelFiltros>
 	</div>
 
-	<Leyenda />
-
-	{#each listaFiltrada as agrupacion (agrupacion.grupo)}
-		<div class="grupo-dia">
+	<div class="view-content">
+		{#each listaFiltrada as agrupacion (agrupacion.grupo)}
 			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as event (event.id)}
 					<CardOpListPreview {event} />
 				{/each}
 			</Grupo>
-		</div>
-	{:else}
-		<div class="no-results">
-			<p>No se encontraron oportunidades con los filtros actuales.</p>
-		</div>
-	{/each}
+		{:else}
+			<div class="no-results">
+				<p>No se encontraron oportunidades con los filtros actuales.</p>
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style>
@@ -69,11 +76,5 @@
 		text-align: center;
 		padding: 2rem;
 		color: #64748b;
-	}
-
-	.grupo-dia {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
 	}
 </style>

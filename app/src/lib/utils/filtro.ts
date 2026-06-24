@@ -69,7 +69,7 @@ export function agruparDatos<T>(
 	if (!campo) return [{ grupo: valorPorDefecto, elementos: items }];
 
 	const grupos = new Map<string, T[]>();
-
+	console.log(grupos)
 	for (const item of items) {
 		const valor = (item as any)[campo];
 		const nombreGrupo =
