@@ -8,7 +8,8 @@
 		content,
 		meta,
 		href = '/',
-		style = ''
+		style = '',
+		ocultarAcciones
 	}: {
 		header?: Snippet;
 		resume?: Snippet;
@@ -16,6 +17,7 @@
 		meta?: Snippet;
 		href?: string;
 		style?: string;
+		ocultarAcciones?: boolean;
 	} = $props();
 
 	let show = $state(false);
@@ -50,7 +52,7 @@
 	{/if}
 
 	{#if resume}
-		<div class="content {show?'':'resume'}" transition:slide>
+		<div class="content {show ? '' : 'resume'}" transition:slide>
 			{@render resume()}
 		</div>
 	{/if}
@@ -67,7 +69,9 @@
 				{@render meta()}
 			</div>
 		{/if}
-		<button class="butter" onclick={handleNavigationClick}>Ver</button>
+		{#if !ocultarAcciones}
+			<button class="butter" onclick={handleNavigationClick}>Ver</button>
+		{/if}
 	</div>
 </div>
 

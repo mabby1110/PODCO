@@ -6,13 +6,13 @@
 <div class="container" in:slide={{ delay: 300, duration: 300 }}>
 	<div class="button-group">
 		<a
-			href="/calendario"
+			href="/clientes"
 			onclick={() => {
 				appState.togglePageActions();
 			}}
 			class="butter"
 		>
-			📆 Calendario
+			👨‍💼 Clientes
 		</a>
 		<a
 			href="/oportunidades"
@@ -24,13 +24,22 @@
 			📋 Oportunidades
 		</a>
 		<a
-			href="/clientes"
+			href="/actividades"
 			onclick={() => {
 				appState.togglePageActions();
 			}}
 			class="butter"
 		>
-			👨‍💼 Clientes
+			⚡ Actividades
+		</a>
+		<a
+			href="/calendario"
+			onclick={() => {
+				appState.togglePageActions();
+			}}
+			class="butter"
+		>
+			📆 Calendario
 		</a>
 		<a
 			href="/documentos"
@@ -49,15 +58,6 @@
 			class="butter"
 		>
 			📦 Inventario
-		</a>
-		<a
-			href="/actividades"
-			onclick={() => {
-				appState.togglePageActions();
-			}}
-			class="butter"
-		>
-			⚡ Actividades
 		</a>
 	</div>
 </div>
@@ -83,7 +83,7 @@
 	a {
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
 		text-decoration: none;
 	}
 </style>
