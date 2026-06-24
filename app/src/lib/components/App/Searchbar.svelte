@@ -2,35 +2,51 @@
     type Props = {
         label?: string;
         data: Record<string, any>[];
+        lista?: any;
         keyColumns: string[];
         selectedItem?: Record<string, any> | null;
         lenght?: number;
         unique?: boolean;
+        showResults?: boolean;
     };
 
     let {
         label,
         data,
+        lista = $bindable([]),
         keyColumns,
         selectedItem = $bindable(null),
         lenght = $bindable(0),
-        unique = $bindable(false)
+        unique = $bindable(false),
+        showResults = false
     }: Props = $props();
 
     let term = $state('');
     let visibleColumns = $state([...keyColumns]);
 
+    function matchTerm(value: any, search: string): boolean {
+        if (value == null) return false;
+        if (Array.isArray(value)) {
+            return value.some((v) => matchTerm(v, search));
+        }
+        if (typeof value === 'object') {
+            return Object.values(value).some((v) => matchTerm(v, search));
+        }
+        return String(value).toLowerCase().includes(search);
+    }
+
     let results = $derived(
         term.trim() === ''
             ? []
-            : data.filter((obj) =>
-                  keyColumns.some((key) =>
-                      String(obj[key] ?? '')
-                          .toLowerCase()
-                          .includes(term.toLowerCase())
-                  )
-              )
+            : data.filter((obj) => {
+                  const search = term.toLowerCase();
+                  return keyColumns.some((key) => matchTerm(obj[key], search));
+              })
     );
+
+    $effect(() => {
+        lista = term.length > 0 ? results : data;
+    });
 
     $effect(() => {
         lenght = results.length;
@@ -47,18 +63,16 @@
 </script>
 
 <div class="block">
-    <div class="header">
-        {#if label}
-            <h3>{label}</h3>
-        {/if}
-        {#if visibleColumns.length < keyColumns.length}
-            <button class="reset-button" onclick={resetColumns}>Resetear Columnas</button>
-        {/if}
-    </div>
-    
+    {#if label}
+        <h3>{label}</h3>
+    {/if}
+    {#if visibleColumns.length < keyColumns.length}
+        <button class="reset-button" onclick={resetColumns}>Resetear Columnas</button>
+    {/if}
+
     <input type="search" bind:value={term} />
-    
-    {#if results.length > 0 && visibleColumns.length > 0}
+
+    {#if showResults && results.length > 0 && visibleColumns.length > 0}
         <div class="results" style="--col-count: {visibleColumns.length};">
             {#each visibleColumns as col}
                 <button class="grid-header" onclick={() => hideColumn(col)}>
@@ -69,10 +83,19 @@
             {#each results as item}
                 <button
                     class="list-button"
-                    onclick={() => { selectedItem = item; }}
+                    onclick={() => {
+                        selectedItem = item;
+                    }}
                 >
                     {#each visibleColumns as key}
-                        <div class="grid-cell">{item[key] ?? ''}</div>
+                        <div class="grid-cell">
+                            {#if Array.isArray(item[key])}
+                                {JSON.stringify(item[key])} {:else if typeof item[key] === 'object' && item[key] !== null}
+                                [Objeto]
+                            {:else}
+                                {item[key] ?? ''}
+                            {/if}
+                        </div>
                     {/each}
                 </button>
             {/each}
@@ -85,7 +108,6 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
-        width: 100%;
     }
 
     .header {

@@ -9,7 +9,7 @@
 	let data = $derived(page.data);
 
 	let inventario = $derived(data.inventario ?? []);
-	
+
 	let lenght = $state(0);
 	let unique = $state(false);
 	let canSubmit = $state(false);
@@ -53,6 +53,7 @@
 					keyColumns={['serie', 'codigo', 'descripcion']}
 					bind:lenght
 					bind:unique
+					showResults
 				/>
 				{#if lenght == 0 && unique}
 					<FormInventario bind:isValid={canSubmit} />

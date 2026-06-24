@@ -12,14 +12,23 @@
 </script>
 
 <svelte:window onkeydown={handleKeyDown} />
-
 {#if showFilter}
 	<button class="close-btn" type="button" onclick={() => (showFilter = false)}>x</button>
-	<div class="filtros">
-		{#if controles}
+	{#if controles}
+		<div class="controles">
 			{@render controles()}
-		{/if}
-	</div>
+		</div>
+	{/if}
 {:else}
 	<button class="butter" onclick={() => (showFilter = true)}> +Filtros </button>
 {/if}
+
+<style>
+	.controles {
+		position: absolute;
+		top: 7vh;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+	}
+</style>

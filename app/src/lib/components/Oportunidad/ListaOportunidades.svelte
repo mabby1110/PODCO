@@ -1,22 +1,23 @@
 <script lang="ts">
+	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
 	import Filtro from '$lib/components/App/Filtro.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { agrupacionesInventario, categoriasInventario } from '$lib';
-	import Grupo from '../Grupo.svelte';
-	import PreviewListaProducto from './PreviewListaProducto.svelte';
+	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
 	import Agrupaciones from '../App/Agrupaciones.svelte';
+	import Grupo from '../Grupo.svelte';
+	import Leyenda from '../Leyenda.svelte';
 	import PanelFiltros from '../App/PanelFiltros.svelte';
-	import Searchbar from '../App/Searchbar.svelte';
-	import { page } from '$app/state';
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
+	import { page } from '$app/state';
+	import Searchbar from '../App/Searchbar.svelte';
+	import FiltroAgente from '../FiltroAgente.svelte';
 
-	let { inventario } = $derived(page.data);
-
+	let { oportunidades } = $derived(page.data);
+	
+	let data = $derived(oportunidades);
+	let lista = $derived(oportunidades);
     let currentRoute = $derived(page.url.pathname);
-	let lista = $derived(inventario);
-    
     const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
-	let show = $derived($appState.min);
 
 	let agrupaciones = $derived(
 		listaAgrupada.map((e) => {
@@ -31,27 +32,27 @@
 			? listaAgrupada
 			: listaAgrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
 	);
+
+	let show = $derived($appState.min);
 </script>
 
 <div class="view-container">
 	<div class="controls">
-		<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
+		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
-		<Searchbar
-			data={inventario}
-			keyColumns={['serie', 'codigo', 'descripcion']}
-			bind:lista
-		/>
+		<FiltroAgente />
+		<Searchbar {data} keyColumns={categoriasOportunidad.map((c)=>c.key).concat(['clientes'])} bind:lista />
 		<PanelFiltros>
 			{#snippet controles()}
+				<Leyenda />
+				<Filtro categorias={categoriasOportunidad} />
 				<Agrupaciones
-					categorias={agrupacionesInventario}
+					categorias={agrupacionesOportunidades}
 					bind:agrupacionesSeleccionadas
 					{agrupaciones}
 				/>
-				<Filtro categorias={categoriasInventario} />
 			{/snippet}
 		</PanelFiltros>
 	</div>
@@ -60,7 +61,7 @@
 		{#each listaFiltrada as agrupacion (agrupacion.grupo)}
 			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as event (event.id)}
-					<PreviewListaProducto {event} />
+					<CardOpListPreview {event} />
 				{/each}
 			</Grupo>
 		{:else}
@@ -78,6 +79,7 @@
 		gap: var(--a);
 		padding-bottom: var(--f);
 	}
+
 	.no-results {
 		text-align: center;
 		padding: 2rem;

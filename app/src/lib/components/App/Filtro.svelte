@@ -102,6 +102,7 @@
 		flex-wrap: wrap;
 		gap: var(--a);
 		width: fit-content;
+		background-color: var(--color-contrast);
 	}
 	.chop {
 		background-color: var(--color-error);

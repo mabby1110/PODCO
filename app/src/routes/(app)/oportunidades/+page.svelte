@@ -1,5 +1,5 @@
 <script lang="ts">
-	import OpList from '$lib/components/Oportunidad/OpList.svelte';
+	import ListaOportunidades from '$lib/components/Oportunidad/ListaOportunidades.svelte';
 	import { page } from '$app/state';
 	import { procesarDatosReactivos } from '$lib/utils/filtro.js';
 
@@ -11,7 +11,7 @@
 </script>
 
 <div class="page-content">
-	<OpList {listaAgrupada} />
+	<ListaOportunidades {listaAgrupada} />
 </div>
 
 <style>

@@ -1,13 +1,14 @@
 <script lang="ts">
 	import Select from '../Select.svelte';
 	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
+	import FiltroAgente from '../FiltroAgente.svelte';
 
 	let {
 		agrupacionesSeleccionadas = $bindable(),
 		agrupaciones,
 		categorias
 	} = $props<{
-		agrupaciones: [];
+		agrupaciones: any;
 		agrupacionesSeleccionadas: string[];
 		categorias: any;
 	}>();
@@ -50,12 +51,14 @@
 		width: fit-content;
 		align-items: baseline;
 		width: fit-content;
+		background-color: var(--color-contrast);
 	}
 	.agrupaciones {
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;
-		width: 100%;
+		width: var(--i);
+		max-width: 80vw;
 		max-height: 40vh;
 		overflow: auto;
 	}

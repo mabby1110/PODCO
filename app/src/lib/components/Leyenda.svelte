@@ -6,7 +6,7 @@
 			{ label: 'Prospecto (1)', color: 'var(--color-secondary)' },
 			{ label: 'Oportunidad (2)', color: '#5ca8ff99' },
 			{ label: 'Negociación (3)', color: '#ffd70099' },
-			{ label: 'Ganada (4)', color: '#34d76a99' },
+			{ label: 'Ganada (4)', color: '#34d76a99' }
 			// { label: 'Enviar (5)', color: '#6575ff99' },
 			// { label: 'Finalizar (6)', color: '#000000ee' }
 		]
@@ -14,24 +14,30 @@
 	let show = $state(false);
 </script>
 
-<div class="funnel-legend">
-	{#each steps as step, index}
-		<div class="legend-item">
-			<span class="color-box" style="background-color: {step.color};"></span>
-			<span class="label">{step.label}</span>
-		</div>
+<div class="leyenda">
+	<div class="funnel-legend panel">
+		{#each steps as step, index}
+			<div class="legend-item">
+				<span class="color-box" style="background-color: {step.color};"></span>
+				<span class="label">{step.label}</span>
+			</div>
 
-		{#if index < steps.length - 1}
-			<span class="separator">&gt;</span>
-		{/if}
-	{/each}
+			{#if index < steps.length - 1}
+				<span class="separator">&gt;</span>
+			{/if}
+		{/each}
+	</div>
 </div>
 
 <style>
+	.leyenda {
+		width: 100%;
+	}
 	.funnel-legend {
 		display: flex;
 		flex-wrap: wrap;
-		width: 100%;
+		width: fit-content;
+
 		align-items: center;
 		gap: var(--a);
 		color: #333;

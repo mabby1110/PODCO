@@ -1,19 +1,9 @@
 <script lang="ts">
-	import { procesarDatosReactivos } from '$lib/utils/filtro';
-	import ClientList from '$lib/components/Cliente/ClientList.svelte';
-	import ClientesBI from '$lib/components/BI/ClientesBI.svelte';
-	import { page } from '$app/state';
-
-	let { data } = $props();
-
-    let currentRoute = $derived(page.url.pathname);
-    
-    const listaAgrupada = $derived.by(() => procesarDatosReactivos(data.clientes, currentRoute));
+	import ClientList from '$lib/components/Cliente/ListaClientes.svelte';
 </script>
 
-<ClientesBI {listaAgrupada} />
 <div class="page-content">
-	<ClientList {listaAgrupada} />
+	<ClientList />
 </div>
 
 <style>

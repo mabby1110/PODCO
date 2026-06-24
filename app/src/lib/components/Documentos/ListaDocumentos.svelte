@@ -1,5 +1,4 @@
 <script lang="ts">
-	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
 	import Filtro from '$lib/components/App/Filtro.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agrupacionesDocumentos, categoriasDocumentos } from '$lib';
@@ -8,10 +7,17 @@
 	import Leyenda from '../Leyenda.svelte';
 	import CardDocPreview from './CardDocPreview.svelte';
 	import PanelFiltros from '../App/PanelFiltros.svelte';
+	import { page } from '$app/state';
+	import { procesarDatosReactivos } from '$lib/utils/filtro';
+	import Searchbar from '../App/Searchbar.svelte';
+	import FiltroAgente from '../FiltroAgente.svelte';
 
-	let { listaAgrupada } = $props();
-
-	let show = $derived($appState.min);
+	let { documentos } = $derived(page.data);
+	
+	let data = $derived(documentos);
+	let lista = $derived(documentos);
+    let currentRoute = $derived(page.url.pathname);
+    const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
 
 	let agrupaciones = $derived(
 		listaAgrupada.map((e) => {
@@ -26,6 +32,8 @@
 			? listaAgrupada
 			: listaAgrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
 	);
+
+	let show = $derived($appState.min);
 </script>
 
 <div class="view-container">
@@ -33,7 +41,8 @@
 		<button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
-
+		<FiltroAgente />
+		<Searchbar {data} keyColumns={categoriasDocumentos.map(a=>a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet controles()}
 				<Filtro categorias={categoriasDocumentos} />

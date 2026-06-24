@@ -1,22 +1,22 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import { agrupacionesCliente, categoriasCliente } from '$lib';
+	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import CardActividadListPreview from '$lib/components/Actividad/CardActividadListPreview.svelte';
-	import Filtro from '../App/Filtro.svelte';
-	import { categoriasActividad, agrupacionesActividades } from '$lib';
+	import { procesarDatosReactivos } from '$lib/utils/filtro';
 	import Agrupaciones from '../App/Agrupaciones.svelte';
-	import Grupo from '../Grupo.svelte';
-	import Leyenda from '../Leyenda.svelte';
-	import ControlesFiltro from '../App/PanelFiltros.svelte';
+	import Filtro from '../App/Filtro.svelte';
 	import PanelFiltros from '../App/PanelFiltros.svelte';
+	import Searchbar from '../App/Searchbar.svelte';
+	import FiltroAgente from '../FiltroAgente.svelte';
+	import Grupo from '../Grupo.svelte';
 
-	let { listaAgrupada } = $props();
-
-	let show = $derived($appState.min);
-
-	const steps = [
-		{ label: 'Actividad programada', color: 'var(--color-secondary)' },
-		{ label: 'Finalizada', color: '#000000ee' }
-	];
+	let { clientes } = $derived(page.data);
+	
+	let data = $derived(clientes);
+	let lista = $derived(clientes);
+    let currentRoute = $derived(page.url.pathname);
+    const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
 
 	let agrupaciones = $derived(
 		listaAgrupada.map((e) => {
@@ -31,39 +31,40 @@
 			? listaAgrupada
 			: listaAgrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
 	);
+
+	let show = $derived($appState.min);
 </script>
 
 <div class="view-container">
 	<div class="controls">
-		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 		<button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
-
+		<FiltroAgente />
+		<Searchbar {data} keyColumns={categoriasCliente.map(a=>a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet controles()}
-				<div class="panel">
-					<Leyenda {steps} />
-				</div>
-				<Filtro categorias={categoriasActividad} />
+				<Filtro categorias={categoriasCliente} />
 				<Agrupaciones
-					categorias={agrupacionesActividades}
+					categorias={agrupacionesCliente}
 					bind:agrupacionesSeleccionadas
 					{agrupaciones}
 				/>
 			{/snippet}
 		</PanelFiltros>
 	</div>
+
 	<div class="view-content">
 		{#each listaFiltrada as agrupacion (agrupacion.grupo)}
 			<Grupo {agrupacion} showByDefault={show}>
-				{#each agrupacion.elementos as event (event.id)}
-					<CardActividadListPreview {event} />
+				{#each agrupacion.elementos as elemento (elemento.id)}
+					<CardClienteListPreview client={elemento} />
 				{/each}
 			</Grupo>
 		{:else}
 			<div class="no-results">
-				<p>No se encontraron oportunidades con los filtros actuales.</p>
+				<p>No se encontraron clientes con los filtros actuales.</p>
 			</div>
 		{/each}
 	</div>
