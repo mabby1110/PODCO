@@ -1,65 +1,89 @@
 <script lang="ts">
 	import Select from '../Select.svelte';
-	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
+	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
+	import { page } from '$app/state';
 
 	let {
 		agrupacionesSeleccionadas = $bindable(),
 		agrupaciones,
-		categorias
+		categorias,
+		cookies = page.url.pathname
 	} = $props<{
 		agrupaciones: any;
 		agrupacionesSeleccionadas: string[];
 		categorias: any;
+		cookies?: string;
 	}>();
-	let show = $state(false);
+
 	function seleccionarAgrupacion(e: string): void {
 		const index = agrupacionesSeleccionadas.indexOf(e);
-		console.log(e, index);
 		if (index !== -1) {
 			agrupacionesSeleccionadas.splice(index, 1);
 		} else {
 			agrupacionesSeleccionadas.push(e);
 		}
 	}
+
+	function seleccionarTodos(): void {
+		agrupacionesSeleccionadas = agrupaciones.map((a: any) => a.grupo);
+	}
 </script>
 
-<div class="panel">
-	<Select
-		options={categorias}
-		defaultOption="Agrupar todos"
-		bind:selected={selectedGroupStore.selectedGroup}
-	/>
-	<div class="agrupaciones">
-		{#each agrupaciones as agrupacion}
-			<button
-				class="butter"
-				class:seleccionado={agrupacionesSeleccionadas.includes(agrupacion.grupo)}
-				onclick={() => seleccionarAgrupacion(agrupacion.grupo)}
-			>
-				{agrupacion.grupo}
+<div class="contenedor-agrupaciones">
+	<div class="panel">
+		<div class="acciones">
+			<Select
+				options={categorias}
+				defaultOption="Agrupar todos"
+				bind:selected={agrupacionesStore.filtersByRoute[cookies]}
+			/>
+
+			<button class="butter" onclick={seleccionarTodos}>
+				Reset ({agrupacionesSeleccionadas.length})
 			</button>
-		{/each}
+		</div>
+
+		<div class="agrupaciones">
+			{#each agrupaciones as agrupacion}
+				<button
+					class="butter"
+					class:seleccionado={agrupacionesSeleccionadas.includes(agrupacion.grupo)}
+					onclick={() => seleccionarAgrupacion(agrupacion.grupo)}
+				>
+					{agrupacion.grupo}
+				</button>
+			{/each}
+		</div>
 	</div>
 </div>
 
 <style>
+	.contenedor-agrupaciones {
+		width: 100%;
+	}
 	.panel {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
 		width: fit-content;
+		height: fit-content;
 		align-items: baseline;
-		width: fit-content;
 		background-color: var(--color-contrast);
+	}
+	.acciones {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
 	}
 	.agrupaciones {
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;
-		width: var(--i);
-		max-width: 80vw;
-		max-height: 40vh;
+		max-height: 30vh;
 		overflow: auto;
+	}
+	.butter {
+		height: fit-content;
 	}
 	.agrupaciones button {
 		border: none;

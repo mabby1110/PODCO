@@ -33,11 +33,12 @@
 		<Searchbar data={clientes} keyColumns={categoriasCliente.map((c) => c.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet controles()}
-				<Filtro categorias={categoriasCliente} customRoute={'clientes-bi'} />
+				<Filtro categorias={categoriasCliente} cookies={'clientes-bi'} />
 				<Agrupaciones
 					categorias={agrupacionesCliente}
 					bind:agrupacionesSeleccionadas
 					{agrupaciones}
+					cookies={'clientes-bi'}
 				/>
 			{/snippet}
 		</PanelFiltros>

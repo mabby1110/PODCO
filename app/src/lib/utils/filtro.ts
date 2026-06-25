@@ -1,4 +1,5 @@
 // lib/util/filtro.ts
+import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 import { filtroStore } from '$lib/stores/filtroStore.svelte';
 import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
 import { formatDateFull, parseDateTimeLocal } from './agenda';
@@ -63,23 +64,20 @@ export function ordenarDatos<T>(
 
 export function agruparDatos<T>(
 	items: T[],
-	campo: keyof T | string,
+	campo: string,
 	valorPorDefecto: string = 'Sin agrupar'
 ): { grupo: string; elementos: T[] }[] {
 	if (!campo) return [{ grupo: valorPorDefecto, elementos: items }];
-
 	const grupos = new Map<string, T[]>();
-	console.log(grupos)
 	for (const item of items) {
 		const valor = (item as any)[campo];
-		const nombreGrupo =
-			['inicio', 'fecha_creacion', 'fecha_cierre'].includes(campo as string)
-				? valor
-					? String(formatDateFull(parseDateTimeLocal(valor)))
-					: valorPorDefecto
-				: valor
-					? String(valor)
-					: valorPorDefecto;
+		const nombreGrupo = ['inicio', 'fecha_creacion', 'fecha_cierre'].includes(campo as string)
+			? valor
+				? String(formatDateFull(parseDateTimeLocal(valor)))
+				: valorPorDefecto
+			: valor
+				? String(valor)
+				: valorPorDefecto;
 
 		if (!grupos.has(nombreGrupo)) {
 			grupos.set(nombreGrupo, []);
@@ -95,17 +93,20 @@ export function agruparDatos<T>(
 
 export function procesarDatosReactivos(actividades: any[], currentRoute: string) {
 	if (!actividades || !Array.isArray(actividades)) return [];
-
+	console.log(currentRoute);
 	const activeFilters = filtroStore.filtersByRoute[currentRoute] || [];
 	const FILTER_ACTIONS = ['contains', 'isNull', 'hasData'];
 	const searchFilters = activeFilters.filter((f) => FILTER_ACTIONS.includes(f.action));
 	const sortFilters = activeFilters.filter((f) => !FILTER_ACTIONS.includes(f.action));
 
 	const agenteId = selectedGroupStore.selectedAgent ?? '';
-	const grupoSeleccionado = selectedGroupStore.selectedGroup ?? '';
 
+	console.log(
+		'datos preparados',
+		agrupacionesStore.filtersByRoute['oportunidades']
+	);
 	const filtrados = filtrarDatos(actividades, agenteId, searchFilters);
 	const ordenados = ordenarDatos(filtrados, sortFilters);
 
-	return agruparDatos(ordenados, grupoSeleccionado);
+	return agruparDatos(ordenados, agrupacionesStore.filtersByRoute[currentRoute]);
 }

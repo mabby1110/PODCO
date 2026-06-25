@@ -30,10 +30,8 @@
 </div>
 
 <style>
-	.leyenda {
-		width: 100%;
-	}
 	.funnel-legend {
+		height: 100%;
 		display: flex;
 		flex-wrap: wrap;
 		width: fit-content;

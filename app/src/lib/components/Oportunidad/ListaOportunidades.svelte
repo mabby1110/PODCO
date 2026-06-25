@@ -13,12 +13,12 @@
 	import FiltroAgente from '../FiltroAgente.svelte';
 
 	let { oportunidades } = $derived(page.data);
-	
+
 	let data = $derived(oportunidades);
 	let lista = $derived(oportunidades);
-    let currentRoute = $derived(page.url.pathname);
-    const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
+	let currentRoute = $derived(page.url.pathname);
 
+	const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
 	let agrupaciones = $derived(
 		listaAgrupada.map((e) => {
 			return { grupo: e.grupo, tamaño: e.elementos.length };
@@ -43,10 +43,16 @@
 			{show ? 'min' : 'max'}
 		</button>
 		<FiltroAgente />
-		<Searchbar {data} keyColumns={categoriasOportunidad.map((c)=>c.key).concat(['clientes'])} bind:lista />
+		<Searchbar
+			{data}
+			keyColumns={categoriasOportunidad.map((c) => c.key).concat(['clientes'])}
+			bind:lista
+		/>
 		<PanelFiltros>
-			{#snippet controles()}
+			{#snippet header()}
 				<Leyenda />
+			{/snippet}
+			{#snippet controles()}
 				<Filtro categorias={categoriasOportunidad} />
 				<Agrupaciones
 					categorias={agrupacionesOportunidades}

@@ -37,6 +37,7 @@
 					categorias={agrupacionesInventario}
 					bind:agrupacionesSeleccionadas
 					{agrupaciones}
+					ruta={'inventario-bi'}
 				/>
 			{/snippet}
 		</PanelFiltros>

@@ -49,8 +49,10 @@
 		<FiltroAgente />
 		<Searchbar {data} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
-			{#snippet controles()}
+			{#snippet header()}
 				<Leyenda {steps} />
+			{/snippet}
+			{#snippet controles()}
 				<Filtro categorias={categoriasActividad} />
 				<Agrupaciones
 					categorias={agrupacionesActividades}

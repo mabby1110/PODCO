@@ -5,18 +5,18 @@
 	let {
 		categorias,
 		calendar = false,
-		customRoute
+		cookies
 	} = $props<{
 		categorias: ColumnDef[];
 		calendar?: boolean;
-		customRoute?: string;
+		cookies?: string;
 	}>();
 
 	let selectedColumnKey = $state<string>(categorias?.key || '');
 	let selectedAction = $state('');
 	let inputValue = $state<string>('');
 
-	let currentRoute = $derived(customRoute || page.url.pathname);
+	let currentRoute = $derived(cookies || page.url.pathname);
 	let activeFilters = $derived(filtroStore.filtersByRoute[currentRoute] || []);
 
 	function handleAdd() {
@@ -28,13 +28,12 @@
 		filtroStore.addFilter(currentRoute, column, selectedAction, valueToAdd);
 		inputValue = '';
 	}
-	$effect(()=>console.log(activeFilters));
 </script>
 
-<div class="filter-container">
+<div class="contenedor-filtro">
 	<div class="panel">
 		{#if !calendar}
-			<div class="options">
+			<div class="filter-actions">
 				<select bind:value={selectedColumnKey}>
 					<option value="" disabled>Campo</option>
 					{#each categorias as col}
@@ -61,7 +60,15 @@
 				{/if}
 
 				<button class="butter" type="button" onclick={handleAdd}>Agregar</button>
-				{#if activeFilters.length > 0}
+			</div>
+
+			{#if activeFilters.length > 0}
+				<div class="filter-list">
+					{#if activeFilters.length > 1}
+						<button class="chop chip butter" onclick={() => filtroStore.clearFilters(currentRoute)}>
+							Limpiar todo
+						</button>
+					{/if}
 					{#each activeFilters as filter (filter.id)}
 						<button
 							class="chip butter"
@@ -71,38 +78,28 @@
 							{#if filter.action === 'contains'}
 								contiene "{filter.value}"
 							{:else if filter.action === 'asc'}
-								(Mas antiguo)
+								(Ascendente)
 							{:else if filter.action === 'desc'}
-								(Mas reciente)
+								(Desendente)
 							{:else if filter.action === 'isNull'}
-								(Es nulo)
+								(nulo)
 							{:else if filter.action === 'hasData'}
-								(Con datos)
+								(Contiene datos)
 							{/if}
 							<span class="close-chip">×</span>
 						</button>
 					{/each}
-
-					{#if activeFilters.length > 1}
-						<button class="chop butter" onclick={() => filtroStore.clearFilters(currentRoute)}>
-							Limpiar todo
-						</button>
-					{/if}
-				{/if}
-			</div>
+				</div>
+			{/if}
 		{/if}
 	</div>
 </div>
 
 <style>
-	.options {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
+	.contenedor-filtro {
+		width: 100%;
 	}
 	.panel {
-		display: flex;
-		flex-wrap: wrap;
 		gap: var(--a);
 		width: fit-content;
 		background-color: var(--color-contrast);
@@ -121,5 +118,18 @@
 	}
 	.chip:hover {
 		background-color: var(--color-error);
+	}
+	.filter-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+	}
+	.filter-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		max-height: 30vh;
+		overflow: auto;
+		margin-top: var(--a);
 	}
 </style>
