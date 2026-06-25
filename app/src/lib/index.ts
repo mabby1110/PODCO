@@ -220,6 +220,8 @@ export const categoriasInventario = [
 	{ key: 'id', label: 'id' },
 	{ key: 'categorias', label: 'categorias' },
 	{ key: 'codigo', label: 'codigo' },
+	{ key: 'serie', label: 'serie' },
+	{ key: 'cantidad', label: 'cantidad' },
 	{ key: 'descripcion', label: 'descripcion' },
 	{ key: 'ubicacion_fisica', label: 'ubicacion_fisica' },
 ];
@@ -261,6 +263,7 @@ export const agrupacionesCalendario = [
 export const agrupacionesInventario = [
 	// {value: 'id', label:'id'},
 	{ value: 'categorias', label: 'categorias' },
+	{ value: 'codigo', label: 'codigo' },
 	{ value: 'ubicacion_fisica', label: 'ubicacion_fisica' },
 ];
 export const agrupacionesDocumentos = [

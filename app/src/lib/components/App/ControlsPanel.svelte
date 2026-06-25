@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 	import { slide } from 'svelte/transition';
 </script>
 
@@ -59,6 +60,17 @@
 		>
 			📦 Inventario
 		</a>
+		{#if $profile?.isAdmin}
+			<a
+				href="/estadisticas"
+				onclick={() => {
+					appState.togglePageActions();
+				}}
+				class="butter"
+			>
+				📊 Estadisticas
+			</a>
+		{/if}
 	</div>
 </div>
 

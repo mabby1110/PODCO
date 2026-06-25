@@ -1,20 +1,22 @@
 <script lang="ts">
-	import { filtroStore, type ColumnDef, type FilterAction } from '$lib/stores/filtroStore.svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
+	import { filtroStore, type ColumnDef } from '$lib/stores/filtroStore.svelte';
 
 	let {
 		categorias,
-		calendar = false
+		calendar = false,
+		customRoute
 	} = $props<{
 		categorias: ColumnDef[];
 		calendar?: boolean;
+		customRoute?: string;
 	}>();
 
 	let selectedColumnKey = $state<string>(categorias?.key || '');
 	let selectedAction = $state('');
 	let inputValue = $state<string>('');
 
-	let currentRoute = $derived($page.url.pathname);
+	let currentRoute = $derived(customRoute || page.url.pathname);
 	let activeFilters = $derived(filtroStore.filtersByRoute[currentRoute] || []);
 
 	function handleAdd() {
@@ -26,6 +28,7 @@
 		filtroStore.addFilter(currentRoute, column, selectedAction, valueToAdd);
 		inputValue = '';
 	}
+	$effect(()=>console.log(activeFilters));
 </script>
 
 <div class="filter-container">

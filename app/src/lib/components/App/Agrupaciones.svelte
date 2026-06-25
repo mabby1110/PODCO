@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Select from '../Select.svelte';
 	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
-	import FiltroAgente from '../FiltroAgente.svelte';
 
 	let {
 		agrupacionesSeleccionadas = $bindable(),

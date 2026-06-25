@@ -97,6 +97,8 @@ body {
 
 .page-content {
 	height: 100%;
+	overflow-y: auto;
+	padding-bottom: 4rem;
 }
 
 .page-content section {
@@ -141,6 +143,9 @@ body {
 	position: sticky;
 	top: 0;
 }
+.controls h1 {
+	width: 100%;
+}
 
 .panel {
 	border: none;
@@ -154,6 +159,50 @@ body {
 .flex-a {
 	display: flex;
 	flex-wrap: wrap;
+	gap: var(--a);
+}
+
+/* GRAFICAS */
+.contenedor-graficas {
+	padding: var(--a);
+	display: flex;
+	flex-direction: column;
+	gap: var(--a);
+	height: 100%;
+	max-height: 60vh;
+	width: 100%;
+}
+.contenido-graficas {
+	display: flex;
+	overflow-x: auto;
+	height: 100%;
+	max-width: 90vw;
+}
+.contenido-graficas h1 {
+	width: 100%;
+}
+.chart-container {
+	display: flex;
+	width: 100%;
+	height: 100%; /* Ajustar según contenedor padre, ej: 400px */
+	gap: 1rem;
+}
+
+.chart {
+	flex: 1;
+	position: relative;
+	min-width: 0; /* Crítico: permite que el ResizeObserver de Chart.js recalcule hacia arriba y hacia abajo dentro de un flexbox */
+}
+
+.chart-resume {
+	flex: 0 0 350px; /* Fija el ancho del panel lateral al abrirse */
+	overflow-y: auto;
+	position: relative;
+}
+
+.graficas {
+	display: flex;
+	flex-direction: column;
 	gap: var(--a);
 }
 

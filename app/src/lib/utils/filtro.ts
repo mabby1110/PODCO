@@ -98,7 +98,6 @@ export function procesarDatosReactivos(actividades: any[], currentRoute: string)
 
 	const activeFilters = filtroStore.filtersByRoute[currentRoute] || [];
 	const FILTER_ACTIONS = ['contains', 'isNull', 'hasData'];
-
 	const searchFilters = activeFilters.filter((f) => FILTER_ACTIONS.includes(f.action));
 	const sortFilters = activeFilters.filter((f) => !FILTER_ACTIONS.includes(f.action));
 
