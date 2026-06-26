@@ -19,7 +19,7 @@
 
 	const clientes_ordenados = $derived(obtenerDatosFiltrados(lista, 'clientes-bi'));
 	const agrupados = $derived(agruparDatosPorRuta(lista, 'clientes-bi'));
-	console.log(agrupados[0]);
+	
 	let agrupaciones = $derived(
 		agrupados.map((e) => {
 			return { grupo: e.grupo, tamaño: e.elementos.length };
@@ -27,12 +27,6 @@
 	);
 
 	let agrupacionesSeleccionadas: string[] = $state([]);
-
-	let listaFiltrada = $derived(
-		agrupacionesSeleccionadas.length === 0
-			? agrupados
-			: agrupados.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
-	);
 </script>
 
 <div class="contenedor-graficas">

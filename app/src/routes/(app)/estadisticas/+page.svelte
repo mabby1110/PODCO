@@ -5,7 +5,7 @@
 </script>
 
 <div class="page-content">
+	<GraficasInventario />
 	<GraficasClientes />
 	<GraficasOportunidades />
-	<GraficasInventario />
 </div>

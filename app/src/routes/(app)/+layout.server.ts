@@ -49,7 +49,6 @@ export const load: LayoutServerLoad = async ({
 		queryOportunidades = queryOportunidades.eq('id_agente', profile.id);
 		queryActividades = queryActividades.eq('id_agente', profile.id);
 		queryDocumentos = queryDocumentos.eq('id_agente', profile.id);
-		queryInventario = queryInventario.eq('id_agente', profile.id);
 	}
 
 	const [{ data: clientes }, { data: oportunidades }, { data: actividades }, { data: documentos }, { data: inventario }] =

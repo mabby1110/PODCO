@@ -12,10 +12,11 @@
 
 	let { inventario } = $derived(page.data);
 
-    let currentRoute = $derived(page.url.pathname);
+	let data = $derived(inventario);
 	let lista = $derived(inventario);
-    
-    const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
+	
+	let currentRoute = $derived(page.url.pathname);
+	const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
 	let show = $derived($appState.min);
 
 	let agrupaciones = $derived(
@@ -39,11 +40,7 @@
 		<button onclick={appState.toggleMin} class="butter">
 			{show ? 'min' : 'max'}
 		</button>
-		<Searchbar
-			data={inventario}
-			keyColumns={['serie', 'codigo', 'descripcion']}
-			bind:lista
-		/>
+		<Searchbar {data} keyColumns={['serie', 'codigo', 'descripcion']} bind:lista />
 		<PanelFiltros>
 			{#snippet controles()}
 				<Agrupaciones
@@ -65,7 +62,7 @@
 			</Grupo>
 		{:else}
 			<div class="no-results">
-				<p>No se encontraron oportunidades con los filtros actuales.</p>
+				<p>No se encontraron productos con los filtros actuales.</p>
 			</div>
 		{/each}
 	</div>
