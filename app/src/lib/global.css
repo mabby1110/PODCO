@@ -27,6 +27,16 @@ Especiales
 	--color-finalizar: #000000ee;
 	--color-perdida: #ff444499;
 
+	--color-1: var(--color-secondary);
+	--color-2: #5ca8ff99;
+	--color-3: #ffd70099;
+	--color-4: #34d76a99;
+	--color-5: #5ca8ffcc;
+	--color-6: #ffd700cc;
+	--color-7: #34d76acc;
+	--color-8: #000000ee;
+	--color-0: #ff444499;
+
 	--a: 8px;
 	--b: 16px;
 	--c: 24px;
@@ -133,7 +143,8 @@ body {
 	height: 100%;
 }
 
-.controls {
+.controls,
+.contenedor-controles-graficas {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--a);
@@ -141,7 +152,9 @@ body {
 	top: 0;
 	z-index: 1;
 	position: sticky;
-	top: 0;
+}
+.contenedor-controles-graficas {
+	position: relative;
 }
 .controls h1 {
 	width: 100%;
@@ -169,14 +182,23 @@ body {
 	flex-direction: column;
 	gap: var(--a);
 	height: 100%;
-	max-height: 60vh;
+	max-height: 80vh;
 	width: 100%;
 }
 .contenido-graficas {
-	display: flex;
-	overflow-x: auto;
 	height: 100%;
-	max-width: 90vw;
+	overflow: auto;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	grid-auto-flow: column;
+	gap: var(--b);
+	grid-auto-columns: 250px;
+}
+.contenedor-grafica {
+	grid-column: span 2;
+	width: 100%;
+	max-width: 94vw;
+	height: 100%;
 }
 .contenido-graficas h1 {
 	width: 100%;
@@ -184,7 +206,7 @@ body {
 .chart-container {
 	display: flex;
 	width: 100%;
-	height: 100%; /* Ajustar según contenedor padre, ej: 400px */
+	height: 100%;
 	gap: 1rem;
 }
 

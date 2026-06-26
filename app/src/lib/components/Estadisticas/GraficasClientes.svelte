@@ -1,20 +1,27 @@
 <script lang="ts">
 	import Filtro from '$lib/components/App/Filtro.svelte';
+	import CantidadXLista from './graficas/CantidadXLista.svelte';
 	import { agrupacionesCliente, categoriasCliente } from '$lib';
 	import Agrupaciones from '../App/Agrupaciones.svelte';
 	import PanelFiltros from '../App/PanelFiltros.svelte';
 	import Searchbar from '../App/Searchbar.svelte';
 	import { page } from '$app/state';
-	import { procesarDatosReactivos } from '$lib/utils/filtro';
+	import {
+		agruparDatosPorRuta,
+		obtenerDatosFiltrados,
+	} from '$lib/utils/filtro';
+	import FiltroAgente from '../FiltroAgente.svelte';
 	import CantidadXGrupo from './graficas/CantidadXGrupo.svelte';
 
 	let { clientes } = $derived(page.data);
 
 	let lista = $derived(clientes);
 
-	const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, 'clientes-bi'));
+	const clientes_ordenados = $derived(obtenerDatosFiltrados(lista, 'clientes-bi'));
+	const agrupados = $derived(agruparDatosPorRuta(lista, 'clientes-bi'));
+	console.log(agrupados[0]);
 	let agrupaciones = $derived(
-		listaAgrupada.map((e) => {
+		agrupados.map((e) => {
 			return { grupo: e.grupo, tamaño: e.elementos.length };
 		})
 	);
@@ -23,15 +30,17 @@
 
 	let listaFiltrada = $derived(
 		agrupacionesSeleccionadas.length === 0
-			? listaAgrupada
-			: listaAgrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
+			? agrupados
+			: agrupados.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
 	);
 </script>
 
 <div class="contenedor-graficas">
-	<div class="controls">
+	<h1>Clientes</h1>
+	<div class="contenedor-controles-graficas">
+		<FiltroAgente />
 		<Searchbar data={clientes} keyColumns={categoriasCliente.map((c) => c.key)} bind:lista />
-		<PanelFiltros>
+		<PanelFiltros absolute>
 			{#snippet controles()}
 				<Filtro categorias={categoriasCliente} cookies={'clientes-bi'} />
 				<Agrupaciones
@@ -44,8 +53,9 @@
 		</PanelFiltros>
 	</div>
 
-	<h1>Clientes</h1>
 	<div class="contenido-graficas">
-		<CantidadXGrupo data={listaFiltrada} />
+		<CantidadXLista data={clientes_ordenados} titulo={'cliente'} categoria={'oportunidades'}/>
+		<CantidadXLista data={clientes_ordenados} titulo={'cliente'} categoria={'contactos'}/>
+		<CantidadXGrupo data={agrupados} titulo={'grupo'} categoria={'oportunidades'}/>
 	</div>
 </div>

@@ -33,7 +33,7 @@ export const load: LayoutServerLoad = async ({
 		.from('actividades')
 		.select('*')
 		.order('inicio', { ascending: false });
-	let queryClientes = supabase.from('clientes').select('*');
+	let queryClientes = supabase.from('clientes').select('*, oportunidades(*)');
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
 	let queryInventario = supabase.from('inventario').select('*');
 

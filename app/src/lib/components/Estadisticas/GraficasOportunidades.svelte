@@ -1,18 +1,19 @@
 <script lang="ts">
-	import { agrupacionesInventario, categoriasCliente, categoriasInventario } from '$lib';
+	import { agrupacionesOportunidades, categoriasOportunidad} from '$lib';
 	import Agrupaciones from '../App/Agrupaciones.svelte';
 	import PanelFiltros from '../App/PanelFiltros.svelte';
 	import Searchbar from '../App/Searchbar.svelte';
 	import { page } from '$app/state';
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
-	import CantidadXLista from './graficas/CantidadXLista.svelte';
+	import FasesXOportunidad from './graficas/FasesXOportunidad.svelte';
 	import Filtro from '../App/Filtro.svelte';
+	import FiltroAgente from '../FiltroAgente.svelte';
 
-	let { inventario } = $derived(page.data);
+	let { oportunidades } = $derived(page.data);
 
-	let lista = $derived(inventario);
+	let lista = $derived(oportunidades);
 
-	const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, 'inventario-bi'));
+	const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, 'oportunidades-bi'));
 	let agrupaciones = $derived(
 		listaAgrupada.map((e) => {
 			return { grupo: e.grupo, tamaño: e.elementos.length };
@@ -29,23 +30,24 @@
 </script>
 
 <div class="contenedor-graficas">
-	<h1>Inventario</h1>
+	<h1>Oportunidades</h1>
 	<div class="contenedor-controles-graficas">
-		<Searchbar data={inventario} keyColumns={['serie', 'codigo', 'descripcion']} bind:lista />
+		<FiltroAgente />
+		<Searchbar data={oportunidades} keyColumns={['serie', 'codigo', 'descripcion']} bind:lista />
 		<PanelFiltros absolute>
 			{#snippet controles()}
-				<Filtro categorias={categoriasCliente} cookies={'clientes-bi'} />
+				<Filtro categorias={categoriasOportunidad} cookies={'oportunidades-bi'} />
 				<Agrupaciones
-					categorias={agrupacionesInventario}
+					categorias={agrupacionesOportunidades}
 					bind:agrupacionesSeleccionadas
 					{agrupaciones}
-					cookies={'inventario-bi'}
+					cookies={'oportunidades-bi'}
 				/>
 			{/snippet}
 		</PanelFiltros>
 	</div>
 
 	<div class="contenido-graficas">
-		<CantidadXLista data={listaFiltrada} />
+		<FasesXOportunidad data={listaFiltrada} />
 	</div>
 </div>

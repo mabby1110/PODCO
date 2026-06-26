@@ -65,6 +65,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
+		max-width: 60vw;
 		width: fit-content;
 		height: fit-content;
 		align-items: baseline;
@@ -79,7 +80,7 @@
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;
-		max-height: 30vh;
+		max-height: 20vh;
 		overflow: auto;
 	}
 	.butter {

@@ -2,7 +2,11 @@
 	import { onMount } from 'svelte';
 	import type { Snippet } from 'svelte';
 
-	let { controles, header }: { controles?: Snippet; header?: Snippet } = $props();
+	let {
+		controles,
+		header,
+		absolute
+	}: { controles?: Snippet; header?: Snippet; absolute?: boolean } = $props();
 
 	let showFilter = $state(false);
 
@@ -80,16 +84,15 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={panel}
-		class="panel-controls {quadrantY} {quadrantX}"
+		class="{quadrantY} {quadrantX} {absolute ? 'panel-controls-local' : 'panel-controls'}"
 		style="transform: translate({x}px, {y}px);"
-		onmousedown={onMouseDown}
 	>
-		<div class="header-actions">
-			<button class="butter" type="button" onclick={resetPosition}>Resetear posición</button>
+		<div class="header-actions" onmousedown={onMouseDown}>
+			<button class="close-btn" type="button" onclick={() => (showFilter = false)}>x</button>
 			{#if header}
 				{@render header()}
 			{/if}
-			<button class="close-btn" type="button" onclick={() => (showFilter = false)}>x</button>
+			<button class="butter" type="button" onclick={resetPosition}>Resetear posición</button>
 		</div>
 		{#if controles}
 			{@render controles()}
@@ -102,15 +105,19 @@
 <style>
 	.panel-controls {
 		position: fixed;
-		max-width: 90vw;
 		top: 3.6rem;
 		display: flex;
 		gap: var(--a);
-		cursor: grab;
-		user-select: none;
-		padding: 1rem;
 	}
-
+	.panel-controls-local {
+		position: absolute;
+		top: 0;
+		right: 0;
+		max-width: 60vw;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+	}
 	.panel-controls.top {
 		flex-direction: column;
 	}
@@ -130,15 +137,45 @@
 		justify-content: flex-end;
 	}
 
-	.panel-controls:active {
+	.panel-controls.left :global(.header-actions),
+	.panel-controls.left :global(.header-actions) {
+		flex-direction: row;
+	}
+	.panel-controls.right :global(.header-actions),
+	.panel-controls.right :global(.header-actions) {
+		flex-direction: row-reverse;
+	}
+	.panel-controls-local.left :global(.contenedor-agrupaciones:last-child),
+	.panel-controls-local.left :global(.contenedor-filtro) {
+		display: flex;
+		justify-content: flex-start;
+	}
+
+	.panel-controls-local.right :global(.contenedor-agrupaciones:last-child),
+	.panel-controls-local.right :global(.contenedor-filtro) {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.panel-controls-local.left :global(.header-actions),
+	.panel-controls-local.left :global(.header-actions) {
+		flex-direction: row;
+	}
+	.panel-controls-local.right :global(.header-actions),
+	.panel-controls-local.right :global(.header-actions) {
+		flex-direction: row-reverse;
+	}
+	.header-actions:active {
 		cursor: grabbing;
 	}
 
 	.header-actions {
+		width: 100%;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
 		gap: var(--a);
-		width: 100%;
+		cursor: grab;
+		user-select: none;
 	}
 </style>

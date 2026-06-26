@@ -223,7 +223,7 @@ export const categoriasInventario = [
 	{ key: 'serie', label: 'serie' },
 	{ key: 'cantidad', label: 'cantidad' },
 	{ key: 'descripcion', label: 'descripcion' },
-	{ key: 'ubicacion_fisica', label: 'ubicacion_fisica' },
+	{ key: 'ubicacion_fisica', label: 'ubicacion_fisica' }
 ];
 
 // AGRUPACIONES
@@ -264,7 +264,7 @@ export const agrupacionesInventario = [
 	// {value: 'id', label:'id'},
 	{ value: 'categorias', label: 'categorias' },
 	{ value: 'codigo', label: 'codigo' },
-	{ value: 'ubicacion_fisica', label: 'ubicacion_fisica' },
+	{ value: 'ubicacion_fisica', label: 'ubicacion_fisica' }
 ];
 export const agrupacionesDocumentos = [
 	// {value: 'id', label:'id'},
@@ -284,56 +284,65 @@ export const fases = [
 		id_fase: 1,
 		actual: 'Oportunidad',
 		accion: 'Analizar',
-		placeholder: 'Actividad con un cliente especifico.'
+		placeholder: 'Actividad con un cliente especifico.',
+		color: 'b8c0d999'
 	},
 	{
 		id_fase: 2,
 		actual: 'Analisis',
 		accion: 'Negociar',
-		placeholder: 'Validar alcance, condiciones técnicas y viabilidad comercial'
+		placeholder: 'Validar alcance, condiciones técnicas y viabilidad comercial',
+		color: '5ca8ff99'
 	},
 	{
 		id_fase: 3,
 		actual: 'Negociacion',
 		accion: 'Ganar',
-		placeholder: 'Motivos de conversión'
+		placeholder: 'Motivos de conversión',
+		color: 'ffd70099'
 	},
 	{
 		id_fase: 4,
 		actual: 'Ganada',
 		accion: 'Proceso de envío',
-		placeholder: 'O.C BMS a proveedor (reconocimiento si hay) y documentos logistica'
+		placeholder: 'O.C BMS a proveedor (reconocimiento si hay) y documentos logistica',
+		color: '34d76a99'
 	},
 	{
 		id_fase: 5,
 		actual: 'En proceso de entrega',
 		accion: 'En transito',
 		placeholder:
-			'Proceso de logística, reunir el material vendido, esperar material pedido al proveedor y corroborar condiciones'
+			'Proceso de logística, reunir el material vendido, esperar material pedido al proveedor y corroborar condiciones',
+		color: '5ca8ffcc'
 	},
 	{
 		id_fase: 6,
 		actual: 'En transito',
 		accion: 'Pedido entregado',
-		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes'
+		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes',
+		color: 'ffd700cc'
 	},
 	{
 		id_fase: 7,
 		actual: 'Pedido entregado',
 		accion: 'Pendiente por cobrar',
-		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes'
+		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes',
+		color: '34d76acc'
 	},
 	{
 		id_fase: 8,
 		actual: 'Oportunidad finalizada',
 		accion: '',
-		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes'
+		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes',
+		color: '000000ee'
 	},
 	{
 		id_fase: 0,
 		actual: 'Perdida',
 		accion: 'Analizar',
-		placeholder: 'Registrar motivo de pérdida y lecciones para futuras oportunidades'
+		placeholder: 'Registrar motivo de pérdida y lecciones para futuras oportunidades',
+		color: 'ff444499'
 	}
 ];
 export const fases_actividad = [
@@ -399,3 +408,13 @@ export let motivosProspeccion = [
 	'Evento / Feria / Exposición',
 	'Reactivación de cliente'
 ];
+// COLORES
+export const colorMap = {
+	'0': 'var(--color-perdida);',
+	'1': 'var(--color-prospecto);',
+	'2': 'var(--color-analizar);',
+	'3': 'var(--color-cotizar);',
+	'4': 'var(--color-ganada);',
+	'5': 'var(--color-enviar);',
+	'6': 'var(--color-finalizar); color: var(--color-text-ob);'
+};

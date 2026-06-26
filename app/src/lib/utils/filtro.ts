@@ -91,9 +91,18 @@ export function agruparDatos<T>(
 	}));
 }
 
+
 export function procesarDatosReactivos(actividades: any[], currentRoute: string) {
+	const datosOrdenados = obtenerDatosFiltrados(actividades, currentRoute);
+	return agruparDatosPorRuta(datosOrdenados, currentRoute);
+}
+/**
+ * Filtra y ordena las actividades según las reglas de la ruta actual.
+ * No agrupa nada, devuelve la lista "plana" lista para usarse o para agrupar.
+*/
+export function obtenerDatosFiltrados(actividades: any[], currentRoute: string) {
 	if (!actividades || !Array.isArray(actividades)) return [];
-	console.log(currentRoute);
+
 	const activeFilters = filtroStore.filtersByRoute[currentRoute] || [];
 	const FILTER_ACTIONS = ['contains', 'isNull', 'hasData'];
 	const searchFilters = activeFilters.filter((f) => FILTER_ACTIONS.includes(f.action));
@@ -101,12 +110,17 @@ export function procesarDatosReactivos(actividades: any[], currentRoute: string)
 
 	const agenteId = selectedGroupStore.selectedAgent ?? '';
 
-	console.log(
-		'datos preparados',
-		agrupacionesStore.filtersByRoute['oportunidades']
-	);
 	const filtrados = filtrarDatos(actividades, agenteId, searchFilters);
-	const ordenados = ordenarDatos(filtrados, sortFilters);
+	return ordenarDatos(filtrados, sortFilters);
+}
 
-	return agruparDatos(ordenados, agrupacionesStore.filtersByRoute[currentRoute]);
+/**
+ * Agrupa una lista ya filtrada/ordenada según las reglas de agrupación
+ * configuradas para esa ruta.
+ */
+export function agruparDatosPorRuta(datos: any[], currentRoute: string) {
+	if (!datos || !Array.isArray(datos)) return [];
+
+	const reglasAgrupacion = agrupacionesStore.filtersByRoute[currentRoute];
+	return agruparDatos(datos, reglasAgrupacion);
 }
