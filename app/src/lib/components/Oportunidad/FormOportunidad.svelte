@@ -123,10 +123,4 @@
 		flex-wrap: wrap;
 		gap: var(--b);
 	}
-	.form-group {
-		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-	}
 </style>

@@ -104,9 +104,11 @@
 <style>
 	.panel-controls {
 		position: fixed;
-		top: 3.6rem;
+		bottom: 10%;
+		right: var(--a);
 		display: flex;
 		gap: var(--a);
+		max-width: 800px;
 	}
 	.panel-controls-local {
 		position: absolute;

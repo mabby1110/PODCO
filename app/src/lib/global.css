@@ -416,6 +416,12 @@ body {
 	gap: var(--b);
 }
 
+.form-group {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+}
 .modal-header {
 	display: flex;
 	justify-content: space-between;
