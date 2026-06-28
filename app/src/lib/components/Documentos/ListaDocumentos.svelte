@@ -13,11 +13,11 @@
 	import FiltroAgente from '../FiltroAgente.svelte';
 
 	let { documentos } = $derived(page.data);
-	
+
 	let data = $derived(documentos);
 	let lista = $derived(documentos);
-    let currentRoute = $derived(page.url.pathname);
-    const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
+	let currentRoute = $derived(page.url.pathname);
+	const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
 
 	let agrupaciones = $derived(
 		listaAgrupada.map((e) => {
@@ -38,12 +38,14 @@
 
 <div class="view-container">
 	<div class="controls">
-		<button onclick={appState.toggleMin} class="butter">
-			{show ? 'min' : 'max'}
-		</button>
-		<FiltroAgente />
-		<Searchbar {data} keyColumns={categoriasDocumentos.map(a=>a.key)} bind:lista />
+		<Searchbar {data} keyColumns={categoriasDocumentos.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
+			{#snippet header()}
+				<FiltroAgente />
+				<button onclick={appState.toggleMin} class="butter">
+					{show ? 'min' : 'max'}
+				</button>
+			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasDocumentos} />
 				<Agrupaciones
@@ -51,7 +53,6 @@
 					bind:agrupacionesSeleccionadas
 					{agrupaciones}
 				/>
-				<Leyenda />
 			{/snippet}
 		</PanelFiltros>
 	</div>

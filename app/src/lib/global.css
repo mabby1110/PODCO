@@ -167,6 +167,7 @@ body {
 	background-color: var(--color-primary);
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(16px);
+	z-index: 999;
 }
 
 .flex-a {
@@ -457,7 +458,9 @@ body {
 	backdrop-filter: blur(16px);
 	cursor: pointer;
 }
-
+.chile {
+	background-color: var(--color-error);
+}
 .btn-icon {
 	background: none;
 	border: none;
@@ -473,7 +476,7 @@ body {
 	width: var(--d);
 	height: var(--d);
 	border-radius: 4px;
-	background: #f3f4f6;
+	background-color: var(--color-error);
 	color: #000;
 	transition: all 0.2s;
 	aspect-ratio: 1/1;
@@ -494,8 +497,8 @@ body {
 }
 .close-btn:hover {
 	background-color: var(--color-error);
+	opacity: 60%;
 }
-
 .lost {
 	background-color: var(--color-error);
 }

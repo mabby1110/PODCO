@@ -6,10 +6,7 @@
 	import PanelFiltros from '../App/PanelFiltros.svelte';
 	import Searchbar from '../App/Searchbar.svelte';
 	import { page } from '$app/state';
-	import {
-		agruparDatosPorRuta,
-		obtenerDatosFiltrados,
-	} from '$lib/utils/filtro';
+	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import FiltroAgente from '../FiltroAgente.svelte';
 	import CantidadXGrupo from './graficas/CantidadXGrupo.svelte';
 
@@ -19,7 +16,7 @@
 
 	const clientes_ordenados = $derived(obtenerDatosFiltrados(lista, 'clientes-bi'));
 	const agrupados = $derived(agruparDatosPorRuta(lista, 'clientes-bi'));
-	
+
 	let agrupaciones = $derived(
 		agrupados.map((e) => {
 			return { grupo: e.grupo, tamaño: e.elementos.length };
@@ -32,9 +29,11 @@
 <div class="contenedor-graficas">
 	<h1>Clientes</h1>
 	<div class="contenedor-controles-graficas">
-		<FiltroAgente />
 		<Searchbar data={clientes} keyColumns={categoriasCliente.map((c) => c.key)} bind:lista />
 		<PanelFiltros absolute>
+			{#snippet header()}
+				<FiltroAgente />
+			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasCliente} cookies={'clientes-bi'} />
 				<Agrupaciones
@@ -48,8 +47,8 @@
 	</div>
 
 	<div class="contenido-graficas">
-		<CantidadXLista data={clientes_ordenados} titulo={'cliente'} categoria={'oportunidades'}/>
-		<CantidadXLista data={clientes_ordenados} titulo={'cliente'} categoria={'contactos'}/>
-		<CantidadXGrupo data={agrupados} titulo={'grupo'} categoria={'oportunidades'}/>
+		<CantidadXLista data={clientes_ordenados} titulo={'cliente'} categoria={'oportunidades'} />
+		<CantidadXLista data={clientes_ordenados} titulo={'cliente'} categoria={'contactos'} />
+		<CantidadXGrupo data={agrupados} titulo={'grupo'} categoria={'oportunidades'} />
 	</div>
 </div>

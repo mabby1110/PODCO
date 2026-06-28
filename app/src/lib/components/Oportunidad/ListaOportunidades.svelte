@@ -39,10 +39,6 @@
 <div class="view-container">
 	<div class="controls">
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-		<button onclick={appState.toggleMin} class="butter">
-			{show ? 'min' : 'max'}
-		</button>
-		<FiltroAgente />
 		<Searchbar
 			{data}
 			keyColumns={categoriasOportunidad.map((c) => c.key).concat(['clientes'])}
@@ -50,7 +46,11 @@
 		/>
 		<PanelFiltros>
 			{#snippet header()}
-				<Leyenda />
+				<Leyenda/>
+				<FiltroAgente />
+				<button onclick={appState.toggleMin} class="butter">
+					{show ? 'min' : 'max'}
+				</button>
 			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasOportunidad} />

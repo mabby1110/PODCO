@@ -7,6 +7,7 @@
 		resume,
 		content,
 		meta,
+		acciones,
 		href = '/',
 		style = '',
 		ocultarAcciones
@@ -15,6 +16,7 @@
 		resume?: Snippet;
 		content?: Snippet;
 		meta?: Snippet;
+		acciones?: Snippet;
 		href?: string;
 		style?: string;
 		ocultarAcciones?: boolean;
@@ -52,7 +54,7 @@
 	{/if}
 
 	{#if resume}
-		<div class="content {show ? '' : 'resume'}" transition:slide>
+		<div class="content {show ? '' : 'resume'}">
 			{@render resume()}
 		</div>
 	{/if}
@@ -69,6 +71,9 @@
 				{@render meta()}
 			</div>
 		{/if}
+		{#if acciones}
+			{@render acciones()}
+		{/if}
 		{#if !ocultarAcciones}
 			<button class="butter" onclick={handleNavigationClick}>Ver</button>
 		{/if}
@@ -77,9 +82,9 @@
 
 <style>
 	.card-list-preview {
+		position: relative;
 		text-decoration: none;
 		color: inherit;
-		position: relative;
 		padding: var(--a);
 		background-color: var(--color-secondary);
 		backdrop-filter: blur(16px);

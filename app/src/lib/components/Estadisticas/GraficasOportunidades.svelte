@@ -32,9 +32,11 @@
 <div class="contenedor-graficas">
 	<h1>Oportunidades</h1>
 	<div class="contenedor-controles-graficas">
-		<FiltroAgente />
 		<Searchbar data={oportunidades} keyColumns={['serie', 'codigo', 'descripcion']} bind:lista />
 		<PanelFiltros absolute>
+			{#snippet header()}
+				<FiltroAgente />
+			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasOportunidad} cookies={'oportunidades-bi'} />
 				<Agrupaciones

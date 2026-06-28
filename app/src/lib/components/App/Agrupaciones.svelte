@@ -65,8 +65,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		max-width: 60vw;
-		width: fit-content;
 		height: fit-content;
 		align-items: baseline;
 		background-color: var(--color-contrast);
@@ -77,6 +75,7 @@
 		gap: var(--a);
 	}
 	.agrupaciones {
+		flex-grow: 1;
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;

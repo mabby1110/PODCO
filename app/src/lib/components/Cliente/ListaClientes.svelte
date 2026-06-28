@@ -12,11 +12,11 @@
 	import Grupo from '../Grupo.svelte';
 
 	let { clientes } = $derived(page.data);
-	
+
 	let data = $derived(clientes);
 	let lista = $derived(clientes);
-    let currentRoute = $derived(page.url.pathname);
-    const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
+	let currentRoute = $derived(page.url.pathname);
+	const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
 
 	let agrupaciones = $derived(
 		listaAgrupada.map((e) => {
@@ -38,12 +38,14 @@
 <div class="view-container">
 	<div class="controls">
 		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-		<button onclick={appState.toggleMin} class="butter">
-			{show ? 'min' : 'max'}
-		</button>
-		<FiltroAgente />
-		<Searchbar {data} keyColumns={categoriasCliente.map(a=>a.key)} bind:lista />
+		<Searchbar {data} keyColumns={categoriasCliente.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
+			{#snippet header()}
+				<FiltroAgente />
+				<button onclick={appState.toggleMin} class="butter">
+					{show ? 'min' : 'max'}
+				</button>
+			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasCliente} />
 				<Agrupaciones

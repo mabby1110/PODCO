@@ -9,12 +9,14 @@
 	import Searchbar from '../App/Searchbar.svelte';
 	import { page } from '$app/state';
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
+	import ProductosSeleccionados from './ProductosSeleccionados.svelte';
+	import Panel from '../App/Panel.svelte';
 
 	let { inventario } = $derived(page.data);
 
 	let data = $derived(inventario);
 	let lista = $derived(inventario);
-	
+
 	let currentRoute = $derived(page.url.pathname);
 	const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
 	let show = $derived($appState.min);
@@ -37,11 +39,13 @@
 <div class="view-container">
 	<div class="controls">
 		<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
-		<button onclick={appState.toggleMin} class="butter">
-			{show ? 'min' : 'max'}
-		</button>
-		<Searchbar {data} keyColumns={['serie', 'codigo', 'descripcion']} bind:lista />
+		<Searchbar {data} keyColumns={['serie', 'codigo', 'descripcion', 'categorias']} bind:lista />
 		<PanelFiltros>
+			{#snippet header()}
+				<button onclick={appState.toggleMin} class="butter">
+					{show ? 'min' : 'max'}
+				</button>
+			{/snippet}
 			{#snippet controles()}
 				<Agrupaciones
 					categorias={agrupacionesInventario}
@@ -51,6 +55,11 @@
 				<Filtro categorias={categoriasInventario} />
 			{/snippet}
 		</PanelFiltros>
+		<Panel tituloBoton="Productos Seleccionados">
+			{#snippet controles()}
+				<ProductosSeleccionados />
+			{/snippet}
+		</Panel>
 	</div>
 
 	<div class="view-content">

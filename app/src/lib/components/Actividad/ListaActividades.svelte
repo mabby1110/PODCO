@@ -43,14 +43,14 @@
 <div class="view-container">
 	<div class="controls">
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-		<button onclick={appState.toggleMin} class="butter">
-			{show ? 'min' : 'max'}
-		</button>
-		<FiltroAgente />
 		<Searchbar {data} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
 				<Leyenda {steps} />
+				<FiltroAgente />
+				<button onclick={appState.toggleMin} class="butter">
+					{show ? 'min' : 'max'}
+				</button>
 			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasActividad} />

@@ -5,8 +5,9 @@
 	let {
 		controles,
 		header,
-		absolute
-	}: { controles?: Snippet; header?: Snippet; absolute?: boolean } = $props();
+		absolute,
+		tituloBoton = 'boton'
+	}: { controles?: Snippet; header?: Snippet; absolute?: boolean; tituloBoton: string } = $props();
 
 	let showFilter = $state(false);
 
@@ -87,6 +88,9 @@
 		class="panel {quadrantY} {quadrantX} {absolute ? 'panel-controls-local' : 'panel-controls'}"
 		style="transform: translate({x}px, {y}px);"
 	>
+		{#if controles}
+			{@render controles()}
+		{/if}
 		<div class="header-actions" onmousedown={onMouseDown}>
 			<button class="close-btn" type="button" onclick={() => (showFilter = false)}>✕</button>
 			<button class="butter" type="button" onclick={resetPosition}>Resetear posición</button>
@@ -94,12 +98,9 @@
 				{@render header()}
 			{/if}
 		</div>
-		{#if controles}
-			{@render controles()}
-		{/if}
 	</div>
 {/if}
-<button class="butter" onclick={() => (showFilter = true)}> +Filtros </button>
+<button class="butter" onclick={() => (showFilter = true)}> {tituloBoton} </button>
 
 <style>
 	.panel-controls {
@@ -107,6 +108,7 @@
 		top: 3.6rem;
 		display: flex;
 		gap: var(--a);
+		max-width: 800px;
 	}
 	.panel-controls-local {
 		position: absolute;
@@ -117,35 +119,33 @@
 		flex-wrap: wrap;
 		gap: var(--a);
 	}
-
 	.panel-controls.top,
 	.panel-controls.bottom {
-		flex-direction: column;
+		flex-direction: column-reverse;
 	}
 	.panel-controls.left :global(.contenedor-agrupaciones:last-child),
 	.panel-controls.left :global(.contenedor-filtro) {
 		display: flex;
-		justify-content: flex-start;
+		justify-content: flex-end;
 	}
 
 	.panel-controls.right :global(.contenedor-agrupaciones:last-child),
 	.panel-controls.right :global(.contenedor-filtro) {
 		display: flex;
-		justify-content: flex-end;
+		justify-content: flex-start;
 	}
 
 	.panel-controls-local.left :global(.contenedor-agrupaciones:last-child),
 	.panel-controls-local.left :global(.contenedor-filtro) {
 		display: flex;
-		justify-content: flex-start;
+		justify-content: flex-end;
 	}
 
 	.panel-controls-local.right :global(.contenedor-agrupaciones:last-child),
 	.panel-controls-local.right :global(.contenedor-filtro) {
 		display: flex;
-		justify-content: flex-end;
+		justify-content: flex-start;
 	}
-
 	.header-actions:active {
 		cursor: grabbing;
 	}
