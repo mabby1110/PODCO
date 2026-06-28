@@ -4,18 +4,25 @@
 	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 
 	let { agrupacion, showByDefault = false, children } = $props();
-	let { clientes } = $derived(page.data);
+	let { clientes, agentes, oportunidades } = $state(page.data);
 	let categoria = String(agrupacionesStore.filtersByRoute[page.url.pathname]);
 	let show = $derived(showByDefault);
-	let groupTitle = agrupacion.grupo;
+	let groupTitle = $derived(agrupacion.grupo);
 
-	console.log(agrupacion, agrupacionesStore.filtersByRoute[page.url.pathname]);
 	if (categoria == 'fase') {
 		groupTitle = fases.find((i) => i.id_fase == agrupacion.grupo)?.actual;
 	} else if (categoria == 'id_cliente') {
-		let cliente = clientes.find((c)=>c.id == agrupacion.grupo);
-		console.log(cliente);
+		let cliente = clientes.find((c) => c.id == agrupacion.grupo);
 		groupTitle = cliente.nombre_comercial || cliente.razon_social;
+	} else if (categoria == 'id_agente') {
+		let agente = agentes.find((c) => c.id == agrupacion.grupo);
+		groupTitle = agente.nombre;
+	} else if (categoria == 'id_oportunidad') {
+		let oportunidad = oportunidades.find((c) => c.id == agrupacion.grupo);
+		let cliente = clientes.find((c) => c.id == oportunidad.id_cliente);
+		groupTitle = (cliente.nombre_comercial || cliente.razon_social) + ' ' + oportunidad.motivo;
+	} else {
+		groupTitle = agrupacion.grupo;
 	}
 </script>
 

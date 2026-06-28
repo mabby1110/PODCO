@@ -15,7 +15,7 @@
 		-
 	</button>
 
-	<span class="cantidad-viva">{cantidad}</span>
+	<span class="cantidad-viva">{cantidad}/{producto.cantidad}</span>
 
 	<button
 		type="button"
