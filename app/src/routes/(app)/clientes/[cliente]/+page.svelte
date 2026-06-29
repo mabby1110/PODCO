@@ -6,7 +6,7 @@
 	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
 	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
 	import Card from '$lib/components/Card.svelte';
-	import EditableInput from '$lib/components/EditableInput.svelte';
+	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
 
 	let { cliente, oportunidades, agentes } = $derived(page.data);
 	let openOp = $derived(oportunidades?.filter((a: any) => a.id_cliente == cliente.id));

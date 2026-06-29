@@ -105,11 +105,11 @@
 <style>
 	.panel-controls {
 		position: fixed;
-		top: 20%;
+		top: 0;
 		right: var(--a);
 		display: flex;
 		gap: var(--a);
-		max-width: 800px;
+		max-width: 700px;
 		width: 94%;
 	}
 	.panel-controls-local {

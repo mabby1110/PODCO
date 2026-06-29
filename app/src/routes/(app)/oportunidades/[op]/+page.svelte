@@ -8,7 +8,7 @@
 	import Card from '$lib/components/Card.svelte';
 	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
 	import Entradas from '$lib/components/Entradas.svelte';
-	import EditableInput from '$lib/components/EditableInput.svelte';
+	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
 	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
 	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
 	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';

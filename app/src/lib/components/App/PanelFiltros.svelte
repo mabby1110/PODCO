@@ -84,10 +84,10 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={panel}
-		class="panel {quadrantY} {quadrantX} {absolute ? 'panel-controls-local' : 'panel-controls'}"
+		class="{quadrantY} {quadrantX} {absolute ? 'panel-controls-local' : 'panel-controls'}"
 		style="transform: translate({x}px, {y}px);"
 	>
-		<div class="header-actions" onmousedown={onMouseDown}>
+		<div class="panel header-actions" onmousedown={onMouseDown}>
 			<button class="close-btn" type="button" onclick={() => (showFilter = false)}>✕</button>
 			<button class="butter" type="button" onclick={resetPosition}>Resetear posición</button>
 			{#if header}
@@ -104,17 +104,17 @@
 <style>
 	.panel-controls {
 		position: fixed;
-		bottom: 10%;
+		top: 0;
+		right: 0;
 		right: var(--a);
 		display: flex;
 		gap: var(--a);
-		max-width: 800px;
+		max-width: fit-content;
 	}
 	.panel-controls-local {
 		position: absolute;
 		top: 0;
 		right: 0;
-		max-width: 60vw;
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
@@ -160,5 +160,8 @@
 		gap: var(--a);
 		cursor: grab;
 		user-select: none;
+	}
+	.header-actions.is-dragging > * {
+		pointer-events: none;
 	}
 </style>

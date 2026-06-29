@@ -11,7 +11,7 @@
 	import { postActivityUpdate } from '$lib/utils/actions.js';
 	import { invalidateAll } from '$app/navigation';
 	import Entradas from '$lib/components/Entradas.svelte';
-	import EditableInput from '$lib/components/EditableInput.svelte';
+	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
 	// 💡 NOTA: Se eliminó 'untrack' ya que no lo necesitamos en eventos
 
 	let { data } = $props();

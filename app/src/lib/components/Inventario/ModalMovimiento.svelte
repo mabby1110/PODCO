@@ -4,11 +4,12 @@
 	import { productosSeleccionadosStore } from '$lib/stores/productosSeleccionadosStore.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import FormInput from '../FormInput.svelte';
+	import Select from '../Select.svelte';
 
 	let id_agente = $state('');
 	let id_oportunidad = $derived(page.data.profile);
 	let no_orden = $state('');
-	let tipo: 'entrada' | 'salida' = $state('entrada');
+	let tipo = $state('');
 
 	const copiarAExcel = () => {
 		const cabeceras = 'Cantidad\tCódigo\tDescripción\tSerie\tMoneda\tPrecio';
@@ -31,7 +32,12 @@
 		</div>
 	</div>
 
-	<h4>Productos en Cola:</h4>
+	<div class="acciones-tabla">
+		<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
+		<button class="butter" type="button" onclick={() => productosSeleccionadosStore.limpiar()}>
+			Borrar
+		</button>
+	</div>
 	{#if productosSeleccionadosStore.items.length === 0}
 		<p class="vacio">No hay productos seleccionados.</p>
 	{:else}
@@ -54,12 +60,6 @@
 					<input type="number" bind:value={item.producto.precio} />
 				</div>
 			{/each}
-			<div class="acciones-tabla">
-				<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
-				<button class="butter" type="button" onclick={() => productosSeleccionadosStore.limpiar()}>
-					Borrar
-				</button>
-			</div>
 		</div>
 	{/if}
 
@@ -88,55 +88,53 @@
 	>
 		<input type="text" hidden bind:value={$profile} />
 		<div class="acciones">
-			<div class="form-group">
-				<label>
-					<select bind:value={tipo}>
-						<option value="" selected disabled>seleccionar acción</option>
-						<option value="cotizacion">cotización</option>
-						<option value="entrada">Entrada</option>
-						<option value="salida">Salida</option>
-					</select>
-				</label>
-				{#if tipo === 'entrada'}
-					<FormInput
-						label="Número de Orden BMS"
-						name="no_orden"
-						placeholder="Serial BMS"
-						type="text"
-						bind:value={no_orden}
-					/>
-					<button
-						class="butter submit"
-						type="submit"
-						disabled={productosSeleccionadosStore.items.length === 0}
-					>
-						Procesar Entrada
-					</button>
-				{:else if tipo === 'salida'}
-					<button
-						class="butter submit"
-						type="submit"
-						disabled={productosSeleccionadosStore.items.length === 0}
-					>
-						Procesar Salida
-					</button>
-				{:else if tipo === 'cotizacion'}
-					<button
-						class="butter submit"
-						type="submit"
-						disabled={productosSeleccionadosStore.items.length === 0}
-					>
-						Crear Pedido
-					</button>
-				{/if}
-			</div>
+			<Select
+				bind:selected={tipo}
+				title="Tipo de movimiento"
+				options={[
+					{ value: 'cotizacion', label: 'Cotización' },
+					{ value: 'entrada', label: 'entrada' },
+					{ value: 'salida', label: 'salida' }
+				]}
+			/>
+			{#if tipo === 'entrada'}
+				<FormInput
+					label="Número de Orden BMS"
+					name="no_orden"
+					placeholder="Serial BMS"
+					type="text"
+					bind:value={no_orden}
+				/>
+				<button
+					class="butter submit"
+					type="submit"
+					disabled={productosSeleccionadosStore.items.length === 0}
+				>
+					Procesar Entrada
+				</button>
+			{:else if tipo === 'salida'}
+				<button
+					class="butter submit"
+					type="submit"
+					disabled={productosSeleccionadosStore.items.length === 0}
+				>
+					Procesar Salida
+				</button>
+			{:else if tipo === 'cotizacion'}
+				<button
+					class="butter submit"
+					type="submit"
+					disabled={productosSeleccionadosStore.items.length === 0}
+				>
+					Crear Pedido
+				</button>
+			{/if}
 		</div>
 	</form>
 </div>
 
 <style>
 	.movimiento {
-		width: 100%;
 		position: sticky;
 		top: 0;
 		z-index: 99;
@@ -146,7 +144,9 @@
 	}
 	.acciones {
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
+		justify-content: space-between;
+		width: 100%;
 		gap: var(--a);
 	}
 	.campos-grupo {
@@ -168,9 +168,15 @@
 		display: flex;
 		gap: var(--a);
 		margin-top: var(--a);
+		position: sticky;
+		bottom: 0;
 	}
 	.acciones-tabla .butter {
 		width: fit-content;
+	}
+	.submit {
+		width: fit-content;
+		align-self: flex-end;
 	}
 	.producto {
 		display: grid;
@@ -180,10 +186,6 @@
 	}
 	.producto :last-child {
 		grid-column: span 2;
-	}
-	form {
-		display: flex;
-		justify-content: space-between;
 	}
 	.vacio {
 		margin: 2rem;
