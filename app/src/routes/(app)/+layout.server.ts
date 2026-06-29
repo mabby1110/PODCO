@@ -37,6 +37,7 @@ export const load: LayoutServerLoad = async ({
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
 	let queryInventario = supabase.from('inventario').select('*');
 	let queryPedidos = supabase.from('pedidos').select('*, profiles(*), inventario(*)');
+	let queryCotizaciones = supabase.from('docs_cotizaciones').select('*');
 
 	if (profile?.isAdmin) {
 		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
@@ -51,6 +52,7 @@ export const load: LayoutServerLoad = async ({
 		queryActividades = queryActividades.eq('id_agente', profile.id);
 		queryDocumentos = queryDocumentos.eq('id_agente', profile.id);
 		queryPedidos = queryPedidos.eq('id_agente', profile.id);
+		queryCotizaciones = queryCotizaciones.eq('id_agente', profile.id);
 	}
 
 	const [
@@ -60,6 +62,7 @@ export const load: LayoutServerLoad = async ({
 		{ data: documentos },
 		{ data: inventario },
 		{ data: pedidos },
+		{ data: cotizaciones },
 	] = await Promise.all([
 		queryClientes,
 		queryOportunidades,
@@ -67,19 +70,21 @@ export const load: LayoutServerLoad = async ({
 		queryDocumentos,
 		queryInventario,
 		queryPedidos,
+		queryCotizaciones,
 	]);
 	console.log('actividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
 	console.log('clientes: ', clientes?.length);
 	console.log('documentos: ', documentos?.length);
 	console.log('inventario: ', inventario?.length);
-	console.log('pedidos: ', inventario?.length);
+	console.log('pedidos: ', pedidos?.length);
+	console.log('cotizaciones: ', cotizaciones?.length);
 
-	let ides = []
-	for (let i=0  ; i<=2; i++){
-		ides.push(generateId('BMS-OCP'));
-	}
-	console.log(JSON.stringify(ides));
+	// let ides = []
+	// for (let i=0  ; i<=2; i++){
+	// 	ides.push(generateId('BMS-OCP'));
+	// }
+	// console.log(JSON.stringify(ides));
 	return {
 		profile,
 		agentes,
@@ -88,6 +93,7 @@ export const load: LayoutServerLoad = async ({
 		clientes: clientes || [],
 		documentos: documentos || [],
 		inventario: inventario || [],
-		pedidos: pedidos || []
+		pedidos: pedidos || [],
+		cotizaciones: cotizaciones || []
 	};
 };

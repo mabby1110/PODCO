@@ -14,7 +14,7 @@
 		categorias: any;
 		cookies?: string;
 	}>();
-
+	console.log(agrupaciones);
 	function seleccionarAgrupacion(e: string): void {
 		const index = agrupacionesSeleccionadas.indexOf(e);
 		if (index !== -1) {
