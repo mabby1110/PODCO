@@ -75,6 +75,11 @@ export const load: LayoutServerLoad = async ({
 	console.log('inventario: ', inventario?.length);
 	console.log('pedidos: ', inventario?.length);
 
+	let ides = []
+	for (let i=0  ; i<=2; i++){
+		ides.push(generateId('BMS-OCP'));
+	}
+	console.log(JSON.stringify(ides));
 	return {
 		profile,
 		agentes,

@@ -1,9 +1,13 @@
 <script lang="ts">
-	import { categoriasInventario } from '$lib';
+	import { agrupacionesInventario, categoriasInventario } from '$lib';
 	import Searchbar from '../App/Searchbar.svelte';
 	import { page } from '$app/state';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import InventarioCantidadXGrupo from './graficas/InventarioCantidadXGrupo.svelte';
+	import PanelFiltros from '../App/PanelFiltros.svelte';
+	import FiltroAgente from '../FiltroAgente.svelte';
+	import Agrupaciones from '../App/Agrupaciones.svelte';
+	import Filtro from '../App/Filtro.svelte';
 	
 	let { inventario } = $derived(page.data);
 	let lista = $derived(inventario);
@@ -23,10 +27,7 @@
 	<h1>Inventario</h1>
 	<div class="contenedor-controles-graficas">
 		<Searchbar data={inventario} keyColumns={categoriasInventario.map(i=>i.key)} bind:lista />
-		<!-- <PanelFiltros absolute>
-			{#snippet header()}
-				<FiltroAgente />
-			{/snippet}
+		<PanelFiltros absolute>
 			{#snippet controles()}
 				<Filtro categorias={categoriasInventario} cookies={'inventario-bi'} />
 				<Agrupaciones
@@ -36,7 +37,7 @@
 					cookies={'inventario-bi'}
 				/>
 			{/snippet}
-		</PanelFiltros> -->
+		</PanelFiltros>
 	</div>
 
 	<div class="contenido-graficas">

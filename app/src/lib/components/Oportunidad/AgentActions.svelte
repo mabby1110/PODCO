@@ -34,10 +34,10 @@
 			return eventData.cotizaciones.length > 0;
 		} else if (currentPhase == 3) {
 			return eventData.cotizaciones.length > 0 && eventData.occ.lenght > 0;
-		} else if ((currentPhase = 4)) {
-			return (
-				eventData.cotizaciones.length > 0 && eventData.occ.lenght > 0 && eventData.ocp.lenght > 0
-			);
+		} else if (currentPhase == 4) {
+			return eventData.cotizaciones.length > 0 && eventData.occ.lenght > 0 && eventData.ocp.lenght > 0;
+		} else {
+			return true;
 		}
 	});
 	let submitUpdate = $state(false);

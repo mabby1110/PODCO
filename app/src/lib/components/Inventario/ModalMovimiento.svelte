@@ -81,7 +81,7 @@
 			};
 		}}
 	>
-	<!-- formulario -->
+		<!-- formulario -->
 		<div class="acciones">
 			<Select
 				bind:selected={tipo}
@@ -179,8 +179,10 @@
 		gap: var(--a);
 		align-items: baseline;
 	}
-	.producto :last-child {
+	.producto :nth-child(2),
+	.producto :nth-child(3) {
 		grid-column: span 2;
+		word-break: break-all;
 	}
 	.vacio {
 		margin: 2rem;

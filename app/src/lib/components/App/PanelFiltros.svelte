@@ -110,6 +110,7 @@
 		display: flex;
 		gap: var(--a);
 		max-width: fit-content;
+		z-index: 99;
 	}
 	.panel-controls-local {
 		position: absolute;
@@ -118,6 +119,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
+		z-index: 99;
+		max-width: 94vw;
 	}
 
 	.panel-controls.top,
