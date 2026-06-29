@@ -6,8 +6,7 @@
 	import FormInput from '../FormInput.svelte';
 	import Select from '../Select.svelte';
 
-	let id_agente = $state('');
-	let id_oportunidad = $derived(page.data.profile);
+	let agente = $derived(page.data.profile);
 	let no_orden = $state('');
 	let tipo = $state('');
 
@@ -28,7 +27,7 @@
 	<div class="campos-grupo">
 		<div class="header">
 			<h3>Confirmación de Movimiento</h3>
-			<p>{id_oportunidad.nombre}</p>
+			<p>{agente.nombre}</p>
 		</div>
 	</div>
 
@@ -57,7 +56,7 @@
 					<span>{item.producto.descripcion || '-'}</span>
 					<span>{item.producto.serie || '-'}</span>
 					<span>USD</span>
-					<input type="number" bind:value={item.producto.precio} />
+					<input type="number" name="total" bind:value={item.producto.precio} />
 				</div>
 			{/each}
 		</div>
@@ -65,14 +64,12 @@
 
 	<form
 		method="POST"
-		action="/kardex?/add"
+		action="/inventario?/crearPedido"
 		use:enhance={({ formData }) => {
 			const payload = productosSeleccionadosStore.items.map((item) => ({
 				id_producto: item.producto.id,
-				id_agente,
-				id_oportunidad,
-				piezas: item.piezas,
-				tipo
+				cantidad: item.piezas,
+				precio_unitario: item.producto.precio
 			}));
 
 			formData.append('payload', JSON.stringify(payload));
@@ -80,13 +77,11 @@
 			return async ({ result }) => {
 				if (result.type === 'success') {
 					productosSeleccionadosStore.limpiar();
-					id_agente = '';
-					id_oportunidad = '';
 				}
 			};
 		}}
 	>
-		<input type="text" hidden bind:value={$profile} />
+	<!-- formulario -->
 		<div class="acciones">
 			<Select
 				bind:selected={tipo}

@@ -1,4 +1,4 @@
-import type { Actividad, Cliente, Cotizacion, Oportunidad } from '$lib';
+import type { Actividad, Cliente, Cotizacion, Oportunidad, Pedido } from '$lib';
 import { processAttachments } from '../google/drive';
 import { generateId } from '../google/sheets';
 
@@ -73,6 +73,26 @@ const CLAVES_OPORTUNIDAD: (keyof Oportunidad)[] = [
 	'oc_cliente',
 	'documentos_operacion'
 ];
+const CLAVES_PEDIDO: (keyof Pedido)[] = [
+	'id',
+	'fecha_creacion',
+	'inicio',
+	'fin',
+	'fecha_cierre',
+	'id_agente',
+	'fase',
+	'historia',
+	'observaciones',
+	'fecha_pedido',
+	'fecha_reconocimiento',
+	'fecha_recepcion',
+	'total',
+	'no_orden',
+	'id_oportunidad',
+	'id_producto',
+	'cantidad',
+	'precio_unitario',
+];
 
 export function limpiarCamposVacios(obj: Record<string, any>): Record<string, any> {
 	// Creamos una copia para no mutar el objeto original
@@ -135,7 +155,6 @@ export function construirDatosCliente(data: Record<string, any>, id?: string): P
 	return limpiarCamposVacios(datosBrutos) as Partial<Cliente>;
 }
 
-// --- FUNCIONES CONSTRUCTORAS ---
 export function construirDatosActividad(
 	data: Record<string, any>,
 	id?: string
@@ -168,6 +187,51 @@ export function construirDatosActividad(
 	}
 
 	return limpiarCamposVacios(datosBrutos) as Partial<Actividad>;
+}
+
+export function construirDatosPedido(
+	data: Record<string, any>,
+	id?: string
+): Partial<Pedido> {
+	const datosBrutos: Partial<Pedido> = {};
+	console.log('brutos: ', datosBrutos)
+	for (const clave of CLAVES_PEDIDO) {
+		// Asignación de ID
+		if (clave === 'id') {
+			datosBrutos.id = id ? id : generateId('BMS-PD');
+			continue;
+		}
+
+		// Asignación de id_agente
+		if (clave === 'id_agente') {
+			datosBrutos.id_agente = data.id_agente ?? null;
+			continue;
+		}
+
+		// Asignación de Fecha de Creación
+		if (clave === 'fecha_creacion' && !data.fecha_creacion) {
+			datosBrutos.fecha_creacion = new Date().toISOString();
+			continue;
+		}
+
+		// Conversión de Fase a Número
+		if (clave === 'fase' && data.fase !== undefined) {
+			datosBrutos.fase = data.fase ? Number(data.fase) : 1;
+			continue;
+		}
+
+		// manejo para json
+		// if (clave === 'historia' && data.historia !== undefined) {
+		// 	datosBrutos.historia = data.historia === 'string' ? JSON.parse(data.historia) : data.historia;
+		// 	continue;
+		// }
+		// Asignación del resto si existen
+		if (data[clave] !== undefined) {
+			(datosBrutos as any)[clave] = data[clave];
+		}
+	}
+
+	return limpiarCamposVacios(datosBrutos) as Partial<Pedido>;
 }
 
 export function construirDatosOportunidad(

@@ -92,6 +92,26 @@ export type Cotizacion = {
 	id_actividad: string;
 	tipo: string;
 };
+export type Pedido = {
+	id: string;
+	fecha_creacion: string | Date;
+	inicio: string | Date;
+	fin: string | Date;
+	fecha_cierre: string | Date;
+	id_agente: string;
+	fase: number;
+	historia: string;
+	observaciones: string;
+	fecha_pedido: string | Date;
+	fecha_reconocimiento: string | Date;
+	fecha_recepcion: string | Date;
+	total: number;
+	no_orden: string;
+	id_oportunidad: string;
+	id_producto: string;
+	cantidad: string;
+	precio_unitario: string;
+};
 // MAPEO CON SHEETS
 export const historialFieldMap = {
 	fecha_creacion: 'B',
