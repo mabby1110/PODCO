@@ -60,6 +60,15 @@
 		>
 			📦 Inventario
 		</a>
+		<a
+			href="/pedidos"
+			onclick={() => {
+				appState.togglePageActions();
+			}}
+			class="butter"
+		>
+			🛒 Pedidos
+		</a>
 		{#if $profile?.isAdmin}
 			<a
 				href="/estadisticas"

@@ -36,6 +36,7 @@ export const load: LayoutServerLoad = async ({
 	let queryClientes = supabase.from('clientes').select('*, oportunidades(*)');
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
 	let queryInventario = supabase.from('inventario').select('*');
+	let queryPedidos = supabase.from('pedidos').select('*, profiles(*), inventario(*)');
 
 	if (profile?.isAdmin) {
 		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
@@ -49,15 +50,30 @@ export const load: LayoutServerLoad = async ({
 		queryOportunidades = queryOportunidades.eq('id_agente', profile.id);
 		queryActividades = queryActividades.eq('id_agente', profile.id);
 		queryDocumentos = queryDocumentos.eq('id_agente', profile.id);
+		queryPedidos = queryPedidos.eq('id_agente', profile.id);
 	}
 
-	const [{ data: clientes }, { data: oportunidades }, { data: actividades }, { data: documentos }, { data: inventario }] =
-		await Promise.all([queryClientes, queryOportunidades, queryActividades, queryDocumentos, queryInventario]);
+	const [
+		{ data: clientes },
+		{ data: oportunidades },
+		{ data: actividades },
+		{ data: documentos },
+		{ data: inventario },
+		{ data: pedidos },
+	] = await Promise.all([
+		queryClientes,
+		queryOportunidades,
+		queryActividades,
+		queryDocumentos,
+		queryInventario,
+		queryPedidos,
+	]);
 	console.log('actividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
 	console.log('clientes: ', clientes?.length);
 	console.log('documentos: ', documentos?.length);
 	console.log('inventario: ', inventario?.length);
+	console.log('pedidos: ', inventario?.length);
 
 	return {
 		profile,
@@ -67,5 +83,6 @@ export const load: LayoutServerLoad = async ({
 		clientes: clientes || [],
 		documentos: documentos || [],
 		inventario: inventario || [],
+		pedidos: pedidos || []
 	};
 };

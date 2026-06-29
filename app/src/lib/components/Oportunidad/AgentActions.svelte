@@ -27,7 +27,19 @@
 
 	let isOpen = $state(false);
 	let submit = $state(false);
-	let canSubmit = $derived(eventData.cotizaciones.length > 0 && eventData.occ.length > 0);
+	let canSubmit = $derived.by(() => {
+		console.log(eventData.cotizaciones.length);
+		console.log(eventData.occ.lenght);
+		if (currentPhase == 2) {
+			return eventData.cotizaciones.length > 0;
+		} else if (currentPhase == 3) {
+			return eventData.cotizaciones.length > 0 && eventData.occ.lenght > 0;
+		} else if ((currentPhase = 4)) {
+			return (
+				eventData.cotizaciones.length > 0 && eventData.occ.lenght > 0 && eventData.ocp.lenght > 0
+			);
+		}
+	});
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 	let style = $derived(getStyleForPhase(currentPhase + 1));
@@ -80,6 +92,7 @@
 						required
 					/>
 				{:else if currentPhase == 2}
+					<input type="hidden" name="fecha_negociacion" value={new Date().toISOString()} />
 					<FormSelectMotivo
 						title="Especificar Motivo"
 						list={motivosOportunidad}
@@ -134,7 +147,6 @@
 						</div>
 					</div>
 					<DatePicker title="Fecha seguimiento o Expiración" />
-					<input type="hidden" name="fecha_negociacion" value={new Date().toISOString()} />
 				{:else if currentPhase == 3}
 					<FormInput
 						label={eventData.fase.actual}
