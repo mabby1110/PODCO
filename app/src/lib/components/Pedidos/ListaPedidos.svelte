@@ -7,37 +7,51 @@
 	import PanelFiltros from '../App/PanelFiltros.svelte';
 	import Searchbar from '../App/Searchbar.svelte';
 	import { page } from '$app/state';
-	import { procesarDatosReactivos } from '$lib/utils/filtro';
+	import { agruparDatosPorRuta, obtenerDatosFiltrados, procesarDatosReactivos } from '$lib/utils/filtro';
 	import PreviewListaPedido from './PreviewListaPedido.svelte';
 
 	let { pedidos } = $derived(page.data);
 
-	let data = $derived(pedidos);
+	let currentRoute = $derived(page.url.pathname);
+
+	// guardamos lista para poder manipular data
 	let lista = $derived(pedidos);
 
-	let currentRoute = $derived(page.url.pathname);
-	const listaAgrupada = $derived.by(() => procesarDatosReactivos(lista, currentRoute));
-	let show = $derived($appState.min);
+	// cadena de variables reactivas, data > lista > lista_odenada > lista_agrupada
+	let lista_ordenada = $derived(obtenerDatosFiltrados(lista, currentRoute));
+	let lista_agrupada = $derived(agruparDatosPorRuta(lista_ordenada, currentRoute));
 
-	let agrupaciones = $derived(
-		listaAgrupada.map((e) => {
+	let grupos = $derived(
+		lista_agrupada.map((e) => {
 			return { grupo: e.grupo, tamaño: e.elementos.length };
 		})
 	);
 
-	let agrupacionesSeleccionadas: string[] = $state([]);
-
-	let listaFiltrada = $derived(
-		agrupacionesSeleccionadas.length === 0
-			? listaAgrupada
-			: listaAgrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
+	/* Es necesario una variable reactiva ya que los derived son solo de lectura,
+	lista_agrupada ya maneja la reactividad contra lista ordenada
+	por lo que bloquea todo lo demas que modifique su valor actual
+	*/
+	let agrupacionesSeleccionadas: string[] = $state(grupos.map((a: any) => a.grupo));
+	let lista_agrupada_filtrada = $derived(
+		agrupacionesSeleccionadas.length > 0
+			? lista_agrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
+			: lista_agrupada
 	);
+
+	$effect(() => {
+		console.log('lista: ', agrupacionesSeleccionadas);
+		if (agrupacionesSeleccionadas.length > 0) {
+			lista_agrupada?.filter((a) => agrupacionesSeleccionadas.includes(a.grupo));
+		}
+	});
+
+	let show = $derived($appState.min);
 </script>
 
 <div class="view-container">
 	<div class="controls">
 		<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
-		<Searchbar {data} keyColumns={['serie', 'codigo', 'descripcion', 'categorias']} bind:lista />
+		<Searchbar data={pedidos} keyColumns={['serie', 'codigo', 'descripcion', 'categorias']} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
 				<button onclick={appState.toggleMin} class="butter">
@@ -48,7 +62,7 @@
 				<Agrupaciones
 					categorias={agrupacionesInventario}
 					bind:agrupacionesSeleccionadas
-					{agrupaciones}
+					{grupos}
 				/>
 				<Filtro categorias={categoriasInventario} />
 			{/snippet}
@@ -56,7 +70,7 @@
 	</div>
 
 	<div class="view-content">
-		{#each listaFiltrada as agrupacion (agrupacion.grupo)}
+		{#each lista_agrupada_filtrada as agrupacion (agrupacion.grupo)}
 			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as event (event.id)}
 					<PreviewListaPedido {event} />
@@ -64,7 +78,7 @@
 			</Grupo>
 		{:else}
 			<div class="no-results">
-				<p>No se encontraron pedidoPreviewListaPedidos con los filtros actuales.</p>
+				<p>No se encontraron datos.</p>
 			</div>
 		{/each}
 	</div>

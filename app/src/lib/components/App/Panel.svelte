@@ -88,9 +88,6 @@
 		class="panel {quadrantY} {quadrantX} {absolute ? 'panel-controls-local' : 'panel-controls'}"
 		style="transform: translate({x}px, {y}px);"
 	>
-		{#if controles}
-			{@render controles()}
-		{/if}
 		<div class="header-actions" onmousedown={onMouseDown}>
 			<button class="close-btn" type="button" onclick={() => (showFilter = false)}>✕</button>
 			<button class="butter" type="button" onclick={resetPosition}>Resetear posición</button>
@@ -98,6 +95,9 @@
 				{@render header()}
 			{/if}
 		</div>
+		{#if controles}
+			{@render controles()}
+		{/if}
 	</div>
 {/if}
 <button class="butter" onclick={() => (showFilter = true)}> {tituloBoton} </button>
@@ -113,7 +113,7 @@
 		width: 94%;
 	}
 	.panel-controls-local {
-		position:sticky;
+		position: sticky;
 		top: 0;
 		right: 0;
 		max-width: 40vw;

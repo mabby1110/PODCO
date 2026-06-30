@@ -108,7 +108,6 @@ body {
 .page-content {
 	height: 100%;
 	overflow-y: auto;
-	padding-bottom: 4rem;
 }
 
 .page-content section {

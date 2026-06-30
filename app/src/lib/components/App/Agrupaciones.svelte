@@ -2,6 +2,7 @@
 	import Select from '../Select.svelte';
 	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 	import { page } from '$app/state';
+	import { appState } from '$lib/stores/appState.svelte';
 
 	let {
 		agrupacionesSeleccionadas = $bindable(),
@@ -14,17 +15,24 @@
 		categorias: any;
 		cookies?: string;
 	}>();
+
+	let show = $derived($appState.min);
+
 	function seleccionarAgrupacion(e: string): void {
 		const index = agrupacionesSeleccionadas.indexOf(e);
+
 		if (index !== -1) {
-			agrupacionesSeleccionadas.splice(index, 1);
+			agrupacionesSeleccionadas = agrupacionesSeleccionadas.filter((item) => item !== e);
 		} else {
-			agrupacionesSeleccionadas.push(e);
+			agrupacionesSeleccionadas = [...agrupacionesSeleccionadas, e];
 		}
 	}
 
 	function seleccionarTodos(): void {
 		agrupacionesSeleccionadas = grupos.map((a: any) => a.grupo);
+	}
+	function borrar(): void {
+		agrupacionesSeleccionadas = [];
 	}
 </script>
 
@@ -37,8 +45,12 @@
 				bind:selected={agrupacionesStore.filtersByRoute[cookies]}
 			/>
 
-			<button class="butter" onclick={seleccionarTodos}>
-				Reset ({agrupacionesSeleccionadas.length})
+			<button onclick={appState.toggleMin} class="butter">
+				{show ? 'min' : 'max'}
+			</button>
+			<button class="butter" onclick={seleccionarTodos}> Todos </button>
+			<button class="butter" onclick={borrar}>
+				borrar ({agrupacionesSeleccionadas.length})
 			</button>
 		</div>
 
