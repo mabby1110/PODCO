@@ -3,8 +3,10 @@
 	import { agrupacionesCliente, categoriasCliente } from '$lib';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
+	import { exportarCSV } from '$lib/utils/blobActions';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import Agrupaciones from '../App/Agrupaciones.svelte';
+	import ExportarCSV from '../App/ExportarCSV.svelte';
 	import Filtro from '../App/Filtro.svelte';
 	import PanelFiltros from '../App/PanelFiltros.svelte';
 	import Searchbar from '../App/Searchbar.svelte';
@@ -50,6 +52,7 @@
 
 <div class="view-container">
 	<div class="controls">
+		<ExportarCSV {lista_ordenada} />
 		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 		<Searchbar data={clientes} keyColumns={categoriasCliente.map((a) => a.key)} bind:lista />
 		<PanelFiltros>

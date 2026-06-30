@@ -14,6 +14,8 @@
 	} from '$lib/utils/filtro';
 	import ModalMovimiento from './ModalMovimiento.svelte';
 	import Panel from '../App/Panel.svelte';
+	import { exportarCSV } from '$lib/utils/blobActions';
+	import ExportarCSV from '../App/ExportarCSV.svelte';
 
 	let { inventario } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -53,6 +55,7 @@
 
 <div class="view-container">
 	<div class="controls">
+		<ExportarCSV {lista_ordenada} />
 		<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
 		<Searchbar
 			data={inventario}

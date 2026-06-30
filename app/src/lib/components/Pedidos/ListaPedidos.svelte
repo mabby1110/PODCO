@@ -7,8 +7,13 @@
 	import PanelFiltros from '../App/PanelFiltros.svelte';
 	import Searchbar from '../App/Searchbar.svelte';
 	import { page } from '$app/state';
-	import { agruparDatosPorRuta, obtenerDatosFiltrados, procesarDatosReactivos } from '$lib/utils/filtro';
+	import {
+		agruparDatosPorRuta,
+		obtenerDatosFiltrados,
+		procesarDatosReactivos
+	} from '$lib/utils/filtro';
 	import PreviewListaPedido from './PreviewListaPedido.svelte';
+	import ExportarCSV from '../App/ExportarCSV.svelte';
 
 	let { pedidos } = $derived(page.data);
 
@@ -50,8 +55,13 @@
 
 <div class="view-container">
 	<div class="controls">
+		<ExportarCSV {lista_ordenada} />
 		<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
-		<Searchbar data={pedidos} keyColumns={['serie', 'codigo', 'descripcion', 'categorias']} bind:lista />
+		<Searchbar
+			data={pedidos}
+			keyColumns={['serie', 'codigo', 'descripcion', 'categorias']}
+			bind:lista
+		/>
 		<PanelFiltros>
 			{#snippet header()}
 				<button onclick={appState.toggleMin} class="butter">
@@ -59,11 +69,7 @@
 				</button>
 			{/snippet}
 			{#snippet controles()}
-				<Agrupaciones
-					categorias={agrupacionesInventario}
-					bind:agrupacionesSeleccionadas
-					{grupos}
-				/>
+				<Agrupaciones categorias={agrupacionesInventario} bind:agrupacionesSeleccionadas {grupos} />
 				<Filtro categorias={categoriasInventario} />
 			{/snippet}
 		</PanelFiltros>

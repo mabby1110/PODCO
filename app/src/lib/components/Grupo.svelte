@@ -1,6 +1,6 @@
 <script>
 	import { page } from '$app/state';
-	import { fases } from '$lib';
+	import { fases, fases_actividad } from '$lib';
 	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 
 	let { agrupacion, showByDefault = false, children } = $props();
@@ -10,7 +10,17 @@
 	let groupTitle = $derived(agrupacion.grupo);
 
 	if (categoria == 'fase') {
-		groupTitle = fases.find((i) => i.id_fase == agrupacion.grupo)?.actual;
+		switch (page.url.pathname) {
+			case '/actividades':
+				groupTitle = fases_actividad.find((i) => i.id_fase == agrupacion.grupo)?.actual;
+				break;
+			case '/oportunidades':
+				groupTitle = fases.find((i) => i.id_fase == agrupacion.grupo)?.actual;
+				break;
+			default:
+				break;
+		}	
+		
 	} else if (categoria == 'id_cliente') {
 		let cliente = clientes.find((c) => c.id == agrupacion.grupo);
 		groupTitle = cliente.nombre_comercial || cliente.razon_social;

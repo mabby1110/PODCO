@@ -11,6 +11,7 @@
 	import { page } from '$app/state';
 	import Searchbar from '../App/Searchbar.svelte';
 	import FiltroAgente from '../FiltroAgente.svelte';
+	import ExportarCSV from '../App/ExportarCSV.svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -40,7 +41,6 @@
 	);
 
 	$effect(() => {
-		console.log('lista: ', agrupacionesSeleccionadas);
 		if (agrupacionesSeleccionadas.length > 0) {
 			lista_agrupada?.filter((a) => agrupacionesSeleccionadas.includes(a.grupo));
 		}
@@ -51,6 +51,7 @@
 
 <div class="view-container">
 	<div class="controls">
+		<ExportarCSV {lista_ordenada} />
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<Searchbar
 			data={oportunidades}

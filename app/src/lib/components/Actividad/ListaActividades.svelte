@@ -11,6 +11,8 @@
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import Searchbar from '../App/Searchbar.svelte';
 	import FiltroAgente from '../FiltroAgente.svelte';
+	import { exportarCSV } from '$lib/utils/blobActions';
+	import ExportarCSV from '../App/ExportarCSV.svelte';
 
 	let { actividades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -40,7 +42,6 @@
 	);
 
 	$effect(() => {
-		console.log('lista: ', agrupacionesSeleccionadas);
 		if (agrupacionesSeleccionadas.length > 0) {
 			lista_agrupada?.filter((a) => agrupacionesSeleccionadas.includes(a.grupo));
 		}
@@ -56,6 +57,7 @@
 
 <div class="view-container">
 	<div class="controls">
+		<ExportarCSV {lista_ordenada} />
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 		<Searchbar data={actividades} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
 		<PanelFiltros>

@@ -10,6 +10,8 @@
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import Searchbar from '../App/Searchbar.svelte';
 	import FiltroAgente from '../FiltroAgente.svelte';
+	import { exportarCSV } from '$lib/utils/blobActions';
+	import ExportarCSV from '../App/ExportarCSV.svelte';
 
 	let { documentos } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -50,6 +52,7 @@
 
 <div class="view-container">
 	<div class="controls">
+		<ExportarCSV {lista_ordenada} />
 		<Searchbar data={documentos} keyColumns={categoriasDocumentos.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
