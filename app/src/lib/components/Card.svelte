@@ -41,6 +41,5 @@
     }
     .card-content {
 		white-space: pre-wrap;
-        margin-bottom: var(--e);
     }
 </style>
