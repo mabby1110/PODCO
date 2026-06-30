@@ -10,8 +10,7 @@
 	import { page } from '$app/state';
 	import {
 		agruparDatosPorRuta,
-		obtenerDatosFiltrados,
-		procesarDatosReactivos
+		obtenerDatosFiltrados
 	} from '$lib/utils/filtro';
 	import ModalMovimiento from './ModalMovimiento.svelte';
 	import Panel from '../App/Panel.svelte';
@@ -44,7 +43,6 @@
 	);
 
 	$effect(() => {
-		console.log('lista: ', agrupacionesSeleccionadas);
 		if (agrupacionesSeleccionadas.length > 0) {
 			lista_agrupada?.filter((a) => agrupacionesSeleccionadas.includes(a.grupo));
 		}
@@ -62,17 +60,20 @@
 			bind:lista
 		/>
 		<PanelFiltros>
-			{#snippet header()}
-				<button onclick={appState.toggleMin} class="butter">
-					{show ? 'min' : 'max'}
-				</button>
-			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasInventario} />
 				<Agrupaciones categorias={agrupacionesInventario} bind:agrupacionesSeleccionadas {grupos} />
 			{/snippet}
 		</PanelFiltros>
 		<Panel tituloBoton="Productos Seleccionados">
+			{#snippet header()}
+				<div class="campos-grupo">
+					<div class="header">
+						<h3>Seleccion de inventario</h3>
+						<p>{page.data.profile.nombre}</p>
+					</div>
+				</div>
+			{/snippet}
 			{#snippet controles()}
 				<ModalMovimiento />
 			{/snippet}

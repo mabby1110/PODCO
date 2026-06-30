@@ -159,7 +159,7 @@
 					{/if}
 					{#if currentFase >= 2 && currentFase <= 3 && (eventData.cotizaciones.length <= 0 || isEditing)}
 						<SubirCotizacion
-							name={$profile?.isOper?'docs_adjuntos':'docs_cotizaciones'}
+							name={'docs_cotizaciones'}
 							amountLabel="Total cotizado"
 							amountName="totales"
 							id_nodo_p={eventData.id}
@@ -184,7 +184,7 @@
 							{/each}
 						</div>
 					{/if}
-					{#if !$profile?.isOper && currentFase == 3 && (eventData.occ.length <= 0 || isEditing)}
+					{#if (!$profile?.isOper || $profile?.isAdmin) && currentFase == 3 && (eventData.occ.length <= 0 || isEditing)}
 						<SubirOcc
 							name="docs_occ"
 							amountLabel="Total"

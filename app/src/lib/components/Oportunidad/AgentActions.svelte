@@ -24,22 +24,30 @@
 	let necesidades = $state('');
 	let potencial_venta = $state(eventData.potencial_venta || '');
 	let objetivo = $state('');
-
 	let isOpen = $state(false);
 	let submit = $state(false);
+
 	let canSubmit = $derived.by(() => {
-		console.log(eventData.cotizaciones.length);
-		console.log(eventData.occ.lenght);
+		const cotizacionesCount = eventData.cotizaciones?.length || 0;
+		// Si occ y ocp son arreglos, use .length directamente.
+		// Si son objetos {}, use Object.keys().length:
+		const occCount = Object.keys(eventData.occ || {}).length;
+		const ocpCount = Object.keys(eventData.ocp || {}).length;
+
+		console.log('cotizaciones', cotizacionesCount);
+		console.log('occ', occCount);
+
 		if (currentPhase == 2) {
-			return eventData.cotizaciones.length > 0;
+			return cotizacionesCount > 0;
 		} else if (currentPhase == 3) {
-			return eventData.cotizaciones.length > 0 && eventData.occ.lenght > 0;
+			return cotizacionesCount > 0 && occCount > 0;
 		} else if (currentPhase == 4) {
-			return eventData.cotizaciones.length > 0 && eventData.occ.lenght > 0 && eventData.ocp.lenght > 0;
+			return cotizacionesCount > 0 && occCount > 0 && ocpCount > 0;
 		} else {
 			return true;
 		}
 	});
+
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 	let style = $derived(getStyleForPhase(currentPhase + 1));

@@ -70,7 +70,7 @@
         <button class="reset-button" onclick={resetColumns}>Resetear Columnas</button>
     {/if}
 
-    <input type="search" bind:value={term} />
+    <input type="search" bind:value={term} placeholder="Buscar..."/>
 
     {#if showResults && results.length > 0 && visibleColumns.length > 0}
         <div class="results" style="--col-count: {visibleColumns.length};">

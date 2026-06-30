@@ -90,10 +90,10 @@
 	>
 		<div class="header-actions" onmousedown={onMouseDown}>
 			<button class="close-btn" type="button" onclick={() => (showFilter = false)}>✕</button>
-			<button class="butter" type="button" onclick={resetPosition}>Resetear posición</button>
 			{#if header}
 				{@render header()}
 			{/if}
+			<button class="butter" type="button" onclick={resetPosition}>Resetear posición</button>
 		</div>
 		{#if controles}
 			{@render controles()}

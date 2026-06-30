@@ -18,6 +18,7 @@
 		{#if eventData?.inventario}
 			<div class="brief">
 				<p>{eventData?.inventario.descripcion}</p>
+				<p>{eventData?.inventario.serie}</p>
 			</div>
 		{/if}
 		<p class="codigo">{eventData?.no_orden}</p>

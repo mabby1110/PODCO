@@ -6,7 +6,6 @@
 	import FormInput from '../FormInput.svelte';
 	import Select from '../Select.svelte';
 
-	let agente = $derived(page.data.profile);
 	let no_orden = $state('');
 	let tipo = $state('');
 
@@ -24,13 +23,6 @@
 </script>
 
 <div class="movimiento">
-	<div class="campos-grupo">
-		<div class="header">
-			<h3>Confirmación de Movimiento</h3>
-			<p>{agente.nombre}</p>
-		</div>
-	</div>
-
 	<div class="acciones-tabla">
 		<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
 		<button class="butter" type="button" onclick={() => productosSeleccionadosStore.limpiar()}>
@@ -62,70 +54,72 @@
 		</div>
 	{/if}
 
-	<form
-		method="POST"
-		action="/inventario?/crearPedido"
-		use:enhance={({ formData }) => {
-			const payload = productosSeleccionadosStore.items.map((item) => ({
-				id_producto: item.producto.id,
-				cantidad: item.piezas,
-				precio_unitario: item.producto.precio
-			}));
+	{#if $profile?.isAdmin || $profile?.isOper}
+		<form
+			method="POST"
+			action="/inventario?/crearPedido"
+			use:enhance={({ formData }) => {
+				const payload = productosSeleccionadosStore.items.map((item) => ({
+					id_producto: item.producto.id,
+					cantidad: item.piezas,
+					precio_unitario: item.producto.precio
+				}));
 
-			formData.append('payload', JSON.stringify(payload));
+				formData.append('payload', JSON.stringify(payload));
 
-			return async ({ result }) => {
-				if (result.type === 'success') {
-					productosSeleccionadosStore.limpiar();
-				}
-			};
-		}}
-	>
-		<!-- formulario -->
-		<div class="acciones">
-			<Select
-				bind:selected={tipo}
-				title="Tipo de movimiento"
-				options={[
-					{ value: 'cotizacion', label: 'Cotización' },
-					{ value: 'entrada', label: 'entrada' },
-					{ value: 'salida', label: 'salida' }
-				]}
-			/>
-			{#if tipo === 'entrada'}
-				<FormInput
-					label="Número de Orden BMS"
-					name="no_orden"
-					placeholder="Serial BMS"
-					type="text"
-					bind:value={no_orden}
+				return async ({ result }) => {
+					if (result.type === 'success') {
+						productosSeleccionadosStore.limpiar();
+					}
+				};
+			}}
+		>
+			<!-- formulario -->
+			<div class="acciones">
+				<Select
+					bind:selected={tipo}
+					title="Tipo de movimiento"
+					options={[
+						{ value: 'cotizacion', label: 'Cotización' },
+						{ value: 'entrada', label: 'entrada' },
+						{ value: 'salida', label: 'salida' }
+					]}
 				/>
-				<button
-					class="butter submit"
-					type="submit"
-					disabled={productosSeleccionadosStore.items.length === 0}
-				>
-					Procesar Entrada
-				</button>
-			{:else if tipo === 'salida'}
-				<button
-					class="butter submit"
-					type="submit"
-					disabled={productosSeleccionadosStore.items.length === 0}
-				>
-					Procesar Salida
-				</button>
-			{:else if tipo === 'cotizacion'}
-				<button
-					class="butter submit"
-					type="submit"
-					disabled={productosSeleccionadosStore.items.length === 0}
-				>
-					Crear Pedido
-				</button>
-			{/if}
-		</div>
-	</form>
+				{#if tipo === 'entrada'}
+					<FormInput
+						label="Número de Orden BMS"
+						name="no_orden"
+						placeholder="Serial BMS"
+						type="text"
+						bind:value={no_orden}
+					/>
+					<button
+						class="butter submit"
+						type="submit"
+						disabled={productosSeleccionadosStore.items.length === 0}
+					>
+						Procesar Entrada
+					</button>
+				{:else if tipo === 'salida'}
+					<button
+						class="butter submit"
+						type="submit"
+						disabled={productosSeleccionadosStore.items.length === 0}
+					>
+						Procesar Salida
+					</button>
+				{:else if tipo === 'cotizacion'}
+					<button
+						class="butter submit"
+						type="submit"
+						disabled={productosSeleccionadosStore.items.length === 0}
+					>
+						Crear Pedido
+					</button>
+				{/if}
+			</div>
+		</form>
+	{/if}
 </div>
 
 <style>
