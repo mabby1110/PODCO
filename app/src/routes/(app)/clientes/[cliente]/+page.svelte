@@ -181,15 +181,15 @@
 			<button onclick={() => (isEditing = !isEditing)} class="butter {isEditing}">Editar</button>
 			<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		</div>
-		<div class="op-list">
-			{#if openOp.length > 0}
-				{#each openOp as op}
-					<CardOpListPreview event={op} />
-				{/each}
-			{/if}
-		</div>
 	{/snippet}
 </Card>
+<div class="op-list">
+	{#if openOp.length > 0}
+		{#each openOp as op}
+			<CardOpListPreview event={op} />
+		{/each}
+	{/if}
+</div>
 
 <style>
 	.true {
@@ -223,15 +223,5 @@
 		width: 100%;
 		padding: 0 var(--a);
 		margin-bottom: var(--e);
-	}
-	.card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: var(--c) var(--a);
-	}
-
-	.submit {
-		position: fixed;
-		bottom: 0;
 	}
 </style>

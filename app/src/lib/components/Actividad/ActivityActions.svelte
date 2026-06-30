@@ -38,29 +38,27 @@
 {#if currentPhase != 0 && currentPhase != 6}
 	<FormActions action="/actividades?/update" bind:isOpen onSuccess={handleSuccess}>
 		{#snippet fieldsContent()}
-			<div class="actions">
-				{#if submit}
-					{#if currentPhase == 1}
-						<FormInput
-							label="Conclusión"
-							name="nuevaHistoria"
-							bind:value={nuevaHistoria}
-							placeholder="Resultados técnicos, potencial detectado y acuerdos de seguimiento."
-							type="textarea"
-							required
-						/>
-					{/if}
-				{:else if submitCancel}
+			{#if submit}
+				{#if currentPhase == 1}
 					<FormInput
-						label="Justificación"
+						label="Conclusión"
 						name="nuevaHistoria"
 						bind:value={nuevaHistoria}
-						placeholder="Motivo de la cancelación"
+						placeholder="Resultados técnicos, potencial detectado y acuerdos de seguimiento."
 						type="textarea"
 						required
 					/>
 				{/if}
-			</div>
+			{:else if submitCancel}
+				<FormInput
+					label="Justificación"
+					name="nuevaHistoria"
+					bind:value={nuevaHistoria}
+					placeholder="Motivo de la cancelación"
+					type="textarea"
+					required
+				/>
+			{/if}
 		{/snippet}
 		{#snippet hiddenContent()}
 			<input type="hidden" name="id" value={eventData.id} />
@@ -150,9 +148,5 @@
 		width: 100%;
 		flex-wrap: wrap;
 		gap: var(--a);
-	}
-	.submit {
-		position: fixed;
-		bottom: 0;
 	}
 </style>

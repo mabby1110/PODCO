@@ -152,9 +152,11 @@ body {
 	z-index: 1;
 	position: sticky;
 }
+
 .contenedor-controles-graficas {
 	position: relative;
 }
+
 .controls h1 {
 	width: 100%;
 }
@@ -185,6 +187,7 @@ body {
 	max-height: 80vh;
 	width: 100%;
 }
+
 .contenido-graficas {
 	height: 100%;
 	overflow: auto;
@@ -194,15 +197,18 @@ body {
 	gap: var(--b);
 	grid-auto-columns: 250px;
 }
+
 .contenedor-grafica {
 	grid-column: span 2;
 	width: 100%;
 	max-width: 94vw;
 	height: 100%;
 }
+
 .contenido-graficas h1 {
 	width: 100%;
 }
+
 .chart-container {
 	display: flex;
 	width: 100%;
@@ -213,11 +219,13 @@ body {
 .chart {
 	flex: 1;
 	position: relative;
-	min-width: 0; /* Crítico: permite que el ResizeObserver de Chart.js recalcule hacia arriba y hacia abajo dentro de un flexbox */
+	min-width: 0;
+	/* Crítico: permite que el ResizeObserver de Chart.js recalcule hacia arriba y hacia abajo dentro de un flexbox */
 }
 
 .chart-resume {
-	flex: 0 0 350px; /* Fija el ancho del panel lateral al abrirse */
+	flex: 0 0 350px;
+	/* Fija el ancho del panel lateral al abrirse */
 	overflow-y: auto;
 	position: relative;
 }
@@ -292,15 +300,6 @@ body {
 	text-decoration: none;
 }
 
-.card-full .card-content {
-	overflow: auto;
-	display: flex;
-	flex-direction: column;
-	gap: var(--b);
-	padding: var(--a) 0 0;
-	height: 100%;
-}
-
 .entradas {
 	flex-grow: 1;
 	display: flex;
@@ -316,10 +315,12 @@ body {
 	margin-bottom: var(--b);
 	align-items: center;
 }
+
 .titulo-entrada {
 	display: flex;
 	gap: var(--a);
 }
+
 .contenido-entrada {
 	width: 100%;
 	display: flex;
@@ -360,13 +361,21 @@ body {
 	padding-left: var(--a);
 }
 
+/* CARD-FULL */
+.card-full .card-content {
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	gap: var(--b);
+	height: 100%;
+	padding-bottom: var(--e);
+}
 .card-content section {
 	padding: 0 var(--a);
 	display: flex;
 	flex-direction: column;
 	gap: var(--a);
 }
-
 .card-actions {
 	position: relative;
 	display: flex;
@@ -383,12 +392,11 @@ body {
 	justify-content: flex-end;
 	align-items: flex-end;
 	flex-grow: 1;
-	padding: var(--a);
+	padding: var(--a) var(--a) var(--a) var(--f);
 	width: 100%;
-	position: sticky;
+	position: fixed;
 	bottom: 0;
 	border-radius: var(--a) var(--a) 0 0;
-	padding-left: var(--e);
 }
 
 /* ESTILOS PARA MODALES */
@@ -420,6 +428,7 @@ body {
 	flex-wrap: wrap;
 	gap: var(--a);
 }
+
 .modal-header {
 	display: flex;
 	justify-content: space-between;
@@ -462,9 +471,11 @@ body {
 	backdrop-filter: blur(16px);
 	cursor: pointer;
 }
+
 .chile {
 	background-color: var(--color-error);
 }
+
 .btn-icon {
 	background: none;
 	border: none;
@@ -485,24 +496,29 @@ body {
 	transition: all 0.2s;
 	aspect-ratio: 1/1;
 }
+
 .list-button {
 	all: unset;
 	width: 100%;
 	padding: 4px 0;
 	border-radius: var(--a);
 }
+
 .list-button:hover {
 	background-color: var(--color-contrast);
 	color: var(--color-text-ob);
 }
+
 .btn-save-small {
 	background: var(--color-ganada, #4caf50);
 	align-self: flex-end;
 }
+
 .close-btn:hover {
 	background-color: var(--color-error);
 	opacity: 60%;
 }
+
 .lost {
 	background-color: var(--color-error);
 }
@@ -543,6 +559,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
 	background: rgba(136, 136, 136, 0.65);
 }
+
 @media (max-width: 768px) {
 	::-webkit-scrollbar {
 		width: 10px;
