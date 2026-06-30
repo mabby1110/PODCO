@@ -1,0 +1,65 @@
+<script lang="ts">
+    import * as echarts from 'echarts';
+
+    interface Documento {
+        id_oportunidad?: string;
+        id_cliente?: string;
+        id_agente?: string;
+        total?: number;
+        [key: string]: any;
+    }
+
+    interface Grupo {
+        grupo: string;
+        elementos: Documento[];
+    }
+
+    let { data, titulo }: { data: Grupo[]; titulo: string } = $props();
+    let chartRef: HTMLDivElement | undefined = $state();
+
+    $effect(() => {
+        if (!chartRef || !data) return;
+
+        const chart = echarts.init(chartRef);
+
+        const procesados = data
+            .map(g => ({
+                nombre: g.grupo || 'Desconocido',
+                valor: g.elementos.reduce((acc, el) => acc + (Number(el.total) || 0), 0)
+            }))
+            .sort((a, b) => b.valor - a.valor)
+            .slice(0, 10)
+            .reverse();
+
+        chart.setOption({
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            grid: { left: '3%', right: '10%', top: '5%', bottom: '10%', containLabel: true },
+            xAxis: { type: 'value' },
+            yAxis: {
+                type: 'category',
+                data: procesados.map(p => p.nombre),
+                axisLabel: { width: 120, overflow: 'truncate' }
+            },
+            series: [{
+                name: 'Total Documentos',
+                type: 'bar',
+                data: procesados.map(p => p.valor),
+                label: { show: true, position: 'right', color: '#000' },
+                itemStyle: { color: 'var(--color-1, #5470c6)' }
+            }]
+        });
+
+        const handleResize = () => chart.resize();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            chart.dispose();
+        };
+    });
+</script>
+
+<div class="contenedor-grafica" style="display: flex; flex-direction: column; height: 100%; width: 100%;">
+    <h2>{titulo}</h2>
+    <div bind:this={chartRef} style="flex: 1; min-height: 300px;"></div>
+</div>

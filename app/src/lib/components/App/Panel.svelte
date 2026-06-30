@@ -113,17 +113,17 @@
 		width: 94%;
 	}
 	.panel-controls-local {
-		position: absolute;
+		position:sticky;
 		top: 0;
 		right: 0;
-		max-width: 60vw;
+		max-width: 40vw;
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
 	}
 	.panel-controls.top,
 	.panel-controls.bottom {
-		flex-direction: column-reverse;
+		flex-direction: column;
 	}
 	.panel-controls.left :global(.contenedor-agrupaciones:last-child),
 	.panel-controls.left :global(.contenedor-filtro) {

@@ -9,29 +9,18 @@
         [key: string]: any;
     }
 
-    interface Grupo {
-        grupo: string;
-        elementos?: Documento[];
-    }
-
-    let { data, titulo }: { data: Grupo[]; titulo: string } = $props();
-    let chartRef: HTMLDivElement | undefined = $state();
+    let { data, titulo }: { data: Documento[]; titulo: string } = $props();
     
+    let chartRef: HTMLDivElement | undefined = $state();
+    let topN: number = $state(10);
+    let chart: echarts.ECharts | undefined;
+
     $effect(() => {
         if (!chartRef || !data) return;
 
-        const chart = echarts.init(chartRef);
+        chart ??= echarts.init(chartRef);
 
-        const procesados = data
-            .map(g => ({
-                nombre: g.grupo || 'Desconocido',
-                valor: Array.isArray(g.elementos) 
-                    ? g.elementos.reduce((acc, el) => acc + (Number(el.total) || 0), 0) 
-                    : 0
-            }))
-            .sort((a, b) => b.valor - a.valor)
-            .slice(0, 10)
-            .reverse();
+        const procesados = data.slice(0, topN).reverse();
 
         chart.setOption({
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
@@ -39,29 +28,38 @@
             xAxis: { type: 'value' },
             yAxis: {
                 type: 'category',
-                data: procesados.map(p => p.nombre),
+                data: procesados.map(p => p.id_cliente || p.id_oportunidad || p.id_agente || 'Desconocido'),
                 axisLabel: { width: 120, overflow: 'truncate' }
             },
             series: [{
-                name: 'Total Documentos',
+                name: 'Total cotizado sin iva',
                 type: 'bar',
-                data: procesados.map(p => p.valor),
+                data: procesados.map(p => Number(p.total) || 0),
                 label: { show: true, position: 'right', color: '#000' },
                 itemStyle: { color: 'var(--color-1, #5470c6)' }
             }]
         });
+    });
 
-        const handleResize = () => chart.resize();
+    $effect(() => {
+        const handleResize = () => chart?.resize();
         window.addEventListener('resize', handleResize);
 
         return () => {
             window.removeEventListener('resize', handleResize);
-            chart.dispose();
+            chart?.dispose();
         };
     });
 </script>
 
 <div class="contenedor-grafica" style="display: flex; flex-direction: column; height: 100%; width: 100%;">
-    <h1>{titulo}</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>{titulo}</h2>
+        <select bind:value={topN} style="padding: 4px 8px; border-radius: 4px;">
+            <option value={5}>Top 5</option>
+            <option value={10}>Top 10</option>
+            <option value={50}>Top 50</option>
+        </select>
+    </div>
     <div bind:this={chartRef} style="flex: 1; min-height: 300px;"></div>
 </div>

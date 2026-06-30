@@ -5,16 +5,15 @@
 
 	let {
 		agrupacionesSeleccionadas = $bindable(),
-		agrupaciones,
+		grupos,
 		categorias,
 		cookies = page.url.pathname
 	} = $props<{
-		agrupaciones: any;
+		grupos: any;
 		agrupacionesSeleccionadas: string[];
 		categorias: any;
 		cookies?: string;
 	}>();
-	console.log(agrupaciones);
 	function seleccionarAgrupacion(e: string): void {
 		const index = agrupacionesSeleccionadas.indexOf(e);
 		if (index !== -1) {
@@ -25,7 +24,7 @@
 	}
 
 	function seleccionarTodos(): void {
-		agrupacionesSeleccionadas = agrupaciones.map((a: any) => a.grupo);
+		agrupacionesSeleccionadas = grupos.map((a: any) => a.grupo);
 	}
 </script>
 
@@ -44,7 +43,7 @@
 		</div>
 
 		<div class="agrupaciones">
-			{#each agrupaciones as agrupacion}
+			{#each grupos as agrupacion}
 				<button
 					class="butter"
 					class:seleccionado={agrupacionesSeleccionadas.includes(agrupacion.grupo)}

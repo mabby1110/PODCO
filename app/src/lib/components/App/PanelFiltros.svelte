@@ -116,11 +116,11 @@
 		position: absolute;
 		top: 0;
 		right: 0;
+		max-width: 40vw;
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
 		z-index: 99;
-		max-width: 94vw;
 	}
 
 	.panel-controls.top,

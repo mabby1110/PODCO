@@ -37,7 +37,7 @@ export const load: LayoutServerLoad = async ({
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
 	let queryInventario = supabase.from('inventario').select('*');
 	let queryPedidos = supabase.from('pedidos').select('*, profiles(*), inventario(*)');
-	let queryCotizaciones = supabase.from('docs_cotizaciones').select('*');
+	let queryCotizaciones = supabase.from('docs_cotizaciones').select('*, profiles(nombre), oportunidades(motivo), clientes(nombre_comercial)');
 
 	if (profile?.isAdmin) {
 		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
