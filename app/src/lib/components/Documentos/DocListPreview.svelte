@@ -94,7 +94,6 @@
 		flex-grow: 1;
 		width: 100%;
 		overflow: hidden;
-		pointer-events: none;
 	}
 	.meta {
 		flex-grow: 2;
