@@ -1,16 +1,12 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import { fases } from '$lib';
-	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { formatCurrency, getStyleForPhase } from '$lib/utils/util';
-	import ListPreview from '../ListPreview.svelte';
 	import DocListPreview from './DocListPreview.svelte';
 
 	let { event } = $props();
 </script>
 
-<DocListPreview href="/oportunidades/{event.id}">
+<DocListPreview href="/oportunidades/{event.id}" ocultarAcciones>
 	{#snippet header()}
 		<p>{event?.titulo}</p>
 	{/snippet}

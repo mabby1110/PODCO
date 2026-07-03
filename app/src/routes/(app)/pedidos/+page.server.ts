@@ -185,7 +185,7 @@ export const actions: Actions = {
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
-		const { error } = await supabase.from('oportunidades').delete().eq('id', id);
+		const { error } = await supabase.from('pedidos').delete().eq('id', id);
 
 		if (error) {
 			return fail(500, { error: error.message });

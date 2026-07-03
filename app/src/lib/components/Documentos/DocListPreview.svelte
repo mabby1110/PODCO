@@ -4,18 +4,20 @@
 
 	let {
 		header,
-		resume,
+		acciones,
 		content,
 		meta,
 		href = '/',
-		style = ''
+		style = '',
+		ocultarAcciones
 	}: {
 		header?: Snippet;
-		resume?: Snippet;
+		acciones?: Snippet;
 		content?: Snippet;
 		meta?: Snippet;
 		href?: string;
 		style?: string;
+		ocultarAcciones?: boolean;
 	} = $props();
 
 	let show = $state(false);
@@ -35,47 +37,59 @@
 	}
 </script>
 
-<div
-	role="button"
-	tabindex="0"
-	onclick={handleClick}
-	onkeydown={handleKeydown}
-	{style}
-	class="card-list-preview"
->
-	{#if header}
-		<div class="title">
-			{@render header()}
-		</div>
-	{/if}
+<div class="preview">
+	<div
+		role="button"
+		tabindex="0"
+		onclick={handleClick}
+		onkeydown={handleKeydown}
+		{style}
+		class="card-list-preview"
+	>
+		{#if header}
+			<div class="title">
+				{@render header()}
+			</div>
+		{/if}
 
-	{#if meta}
-		<div class="meta" transition:slide>
-			{@render meta()}
-		</div>
-	{/if}
+		{#if content && show}
+			<div class="content" transition:slide>
+				{@render content()}
+			</div>
+		{/if}
 
-	{#if content && show}
-		<div class="content" transition:slide>
-			{@render content()}
-		</div>
-	{/if}
+		{#if meta}
+			<div class="meta" transition:slide>
+				{@render meta()}
+			</div>
+		{/if}
+	</div>
+	<div class="acciones">
+		{#if acciones}
+			{@render acciones()}
+		{/if}
+		{#if !ocultarAcciones}
+			<button class="butter" onclick={handleNavigationClick}>Ver</button>
+		{/if}
+	</div>
 </div>
 
 <style>
-	.card-list-preview {
-        display: flex;
+	.preview {
+		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		text-decoration: none;
-		color: inherit;
+	}
+	.card-list-preview {
 		position: relative;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		gap: var(--a);
 		padding: var(--a);
 		background-color: var(--color-secondary);
 		backdrop-filter: blur(16px);
 		width: 100%;
-        max-width: 800px;
-		align-items: center;
+		max-width: 800px;
 		text-align: left;
 		border-style: none;
 		border-width: 0;
@@ -83,9 +97,8 @@
 		cursor: pointer;
 		white-space: pre-wrap;
 	}
-
 	.card-list-preview .title {
-		flex-grow: 1;
+		grid-column: span 3;
 	}
 	.card-list-preview .content {
 		display: flex;
@@ -96,9 +109,9 @@
 		overflow: hidden;
 	}
 	.meta {
-		flex-grow: 2;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
+		grid-column: span 2;
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
 	}
 </style>

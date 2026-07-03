@@ -81,76 +81,65 @@
 		};
 	}
 
-	$effect(() => {
-		if (formInput) {
-			formInput.scrollIntoView({
-				behavior: 'smooth',
-				block: 'start'
-			});
-		}
-	});
+	// $effect(() => {
+	// 	if (formInput) {
+	// 		formInput.scrollIntoView({
+	// 			behavior: 'smooth',
+	// 			block: 'start'
+	// 		});
+	// 	}
+	// });
 </script>
 
-<section class="historia">
-	<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
-		<input type="hidden" name="id" value={objId} />
-		<input type="hidden" name="historia" value={list_stringified} />
+<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
+	<input type="hidden" name="id" value={objId} />
+	<input type="hidden" name="historia" value={list_stringified} />
 
-		<div class="detail-body">
-			<div class="entradas">
-				{#if lista.length > 0}
-					{#each lista as item, i}
-						<div class="entrada">
-							{#if editIndex === i}
-								<label class="field-input">
-									<span>Editar Entrada</span>
-									<textarea bind:value={editData.entrada}></textarea>
-								</label>
-								<div class="form-actions">
-									<button type="button" class="butter" onclick={saveEdit}>Guardar</button>
-									<button type="button" class="close-btn" onclick={cancelEdit}>X</button>
-								</div>
-							{:else}
-								{#if (item.nombre_perfil === $profile?.nombre && isEditing) || (!item.nombre_perfil && isEditing)}
-									<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
-								{/if}
-								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
-								{#if item.entrada}
-									<div class="contenido-entrada">
-										{#if item.nombre_perfil}
-											<span class="profile">{item.nombre_perfil},</span>
-										{/if}
-										<p>{item.entrada}</p>
-									</div>
-								{/if}
+	<div class="detail-body">
+		<div class="entradas">
+			{#if lista.length > 0}
+				{#each lista as item, i}
+					<div class="entrada">
+						{#if editIndex === i}
+							<label class="field-input">
+								<span>Editar Entrada</span>
+								<textarea bind:value={editData.entrada}></textarea>
+							</label>
+							<div class="form-actions">
+								<button type="button" class="butter" onclick={saveEdit}>Guardar</button>
+								<button type="button" class="close-btn" onclick={cancelEdit}>X</button>
+							</div>
+						{:else}
+							{#if (item.nombre_perfil === $profile?.nombre && isEditing) || (!item.nombre_perfil && isEditing)}
+								<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
 							{/if}
-						</div>
-					{/each}
-				{:else}
-					<p class="empty-msg">No hay entradas</p>
-				{/if}
-			</div>
-			<div class="entrada form-permanente">
-				<label class="field-input">
-					<textarea bind:value={newData.entrada} bind:this={formInput} placeholder="Nueva Entrada"
-					></textarea>
-				</label>
-				<button type="button" class="butter btn-save-small" onclick={saveNew}>Guardar</button>
-			</div>
+							<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
+							{#if item.entrada}
+								<div class="contenido-entrada">
+									{#if item.nombre_perfil}
+										<span class="profile">{item.nombre_perfil},</span>
+									{/if}
+									<p>{item.entrada}</p>
+								</div>
+							{/if}
+						{/if}
+					</div>
+				{/each}
+			{:else}
+				<p class="empty-msg">No hay entradas</p>
+			{/if}
 		</div>
-	</form>
-</section>
+		<div class="entrada form-permanente">
+			<label class="field-input">
+				<textarea bind:value={newData.entrada} bind:this={formInput} placeholder="Nueva Entrada"
+				></textarea>
+			</label>
+			<button type="button" class="butter btn-save-small" onclick={saveNew}>Guardar</button>
+		</div>
+	</div>
+</form>
 
 <style>
-	.historia {
-		display: flex;
-		align-items: flex-start;
-		height: fit-content;
-		gap: var(--a);
-	}
-	.historia .close-btn {
-		align-self: flex-start;
-	}
 	.empty-msg {
 		font-style: italic;
 		margin: 16px 0;
@@ -178,6 +167,7 @@
 		flex-wrap: wrap;
 		width: 100%;
 		max-width: 1000px;
+		pointer-events: none;
 	}
 	.profile {
 		font-style: italic;
@@ -198,5 +188,8 @@
 	.btn-save-small {
 		background: var(--color-ganada, #4caf50);
 		align-self: flex-end;
+	}
+	button, input, textarea {
+		pointer-events: all;
 	}
 </style>

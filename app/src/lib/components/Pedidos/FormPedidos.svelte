@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
 	import { productosSeleccionadosStore } from '$lib/stores/productosSeleccionadosStore.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import Searchbar from '../App/Searchbar.svelte';
 	import FormInput from '../FormInput.svelte';
+	import ContadorProducto from '../Inventario/ContadorProducto.svelte';
 	import Select from '../Select.svelte';
 
 	let { id_oportunidad }: { id_oportunidad?: string } = $props();
@@ -27,9 +29,9 @@
 
 	let selectedItem: any = $state(null);
 	$effect(() => {
-		console.log(selectedItem);
 		if (selectedItem) {
 			productosSeleccionadosStore.agregar(selectedItem);
+			selectedItem = null;
 		}
 	});
 </script>
@@ -43,7 +45,7 @@
 	</div>
 	<Searchbar
 		data={inventario}
-		keyColumns={['serie', 'codigo', 'descripcion', 'categorias']}
+		keyColumns={['cantidad', 'serie', 'codigo', 'descripcion', 'categorias']}
 		showResults
 		bind:selectedItem
 	/>
@@ -57,87 +59,87 @@
 				<span>Descripción</span>
 				<span>Serie</span>
 				<span>Moneda</span>
-				<span>Precio</span>
+				<span>Precio Unitario</span>
+				<span>total</span>
 			</div>
 			{#each productosSeleccionadosStore.items as item}
 				<div class="producto">
-					<span>{item.piezas}</span>
+					<ContadorProducto producto={item.producto} />
 					<span>{item.producto.codigo || '-'}</span>
 					<span>{item.producto.descripcion || '-'}</span>
 					<span>{item.producto.serie || '-'}</span>
 					<span>USD</span>
 					<input type="number" name="total" bind:value={item.producto.precio} />
+					<span>{item.producto.precio*item.piezas}</span>
 				</div>
 			{/each}
 		</div>
-	{/if}
+		{#if $profile?.isAdmin || $profile?.isOper}
+			<form
+				method="POST"
+				action="/inventario?/crearPedido"
+				use:enhance={({ formData }) => {
+					const payload = productosSeleccionadosStore.items.map((item) => ({
+						id_producto: item.producto.id,
+						id_oportunidad: id_oportunidad || null,
+						cantidad: item.piezas,
+						precio_unitario: item.producto.precio
+					}));
 
-	{#if $profile?.isAdmin || $profile?.isOper}
-		<form
-			method="POST"
-			action="/inventario?/crearPedido"
-			use:enhance={({ formData }) => {
-				const payload = productosSeleccionadosStore.items.map((item) => ({
-					id_producto: item.producto.id,
-					id_oportunidad: id_oportunidad || null,
-					cantidad: item.piezas,
-					precio_unitario: item.producto.precio
-				}));
+					formData.append('payload', JSON.stringify(payload));
 
-				formData.append('payload', JSON.stringify(payload));
-
-				return async ({ result }) => {
-					if (result.type === 'success') {
-						productosSeleccionadosStore.limpiar();
-					}
-				};
-			}}
-		>
-			<!-- formulario -->
-			<div class="acciones">
-				<Select
-					bind:selected={tipo}
-					title="Tipo de movimiento"
-					options={[
-						{ value: 'cotizacion', label: 'Cotización' },
-						{ value: 'entrada', label: 'entrada' },
-						{ value: 'salida', label: 'salida' }
-					]}
-				/>
-				{#if tipo === 'entrada'}
-					<FormInput
-						label="Número de Orden BMS"
-						name="no_orden"
-						placeholder="Serial BMS"
-						type="text"
-						bind:value={no_orden}
+					return async ({ result }) => {
+						if (result.type === 'success') {
+							productosSeleccionadosStore.limpiar();
+							invalidateAll();
+						}
+					};
+				}}
+			>
+				<!-- formulario -->
+				<div class="acciones">
+					<Select
+						bind:selected={tipo}
+						title="Tipo de movimiento"
+						options={[
+							{ value: 'cotizacion', label: 'Cotización' }
+						]}
 					/>
-					<button
-						class="butter submit"
-						type="submit"
-						disabled={productosSeleccionadosStore.items.length === 0}
-					>
-						Procesar Entrada
-					</button>
-				{:else if tipo === 'salida'}
-					<button
-						class="butter submit"
-						type="submit"
-						disabled={productosSeleccionadosStore.items.length === 0}
-					>
-						Procesar Salida
-					</button>
-				{:else if tipo === 'cotizacion'}
-					<button
-						class="butter submit"
-						type="submit"
-						disabled={productosSeleccionadosStore.items.length === 0}
-					>
-						Crear Pedido
-					</button>
-				{/if}
-			</div>
-		</form>
+					{#if tipo === 'entrada'}
+						<FormInput
+							label="Número de Orden BMS"
+							name="no_orden"
+							placeholder="Serial BMS"
+							type="text"
+							bind:value={no_orden}
+						/>
+						<button
+							class="butter submit"
+							type="submit"
+							disabled={productosSeleccionadosStore.items.length === 0}
+						>
+							Procesar Entrada
+						</button>
+					{:else if tipo === 'salida'}
+						<button
+							class="butter submit"
+							type="submit"
+							disabled={productosSeleccionadosStore.items.length === 0}
+						>
+							Procesar Salida
+						</button>
+					{:else if tipo === 'cotizacion'}
+						<button
+							class="butter submit"
+							type="submit"
+							disabled={productosSeleccionadosStore.items.length === 0}
+						>
+							Crear Pedido
+						</button>
+					{/if}
+				</div>
+			</form>
+		{/if}
 	{/if}
 </div>
 
@@ -145,11 +147,14 @@
 	.movimiento {
 		position: sticky;
 		top: 0;
-		z-index: 99;
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
 		width: 100%;
+		max-width: 800px;
+		border-radius: 12px;
+		border: 1px solid var(--color-contrast);
+		padding: var(--a);
 	}
 	.acciones {
 		display: flex;
@@ -158,25 +163,17 @@
 		width: 100%;
 		gap: var(--a);
 	}
-	.campos-grupo {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		gap: 0.5rem;
-		margin: var(--a) 0;
-	}
 	.productos {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
 		padding: var(--a);
-		max-height: 40vh;
+		max-height: 30vh;
 		overflow: auto;
 	}
 	.acciones-tabla {
 		display: flex;
 		gap: var(--a);
-		margin-top: var(--a);
 		position: sticky;
 		bottom: 0;
 	}

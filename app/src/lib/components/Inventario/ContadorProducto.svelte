@@ -3,6 +3,7 @@
 
 	let { producto } = $props();
 	let cantidad = $derived(productosSeleccionadosStore.obtenerCantidad(producto.id));
+	console.log('contador: ', cantidad);
 </script>
 
 <div class="control-contador">

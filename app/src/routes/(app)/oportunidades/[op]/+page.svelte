@@ -47,14 +47,14 @@
 			objetivo: event.objetivo,
 			monto_oc: formatCurrency(event.monto_oc, 'USD'),
 			etiquetas: event.etiquetas,
-			pedidos: event.pedidos,
+			pedidos: event.pedidos || [],
 			style: getStyleForPhase(event.fase)
 		};
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let isEditing = $state(false);
 
-	console.log(eventData.pedidos);
+	console.log(eventData?.pedidos);
 </script>
 
 {#if eventData}
@@ -150,21 +150,22 @@
 				action="/clientes?/update"
 				{isEditing}
 			/>
-			<section>
-				{#if eventData.pedidos}
+
+			{#if currentFase >= 2}
+				<section>
 					<h2>Pedidos</h2>
-					{#each eventData.pedidos as pedido}
-						<PreviewListaPedido event={pedido} />
-					{/each}
-				{:else}
+					{#if eventData.pedidos.length > 0}
+						{#each eventData.pedidos as pedido}
+							<PreviewListaPedido event={pedido} {isEditing} />
+						{/each}
+					{/if}
 					<div class="block-content">
 						<FormOptionalInput title="+Pedido">
 							<FormPedidos id_oportunidad={page.url.href.split('/').pop()} />
 						</FormOptionalInput>
 					</div>
-				{/if}
-			</section>
-			{#if currentFase >= 2}
+				</section>
+
 				<section class="cotizacion">
 					<div class="block-header">
 						<h2>Cotizaciones</h2>

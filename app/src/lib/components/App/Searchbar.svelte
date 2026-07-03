@@ -23,15 +23,15 @@
 
 	let term = $state('');
 	let visibleColumns = $state([...keyColumns]);
-    
-    let results = $derived(
-        term.trim() === ''
-        ? []
-        : data.filter((obj) => {
-            const search = term.toLowerCase();
-            return keyColumns.some((key) => matchTerm(obj[key], search));
-        })
-    );
+
+	let results = $derived(
+		term.trim() === ''
+			? []
+			: data.filter((obj) => {
+					const search = term.toLowerCase();
+					return keyColumns.some((key) => matchTerm(obj[key], search));
+				})
+	);
 	function matchTerm(value: any, search: string): boolean {
 		if (value == null) return false;
 		if (Array.isArray(value)) {
@@ -51,6 +51,11 @@
 		visibleColumns = [...keyColumns];
 	}
 
+	$effect(() => {
+		if (selectedItem) {
+			term = '';
+		}
+	});
 	$effect(() => {
 		lista = term.length > 0 ? results : data;
 	});
@@ -119,8 +124,7 @@
 		display: grid;
 		grid-template-columns: repeat(var(--col-count), 1fr);
 		width: 100%;
-		min-height: 30vh;
-		max-height: 50vh;
+		max-height: 30vh;
 		overflow-y: auto;
 	}
 
