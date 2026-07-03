@@ -52,7 +52,6 @@
 
 <div class="view-container">
 	<div class="controls">
-		<ExportarCSV {lista_ordenada} />
 		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 		<Searchbar data={clientes} keyColumns={categoriasCliente.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
@@ -61,14 +60,11 @@
 				<button onclick={appState.toggleMin} class="butter">
 					{show ? 'min' : 'max'}
 				</button>
+				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasCliente} />
-				<Agrupaciones
-					categorias={agrupacionesCliente}
-					bind:agrupacionesSeleccionadas
-					{grupos}
-				/>
+				<Agrupaciones categorias={agrupacionesCliente} bind:agrupacionesSeleccionadas {grupos} />
 			{/snippet}
 		</PanelFiltros>
 	</div>

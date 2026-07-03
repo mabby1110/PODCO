@@ -7,6 +7,8 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
 
+		console.log(data);
+		
 		// 1. Construimos los datos del cliente
 		const clienteData = construirDatosCliente(data);
 
@@ -40,7 +42,7 @@ export const actions: Actions = {
 		console.log('cliente', cliente);
 		// 3. Actualizamos en Supabase usando .eq()
 		const { error } = await supabase.from('clientes').update(cliente).eq('id', id);
-        console.log(error);
+		console.log(error);
 		if (error) {
 			return fail(500, { error: `Error al actualizar cliente: ${error.message}` });
 		}

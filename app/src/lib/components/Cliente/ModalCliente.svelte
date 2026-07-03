@@ -4,6 +4,7 @@
     import FormNewClient from './FormNewClient.svelte';
     import FormSelectAgente from '../FormSelectAgente.svelte';
     import { page } from '$app/state';
+	import { invalidateAll } from '$app/navigation';
 
     let clientes = $derived(page.data.clientes ?? []);
 
@@ -32,11 +33,11 @@
 {#if $appState.ModalClient}
     <div
         class="overlay"
-        onclick={() => appState.toggleModalClient()}
         role="button"
         tabindex="0"
         onkeydown={(e) => e.key === 'Escape' && appState.toggleModalClient()}
     >
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
         <div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" tabindex="-1">
             <div class="modal-header">
                 <h2>Nuevo Cliente</h2>
@@ -47,6 +48,7 @@
                 action="?/add"
                 use:enhance={() => {
                     appState.toggleModalClient();
+                    invalidateAll();
                     selectedDataItem = null;
                     alert('creado con exito!');
                 }}

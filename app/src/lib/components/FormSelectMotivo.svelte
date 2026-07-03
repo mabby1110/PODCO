@@ -41,7 +41,7 @@
 	<h3>{title}</h3>
 
 	<select class="butter" bind:value={selected} required>
-		<option value="" disabled selected>Selecciona un motivo</option>
+		<option value="" disabled selected>Selecciona una opción</option>
 		{#if !disableCustom}
 			<option value="__otro__">Otro…</option>
 		{/if}
