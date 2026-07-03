@@ -51,7 +51,6 @@
 
 <div class="view-container">
 	<div class="controls">
-		<ExportarCSV {lista_ordenada} />
 		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<Searchbar
 			data={oportunidades}
@@ -60,11 +59,12 @@
 		/>
 		<PanelFiltros>
 			{#snippet header()}
-				<Leyenda/>
+				<Leyenda />
 				<FiltroAgente />
 				<button onclick={appState.toggleMin} class="butter">
 					{show ? 'min' : 'max'}
 				</button>
+				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasOportunidad} />

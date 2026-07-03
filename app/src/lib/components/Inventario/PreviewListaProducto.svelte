@@ -25,9 +25,9 @@
 		<p>{eventData?.categorias}</p>
 		<p>cantidad: {eventData?.cantidad}</p>
 	{/snippet}
-	{#snippet acciones()}
+	<!-- {#snippet acciones()}
 		<ContadorProducto producto={eventData} />
-	{/snippet}
+	{/snippet} -->
 </ListPreview>
 
 <style>

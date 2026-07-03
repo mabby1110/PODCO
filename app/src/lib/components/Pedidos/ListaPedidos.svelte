@@ -55,7 +55,6 @@
 
 <div class="view-container">
 	<div class="controls">
-		<ExportarCSV {lista_ordenada} />
 		<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
 		<Searchbar
 			data={pedidos}
@@ -67,6 +66,7 @@
 				<button onclick={appState.toggleMin} class="butter">
 					{show ? 'min' : 'max'}
 				</button>
+				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
 				<Agrupaciones categorias={agrupacionesInventario} bind:agrupacionesSeleccionadas {grupos} />

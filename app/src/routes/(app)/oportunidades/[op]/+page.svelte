@@ -13,6 +13,9 @@
 	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
 	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';
 	import SubirOcc from '$lib/components/Documentos/SubirOcc.svelte';
+	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
+	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
+	import PreviewListaPedido from '$lib/components/Pedidos/PreviewListaPedido.svelte';
 
 	let { data } = $props();
 
@@ -44,11 +47,14 @@
 			objetivo: event.objetivo,
 			monto_oc: formatCurrency(event.monto_oc, 'USD'),
 			etiquetas: event.etiquetas,
+			pedidos: event.pedidos,
 			style: getStyleForPhase(event.fase)
 		};
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let isEditing = $state(false);
+
+	console.log(eventData.pedidos);
 </script>
 
 {#if eventData}
@@ -73,6 +79,7 @@
 				<p>{eventData?.agente?.nombre}</p>
 			</div>
 		{/snippet}
+
 		{#snippet content()}
 			<section>
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
@@ -136,7 +143,6 @@
 				action="/oportunidades?/update"
 				placeholder="Observaciones"
 			/>
-
 			<FormEditableContact
 				lista={eventData.cliente.contactos}
 				id={eventData.cliente.id}
@@ -144,7 +150,20 @@
 				action="/clientes?/update"
 				{isEditing}
 			/>
-
+			<section>
+				{#if eventData.pedidos}
+					<h2>Pedidos</h2>
+					{#each eventData.pedidos as pedido}
+						<PreviewListaPedido event={pedido} />
+					{/each}
+				{:else}
+					<div class="block-content">
+						<FormOptionalInput title="+Pedido">
+							<FormPedidos id_oportunidad={page.url.href.split('/').pop()} />
+						</FormOptionalInput>
+					</div>
+				{/if}
+			</section>
 			{#if currentFase >= 2}
 				<section class="cotizacion">
 					<div class="block-header">
@@ -249,6 +268,7 @@
 				</div>
 			</section>
 		{/snippet}
+
 		{#snippet actions()}
 			{#if $profile?.isAdmin}
 				{#if currentFase < 4}

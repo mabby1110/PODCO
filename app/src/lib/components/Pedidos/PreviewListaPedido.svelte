@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DocListPreview from '../Documentos/DocListPreview.svelte';
 	import ContadorProducto from '../Inventario/ContadorProducto.svelte';
 	import ListPreview from '../ListPreview.svelte';
 	let { event } = $props();
@@ -12,25 +13,23 @@
 	console.log(eventData);
 </script>
 
-<ListPreview style={eventData?.style} ocultarAcciones>
+<DocListPreview>
 	{#snippet header()}
-		<h3 class="codigo">{eventData?.profiles.nombre}</h3>
+		<h3 class="codigo">{eventData?.inventario.descripcion}</h3>
+	{/snippet}
+	{#snippet content()}
 		{#if eventData?.inventario}
-			<div class="brief">
-				<p>{eventData?.inventario.descripcion}</p>
-				<p>{eventData?.inventario.serie}</p>
-			</div>
+			<p>{eventData?.id_agente}</p>
 		{/if}
 		<p class="codigo">{eventData?.no_orden}</p>
 		<p class="codigo">{eventData?.id_oportunidad}</p>
 	{/snippet}
 	{#snippet meta()}
-		<p>{eventData?.ubicacion_fisica}</p>
 		<p>p/u: {eventData?.precio_unitario} USD</p>
 		<p>cantidad: {eventData?.cantidad}</p>
 		<p>total: {eventData?.precio_unitario * eventData?.cantidad}</p>
 	{/snippet}
-</ListPreview>
+</DocListPreview>
 
 <style>
 	.codigo {

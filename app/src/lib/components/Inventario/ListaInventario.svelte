@@ -8,14 +8,11 @@
 	import PanelFiltros from '../App/PanelFiltros.svelte';
 	import Searchbar from '../App/Searchbar.svelte';
 	import { page } from '$app/state';
-	import {
-		agruparDatosPorRuta,
-		obtenerDatosFiltrados
-	} from '$lib/utils/filtro';
+	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import ModalMovimiento from './ModalMovimiento.svelte';
 	import Panel from '../App/Panel.svelte';
-	import { exportarCSV } from '$lib/utils/blobActions';
 	import ExportarCSV from '../App/ExportarCSV.svelte';
+	import FormPedidos from '../Pedidos/FormPedidos.svelte';
 
 	let { inventario } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -55,7 +52,6 @@
 
 <div class="view-container">
 	<div class="controls">
-		<ExportarCSV {lista_ordenada} />
 		<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
 		<Searchbar
 			data={inventario}
@@ -63,12 +59,15 @@
 			bind:lista
 		/>
 		<PanelFiltros>
+			{#snippet header()}
+				<ExportarCSV {lista_ordenada} />
+			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasInventario} />
 				<Agrupaciones categorias={agrupacionesInventario} bind:agrupacionesSeleccionadas {grupos} />
 			{/snippet}
 		</PanelFiltros>
-		<Panel tituloBoton="Productos Seleccionados">
+		<!-- <Panel tituloBoton="Productos Seleccionados">
 			{#snippet header()}
 				<div class="campos-grupo">
 					<div class="header">
@@ -78,9 +77,9 @@
 				</div>
 			{/snippet}
 			{#snippet controles()}
-				<ModalMovimiento />
+				<FormPedidos />
 			{/snippet}
-		</Panel>
+		</Panel> -->
 	</div>
 
 	<div class="view-content">
