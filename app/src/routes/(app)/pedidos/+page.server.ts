@@ -1,9 +1,7 @@
 // page.server.ts
-import type { Documento } from '$lib';
 import { generateId } from '$lib/server/google/sheets';
 import {
 	construirDatosCliente,
-	construirDatosDocumentos,
 	construirDatosOportunidad,
 	construirDatosPedido
 } from '$lib/server/supabase/util';

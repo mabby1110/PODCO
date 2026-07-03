@@ -1,11 +1,6 @@
 // page.server.ts
-import type { Documento } from '$lib';
 import { generateId } from '$lib/server/google/sheets';
-import {
-	construirDatosCliente,
-	construirDatosDocumentos,
-	construirDatosOportunidad
-} from '$lib/server/supabase/util';
+import { construirDatosCliente, construirDatosOportunidad } from '$lib/server/supabase/util';
 import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
@@ -54,56 +49,6 @@ export const actions: Actions = {
 
 		return { success: true, op: result.id };
 	},
-
-	// updateViejo: async ({ request, locals: { supabase } }) => {
-	// 	console.log('\nOportunidaddd actualizada\n');
-
-	// 	const formData = await request.formData();
-	// 	const data = Object.fromEntries(formData.entries());
-	// 	console.log(data);
-
-	// 	// 1. Validación del ID
-	// 	const id = (data['id_op'] as string) || (data['id'] as string);
-	// 	if (!id) {
-	// 		return fail(400, { error: 'ID requerido' });
-	// 	}
-
-	// 	// 2. Construimos los datos limpios
-	// 	const oportunidad = construirDatosOportunidad(data, id);
-	// 	delete data.id;
-
-	// 	// Procesamiento de archivos
-	// 	const agenteNombre = formData.get('agente') as string;
-	// 	const opFolder = `${id}`;
-
-	// 	// Validación adicional de size para evitar procesar envíos vacíos de input type="file"
-	// 	const quoteFile = formData.get('quoteFile') as File | null;
-	// 	if (quoteFile && quoteFile.size > 0) {
-	// 		try {
-	// 			// documentos en formulario
-	// 			const docFiles = formData.getAll('quoteFile') as File[];
-
-	// 			// json con los indices ya registrados
-	// 			const docsRaw = formData.get('documentos') as string;
-
-	// 			const docs = await processAttachments(docFiles, agenteNombre, opFolder, docsRaw);
-	// 			console.log('docs', docs);
-	// 			oportunidad.cotizaciones_presentadas = docs;
-	// 		} catch (err) {
-	// 			console.error('Error procesando documentos', err);
-	// 			return fail(500, { error: 'Fallo al procesar adjuntos' });
-	// 		}
-	// 	}
-	// 	console.log('oportunidad con archivos: ', oportunidad);
-	// 	// Actualización en base de datos
-	// 	const { error } = await supabase.from('oportunidades').update(oportunidad).eq('id', id);
-
-	// 	if (error) {
-	// 		return fail(500, { error: error.message });
-	// 	}
-
-	// 	return { success: true };
-	// },
 	update: async ({ request, locals: { supabase, user } }) => {
 		console.log('\nOportunidaddd actualizada\n');
 
@@ -199,7 +144,6 @@ export const actions: Actions = {
 
 		return { success: true };
 	},
-
 	delete: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const id = formData.get('id') as string;
