@@ -11,7 +11,6 @@
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import Searchbar from '../App/Searchbar.svelte';
 	import FiltroAgente from '../FiltroAgente.svelte';
-	import { exportarCSV } from '$lib/utils/blobActions';
 	import ExportarCSV from '../App/ExportarCSV.svelte';
 
 	let { actividades } = $derived(page.data);
@@ -57,11 +56,11 @@
 
 <div class="view-container">
 	<div class="controls">
-		<ExportarCSV {lista_ordenada} />
 		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 		<Searchbar data={actividades} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
+				<ExportarCSV {lista_ordenada} />
 				<Leyenda {steps} />
 				<FiltroAgente />
 			{/snippet}

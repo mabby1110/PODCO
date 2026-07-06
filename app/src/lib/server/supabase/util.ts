@@ -18,7 +18,8 @@ const CLAVES_CLIENTE: (keyof Cliente)[] = [
 	'tipo_prospeccion',
 	'ultima_actualizacion',
 	'historial',
-	'observaciones'
+	'observaciones',
+	'giro_comercial'
 ];
 
 const CLAVES_ACTIVIDAD: (keyof Actividad)[] = [

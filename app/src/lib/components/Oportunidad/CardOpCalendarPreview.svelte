@@ -17,6 +17,8 @@
 			id: event.id,
 			razon_social:
 				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
+			nombre_comercial:
+				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.nombre_comercial ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			motivo: event?.motivo,
 			inicio: event?.inicio,
@@ -39,7 +41,7 @@
 	{#if $appState.calendarCards}
 		<div class="preview-header">
 			<p class="header-date">{eventData?.inicio.split(' ')[1]}</p>
-			<b class="header-title">{eventData?.razon_social}</b>
+			<b class="header-title">{eventData?.razon_social || eventData?.nombre_comercial}</b>
 			<div class="meta">
 				<b>{eventData?.agente?.nombre}</b>
 				<p>{event?.motivo}</p>
@@ -48,7 +50,7 @@
 		</div>
 	{:else}
 		<div class="preview-header">
-			<b class="header-title">{eventData?.razon_social}</b>
+			<b class="header-title">{eventData?.razon_social || eventData?.nombre_comercial}</b>
 			<div class="meta-min">
 				<b>{eventData?.agente?.nombre}</b>
 				<p>{event?.motivo}</p>

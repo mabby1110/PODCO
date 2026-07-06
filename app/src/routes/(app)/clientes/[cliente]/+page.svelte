@@ -97,8 +97,8 @@
 		<EditableInput
 			{isEditing}
 			label="Giro comercial"
-			name="descripcion"
-			value={cliente.descripcion}
+			name="giro_comercial"
+			value={cliente.giro_comercial}
 			id={cliente.id}
 			id_agente={$profile?.isAdmin ? cliente.id_agente : $profile?.id}
 			action="/clientes?/update"

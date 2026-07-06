@@ -59,6 +59,7 @@ export type Cliente = {
 	ciudad: string;
 	sector: string;
 	contactos: string;
+	giro_comercial: string;
 	tipo_prospeccion: string;
 	ultima_actualizacion?: string | Date;
 	historial: string;
