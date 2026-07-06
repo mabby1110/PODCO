@@ -3,7 +3,6 @@
 	import { agrupacionesCliente, categoriasCliente } from '$lib';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { exportarCSV } from '$lib/utils/blobActions';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import Agrupaciones from '../App/Agrupaciones.svelte';
 	import ExportarCSV from '../App/ExportarCSV.svelte';
@@ -57,9 +56,6 @@
 		<PanelFiltros>
 			{#snippet header()}
 				<FiltroAgente />
-				<button onclick={appState.toggleMin} class="butter">
-					{show ? 'min' : 'max'}
-				</button>
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}

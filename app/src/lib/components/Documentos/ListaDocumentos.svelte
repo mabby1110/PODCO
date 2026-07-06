@@ -10,7 +10,6 @@
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import Searchbar from '../App/Searchbar.svelte';
 	import FiltroAgente from '../FiltroAgente.svelte';
-	import { exportarCSV } from '$lib/utils/blobActions';
 	import ExportarCSV from '../App/ExportarCSV.svelte';
 
 	let { documentos } = $derived(page.data);
@@ -52,22 +51,15 @@
 
 <div class="view-container">
 	<div class="controls">
-		<ExportarCSV {lista_ordenada} />
 		<Searchbar data={documentos} keyColumns={categoriasDocumentos.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
 				<FiltroAgente />
-				<button onclick={appState.toggleMin} class="butter">
-					{show ? 'min' : 'max'}
-				</button>
+				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasDocumentos} />
-				<Agrupaciones
-					categorias={agrupacionesDocumentos}
-					bind:agrupacionesSeleccionadas
-					{grupos}
-				/>
+				<Agrupaciones categorias={agrupacionesDocumentos} bind:agrupacionesSeleccionadas {grupos} />
 			{/snippet}
 		</PanelFiltros>
 	</div>

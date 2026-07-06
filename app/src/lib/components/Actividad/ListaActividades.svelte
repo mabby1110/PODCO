@@ -60,9 +60,9 @@
 		<Searchbar data={actividades} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
-				<ExportarCSV {lista_ordenada} />
-				<Leyenda {steps} />
 				<FiltroAgente />
+				<ExportarCSV {lista_ordenada} />
+				<!-- <Leyenda {steps} /> -->
 			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasActividad} />

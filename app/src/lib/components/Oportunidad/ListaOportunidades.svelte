@@ -59,11 +59,8 @@
 		/>
 		<PanelFiltros>
 			{#snippet header()}
-				<Leyenda />
+				<!-- <Leyenda /> -->
 				<FiltroAgente />
-				<button onclick={appState.toggleMin} class="butter">
-					{show ? 'min' : 'max'}
-				</button>
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}

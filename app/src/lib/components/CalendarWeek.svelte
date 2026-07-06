@@ -3,7 +3,7 @@
 	import { dropzone } from '$lib/actions/dnd';
 	import { calendarStore } from '$lib/stores/calendarStore.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { invalidate, invalidateAll } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	import {
 		getWeekDates,
 		isSameDay,
