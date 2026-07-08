@@ -99,6 +99,10 @@ body {
 	background-color: var(--color-background);
 }
 
+.tiny {
+	font-size: smaller;
+}
+
 /* +PAGE */
 .page-container {
 	width: 100%;
@@ -354,11 +358,14 @@ body {
 	cursor: pointer;
 }
 
-.card-list-preview .brief {
+.brief {
 	display: flex;
 	flex-direction: column;
-	gap: var(--a);
-	padding-left: var(--a);
+}
+
+.brief-content {
+	display: flex;
+	flex-direction: column;
 }
 
 /* CARD-FULL */
@@ -370,12 +377,14 @@ body {
 	height: 100%;
 	padding-bottom: var(--e);
 }
+
 .card-content section {
 	padding: 0 var(--a);
 	display: flex;
 	flex-direction: column;
 	gap: var(--a);
 }
+
 .card-actions {
 	position: relative;
 	display: flex;

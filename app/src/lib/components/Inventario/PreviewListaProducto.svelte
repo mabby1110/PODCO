@@ -2,36 +2,24 @@
 	import ListPreview from '../ListPreview.svelte';
 	import ContadorProducto from './ContadorProducto.svelte';
 	let { event } = $props();
-
-	const eventData = $derived.by(() => {
-		if (!event) return null;
-		return {
-			...event
-		};
-	});
 </script>
 
-<ListPreview style={eventData?.style} ocultarAcciones>
+<ListPreview style={event?.style} ocultarAcciones>
 	{#snippet header()}
-		<p class="codigo">{eventData?.serie || eventData?.codigo}</p>
-		{#if eventData?.descripcion}
+		{#if event?.descripcion}
 			<div class="brief">
-				<h3>{eventData?.descripcion}</h3>
+				<h3>{event?.descripcion}</h3>
 			</div>
 		{/if}
+		<p class="tiny">{event?.serie || event?.codigo}</p>
 	{/snippet}
 	{#snippet meta()}
-		<p>{eventData?.ubicacion_fisica}</p>
-		<p>{eventData?.categorias}</p>
-		<p>cantidad: {eventData?.cantidad}</p>
+		<p>{event?.ubicacion_fisica}</p>
+		<p>{event?.categorias}</p>
+		<p>cantidad: {event?.cantidad}</p>
 	{/snippet}
+
 	<!-- {#snippet acciones()}
 		<ContadorProducto producto={eventData} />
 	{/snippet} -->
 </ListPreview>
-
-<style>
-	.codigo {
-		min-width: 15%;
-	}
-</style>

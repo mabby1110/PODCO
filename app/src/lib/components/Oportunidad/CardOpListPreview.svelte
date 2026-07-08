@@ -38,21 +38,21 @@
 
 <ListPreview href="/oportunidades/{event.id}" style={eventData?.style}>
 	{#snippet header()}
-		<h2>{eventData?.razon_social || eventData?.nombre_comercial}</h2>
-		<h3>{eventData?.motivo}</h3>
+		<h3>{eventData?.razon_social || eventData?.nombre_comercial}</h3>
+		<p>{eventData?.motivo}</p>
 	{/snippet}
 
 	{#snippet content()}
 		{#if eventData?.objetivo}
 			<div class="brief">
-				<h3>Objetivo</h3>
+				<b>Objetivo</b>
 				<p>{eventData?.objetivo}</p>
 			</div>
 		{/if}
 
 		{#if eventData?.historia}
 			<div class="brief">
-				<h3>Historia</h3>
+				<b>Historia</b>
 				<div class="entradas">
 					{#each JSON.parse(eventData?.historia) as item}
 						<div class="entrada">
@@ -65,13 +65,10 @@
 					{/each}
 				</div>
 			</div>
-		{:else}
-			<p>no hay entradas</p>
 		{/if}
 	{/snippet}
 
 	{#snippet meta()}
-		<p class="id">{eventData?.id}</p>
 		<p>{eventData?.agente?.nombre}</p>
 		<p>{eventData?.inicio}</p>
 	{/snippet}

@@ -28,15 +28,13 @@
 
 <ListPreview href="/actividades/{event.id}" style={eventData?.style}>
 	{#snippet header()}
-		<h2>{eventData?.motivo}</h2>
+		<h3>{eventData?.motivo}</h3>
 	{/snippet}
 
 	{#snippet resume()}
 		{#if eventData?.objetivo}
-			<div class="brief">
-				<b>Objetivo</b>
-				<p>{eventData?.objetivo}</p>
-			</div>
+			<b>Objetivo</b>
+			<p>{eventData?.objetivo}</p>
 		{/if}
 	{/snippet}
 	{#snippet content()}

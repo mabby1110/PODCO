@@ -1,22 +1,42 @@
 <script lang="ts">
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
-	import { formatCurrency, getStyleForPhase } from '$lib/utils/util';
-	import DocListPreview from './DocListPreview.svelte';
+	import { formatCurrency } from '$lib/utils/util';
+	import ListPreview from '../ListPreview.svelte';
 
 	let { event } = $props();
 </script>
 
-<DocListPreview href="/oportunidades/{event.id}" ocultarAcciones>
+<ListPreview href="/oportunidades/{event.id}" ocultarAcciones>
 	{#snippet header()}
-		<p>{event?.titulo}</p>
-	{/snippet}
-	{#snippet meta()}
-		<p>{formatCurrency(event.total, 'USD')}</p>
-		<p>{formatDateFull(parseDateTimeLocal(event.fecha_creacion))}</p>
+		<h3>{event?.titulo}</h3>
 	{/snippet}
 	{#snippet content()}
-		{#if event?.preview}
+		{#if event?.id_agente}
 			<div class="brief">
+				<p>
+					<b>id_agente:</b>
+					{event.id_agente}
+				</p>
+			</div>
+		{/if}
+		{#if event?.id_oportunidad}
+			<div class="brief">
+				<a href="/oportunidades/{event.id_oportunidad}">
+					<b>id_oportunidad:</b>
+					{event.id_oportunidad}
+				</a>
+			</div>
+		{/if}
+		{#if event?.id_actividad}
+			<div class="brief">
+				<a href="/actividades/{event.id_actividad}">
+					<b>id_actividad:</b>
+					{event.id_actividad}
+				</a>
+			</div>
+		{/if}
+		{#if event?.preview}
+			<div class="doc-preview">
 				<iframe
 					src={event.preview}
 					class="iframe"
@@ -27,16 +47,19 @@
 			</div>
 		{/if}
 	{/snippet}
-
-	<!-- {#snippet meta()}
-		<p class="id">{eventData?.id}</p>
-		<p>{eventData?.agente?.nombre}</p>
-		<p>{eventData?.inicio}</p>
-	{/snippet} -->
-</DocListPreview>
+	{#snippet meta()}
+		{#if event.total}
+			<p>{formatCurrency(event.total, 'USD')}</p>
+		{/if}
+		<p>{formatDateFull(parseDateTimeLocal(event.fecha_creacion))}</p>
+	{/snippet}
+</ListPreview>
 
 <style>
-	.brief {
-		height: 60vh;
+	.doc-preview {
+		height: 40vh;
+	}
+	a {
+		pointer-events: all;
 	}
 </style>

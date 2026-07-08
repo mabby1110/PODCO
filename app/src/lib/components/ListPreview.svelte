@@ -45,97 +45,92 @@
 	onclick={handleClick}
 	onkeydown={handleKeydown}
 	{style}
-	class="card-list-preview"
+	class="list-card-preview"
 >
-	{#if header}
-		<div class="title">
+	<div class="list-card-header">
+		{#if header}
 			{@render header()}
-		</div>
-	{/if}
-
-	{#if resume}
-		<div class="content {show ? '' : 'resume'}">
-			{@render resume()}
-		</div>
-	{/if}
+		{/if}
+		{#if resume}
+			<div class="resume">
+				{@render resume()}
+			</div>
+		{/if}
+	</div>
 
 	{#if content && show}
-		<div class="content" transition:slide>
+		<div class="list-card-content" transition:slide>
 			{@render content()}
 		</div>
 	{/if}
 
-	<div class="acciones">
-		{#if meta}
-			<div class="meta">
-				{@render meta()}
-			</div>
+	{#if meta}
+		<div class="list-card-meta">
+			{@render meta()}
+		</div>
+	{/if}
+	<div class="list-card-actions">
+		{#if !ocultarAcciones}
+			<button class="butter" onclick={handleNavigationClick}>Ver</button>
 		{/if}
 		{#if acciones}
 			{@render acciones()}
-		{/if}
-		{#if !ocultarAcciones}
-			<button class="butter" onclick={handleNavigationClick}>Ver</button>
 		{/if}
 	</div>
 </div>
 
 <style>
-	.card-list-preview {
+	.list-card-preview {
 		position: relative;
-		text-decoration: none;
-		color: inherit;
+		min-height: var(--e);
 		padding: var(--a);
+
 		background-color: var(--color-secondary);
 		backdrop-filter: blur(16px);
-		width: 100%;
-		min-height: var(--e);
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		text-align: left;
 		border-style: none;
 		border-width: 0;
 		border-radius: var(--a);
 		cursor: pointer;
 		white-space: pre-wrap;
+
+		display: grid;
+		grid-template-columns: 6fr 1fr;
 	}
 
-	.card-list-preview .title {
-		flex-grow: 1;
-		min-width: var(--g);
+	.list-card-header {
 		display: flex;
-		gap: var(--a);
-		align-items: last baseline;
+		flex-direction: column;
+	}
+	.list-card-header .resume {
 		flex-wrap: wrap;
-	}
-
-	.acciones {
-		width: 100%;
-		display: flex;
-		gap: var(--a);
-		justify-content: space-between;
-		align-items: flex-end;
-	}
-	.acciones button {
-		height: fit-content;
-		flex-grow: 1;
-		min-width: var(--e);
-		max-width: var(--f);
-	}
-	.card-list-preview .content {
-		flex-grow: 1;
-		width: 100%;
+		font-size: smaller;
+		padding: var(--a);
+		max-height: 30vh;
 		overflow: hidden;
 		pointer-events: none;
 	}
-	.card-list-preview .meta {
+	.list-card-content {
+		padding: var(--b) var(--a);
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+		pointer-events: none;
+	}
+	.list-card-meta {
+		grid-column: 1 / end;
+		grid-row: 3;
 		display: flex;
 		gap: 0 var(--a);
 		flex-wrap: wrap;
 		font-size: smaller;
 	}
-	.resume {
-		max-height: 180px;
+	.list-card-actions {
+		grid-row: 1 / span 2;
+		grid-column: 2 / end;
+		display: flex;
+		justify-content: flex-end;
+	}
+	.list-card-actions button {
+		height: fit-content;
 	}
 </style>
