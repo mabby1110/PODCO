@@ -146,7 +146,6 @@ body {
 	height: 100%;
 }
 
-.controls,
 .contenedor-controles-graficas {
 	display: flex;
 	flex-wrap: wrap;
@@ -159,10 +158,6 @@ body {
 
 .contenedor-controles-graficas {
 	position: relative;
-}
-
-.controls h1 {
-	width: 100%;
 }
 
 .panel {

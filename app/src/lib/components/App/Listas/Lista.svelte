@@ -5,15 +5,14 @@
 </script>
 
 <div class="view-container">
-	<div class="controls">
-		{#if acciones}
-			{@render acciones()}
-		{/if}
-	</div>
-
 	<div class="view-content">
 		{#if contenido}
 			{@render contenido()}
+		{/if}
+	</div>
+	<div class="view-controls">
+		{#if acciones}
+			{@render acciones()}
 		{/if}
 	</div>
 </div>
@@ -23,11 +22,26 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
-		padding-bottom: var(--f);
+		position: relative;
 	}
 	.view-content {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
+	}
+	.view-controls {
+		position: absolute;
+		width: 100%;
+		max-width: 70vw;
+		bottom: var(--a);
+		z-index: 88;
+		align-self: flex-end;
+
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		align-items: flex-start;
+		flex-direction: row-reverse;
+		top: 0;
 	}
 </style>
