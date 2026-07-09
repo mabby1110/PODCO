@@ -21,6 +21,7 @@
 			...(date.includes('T') || date.includes(':') ? { hour: '2-digit', minute: '2-digit' } : {})
 		});
 	};
+	console.log(openOp);
 </script>
 
 <Card>
@@ -154,6 +155,13 @@
 			action="/clientes?/update"
 			placeholder="www.bmscomponentes.com"
 		/>
+		<div class="op-list">
+			{#if openOp.length > 0}
+				{#each openOp as op}
+					<CardOpListPreview event={op} />
+				{/each}
+			{/if}
+		</div>
 		<div class="system">
 			<div class="detail-block">
 				<span class="label">Tipo de Prospección:</span>
@@ -183,13 +191,6 @@
 		</div>
 	{/snippet}
 </Card>
-<div class="op-list">
-	{#if openOp.length > 0}
-		{#each openOp as op}
-			<CardOpListPreview event={op} />
-		{/each}
-	{/if}
-</div>
 
 <style>
 	.true {

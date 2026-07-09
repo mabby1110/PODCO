@@ -2,6 +2,7 @@
 	import ListPreview from '../App/Listas/ListPreview.svelte';
 
 	let { client } = $props();
+	console.log(client.oportunidades.length || 0)
 </script>
 
 <ListPreview href="./clientes/{client.id}">
@@ -14,7 +15,7 @@
 	{#snippet content()}
 		<div class="brief">
 			<h3>Gíro comercial:</h3>
-			<p>{client?.descripcion}</p>
+			<p>{client?.giro_comercial}</p>
 		</div>
 		<div class="brief">
 			<h3>Contactos:</h3>
@@ -28,7 +29,6 @@
 		</div>
 	{/snippet}
 	{#snippet meta()}
-		<p>oportunidades abiertas: {client.op ?? 0}</p>
-		<p>visitas: {client.visitas ?? 0}</p>
+		<p>oportunidades: {client.oportunidades.length || 0}</p>
 	{/snippet}
 </ListPreview>
