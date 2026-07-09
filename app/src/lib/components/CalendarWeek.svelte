@@ -20,6 +20,7 @@
 	import CardActividadCalendarPreview from './Actividad/CardActividadCalendarPreview.svelte';
 	import Reload from './Reload.svelte';
 	import FiltroAgente from './FiltroAgente.svelte';
+	import PanelFiltros from './App/PanelFiltros.svelte';
 
 	let { listaAgrupada } = $props<{
 		listaAgrupada: any[];
@@ -109,27 +110,11 @@
 </script>
 
 <div class="view-container">
-	<div class="controls">
-		<Reload />
-		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-
-		<FiltroAgente />
-
-		{#if $profile?.isAdmin}
-			<button
-				onclick={() => appState.toggleDnd()}
-				class="butter toggle"
-				class:active={$appState.dnd}
-			>
-				✏️ Editar
-			</button>
-		{/if}
-		<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-			{$appState.calendarCards ? '📏 Min' : '📐 Max'}
-		</button>
-	</div>
-	<div class="calendar" bind:clientHeight={calendarHeight} style="--dynamic-cell-height: {CELL_HEIGHT}px;">
+	<div
+		class="calendar"
+		bind:clientHeight={calendarHeight}
+		style="--dynamic-cell-height: {CELL_HEIGHT}px;"
+	>
 		<table>
 			<thead>
 				<tr>
@@ -194,12 +179,35 @@
 		</table>
 	</div>
 
-	<div class="calendar-navigation">
-		<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
-		<button onclick={goToCurrentWeek} class="butter current-week">
-			{weekRangeText}
-		</button>
-		<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
+	<div class="view-controls">
+		<PanelFiltros>
+			{#snippet header()}{/snippet}
+			{#snippet controles()}
+				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+				{#if $profile?.isAdmin}
+					<button
+						onclick={() => appState.toggleDnd()}
+						class="butter toggle"
+						class:active={$appState.dnd}
+					>
+						✏️ Editar
+					</button>
+				{/if}
+				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+					{$appState.calendarCards ? '📏 Min' : '📐 Max'}
+				</button>
+				<FiltroAgente />
+			{/snippet}
+		</PanelFiltros>
+
+		<div class="calendar-navigation">
+			<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
+			<button onclick={goToCurrentWeek} class="butter current-week">
+				{weekRangeText}
+			</button>
+			<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
+		</div>
 	</div>
 </div>
 
@@ -215,6 +223,7 @@
 		gap: 16px;
 		border: 1px solid var(--color-muted);
 		border-radius: var(--a);
+		max-height: 88vh;
 	}
 	.calendar table {
 		flex-grow: 1;
@@ -254,7 +263,7 @@
 		position: sticky;
 		top: 0;
 		left: 0;
-		z-index: 99;
+		z-index: 77;
 	}
 	.hour-cell {
 		position: sticky;
@@ -337,9 +346,23 @@
 	.calendar-navigation {
 		display: flex;
 		gap: var(--a);
-		width: 100%;
-		max-width: fit-content;
-		min-width: 40vw;
+		flex-grow: 1;
+		max-width: var(--h);
 		align-self: flex-end;
+	}
+	.view-controls {
+		position: absolute;
+		width: 100%;
+		max-width: 70vw;
+		bottom: var(--a);
+		right: var(--a);
+		z-index: 88;
+		align-self: flex-end;
+
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		align-items: flex-start;
+		flex-direction: row-reverse;
 	}
 </style>

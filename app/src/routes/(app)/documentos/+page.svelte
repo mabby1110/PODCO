@@ -51,7 +51,7 @@
 	let show = $derived($appState.min);
 </script>
 
-<Lista>
+<Lista header="Documentos">
 	{#snippet acciones()}
 		<Searchbar data={documentos} keyColumns={categoriasDocumentos.map((a) => a.key)} bind:lista />
 		<PanelFiltros>

@@ -4,7 +4,7 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { getStyleForPhase } from '$lib/utils/util';
-	import ListPreview from '../ListPreview.svelte';
+	import ListPreview from '../App/Listas/ListPreview.svelte';
 
 	let { event } = $props();
 	const { clientes, agentes } = $derived(page.data);

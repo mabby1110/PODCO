@@ -51,16 +51,16 @@
 	console.log('store', agrupacionesStore.filtersByRoute[currentRoute]);
 </script>
 
-<Lista>
+<Lista header="Clientes">
 	{#snippet acciones()}
 		<Searchbar data={clientes} keyColumns={categoriasCliente.map((a) => a.key)} bind:lista />
-		<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 		<PanelFiltros>
 			{#snippet header()}
 				<FiltroAgente />
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
+				<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 				<Filtro categorias={categoriasCliente} />
 				<Agrupaciones categorias={agrupacionesCliente} bind:agrupacionesSeleccionadas {grupos} />
 			{/snippet}

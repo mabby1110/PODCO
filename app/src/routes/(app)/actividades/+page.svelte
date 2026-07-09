@@ -54,10 +54,9 @@
 	];
 </script>
 
-<Lista>
+<Lista header="Actividades">
 	{#snippet acciones()}
 		<Searchbar data={actividades} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
-		<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 		<PanelFiltros>
 			{#snippet header()}
 				<FiltroAgente />
@@ -65,6 +64,7 @@
 				<!-- <Leyenda {steps} /> -->
 			{/snippet}
 			{#snippet controles()}
+				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 				<Filtro categorias={categoriasActividad} />
 				<Agrupaciones
 					categorias={agrupacionesActividades}

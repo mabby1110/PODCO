@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { formatCurrency } from '$lib/utils/util';
-	import ListPreview from '../ListPreview.svelte';
+	import ListPreview from '../App/Listas/ListPreview.svelte';
 
 	let { event } = $props();
 </script>

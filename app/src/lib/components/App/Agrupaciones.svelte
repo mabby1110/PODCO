@@ -77,6 +77,7 @@
 		flex-wrap: wrap;
 		gap: var(--a);
 		height: fit-content;
+		flex-grow: 1;
 		align-items: baseline;
 		background-color: var(--color-contrast);
 	}
@@ -90,7 +91,7 @@
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;
-		max-height: 20vh;
+		max-height: 30vh;
 		overflow: auto;
 	}
 	.butter {

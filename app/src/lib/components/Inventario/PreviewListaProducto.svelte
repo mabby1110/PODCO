@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ListPreview from '../ListPreview.svelte';
+	import ListPreview from '../App/Listas/ListPreview.svelte';
 	import ContadorProducto from './ContadorProducto.svelte';
 	let { event } = $props();
 </script>

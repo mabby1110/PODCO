@@ -166,7 +166,7 @@ body {
 	padding: var(--a);
 	background-color: var(--color-primary);
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
-	backdrop-filter: blur(16px);
+	backdrop-filter: blur(2px);
 	z-index: 999;
 }
 
@@ -474,6 +474,10 @@ body {
 	background-color: var(--color-background);
 	backdrop-filter: blur(16px);
 	cursor: pointer;
+}
+
+.active {
+	background-color: var(--color-highlight);
 }
 
 .chile {

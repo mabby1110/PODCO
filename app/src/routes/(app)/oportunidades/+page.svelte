@@ -50,14 +50,13 @@
 	let show = $derived($appState.min);
 </script>
 
-<Lista>
+<Lista header="Oportunidades">
 	{#snippet acciones()}
 		<Searchbar
 			data={oportunidades}
 			keyColumns={categoriasOportunidad.map((c) => c.key).concat(['clientes'])}
 			bind:lista
 		/>
-		<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		<PanelFiltros>
 			{#snippet header()}
 				<!-- <Leyenda /> -->
@@ -65,6 +64,7 @@
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
+				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 				<Filtro categorias={categoriasOportunidad} />
 				<Agrupaciones
 					categorias={agrupacionesOportunidades}

@@ -11,7 +11,19 @@
 		e.preventDefault();
 		appState.togglePageActions();
 	}
+
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.altKey && event.key === 'a') {
+			event.preventDefault(); // Evita el comportamiento por defecto del navegador
+			expanded = !expanded;
+		}
+		if (event.key === 'Escape') {
+			expanded = false;
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleKeyDown} />
 
 <div class="nav-container">
 	{#if expanded}

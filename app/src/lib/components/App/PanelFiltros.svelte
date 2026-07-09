@@ -33,10 +33,16 @@
 		quadrantY = centerY > window.innerHeight / 2 ? 'bottom' : 'top';
 	}
 
-	function handleKeyDown(event: KeyboardEvent) {
-		if (event.key === 'Escape') showFilter = false;
-	}
 
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.altKey && event.key === 's') {
+			event.preventDefault(); // Evita el comportamiento por defecto del navegador
+			showFilter = !showFilter;
+		}
+		if (event.key === 'Escape') {
+			showFilter = false;
+		}
+	}
 	function onMouseDown(event: MouseEvent) {
 		isDragging = true;
 		startX = event.clientX;
@@ -94,12 +100,16 @@
 				{@render header()}
 			{/if}
 		</div>
-		{#if controles}
-			{@render controles()}
-		{/if}
+		<div class="panel content-actions">
+			{#if controles}
+				{@render controles()}
+			{/if}
+		</div>
 	</div>
 {/if}
-<button class="butter" onclick={() => (showFilter = true)}> +Filtros </button>
+<button class="butter {showFilter?'active':''}" onclick={() => (showFilter = !showFilter)}>
+	<img src="/options.svg" alt="options" />
+</button>
 
 <style>
 	.panel-controls {
@@ -122,7 +132,11 @@
 		gap: var(--a);
 		z-index: 99;
 	}
-
+	.content-actions {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+	}
 	.panel-controls.top,
 	.panel-controls.bottom {
 		flex-direction: column;

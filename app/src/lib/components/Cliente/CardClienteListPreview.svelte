@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ListPreview from '../ListPreview.svelte';
+	import ListPreview from '../App/Listas/ListPreview.svelte';
 
 	let { client } = $props();
 </script>

@@ -1,10 +1,7 @@
 <script lang="ts">
 	import Filtro from '$lib/components/App/Filtro.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import {
-		agrupacionesInventario,
-		categoriasInventario
-	} from '$lib';
+	import { agrupacionesInventario, categoriasInventario } from '$lib';
 	import { page } from '$app/state';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import Lista from '$lib/components/App/Listas/Lista.svelte';
@@ -53,19 +50,19 @@
 	let show = $derived($appState.min);
 </script>
 
-<Lista>
+<Lista header="Inventario">
 	{#snippet acciones()}
 		<Searchbar
 			data={inventario}
 			keyColumns={['serie', 'codigo', 'descripcion', 'categorias']}
 			bind:lista
 		/>
-		<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
 		<PanelFiltros>
 			{#snippet header()}
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
+				<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
 				<Filtro categorias={categoriasInventario} />
 				<Agrupaciones categorias={agrupacionesInventario} bind:agrupacionesSeleccionadas {grupos} />
 			{/snippet}
