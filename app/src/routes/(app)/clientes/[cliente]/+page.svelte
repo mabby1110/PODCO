@@ -8,8 +8,7 @@
 	import Card from '$lib/components/Card.svelte';
 	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
 
-	let { cliente, oportunidades, agentes } = $derived(page.data);
-	let openOp = $derived(oportunidades?.filter((a: any) => a.id_cliente == cliente.id));
+	let { cliente, agentes } = $derived(page.data);
 
 	let isEditing = $state(false);
 	const formatDate = (date: string | null) => {
@@ -21,7 +20,6 @@
 			...(date.includes('T') || date.includes(':') ? { hour: '2-digit', minute: '2-digit' } : {})
 		});
 	};
-	console.log(openOp);
 </script>
 
 <Card>
@@ -156,8 +154,8 @@
 			placeholder="www.bmscomponentes.com"
 		/>
 		<div class="op-list">
-			{#if openOp.length > 0}
-				{#each openOp as op}
+			{#if cliente.oportunidades.length > 0}
+				{#each cliente.oportunidades as op}
 					<CardOpListPreview event={op} />
 				{/each}
 			{/if}

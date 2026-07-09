@@ -2,7 +2,6 @@
 	import ListPreview from '../App/Listas/ListPreview.svelte';
 
 	let { client } = $props();
-	console.log(client.oportunidades.length || 0)
 </script>
 
 <ListPreview href="./clientes/{client.id}">
