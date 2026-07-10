@@ -85,6 +85,22 @@
 		/>
 		<EditableInput
 			{isEditing}
+			label="Clasificación"
+			name="clasificacion"
+			value={cliente.clasificacion}
+			id={cliente.id}
+			type="select"
+			options={[
+				{ id: 'A', nombre: 'A' },
+				{ id: 'B', nombre: 'B' },
+				{ id: 'C', nombre: 'C' }
+			]}
+			id_agente={$profile?.isAdmin ? cliente.id_agente : $profile?.id}
+			action="/clientes?/update"
+			placeholder="Clasificación"
+		/>
+		<EditableInput
+			{isEditing}
 			label="Sector"
 			name="sector"
 			value={cliente.sector}

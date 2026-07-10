@@ -64,6 +64,7 @@ export type Cliente = {
 	ultima_actualizacion?: string | Date;
 	historial: string;
 	observaciones?: string;
+	clasificacion?: string;
 };
 export type Historial = {
 	id?: string;
