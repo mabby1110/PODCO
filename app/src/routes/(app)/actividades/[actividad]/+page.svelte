@@ -12,6 +12,8 @@
 	import { invalidateAll } from '$app/navigation';
 	import Entradas from '$lib/components/Entradas.svelte';
 	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
+	import CustomInput from '$lib/components/App/form/CustomInput.svelte';
+	import DatePicker from '$lib/components/DatePicker.svelte';
 	// 💡 NOTA: Se eliminó 'untrack' ya que no lo necesitamos en eventos
 
 	let { data } = $props();
@@ -92,6 +94,9 @@
 			<section>
 				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</section>
+			<CustomInput action="/actividades?/update" id={eventData.id} {isEditing}>
+				<DatePicker />
+			</CustomInput>
 			<EditableInput
 				{isEditing}
 				id={eventData.id}

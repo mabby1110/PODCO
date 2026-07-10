@@ -24,7 +24,6 @@
             distance: 15,
             align: 'left',
             verticalAlign: 'middle',
-            rotate: 90,
             formatter: '{c}',
             fontSize: 16
         };

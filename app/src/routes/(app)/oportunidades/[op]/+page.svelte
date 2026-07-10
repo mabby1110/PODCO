@@ -16,6 +16,8 @@
 	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
 	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import PreviewListaPedido from '$lib/components/Pedidos/PreviewListaPedido.svelte';
+	import CustomInput from '$lib/components/App/form/CustomInput.svelte';
+	import DatePicker from '$lib/components/DatePicker.svelte';
 
 	let { data } = $props();
 
@@ -85,6 +87,9 @@
 				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 			</section>
 
+			<CustomInput action="/oportunidades?/update" id={eventData.id} {isEditing}>
+				<DatePicker />
+			</CustomInput>
 			<EditableInput
 				{isEditing}
 				id={eventData.id}
@@ -152,7 +157,7 @@
 			/>
 
 			{#if currentFase >= 2}
-				<section>
+				<!-- <section>
 					<h2>Pedidos</h2>
 					{#if eventData.pedidos.length > 0}
 						{#each eventData.pedidos as pedido}
@@ -164,7 +169,7 @@
 							<FormPedidos id_oportunidad={page.url.href.split('/').pop()} />
 						</FormOptionalInput>
 					</div>
-				</section>
+				</section> -->
 
 				<section class="cotizacion">
 					<div class="block-header">
