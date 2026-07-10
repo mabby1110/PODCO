@@ -8,6 +8,7 @@
 	import FasesXOportunidad from './graficas/FasesXOportunidad.svelte';
 	import Filtro from '../App/Filtro.svelte';
 	import FiltroAgente from '../FiltroAgente.svelte';
+	import OportunidadesXAgenteXmes from './graficas/OportunidadesXAgenteXmes.svelte';
 
 	let { oportunidades } = $derived(page.data);
 
@@ -40,7 +41,7 @@
 			{#snippet controles()}
 				<Filtro categorias={categoriasOportunidad} cookies={'oportunidades-bi'} />
 				<Agrupaciones
-					categorias={agrupacionesOportunidades}
+					categorias={agrupacionesOportunidades.concat([{value:'id_agente', label:'id_agente'}])}
 					bind:agrupacionesSeleccionadas
 					{agrupaciones}
 					cookies={'oportunidades-bi'}
@@ -50,6 +51,6 @@
 	</div>
 
 	<div class="contenido-graficas">
-		<FasesXOportunidad data={listaFiltrada} />
+		<OportunidadesXAgenteXmes data={listaAgrupada}/>
 	</div>
 </div>

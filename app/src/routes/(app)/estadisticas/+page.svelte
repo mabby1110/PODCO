@@ -6,8 +6,8 @@
 </script>
 
 <div class="page-content">
-	<GraficasCotizaciones />
-	<GraficasInventario />
-	<GraficasClientes />
 	<GraficasOportunidades />
+	<!-- <GraficasCotizaciones />
+	<GraficasInventario />
+	<GraficasClientes /> -->
 </div>
