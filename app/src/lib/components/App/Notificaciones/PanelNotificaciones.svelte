@@ -3,7 +3,7 @@
     import { onMount } from 'svelte';
 
     let {notificaciones} = $derived(page.data);
-    let showFilter = $state(true);
+    let showFilter = $state(false);
 
     let x = $state(0);
     let y = $state(0);

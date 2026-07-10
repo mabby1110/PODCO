@@ -5,10 +5,10 @@ import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
 	add: async ({ request, locals: { supabase, user } }) => {
+		if (!user) return 0;
+		console.log('\nOportunidad nueva\n');
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
-
-		console.log('\nOportunidad nueva\n');
 
 		// 1. ¿Necesitamos crear un cliente nuevo primero?
 		if (data['nombre_comercial']) {
@@ -43,13 +43,48 @@ export const actions: Actions = {
 			.single();
 
 		console.log('Insertando oportunidad:', result, error);
+
 		if (error) {
 			return fail(500, { error: error.message });
 		}
 
+		// 3. Insertamos en el Historial
+		const { data: historialCreado, error: errorHistorial } = await supabase
+			.from('historial')
+			.insert([
+				{
+					id_agente: user.id,
+					tipo_objeto: 'oportunidad',
+					id_objeto: result.id,
+					accion: 'add',
+					cambios: data
+				}
+			])
+			.select()
+			.single();
+
+		if (errorHistorial) {
+			console.error('Fallo al registrar historial:', errorHistorial);
+			// No detenemos la ejecución porque el cliente ya se creó, pero lo registramos.
+		}
+
+		// 4. Filtro e Insert en Notificaciones
+		const idDueño = result.id_agente;
+
+		if (idDueño && idDueño !== user.id && historialCreado) {
+			const { error: errorNotif } = await supabase.from('notificaciones').insert([
+				{
+					id_receptor: idDueño,
+					id_historial: historialCreado.id
+				}
+			]);
+
+			if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
+		}
 		return { success: true, op: result.id };
 	},
 	update: async ({ request, locals: { supabase, user } }) => {
+		if (!user) return 0;
 		console.log('\nOportunidaddd actualizada\n');
 
 		const formData = await request.formData();
@@ -64,79 +99,13 @@ export const actions: Actions = {
 		const oportunidad = construirDatosOportunidad(data, id);
 		delete data.id;
 
-		/* PROCESAR DOCUMENTOS */
-		const documentos: Partial<Documento>[] = [];
-
-		const cotizaciones = formData.get('cotizaciones') as File | null;
-		if (cotizaciones && cotizaciones.size > 0) {
-			const docsOc = await construirDatosDocumentos(
-				formData,
-				undefined,
-				id,
-				undefined,
-				user?.id,
-				'cotizaciones',
-				'cotizaciones'
-			);
-			documentos.push(...docsOc);
-		}
-
-		const oc_cliente = formData.get('oc_cliente') as File | null;
-		if (oc_cliente && oc_cliente.size > 0) {
-			const docsOc = await construirDatosDocumentos(
-				formData,
-				undefined,
-				id,
-				undefined,
-				user?.id,
-				'oc_cliente',
-				'oc_cliente'
-			);
-			documentos.push(...docsOc);
-		}
-
-		const oc_proveedor = formData.get('oc_proveedor') as File | null;
-		if (oc_proveedor && oc_proveedor.size > 0) {
-			const docsOc = await construirDatosDocumentos(
-				formData,
-				undefined,
-				id,
-				undefined,
-				user?.id,
-				'oc_proveedor',
-				'oc_proveedor'
-			);
-			documentos.push(...docsOc);
-		}
-
-		// validar orden de compra cliente
-		const adjuntos = formData.get('adjuntos') as File | null;
-		if (adjuntos && adjuntos.size > 0) {
-			const docsOc = await construirDatosDocumentos(
-				formData,
-				undefined,
-				id,
-				undefined,
-				user?.id,
-				'adjuntos',
-				'adjuntos'
-			);
-			documentos.push(...docsOc);
-		}
-
-		// 1. Insertar documentos solo si existen
-		if (documentos.length > 0) {
-			const { error: errDocs } = await supabase.from('documentos').insert(documentos);
-
-			if (errDocs) {
-				console.error('Error insertando documentos:', errDocs);
-				return fail(500, { error: `Error en documentos: ${errDocs.message}` });
-			}
-		}
-
 		// 2. Actualización de la oportunidad
-		const { error: errOp } = await supabase.from('oportunidades').update(oportunidad).eq('id', id);
-
+		const { data: result, error: errOp } = await supabase
+			.from('oportunidades')
+			.update(oportunidad)
+			.eq('id', id)
+			.single();
+		console.log('oportunidad noti: ', result);
 		if (errOp) {
 			console.error('Error actualizando oportunidad:', errOp);
 			return fail(500, { error: `Error en oportunidad: ${errOp.message}` });
