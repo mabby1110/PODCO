@@ -34,7 +34,7 @@
 		if (fecha != '' && datepicker) {
 			datepicker.scrollIntoView({
 				behavior: 'smooth',
-				block: 'start'
+				block: 'center'
 			});
 		}
 	});
