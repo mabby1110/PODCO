@@ -80,7 +80,7 @@
                         <input type="file" {name} class="file-input" />
                     {:else if type === 'select'}
                         <select {name} bind:value={editedValue} class="select">
-                            <option value={editedValue ?? 'Sin Agente'}> seleccionar </option>
+                            <option value=''> seleccionar </option>
                             {#each options as option}
                                 <option value={option.id}>
                                     {option.nombre}

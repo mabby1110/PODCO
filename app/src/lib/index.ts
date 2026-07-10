@@ -76,11 +76,12 @@ export type Historial = {
 	cambios: any;
 };
 export type Notificacion = {
-	id: string;
+	id?: string;
 	fecha_creacion: string | Date;
 	id_agente: string;
 	id_historial: string;
 	visto: boolean;
+	fecha_lectura: string | Date;
 };
 export type Cotizacion = {
 	id: string;

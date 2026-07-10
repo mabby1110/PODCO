@@ -1,4 +1,4 @@
-import type { Actividad, Cliente, Cotizacion, Oportunidad, Pedido } from '$lib';
+import type { Actividad, Cliente, Cotizacion, Historial, Notificacion, Oportunidad, Pedido } from '$lib';
 import { processAttachments } from '../google/drive';
 import { generateId } from '../google/sheets';
 
@@ -75,6 +75,7 @@ const CLAVES_OPORTUNIDAD: (keyof Oportunidad)[] = [
 	'oc_cliente',
 	'documentos_operacion'
 ];
+
 const CLAVES_PEDIDO: (keyof Pedido)[] = [
 	'id',
 	'fecha_creacion',
@@ -93,7 +94,26 @@ const CLAVES_PEDIDO: (keyof Pedido)[] = [
 	'id_oportunidad',
 	'id_producto',
 	'cantidad',
-	'precio_unitario',
+	'precio_unitario'
+];
+
+const CLAVES_HISTORIAL: (keyof Historial)[] = [
+	'id',
+	'fecha_creacion',
+	'id_agente',
+	'tipo_objeto',
+	'id_objeto',
+	'accion',
+	'cambios'
+];
+
+const CLAVES_NOTIFICACIONES: (keyof Notificacion)[] = [
+	'id',
+	'fecha_creacion',
+	'id_agente',
+	'id_historial',
+	'visto',
+	'fecha_lectura',
 ];
 
 export function limpiarCamposVacios(obj: Record<string, any>): Record<string, any> {
@@ -191,12 +211,9 @@ export function construirDatosActividad(
 	return limpiarCamposVacios(datosBrutos) as Partial<Actividad>;
 }
 
-export function construirDatosPedido(
-	data: Record<string, any>,
-	id?: string
-): Partial<Pedido> {
+export function construirDatosPedido(data: Record<string, any>, id?: string): Partial<Pedido> {
 	const datosBrutos: Partial<Pedido> = {};
-	console.log('brutos: ', datosBrutos)
+	console.log('brutos: ', datosBrutos);
 	for (const clave of CLAVES_PEDIDO) {
 		// Asignación de ID
 		if (clave === 'id') {
@@ -289,7 +306,7 @@ export async function procesarDocumentos(
 	// Modificado: Retorna un array
 	const baseDatos: Partial<Cotizacion> = {};
 
-	// 1. Construir datos compartidos 
+	// 1. Construir datos compartidos
 	for (const clave of CLAVES_DOCUMENTO) {
 		if (clave === 'id') continue; // Se asignará individualmente
 

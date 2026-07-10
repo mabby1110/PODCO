@@ -38,6 +38,7 @@ export const load: LayoutServerLoad = async ({
 	let queryInventario = supabase.from('inventario').select('*');
 	let queryPedidos = supabase.from('pedidos').select('*, profiles(*), inventario(*)');
 	let queryCotizaciones = supabase.from('docs_cotizaciones').select('*, profiles(nombre), oportunidades(motivo), clientes(nombre_comercial)');
+	let queryNotificaciones = supabase.from('notificaciones').select('*, profiles(nombre), historial(*)');
 
 	if (profile?.isAdmin) {
 		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
@@ -53,6 +54,7 @@ export const load: LayoutServerLoad = async ({
 		queryDocumentos = queryDocumentos.eq('id_agente', profile.id);
 		queryPedidos = queryPedidos.eq('id_agente', profile.id);
 		queryCotizaciones = queryCotizaciones.eq('id_agente', profile.id);
+		queryNotificaciones = queryNotificaciones.eq('id_agente', profile.id);
 	}
 
 	const [
@@ -63,6 +65,7 @@ export const load: LayoutServerLoad = async ({
 		{ data: inventario },
 		{ data: pedidos },
 		{ data: cotizaciones },
+		{ data: notificaciones },
 	] = await Promise.all([
 		queryClientes,
 		queryOportunidades,
@@ -71,6 +74,7 @@ export const load: LayoutServerLoad = async ({
 		queryInventario,
 		queryPedidos,
 		queryCotizaciones,
+		queryNotificaciones,
 	]);
 	console.log('actividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
@@ -79,6 +83,7 @@ export const load: LayoutServerLoad = async ({
 	console.log('inventario: ', inventario?.length);
 	console.log('pedidos: ', pedidos?.length);
 	console.log('cotizaciones: ', cotizaciones?.length);
+	console.log('notificaciones: ', notificaciones?.length);
 
 	// let ides = []
 	// for (let i=0  ; i<=2; i++){
@@ -94,6 +99,7 @@ export const load: LayoutServerLoad = async ({
 		documentos: documentos || [],
 		inventario: inventario || [],
 		pedidos: pedidos || [],
-		cotizaciones: cotizaciones || []
+		cotizaciones: cotizaciones || [],
+		notificaciones: notificaciones || []
 	};
 };

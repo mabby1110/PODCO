@@ -107,7 +107,7 @@
 		</div>
 	</div>
 {/if}
-<button class="butter {showFilter?'active':''}" onclick={() => (showFilter = !showFilter)}>
+<button class="honey {showFilter?'active':''}" onclick={() => (showFilter = !showFilter)}>
 	<img src="/options.svg" alt="options" />
 </button>
 

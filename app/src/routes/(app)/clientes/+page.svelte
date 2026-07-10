@@ -5,6 +5,7 @@
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
 	import Filtro from '$lib/components/App/Filtro.svelte';
 	import Lista from '$lib/components/App/Listas/Lista.svelte';
+	import PanelNotificaciones from '$lib/components/App/Notificaciones/PanelNotificaciones.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
@@ -54,6 +55,7 @@
 <Lista header="Clientes">
 	{#snippet acciones()}
 		<Searchbar data={clientes} keyColumns={categoriasCliente.map((a) => a.key)} bind:lista />
+		<PanelNotificaciones />
 		<PanelFiltros>
 			{#snippet header()}
 				<FiltroAgente />
