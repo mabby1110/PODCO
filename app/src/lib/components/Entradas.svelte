@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import { appState } from '$lib/stores/appState.svelte';
+	import { opModalStore } from '$lib/stores/opModalStore.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 
@@ -81,6 +83,11 @@
 		};
 	}
 
+	function handleHotOp(i: number, entrada: string) {
+		opModalStore.index_entrada = String(i);
+		opModalStore.observaciones = entrada;
+		appState.toggleModalOp();
+	}
 	// $effect(() => {
 	// 	if (formInput) {
 	// 		formInput.scrollIntoView({
@@ -111,11 +118,19 @@
 							</div>
 						{:else}
 							{#if (item.nombre_perfil === $profile?.nombre && isEditing) || (!item.nombre_perfil && isEditing)}
+								{#if !item.id_op}
+									<button type="button" class="butter" onclick={()=>handleHotOp(i, item.entrada)}>
+										+Oportundiad
+									</button>
+								{/if}
 								<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
 							{/if}
 							<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
 							{#if item.entrada}
 								<div class="contenido-entrada">
+									{#if item.id_op}
+										<a href="/oportunidades/{item.id_op}">Oportunidad</a>
+									{/if}
 									{#if item.nombre_perfil}
 										<span class="profile">{item.nombre_perfil},</span>
 									{/if}
@@ -189,7 +204,10 @@
 		background: var(--color-ganada, #4caf50);
 		align-self: flex-end;
 	}
-	button, input, textarea {
+	button,
+	input,
+	textarea,
+	a {
 		pointer-events: all;
 	}
 </style>

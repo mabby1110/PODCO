@@ -35,6 +35,8 @@
 							);
 
 							appState.toggleModalOp();
+							opModalStore.clearStore();
+							invalidateAll();
 							await update({ reset: true });
 						}
 					};

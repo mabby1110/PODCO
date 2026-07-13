@@ -4,8 +4,10 @@ import { getCookie, setCookie } from '$lib/utils/cookies';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 interface OpModalState {
-	objetivo: string;
+	id_cliente: string;
 	id_op: string;
+	observaciones: string;
+	index_entrada: string;
 	succeded: boolean;
 	clearStore: () => void;
 }
@@ -13,20 +15,26 @@ interface OpModalState {
 const rawSucceded = getCookie('succeded');
 
 export const opModalStore: OpModalState = $state({
-	objetivo: getCookie('objetivo') || '',
+	id_cliente: getCookie('id_cliente') || '',
 	id_op: getCookie('id_op') || '',
+	observaciones: getCookie('observaciones') || '',
+	index_entrada: getCookie('index_entrada') || '',
 	succeded: rawSucceded === 'true',
 	clearStore() {
-		this.objetivo = '';
+		this.id_cliente = '';
 		this.id_op = '';
+		this.observaciones = '';
+		this.index_entrada = '';
 		this.succeded = false;
 	}
 });
 
 const saveCookies = (store: OpModalState) => {
 	if (!browser) return;
-	setCookie('objetivo', store.objetivo, { maxAge: COOKIE_MAX_AGE });
+	setCookie('id_cliente', store.id_cliente, { maxAge: COOKIE_MAX_AGE });
 	setCookie('id_op', store.id_op, { maxAge: COOKIE_MAX_AGE });
+	setCookie('observaciones', store.observaciones, { maxAge: COOKIE_MAX_AGE });
+	setCookie('index_entrada', store.index_entrada, { maxAge: COOKIE_MAX_AGE });
 	setCookie('succeded', String(store.succeded), { maxAge: COOKIE_MAX_AGE });
 };
 

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	let { title, children }: { title: string; children?: Snippet } = $props();
+	let { title, openByDefault = false, children }: { title: string; openByDefault?: boolean; children?: Snippet } = $props();
 
-	let isOpen = $state(false);
+	let isOpen = $derived(openByDefault);
 	let input = $state<HTMLElement | null>(null);
 		
 	function open() {
@@ -15,7 +15,7 @@
 	}
 
 	$effect(() => {
-		if (isOpen && input) {
+		if (isOpen && input && !openByDefault) {
 			input.scrollIntoView({
 				behavior: 'smooth',
 				block: 'start'

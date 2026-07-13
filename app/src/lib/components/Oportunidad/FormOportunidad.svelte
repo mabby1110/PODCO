@@ -19,8 +19,8 @@
 
 	let necesidades = $state('');
 	let potencial_venta = $state('');
-	let objetivo = $state(opModalStore.objetivo || '');
-	let observaciones = $state('');
+	let objetivo = $state('');
+	let observaciones = $state(opModalStore.observaciones || '');
 
 	let isOpen = $state(false);
 
@@ -73,7 +73,7 @@
 		hint="ej. levantamiento técnico en sitio,  o presentar cotización"
 		required
 	/>
-	<FormOptionalInput title="+Observaciones">
+	<FormOptionalInput title="+Observaciones" openByDefault>
 		<FormInput
 			label="Observaciones"
 			name="observaciones"

@@ -14,7 +14,6 @@
 	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
 	import CustomInput from '$lib/components/App/form/CustomInput.svelte';
 	import DatePicker from '$lib/components/DatePicker.svelte';
-	// 💡 NOTA: Se eliminó 'untrack' ya que no lo necesitamos en eventos
 
 	let { data } = $props();
 	const event = $derived(data.actividad);
@@ -41,9 +40,8 @@
 	let currentFase = $derived(eventData?.fase?.id_fase == 6 ? 'w' : '');
 
 	let isEditing = $state(false);
-	let activeHistoriaIndex = $state<number | null>(null);
-
-	function handleModalSuccess(e: Event) {
+	function handleHotOp(e: Event) {
+		const activeHistoriaIndex = opModalStore.index_entrada;
 		const customEvent = e as CustomEvent<{ id_op: string }>;
 		const id_op = customEvent.detail.id_op;
 		if (activeHistoriaIndex !== null && eventData) {
@@ -60,15 +58,13 @@
 				{ id: eventData.id, historia: updatedHistoria },
 				'/actividades?/update'
 			).then(() => {
-				activeHistoriaIndex = null;
 				opModalStore.clearStore();
-				invalidateAll();
 			});
 		}
 	}
 </script>
 
-<svelte:window onmodalOpSuccess={handleModalSuccess} />
+<svelte:window onmodalOpSuccess={handleHotOp} />
 
 {#if eventData}
 	<Card headerStyle={eventData.style}>
