@@ -3,6 +3,7 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import ControlsPanel from './ControlsPanel.svelte';
 	import Logout from '../Logout.svelte';
+	import PanelNotificaciones from './Notificaciones/PanelNotificaciones.svelte';
 
 	let expanded = $derived($appState.pageActions);
 
@@ -29,6 +30,7 @@
 	{#if expanded}
 		<Logout />
 		<ControlsPanel />
+		<PanelNotificaciones />
 	{/if}
 
 	<button onclick={togglePanel} class="butter">

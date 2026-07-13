@@ -59,8 +59,7 @@
 	{/snippet}
 
 	{#snippet meta()}
-		<p class="id">{eventData?.id}</p>
-		<p>{eventData?.agente?.nombre}</p>
 		<p>{formatDateFull(parseDateTimeLocal(eventData?.inicio))}</p>
+		<p>{eventData?.agente?.nombre}</p>
 	{/snippet}
 </ListPreview>

@@ -71,10 +71,10 @@ export const actions: Actions = {
 		const data = Object.fromEntries(formData.entries());
 		console.log('data: ', data);
 
+		// 1. Actualizamos en Supabase usando .eq() y retornamos la data actualizada
 		const id = (data['id_cliente'] as string) || (data['id'] as string);
 		if (!id) return fail(400, { error: 'ID requerido' });
 
-		// 1. Actualizamos en Supabase usando .eq() y retornamos la data actualizada
 		const cliente = construirDatosCliente(data, id);
 		const { data: clienteActualizado, error: errorCliente } = await supabase
 			.from('clientes')

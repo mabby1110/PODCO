@@ -5,12 +5,12 @@ import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
 	add: async ({ request, locals: { supabase, user } }) => {
-		if (!user) return 0;
 		console.log('\nOportunidad nueva\n');
+		if (!user) return 0;
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
 
-		// 1. ¿Necesitamos crear un cliente nuevo primero?
+		// ¿Necesitamos crear un cliente nuevo primero?
 		if (data['nombre_comercial']) {
 			console.log('Creando cliente nuevo enlazado...');
 
@@ -30,30 +30,27 @@ export const actions: Actions = {
 			data['id_cliente'] = clienteResult.id;
 			delete data['razon_social'];
 		}
-		// 2. Crear la oportunidad
-		const oportunidad = construirDatosOportunidad(data);
-		console.log('objeto oportunidad creada:', oportunidad);
 
+		// Crear la oportunidad
+		const oportunidad = construirDatosOportunidad(data);
 		const { data: result, error } = await supabase
 			.from('oportunidades')
 			.insert([oportunidad])
 			.select('id')
 			.single();
-
-		console.log('Insertando oportunidad:', result, error);
-
 		if (error) {
 			return fail(500, { error: error.message });
 		}
+		console.log('result', result);
 
-		// 3. Insertamos en el Historial
-		const { data: historialCreado, error: errorHistorial } = await supabase
+		// Insertamos en el Historial
+		const { data: historial, error: errorHistorial } = await supabase
 			.from('historial')
 			.insert([
 				{
 					id: generateId('BMS-H'),
-					id_agente: user.id,
-					tipo_objeto: 'oportunidad',
+					id_agente: user?.id,
+					tipo_objeto: 'oportunidades',
 					id_objeto: result.id,
 					accion: 'add',
 					cambios: data
@@ -61,31 +58,28 @@ export const actions: Actions = {
 			])
 			.select()
 			.single();
+		if (errorHistorial) console.error('Fallo al registrar historial:', errorHistorial);
+		console.log('\nhistorial creado:\n', historial);
 
-		if (errorHistorial) {
-			console.error('Fallo al registrar historial:', errorHistorial);
-			// No detenemos la ejecución porque el cliente ya se creó, pero lo registramos.
-		}
-
-		// 4. Filtro e Insert en Notificaciones
-		const idDueño = result.id_agente;
-
-		if (idDueño && idDueño !== user.id && historialCreado) {
-			const { error: errorNotif } = await supabase.from('notificaciones').insert([
+		// Filtro e Insert en Notificaciones
+		const { data: notificacion, error: errorNotif } = await supabase
+			.from('notificaciones')
+			.insert([
 				{
-					id_receptor: idDueño,
-					id_historial: historialCreado.id
+					id: generateId('BMS-N'),
+					id_agente: user?.id,
+					id_historial: historial.id
 				}
-			]);
-
-			if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
-		}
+			])
+			.select()
+			.single();
+		if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
+		console.log('\nNotificación creada:\n', notificacion);
 		return { success: true, op: result.id };
 	},
 	update: async ({ request, locals: { supabase, user } }) => {
-		if (!user) return 0;
 		console.log('\nOportunidaddd actualizada\n');
-
+		if (!user) return 0;
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
 
@@ -98,17 +92,52 @@ export const actions: Actions = {
 		const oportunidad = construirDatosOportunidad(data, id);
 		delete data.id;
 
-		// 2. Actualización de la oportunidad
+		// Actualización de la oportunidad
 		const { data: result, error: errOp } = await supabase
 			.from('oportunidades')
 			.update(oportunidad)
 			.eq('id', id)
+			.select()
 			.single();
 
 		if (errOp) {
 			console.error('Error actualizando oportunidad:', errOp);
 			return fail(500, { error: `Error en oportunidad: ${errOp.message}` });
 		}
+		console.log('result', result);
+
+		// Insertamos en el Historial
+		const { data: historial, error: errorHistorial } = await supabase
+			.from('historial')
+			.insert([
+				{
+					id: generateId('BMS-H'),
+					id_agente: user?.id,
+					tipo_objeto: 'oportunidades',
+					id_objeto: result.id,
+					accion: 'update',
+					cambios: data
+				}
+			])
+			.select()
+			.single();
+		if (errorHistorial) console.error('Fallo al registrar historial:', errorHistorial);
+		console.log('\nhistorial creado:\n', historial);
+
+		// Filtro e Insert en Notificaciones
+		const { data: notificacion, error: errorNotif } = await supabase
+			.from('notificaciones')
+			.insert([
+				{
+					id: generateId('BMS-N'),
+					id_agente: user?.id,
+					id_historial: historial.id
+				}
+			])
+			.select()
+			.single();
+		if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
+		console.log('\nNotificación creada:\n', notificacion);
 
 		return { success: true };
 	},

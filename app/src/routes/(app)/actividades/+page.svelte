@@ -58,7 +58,6 @@
 <Lista header="Actividades">
 	{#snippet acciones()}
 		<Searchbar data={actividades} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
-		<PanelNotificaciones />
 		<PanelFiltros>
 			{#snippet header()}
 				<FiltroAgente />
