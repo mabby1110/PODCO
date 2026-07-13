@@ -15,7 +15,7 @@ export const actions: Actions = {
 			console.log('Creando cliente nuevo enlazado...');
 
 			const clienteData = construirDatosCliente(data);
-			console.log(clienteData);
+			console.log('objeto cliente creado: ', clienteData);
 			const { data: clienteResult, error: clienteError } = await supabase
 				.from('clientes')
 				.insert([clienteData])
@@ -31,10 +31,8 @@ export const actions: Actions = {
 			delete data['razon_social'];
 		}
 		// 2. Crear la oportunidad
-		data['id'] = generateId('BMS-OP');
-
 		const oportunidad = construirDatosOportunidad(data);
-		console.log(oportunidad);
+		console.log('objeto oportunidad creada:', oportunidad);
 
 		const { data: result, error } = await supabase
 			.from('oportunidades')
@@ -53,6 +51,7 @@ export const actions: Actions = {
 			.from('historial')
 			.insert([
 				{
+					id: generateId('BMS-H'),
 					id_agente: user.id,
 					tipo_objeto: 'oportunidad',
 					id_objeto: result.id,
@@ -105,7 +104,7 @@ export const actions: Actions = {
 			.update(oportunidad)
 			.eq('id', id)
 			.single();
-		console.log('oportunidad noti: ', result);
+
 		if (errOp) {
 			console.error('Error actualizando oportunidad:', errOp);
 			return fail(500, { error: `Error en oportunidad: ${errOp.message}` });

@@ -1,3 +1,4 @@
+import { construirDatosActividad } from '$lib/server/supabase/util';
 import { fail, type Actions } from '@sveltejs/kit';
 import crypto from 'crypto';
 function generateId(prefix = 'BMS') {
@@ -12,11 +13,13 @@ export const actions: Actions = {
 		data['id'] = generateId('BMS-ACT');
 		console.log('actividad nueva', data);
 
+		const actividad = construirDatosActividad(data);
+
 		const { data: result, error } = await supabase
 			.from('actividades')
-			.insert([data])
+			.insert([actividad])
 			.select('id')
-			.single()
+			.single();
 
 		if (error) {
 			return fail(500, { error: error.message });
@@ -26,21 +29,29 @@ export const actions: Actions = {
 	},
 
 	update: async ({ request, locals: { supabase } }) => {
+		console.log('\nActualizar actividad:\n');
+
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
-
+		console.log(data);
+		
 		const id = data['id'] as string;
-		console.log('Actualizar actividad:\n\n', data);
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
-
+		
+		const actividad = construirDatosActividad(data, id);
 		delete data.id;
+		console.log('actividad', actividad);
 
-		const { error } = await supabase.from('actividades').update(data).eq('id', id);
+		const { data: result, error: err } = await supabase
+			.from('actividades')
+			.update(actividad)
+			.eq('id', id)
+			.single();
 
-		if (error) {
-			return fail(500, { error: error.message });
+		if (err) {
+			return fail(500, { error: err.message });
 		}
 
 		return { success: true };

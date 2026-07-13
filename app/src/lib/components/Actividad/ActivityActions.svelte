@@ -1,12 +1,9 @@
 <script lang="ts">
-	import DatePicker from '$lib/components/DatePicker.svelte';
-	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import FormInput from '../FormInput.svelte';
 	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import FormActions from '../FormActions.svelte';
-	import type { Snippet } from 'svelte';
 
 	let {
 		eventData,
@@ -63,10 +60,11 @@
 		{#snippet hiddenContent()}
 			<input type="hidden" name="id" value={eventData.id} />
 			{#if nuevaHistoria}
+			{eventData?.agente.nombre}
 				<input
 					type="hidden"
 					name="historia"
-					value={agregarEntrada(eventData.historia, nuevaHistoria)}
+					value={agregarEntrada(eventData.historia, nuevaHistoria, eventData?.agente)}
 				/>
 			{/if}
 			{#if nuevoRequisito}
@@ -97,7 +95,6 @@
 						Editar
 					</button>
 				{/if}
-
 				{#if submit}
 					<input type="hidden" name="fase" value={nextPhase} />
 					<button type="submit" class="butter" {style} disabled={isSubmitting}>

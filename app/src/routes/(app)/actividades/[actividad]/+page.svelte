@@ -43,12 +43,6 @@
 	let isEditing = $state(false);
 	let activeHistoriaIndex = $state<number | null>(null);
 
-	function handleHotOp(objetivo: string, index: number) {
-		activeHistoriaIndex = index;
-		opModalStore.objetivo = objetivo;
-		appState.toggleModalOp();
-	}
-
 	function handleModalSuccess(e: Event) {
 		const customEvent = e as CustomEvent<{ id_op: string }>;
 		const id_op = customEvent.detail.id_op;
