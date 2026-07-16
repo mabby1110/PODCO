@@ -13,9 +13,6 @@
 	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
 	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';
 	import SubirOcc from '$lib/components/Documentos/SubirOcc.svelte';
-	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
-	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
-	import PreviewListaPedido from '$lib/components/Pedidos/PreviewListaPedido.svelte';
 	import CustomInput from '$lib/components/App/form/CustomInput.svelte';
 	import DatePicker from '$lib/components/DatePicker.svelte';
 

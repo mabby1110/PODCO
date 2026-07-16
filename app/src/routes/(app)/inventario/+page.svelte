@@ -10,8 +10,10 @@
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
 	import Grupo from '$lib/components/Grupo.svelte';
-	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 	import PreviewListaProducto from '$lib/components/Inventario/PreviewListaProducto.svelte';
+	import { agrupacionesStore } from '$lib/stores/agrupacionesStore.svelte';
+	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
+	import Panel from '$lib/components/App/Panel.svelte';
 
 	let { inventario } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -41,7 +43,6 @@
 	);
 
 	$effect(() => {
-		console.log('lista: ', agrupacionesSeleccionadas);
 		if (agrupacionesSeleccionadas.length > 0) {
 			lista_agrupada?.filter((a) => agrupacionesSeleccionadas.includes(a.grupo));
 		}
@@ -57,6 +58,11 @@
 			keyColumns={['serie', 'codigo', 'descripcion', 'categorias']}
 			bind:lista
 		/>
+		<Panel tituloBoton="Pedido">
+			{#snippet contenido()}
+				<FormPedidos />
+			{/snippet}
+		</Panel>
 		<PanelFiltros>
 			{#snippet header()}
 				<ExportarCSV {lista_ordenada} />

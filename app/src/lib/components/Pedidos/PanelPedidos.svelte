@@ -1,25 +1,24 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Snippet } from 'svelte';
+	import FormPedidos from './FormPedidos.svelte';
 
 	let {
 		contenido,
 		header,
-		absolute,
-		tituloBoton = 'boton'
-	}: { contenido?: Snippet; header?: Snippet; absolute?: boolean; tituloBoton: string } = $props();
+		absolute
+	}: { contenido?: Snippet; header?: Snippet; absolute?: boolean } = $props();
 
-	let show = $state(true);
+	let showFilter = $state(false);
 
+	// FUNCIONES PARA MANIPULACION DEL PANEL
 	let x = $state(0);
 	let y = $state(0);
 	let isDragging = false;
-
 	let startX = 0;
 	let startY = 0;
 	let initialX = 0;
 	let initialY = 0;
-
 	let panel: HTMLDivElement | undefined = $state();
 	let quadrantY = $state('top');
 	let quadrantX = $state('left');
@@ -33,15 +32,15 @@
 		quadrantX = centerX > window.innerWidth / 2 ? 'right' : 'left';
 		quadrantY = centerY > window.innerHeight / 2 ? 'bottom' : 'top';
 	}
-
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.altKey && event.key === 'q') {
-			event.preventDefault(); // Evita el comportamiento por defecto del navegador
-			show = !show;
+			event.preventDefault();
+			showFilter = !showFilter;
 		}
-		if (event.key === 'Escape') show = false;
+		if (event.key === 'Escape') {
+			showFilter = false;
+		}
 	}
-
 	function onMouseDown(event: MouseEvent) {
 		isDragging = true;
 		startX = event.clientX;
@@ -49,34 +48,29 @@
 		initialX = x;
 		initialY = y;
 	}
-
 	function onMouseMove(event: MouseEvent) {
 		if (!isDragging) return;
 		x = initialX + (event.clientX - startX);
 		y = initialY + (event.clientY - startY);
 		calculateQuadrant();
 	}
-
 	function onMouseUp() {
 		if (isDragging) {
 			isDragging = false;
 			calculateQuadrant();
 		}
 	}
-
 	function resetPosition(event: MouseEvent) {
 		event.stopPropagation();
 		x = 0;
 		y = 0;
 		setTimeout(calculateQuadrant, 0);
 	}
-
 	$effect(() => {
-		if (show) {
+		if (showFilter) {
 			setTimeout(calculateQuadrant, 0);
 		}
 	});
-
 	onMount(() => {
 		window.addEventListener('resize', calculateQuadrant);
 		return () => window.removeEventListener('resize', calculateQuadrant);
@@ -85,45 +79,52 @@
 
 <svelte:window onkeydown={handleKeyDown} onmousemove={onMouseMove} onmouseup={onMouseUp} />
 
-{#if show}
+{#if showFilter}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={panel}
-		class="panel {quadrantY} {quadrantX} {absolute ? 'panel-controls-local' : 'panel-controls'}"
+		class="{quadrantY} {quadrantX} {absolute ? 'panel-controls-local' : 'panel-controls'}"
 		style="transform: translate({x}px, {y}px);"
 	>
-		<div class="header-actions" onmousedown={onMouseDown}>
-			<p class="panel-title">{tituloBoton}</p>
-			{#if header}
-				{@render header()}
-			{/if}
-			<button class="butter" type="button" onclick={resetPosition}>Resetear posición</button>
-			<button class="close-btn" type="button" onclick={() => (show = false)}>✕</button>
+		<div class="panel header-actions" onmousedown={onMouseDown}>
+			<button class="butter" type="button" onclick={resetPosition}>⇱</button>
+			<button class="close-btn" type="button" onclick={() => (showFilter = false)}>✕</button>
 		</div>
-		{#if contenido}
-			{@render contenido()}
-		{/if}
+		<div class="panel content-actions">
+			{#if contenido}
+				{@render contenido()}
+			{/if}
+		</div>
 	</div>
 {/if}
-<button class="butter" onclick={() => (show = !show)}> {tituloBoton} </button>
+<button class="honey {showFilter ? 'active' : ''}" onclick={() => (showFilter = !showFilter)}>
+	<img src="/options.svg" alt="options" />
+</button>
 
 <style>
 	.panel-controls {
 		position: fixed;
 		top: 0;
+		right: 0;
 		right: var(--a);
 		display: flex;
 		gap: var(--a);
-		max-width: 700px;
-		width: 94%;
+		max-width: fit-content;
+		z-index: 99;
 	}
 	.panel-controls-local {
-		position: sticky;
+		position: absolute;
 		top: 0;
 		right: 0;
 		max-width: 40vw;
 		display: flex;
 		flex-wrap: wrap;
+		gap: var(--a);
+		z-index: 99;
+	}
+	.content-actions {
+		display: flex;
+		flex-direction: column;
 		gap: var(--a);
 	}
 	.panel-controls.top,
@@ -133,26 +134,27 @@
 	.panel-controls.left :global(.contenedor-agrupaciones:last-child),
 	.panel-controls.left :global(.contenedor-filtro) {
 		display: flex;
-		justify-content: flex-end;
+		justify-content: flex-start;
 	}
 
 	.panel-controls.right :global(.contenedor-agrupaciones:last-child),
 	.panel-controls.right :global(.contenedor-filtro) {
 		display: flex;
-		justify-content: flex-start;
+		justify-content: flex-end;
 	}
 
 	.panel-controls-local.left :global(.contenedor-agrupaciones:last-child),
 	.panel-controls-local.left :global(.contenedor-filtro) {
 		display: flex;
-		justify-content: flex-end;
+		justify-content: flex-start;
 	}
 
 	.panel-controls-local.right :global(.contenedor-agrupaciones:last-child),
 	.panel-controls-local.right :global(.contenedor-filtro) {
 		display: flex;
-		justify-content: flex-start;
+		justify-content: flex-end;
 	}
+
 	.header-actions:active {
 		cursor: grabbing;
 	}
@@ -161,12 +163,12 @@
 		width: 100%;
 		display: flex;
 		flex-wrap: wrap;
-		align-items: baseline;
+		justify-content: space-between;
 		gap: var(--a);
 		cursor: grab;
 		user-select: none;
 	}
-	.panel-title {
-		flex-grow: 1;
+	.header-actions.is-dragging > * {
+		pointer-events: none;
 	}
 </style>

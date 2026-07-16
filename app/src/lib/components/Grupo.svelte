@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/state';
 	import { fases, fases_actividad } from '$lib';
-	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
+	import { agrupacionesStore } from '$lib/stores/agrupacionesStore.svelte';
 
 	let { agrupacion, showByDefault = false, children } = $props();
 	let { clientes, agentes, oportunidades } = $state(page.data);

@@ -4,13 +4,11 @@
 	import { page } from '$app/state';
 	import { productosSeleccionadosStore } from '$lib/stores/productosSeleccionadosStore.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import Searchbar from '../App/Searchbar.svelte';
 	import FormInput from '../FormInput.svelte';
-	import ContadorProducto from '../Inventario/ContadorProducto.svelte';
+	import ContadorProducto from './ContadorProducto.svelte';
 	import Select from '../Select.svelte';
 
 	let { id_oportunidad }: { id_oportunidad?: string } = $props();
-	let { inventario } = $derived(page.data);
 
 	let no_orden = $state('');
 	let tipo = $state('');
@@ -37,18 +35,6 @@
 </script>
 
 <div class="movimiento">
-	<div class="acciones-tabla">
-		<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
-		<button class="butter" type="button" onclick={() => productosSeleccionadosStore.limpiar()}>
-			Borrar
-		</button>
-	</div>
-	<Searchbar
-		data={inventario}
-		keyColumns={['cantidad', 'serie', 'codigo', 'descripcion', 'categorias']}
-		showResults
-		bind:selectedItem
-	/>
 	{#if productosSeleccionadosStore.items.length === 0}
 		<p class="vacio">No hay productos seleccionados.</p>
 	{:else}
@@ -70,7 +56,7 @@
 					<span>{item.producto.serie || '-'}</span>
 					<span>USD</span>
 					<input type="number" name="total" bind:value={item.producto.precio} />
-					<span>{item.producto.precio*item.piezas}</span>
+					<span>{item.producto.precio * item.piezas}</span>
 				</div>
 			{/each}
 		</div>
@@ -101,9 +87,7 @@
 					<Select
 						bind:selected={tipo}
 						title="Tipo de movimiento"
-						options={[
-							{ value: 'cotizacion', label: 'Cotización' }
-						]}
+						options={[{ value: 'cotizacion', label: 'Cotización' }]}
 					/>
 					{#if tipo === 'entrada'}
 						<FormInput
@@ -141,6 +125,13 @@
 			</form>
 		{/if}
 	{/if}
+
+	<div class="acciones-tabla">
+		<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
+		<button class="butter" type="button" onclick={() => productosSeleccionadosStore.limpiar()}>
+			Borrar
+		</button>
+	</div>
 </div>
 
 <style>
@@ -152,9 +143,6 @@
 		gap: var(--a);
 		width: 100%;
 		max-width: 800px;
-		border-radius: 12px;
-		border: 1px solid var(--color-contrast);
-		padding: var(--a);
 	}
 	.acciones {
 		display: flex;
@@ -170,6 +158,9 @@
 		padding: var(--a);
 		max-height: 30vh;
 		overflow: auto;
+		border-radius: var(--a);
+		padding: var(--a);
+		background-color: var(--color-foreground);
 	}
 	.acciones-tabla {
 		display: flex;
