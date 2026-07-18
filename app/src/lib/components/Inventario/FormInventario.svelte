@@ -1,10 +1,7 @@
 <script lang="ts">
 	import FormInput from '$lib/components/FormInput.svelte';
-	import { page } from '$app/state';
 	import FormOptionalInput from '../FormOptionalInput.svelte';
 	import { slide } from 'svelte/transition';
-
-	let data = $derived(page.data);
 
 	let { isValid = $bindable() } = $props();
 	let ubicacion_fisica = $state('');

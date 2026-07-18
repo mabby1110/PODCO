@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { page } from '$app/state';
 	import { productosSeleccionadosStore } from '$lib/stores/productosSeleccionadosStore.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import FormInput from '../FormInput.svelte';
 	import ContadorProducto from './ContadorProducto.svelte';
 	import Select from '../Select.svelte';
+	import { formatCurrency } from '$lib/utils/util';
 
 	let { id_oportunidad }: { id_oportunidad?: string } = $props();
 
@@ -40,23 +40,25 @@
 	{:else}
 		<div class="productos">
 			<div class="producto" style="font-weight: bold;">
-				<span>Cantidad</span>
-				<span>Código</span>
-				<span>Descripción</span>
-				<span>Serie</span>
+				<span class="descripcion">Descripción</span>
+				<span class="codigo">Código</span>
 				<span>Moneda</span>
-				<span>Precio Unitario</span>
-				<span>total</span>
+				<span class="cantidad">P/U</span>
+				<span class="cantidad">Cantidad</span>
+				<span class="total">total</span>
 			</div>
 			{#each productosSeleccionadosStore.items as item}
 				<div class="producto">
-					<ContadorProducto producto={item.producto} />
-					<span>{item.producto.codigo || '-'}</span>
-					<span>{item.producto.descripcion || '-'}</span>
-					<span>{item.producto.serie || '-'}</span>
+					<span class="descripcion">{item.producto.descripcion || '-'}</span>
+					<span class="codigo">{item.producto.serie || item.producto.codigo || 'sin código'}</span>
 					<span>USD</span>
-					<input type="number" name="total" bind:value={item.producto.precio} />
-					<span>{item.producto.precio * item.piezas}</span>
+					<span class="cantidad">
+						<input type="number" name="total" bind:value={item.producto.precio} />
+					</span>
+					<span class="cantidad">
+						<ContadorProducto producto={item.producto} />
+					</span>
+					<span  class="total">{formatCurrency(String(item.producto.precio * item.piezas), 'USD')}</span>
 				</div>
 			{/each}
 		</div>
@@ -156,7 +158,7 @@
 		flex-direction: column;
 		gap: var(--a);
 		padding: var(--a);
-		max-height: 30vh;
+		max-height: 60vh;
 		overflow: auto;
 		border-radius: var(--a);
 		padding: var(--a);
@@ -177,16 +179,28 @@
 	}
 	.producto {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(35px, 1fr));
 		gap: var(--a);
 		align-items: baseline;
+		justify-items: center;
 	}
-	.producto :nth-child(2),
-	.producto :nth-child(3) {
+	.producto .descripcion {
+		grid-column: span 5;
+		word-break: break-all;
+		justify-self: flex-start;
+	}
+	.producto .codigo,
+	.producto .cantidad {
 		grid-column: span 2;
 		word-break: break-all;
 	}
+	.producto .total {
+		grid-column: span 3;
+	}
 	.vacio {
 		margin: 2rem;
+	}
+	input {
+		width: 100%;
 	}
 </style>

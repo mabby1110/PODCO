@@ -13,7 +13,6 @@
 	import Grupo from '$lib/components/Grupo.svelte';
 	import Lista from '$lib/components/App/Listas/Lista.svelte';
 	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
-	import PanelNotificaciones from '$lib/components/App/Notificaciones/PanelNotificaciones.svelte';
 	let { actividades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
 

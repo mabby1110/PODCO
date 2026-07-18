@@ -77,13 +77,13 @@
 	{#snippet contenido()}
 		{#if !agrupacionesStore.filtersByRoute[currentRoute]}
 			{#each lista_ordenada as elemento}
-				<PreviewListaProducto event={elemento} />
+				<PreviewListaProducto producto={elemento} />
 			{/each}
 		{:else}
 			{#each lista_agrupada_filtrada as agrupacion (agrupacion.grupo)}
 				<Grupo {agrupacion} showByDefault={show}>
-					{#each agrupacion.elementos as event (event.id)}
-						<PreviewListaProducto {event} />
+					{#each agrupacion.elementos as elemento (elemento.id)}
+						<PreviewListaProducto producto={elemento} />
 					{/each}
 				</Grupo>
 			{:else}
