@@ -30,14 +30,13 @@
 	{#snippet header()}
 		<h3>{eventData?.motivo}</h3>
 	{/snippet}
-
-	{#snippet resume()}
-		{#if eventData?.objetivo}
-			<b>Objetivo</b>
-			<p>{eventData?.objetivo}</p>
-		{/if}
-	{/snippet}
 	{#snippet content()}
+		{#if eventData?.objetivo}
+			<div class="brief">
+				<b>Objetivo</b>
+				<p>{eventData?.objetivo}</p>
+			</div>
+		{/if}
 		{#if eventData?.historia}
 			<div class="brief">
 				<h3>Historia</h3>

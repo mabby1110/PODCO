@@ -58,7 +58,9 @@
 					<span class="cantidad">
 						<ContadorProducto producto={item.producto} />
 					</span>
-					<span  class="total">{formatCurrency(String(item.producto.precio * item.piezas), 'USD')}</span>
+					<span class="total"
+						>{formatCurrency(String(item.producto.precio * item.piezas), 'USD')}</span
+					>
 				</div>
 			{/each}
 		</div>
@@ -185,17 +187,15 @@
 		justify-items: center;
 	}
 	.producto .descripcion {
-		grid-column: span 5;
+		grid-column: span 6;
 		word-break: break-all;
 		justify-self: flex-start;
 	}
 	.producto .codigo,
-	.producto .cantidad {
+	.producto .cantidad,
+	.producto .total {
 		grid-column: span 2;
 		word-break: break-all;
-	}
-	.producto .total {
-		grid-column: span 3;
 	}
 	.vacio {
 		margin: 2rem;

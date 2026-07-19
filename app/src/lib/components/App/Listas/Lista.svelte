@@ -46,12 +46,11 @@
 		bottom: var(--a);
 		right: var(--a);
 		z-index: 88;
-		align-self: flex-end;
 
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		align-items: flex-start;
 		flex-direction: row-reverse;
+		flex-wrap: wrap-reverse;
 	}
 </style>

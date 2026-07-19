@@ -67,7 +67,6 @@
 			</div>
 		{/if}
 	{/snippet}
-
 	{#snippet meta()}
 		<p>{eventData?.agente?.nombre}</p>
 		<p>{eventData?.inicio}</p>

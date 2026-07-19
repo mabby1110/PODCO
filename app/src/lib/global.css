@@ -87,7 +87,10 @@ select {
 	min-height: var(--d);
 	cursor: pointer;
 }
-
+button {
+	margin: 0;
+	padding: 0;
+}
 html,
 body {
 	max-width: 1800px;
@@ -164,11 +167,11 @@ body {
 .panel {
 	border: none;
 	border-radius: var(--a);
-	padding: var(--a);
+	padding: 4px var(--a);
 	background-color: var(--color-primary);
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(2px);
-	z-index: 999;
+	z-index: 9;
 }
 
 .flex-a {
@@ -469,7 +472,7 @@ body {
 /* ESTILOS PARA BOTONES */
 .butter {
 	color: var(--color-text);
-	height: var(--d);
+	height: fit-content;
 	min-width: fit-content;
 	border: 1px solid var(--color-secondary);
 	border-radius: var(--a);

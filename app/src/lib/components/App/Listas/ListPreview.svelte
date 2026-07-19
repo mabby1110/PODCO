@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import type { Snippet } from 'svelte';
 	import { slide } from 'svelte/transition';
 
@@ -25,7 +26,7 @@
 	let show = $state(false);
 	function handleNavigationClick(e: MouseEvent) {
 		e.stopPropagation();
-		window.location.href = href;
+		goto(href);
 	}
 	function handleClick() {
 		show = !show;
@@ -45,7 +46,7 @@
 	onclick={handleClick}
 	onkeydown={handleKeydown}
 	{style}
-	class="list-card-preview"
+	class="list-card-preview panel"
 >
 	<div class="list-card-header">
 		{#if header}
@@ -64,73 +65,55 @@
 		</div>
 	{/if}
 
-	{#if meta}
-		<div class="list-card-meta">
-			{@render meta()}
+	<div class="list-card-meta">
+		{#if meta}
+			<div class="data">
+				{@render meta()}
+			</div>
+		{/if}
+		<div class="actions">
+			{#if !ocultarAcciones}
+				<button class="butter" onclick={handleNavigationClick}>Ver</button>
+			{/if}
+			{#if acciones}
+				{@render acciones()}
+			{/if}
 		</div>
-	{/if}
-	<div class="list-card-actions">
-		{#if !ocultarAcciones}
-			<button class="butter" onclick={handleNavigationClick}>Ver</button>
-		{/if}
-		{#if acciones}
-			{@render acciones()}
-		{/if}
 	</div>
 </div>
 
 <style>
 	.list-card-preview {
-		position: relative;
-		min-height: var(--e);
-		padding: var(--a);
-
-		background-color: var(--color-secondary);
-		backdrop-filter: blur(16px);
-		border-style: none;
-		border-width: 0;
-		border-radius: var(--a);
-		cursor: pointer;
-		white-space: pre-wrap;
-
-		display: grid;
-		grid-template-columns: 6fr 1fr;
-	}
-
-	.list-card-header {
 		display: flex;
-		flex-direction: column;
-	}
-	.list-card-header .resume {
 		flex-wrap: wrap;
-		font-size: smaller;
-		padding: var(--a);
-		max-height: 30vh;
-		overflow: hidden;
-		pointer-events: none;
+		padding-right: 4px;
+		cursor: pointer;
+	}
+	.list-card-header {
+		flex-grow: 3;
 	}
 	.list-card-content {
-		padding: var(--b) var(--a);
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-		pointer-events: none;
+		width: 100%;
+		padding: var(--b) 0;
 	}
 	.list-card-meta {
-		grid-column: 1 / end;
-		grid-row: 3;
+		width: 100%;
 		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
 		gap: 0 var(--a);
-		flex-wrap: wrap;
+	}
+	.list-card-meta .data {
 		font-size: smaller;
-	}
-	.list-card-actions {
-		grid-row: 1 / span 2;
-		grid-column: 2 / end;
 		display: flex;
-		justify-content: flex-end;
+		flex-wrap: wrap;
 	}
-	.list-card-actions button {
-		height: fit-content;
+	.list-card-meta .actions {
+		font-size: smaller;
+		display: flex;
+		gap: var(--a);
+		flex-direction: row-reverse;
+		flex-wrap: wrap-reverse;
+		align-items: baseline;
 	}
 </style>
