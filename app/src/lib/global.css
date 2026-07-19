@@ -81,10 +81,10 @@ label {
 input,
 textarea,
 select {
-	padding: 0.5rem;
+	padding: 4px var(--a);
 	border: 1px solid var(--color-secondary);
 	border-radius: var(--a);
-	min-height: var(--d);
+	height: fit-content;
 	cursor: pointer;
 }
 button {
@@ -473,7 +473,7 @@ body {
 .butter {
 	color: var(--color-text);
 	height: fit-content;
-	min-width: fit-content;
+	width: fit-content;
 	border: 1px solid var(--color-secondary);
 	border-radius: var(--a);
 	padding: 4px var(--a);

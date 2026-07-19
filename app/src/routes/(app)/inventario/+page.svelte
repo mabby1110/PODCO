@@ -66,9 +66,9 @@
 		<PanelFiltros>
 			{#snippet header()}
 				<ExportarCSV {lista_ordenada} />
+				<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
 			{/snippet}
 			{#snippet controles()}
-				<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
 				<Filtro categorias={categoriasInventario} />
 				<Agrupaciones categorias={agrupacionesInventario} bind:agrupacionesSeleccionadas {grupos} />
 			{/snippet}

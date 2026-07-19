@@ -9,7 +9,7 @@
 		tituloBoton = 'boton'
 	}: { contenido?: Snippet; header?: Snippet; absolute?: boolean; tituloBoton: string } = $props();
 
-	let show = $state(true);
+	let show = $state(false);
 
 	let x = $state(0);
 	let y = $state(0);

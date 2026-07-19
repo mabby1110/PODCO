@@ -95,10 +95,12 @@
 	>
 		<div class="panel header-actions" onmousedown={onMouseDown}>
 			<button class="close-btn" type="button" onclick={() => (showFilter = false)}>✕</button>
-			<button class="butter" type="button" onclick={resetPosition}>Resetear posición</button>
-			{#if header}
-				{@render header()}
-			{/if}
+			<button class="honey" type="button" onclick={resetPosition}><img src="/reset-pos.svg" alt="options" /></button>
+			<div class="custom">
+				{#if header}
+					{@render header()}
+				{/if}
+			</div>
 		</div>
 		<div class="panel content-actions">
 			{#if controles}
@@ -177,6 +179,13 @@
 		gap: var(--a);
 		cursor: grab;
 		user-select: none;
+	}.header-actions .custom {
+		flex-grow: 1;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 var(--a);
+		justify-content: flex-end;
+		align-items: center;
 	}
 	.header-actions.is-dragging > * {
 		pointer-events: none;
