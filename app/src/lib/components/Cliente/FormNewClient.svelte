@@ -1,11 +1,10 @@
 <script lang="ts">
-	import FormSelectMotivo from '../FormSelectMotivo.svelte';
 	import { motivosProspeccion } from '$lib';
 	import { page } from '$app/state';
-	import FormInputAddContact from '$lib/components/FormInputAddContact.svelte';
-	import FormOptionalInput from '../FormOptionalInput.svelte';
-	import FormInput from '../FormInput.svelte';
-	import Select from '../Select.svelte';
+	import FormInputAddContact from '$lib/components/Cliente/FormInputAddContact.svelte';
+	import FormOptionalInput from '../App/form/FormOptionalInput.svelte';
+	import FormInput from '../App/form/FormInput.svelte';
+	import FormSelectMotivo from '../App/form/FormSelectMotivo.svelte';
 
 	let {
 		isDuplicate = $bindable()

@@ -5,7 +5,7 @@
 	import Searchbar from '../App/Searchbar.svelte';
 	import { page } from '$app/state';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import FiltroAgente from '../FiltroAgente.svelte';
+	import FiltroAgente from '../App/FiltroAgente.svelte';
 	import OrdenadosTotalXDocumento from './graficas/OrdenadosTotalXDocumento.svelte';
 	import AgrupadosTotalXDocumento from './graficas/AgrupadosTotalXDocumento.svelte';
 

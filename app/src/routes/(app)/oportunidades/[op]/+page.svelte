@@ -5,16 +5,16 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import AgentActions from '$lib/components/Oportunidad/AgentActions.svelte';
 	import OperActions from '$lib/components/Oportunidad/OperActions.svelte';
-	import Card from '$lib/components/Card.svelte';
-	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
-	import Entradas from '$lib/components/Entradas.svelte';
+	import Card from '$lib/components/App/Card.svelte';
+	import Entradas from '$lib/components/App/Entradas.svelte';
 	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
+	import CustomInput from '$lib/components/App/form/CustomInput.svelte';
+	import DatePicker from '$lib/components/App/DatePicker.svelte';
+	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
 	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
 	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
 	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';
 	import SubirOcc from '$lib/components/Documentos/SubirOcc.svelte';
-	import CustomInput from '$lib/components/App/form/CustomInput.svelte';
-	import DatePicker from '$lib/components/DatePicker.svelte';
 
 	let { data } = $props();
 

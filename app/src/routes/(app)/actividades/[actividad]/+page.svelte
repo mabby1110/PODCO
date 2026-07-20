@@ -4,16 +4,16 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { fases_actividad } from '$lib';
 	import ActivityActions from '$lib/components/Actividad/ActivityActions.svelte';
-	import Card from '$lib/components/Card.svelte';
+	import Card from '$lib/components/App/Card.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
 	import { appState } from '$lib/stores/appState.svelte.js';
 	import { opModalStore } from '$lib/stores/opModalStore.svelte.js';
 	import { postActivityUpdate } from '$lib/utils/actions.js';
 	import { invalidateAll } from '$app/navigation';
-	import Entradas from '$lib/components/Entradas.svelte';
+	import Entradas from '$lib/components/App/Entradas.svelte';
 	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
 	import CustomInput from '$lib/components/App/form/CustomInput.svelte';
-	import DatePicker from '$lib/components/DatePicker.svelte';
+	import DatePicker from '$lib/components/App/DatePicker.svelte';
 
 	let { data } = $props();
 	const event = $derived(data.actividad);

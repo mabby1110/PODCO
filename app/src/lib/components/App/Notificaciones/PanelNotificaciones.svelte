@@ -68,7 +68,7 @@
 	/* Contenedor principal de notificaciones */
 	.notif-container {
 		display: flex;
-		flex-direction: column;
+		flex-direction: column-reverse;
 		gap: var(--a);
         height: 100%;
 		overflow-y: scroll;

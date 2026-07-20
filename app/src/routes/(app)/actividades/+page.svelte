@@ -1,18 +1,19 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { appState } from '$lib/stores/appState.svelte';
-	import CardActividadListPreview from '$lib/components/Actividad/CardActividadListPreview.svelte';
+	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 	import { categoriasActividad, agrupacionesActividades } from '$lib';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
+	import CardActividadListPreview from '$lib/components/Actividad/CardActividadListPreview.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
-	import FiltroAgente from '$lib/components/FiltroAgente.svelte';
+	import FiltroAgente from '$lib/components/App/FiltroAgente.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
 	import Filtro from '$lib/components/App/Filtro.svelte';
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
-	import Grupo from '$lib/components/Grupo.svelte';
+	import Grupo from '$lib/components/App/Grupo.svelte';
 	import Lista from '$lib/components/App/Listas/Lista.svelte';
-	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
+
 	let { actividades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
 
@@ -54,7 +55,7 @@
 	];
 </script>
 
-<Lista header="Actividades">
+<Lista>
 	{#snippet acciones()}
 		<Searchbar data={actividades} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
 		<PanelFiltros>

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import FormInput from '$lib/components/FormInput.svelte';
-	import FormOptionalInput from '../FormOptionalInput.svelte';
+	import FormInput from '$lib/components/App/form/FormInput.svelte';
+	import FormOptionalInput from '../App/form/FormOptionalInput.svelte';
 	import { slide } from 'svelte/transition';
 
 	let { isValid = $bindable() } = $props();

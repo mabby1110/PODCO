@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { addMinutes } from '$lib/utils/agenda';
-	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
-	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
-	import FormInput from '$lib/components/FormInput.svelte';
+	import FormOptionalInput from '$lib/components/App/form/FormOptionalInput.svelte';
+	import FormInput from '$lib/components/App/form/FormInput.svelte';
 	import { motivosActividades } from '$lib';
-	import FormSelectAgente from '../FormSelectAgente.svelte';
-	import DatePicker from '../DatePicker.svelte';
+	import FormSelectAgente from '../App/form/FormSelectAgente.svelte';
+	import DatePicker from '../App/DatePicker.svelte';
+	import FormSelectMotivo from '../App/form/FormSelectMotivo.svelte';
 
 	let objetivo = $state('');
 	let observaciones = $state('');
@@ -37,7 +36,7 @@
 				<!-- si es admin queda el input oculto -->
 				<FormSelectAgente bind:selected={agenteSeleccionado} />
 
-				<FormSelectInput list={motivosActividades} disableCustom />
+				<FormSelectMotivo list={motivosActividades} disableCustom />
 
 				<div class="optional">
 					<FormInput

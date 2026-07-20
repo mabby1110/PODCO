@@ -9,8 +9,8 @@
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
-	import FiltroAgente from '$lib/components/FiltroAgente.svelte';
-	import Grupo from '$lib/components/Grupo.svelte';
+	import FiltroAgente from '$lib/components/App/FiltroAgente.svelte';
+	import Grupo from '$lib/components/App/Grupo.svelte';
 	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';

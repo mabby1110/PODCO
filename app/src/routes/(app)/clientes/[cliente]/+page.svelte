@@ -5,7 +5,7 @@
 	import EditableSelect from '$lib/components/Cliente/EditableSelect.svelte';
 	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
 	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
-	import Card from '$lib/components/Card.svelte';
+	import Card from '$lib/components/App/Card.svelte';
 	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
 
 	let { cliente, agentes } = $derived(page.data);

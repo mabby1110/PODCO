@@ -1,14 +1,14 @@
 <script lang="ts">
-	import DatePicker from '$lib/components/DatePicker.svelte';
-	import FormOptionalSubmit from '$lib/components/FormOptionalSubmit.svelte';
-	import FormOptionalInput from '$lib/components/FormOptionalInput.svelte';
+	import DatePicker from '$lib/components/App/DatePicker.svelte';
+	import FormOptionalSubmit from '$lib/components/App/form/FormOptionalSubmit.svelte';
+	import FormOptionalInput from '$lib/components/App/form/FormOptionalInput.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import { fases, motivosOportunidad } from '$lib';
 	import FormSelectMotivo from '$lib/components/FormSelectMotivo.svelte';
-	import FormInput from '../FormInput.svelte';
+	import FormInput from '../App/form/FormInput.svelte';
 	import UploadFile from '$lib/components/UploadFile.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
-	import FormActions from '../FormActions.svelte';
+	import FormActions from '../App/form/FormActions.svelte';
 
 	import { profile } from '$lib/stores/profileStore.svelte';
 

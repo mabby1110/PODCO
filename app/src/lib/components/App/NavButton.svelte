@@ -2,7 +2,7 @@
 	import { slide } from 'svelte/transition';
 	import { appState } from '$lib/stores/appState.svelte';
 	import ControlsPanel from './ControlsPanel.svelte';
-	import Logout from '../Logout.svelte';
+	import Logout from './Logout.svelte';
 	import PanelNotificaciones from './Notificaciones/PanelNotificaciones.svelte';
 
 	let expanded = $derived($appState.pageActions);
@@ -78,7 +78,7 @@
 		max-height: 90vh;
 	}
 	.app-actions .content {
-		height: 100%;
+		height: 90%;
 		width: 100%;
 	}
 	.home {

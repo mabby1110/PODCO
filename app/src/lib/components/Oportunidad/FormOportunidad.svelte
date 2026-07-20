@@ -1,15 +1,15 @@
 <script lang="ts">
-	import Searchbar from '$lib/components/Searchbar.svelte';
-	import FormSelectInput from '$lib/components/FormSelectMotivo.svelte';
 	import { motivosOportunidad } from '$lib';
-	import FormInput from '$lib/components/FormInput.svelte';
-	import FormSelectAgente from '../FormSelectAgente.svelte';
+	import FormInput from '$lib/components/App/form/FormInput.svelte';
+	import FormSelectAgente from '../App/form/FormSelectAgente.svelte';
 	import { filtrarPorAgente } from '$lib/utils/util';
 	import { page } from '$app/state';
-	import DatePicker from '../DatePicker.svelte';
-	import FormConditionalInput from '../FormConditionalInput.svelte';
+	import DatePicker from '../App/DatePicker.svelte';
+	import FormConditionalInput from '../App/form/FormConditionalInput.svelte';
 	import { opModalStore } from '$lib/stores/opModalStore.svelte';
-	import FormOptionalInput from '../FormOptionalInput.svelte';
+	import FormOptionalInput from '../App/form/FormOptionalInput.svelte';
+	import Searchbar from './Searchbar.svelte';
+	import FormSelectMotivo from '../App/form/FormSelectMotivo.svelte';
 
 	let data = $derived(page.data);
 
@@ -53,7 +53,7 @@
 
 <div class="form-content">
 	<div class="form-group">
-		<FormSelectInput list={motivosOportunidad} />
+		<FormSelectMotivo list={motivosOportunidad} />
 		<FormSelectAgente bind:selected={selectedAgent} />
 	</div>
 

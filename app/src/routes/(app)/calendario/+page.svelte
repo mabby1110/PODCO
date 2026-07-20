@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CalendarWeek from '$lib/components/CalendarWeek.svelte';
+	import CalendarWeek from '$lib/components/Calendario/CalendarWeek.svelte';
 	import { page } from '$app/state';
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Select from '../Select.svelte';
+	import Select from './Select.svelte';
 	import { page } from '$app/state';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';

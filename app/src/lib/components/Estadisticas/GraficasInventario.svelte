@@ -5,7 +5,7 @@
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import InventarioCantidadXGrupo from './graficas/InventarioCantidadXGrupo.svelte';
 	import PanelFiltros from '../App/PanelFiltros.svelte';
-	import FiltroAgente from '../FiltroAgente.svelte';
+	import FiltroAgente from '../App/FiltroAgente.svelte';
 	import Agrupaciones from '../App/Agrupaciones.svelte';
 	import Filtro from '../App/Filtro.svelte';
 	

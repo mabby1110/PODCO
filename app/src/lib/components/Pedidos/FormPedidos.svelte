@@ -3,9 +3,9 @@
 	import { invalidateAll } from '$app/navigation';
 	import { productosSeleccionadosStore } from '$lib/stores/productosSeleccionadosStore.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import FormInput from '../FormInput.svelte';
+	import FormInput from '../App/form/FormInput.svelte';
+	import Select from '../App/Select.svelte';
 	import ContadorProducto from './ContadorProducto.svelte';
-	import Select from '../Select.svelte';
 	import { formatCurrency } from '$lib/utils/util';
 
 	let { id_oportunidad }: { id_oportunidad?: string } = $props();

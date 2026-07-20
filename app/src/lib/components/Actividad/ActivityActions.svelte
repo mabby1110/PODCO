@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { getStyleForPhase } from '$lib/utils/util';
-	import FormInput from '../FormInput.svelte';
+	import FormInput from '../App/form/FormInput.svelte';
 	import ActivityOptionalSubmit from './ActivityOptionalSubmit.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
-	import FormActions from '../FormActions.svelte';
+	import FormActions from '../App/form/FormActions.svelte';
 
 	let {
 		eventData,

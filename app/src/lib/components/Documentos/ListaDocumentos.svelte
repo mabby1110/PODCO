@@ -3,13 +3,13 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agrupacionesDocumentos, categoriasDocumentos } from '$lib';
 	import Agrupaciones from '../App/Agrupaciones.svelte';
-	import Grupo from '../Grupo.svelte';
+	import Grupo from '../App/Grupo.svelte';
 	import CardDocPreview from './CardDocPreview.svelte';
 	import PanelFiltros from '../App/PanelFiltros.svelte';
 	import { page } from '$app/state';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import Searchbar from '../App/Searchbar.svelte';
-	import FiltroAgente from '../FiltroAgente.svelte';
+	import FiltroAgente from '../App/FiltroAgente.svelte';
 	import ExportarCSV from '../App/ExportarCSV.svelte';
 
 	let { documentos } = $derived(page.data);

@@ -7,10 +7,10 @@
 	import Lista from '$lib/components/App/Listas/Lista.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
-	import FiltroAgente from '$lib/components/FiltroAgente.svelte';
+	import FiltroAgente from '$lib/components/App/FiltroAgente.svelte';
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
-	import Grupo from '$lib/components/Grupo.svelte';
+	import Grupo from '$lib/components/App/Grupo.svelte';
 	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
 	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 

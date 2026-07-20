@@ -1,19 +1,18 @@
 <script lang="ts">
-	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
-	import Filtro from '$lib/components/App/Filtro.svelte';
-	import { appState } from '$lib/stores/appState.svelte';
-	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
-	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import { page } from '$app/state';
+	import { appState } from '$lib/stores/appState.svelte';
+	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
+	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
+	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
+	import Lista from '$lib/components/App/Listas/Lista.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
-	import FiltroAgente from '$lib/components/FiltroAgente.svelte';
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
+	import FiltroAgente from '$lib/components/App/FiltroAgente.svelte';
+	import Filtro from '$lib/components/App/Filtro.svelte';
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
-	import Grupo from '$lib/components/Grupo.svelte';
-	import Lista from '$lib/components/App/Listas/Lista.svelte';
-	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
-	import PanelNotificaciones from '$lib/components/App/Notificaciones/PanelNotificaciones.svelte';
+	import Grupo from '$lib/components/App/Grupo.svelte';
+	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -51,7 +50,7 @@
 	let show = $derived($appState.min);
 </script>
 
-<Lista header="Oportunidades">
+<Lista>
 	{#snippet acciones()}
 		<Searchbar
 			data={oportunidades}

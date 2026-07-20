@@ -7,7 +7,7 @@
 	import Searchbar from '../App/Searchbar.svelte';
 	import { page } from '$app/state';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import FiltroAgente from '../FiltroAgente.svelte';
+	import FiltroAgente from '../App/FiltroAgente.svelte';
 	import CantidadXGrupo from './graficas/CantidadXGrupo.svelte';
 
 	let { clientes } = $derived(page.data);

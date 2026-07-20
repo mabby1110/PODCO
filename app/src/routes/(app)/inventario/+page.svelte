@@ -9,11 +9,11 @@
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
-	import Grupo from '$lib/components/Grupo.svelte';
+	import Grupo from '$lib/components/App/Grupo.svelte';
 	import PreviewListaProducto from '$lib/components/Inventario/PreviewListaProducto.svelte';
-	import { agrupacionesStore } from '$lib/stores/agrupacionesStore.svelte';
 	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
 	import Panel from '$lib/components/App/Panel.svelte';
+	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 
 	let { inventario } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);

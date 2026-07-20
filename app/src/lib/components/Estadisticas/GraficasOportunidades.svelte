@@ -7,7 +7,7 @@
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
 	import FasesXOportunidad from './graficas/FasesXOportunidad.svelte';
 	import Filtro from '../App/Filtro.svelte';
-	import FiltroAgente from '../FiltroAgente.svelte';
+	import FiltroAgente from '../App/FiltroAgente.svelte';
 	import OportunidadesXAgenteXmes from './graficas/OportunidadesXAgenteXmes.svelte';
 
 	let { oportunidades } = $derived(page.data);

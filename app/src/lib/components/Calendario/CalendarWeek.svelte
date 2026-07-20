@@ -17,10 +17,9 @@
 
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { type Oportunidad } from '$lib';
-	import CardActividadCalendarPreview from './Actividad/CardActividadCalendarPreview.svelte';
-	import Reload from './Reload.svelte';
-	import FiltroAgente from './FiltroAgente.svelte';
-	import PanelFiltros from './App/PanelFiltros.svelte';
+	import CardActividadCalendarPreview from '../Actividad/CardActividadCalendarPreview.svelte';
+	import FiltroAgente from '../App/FiltroAgente.svelte';
+	import PanelFiltros from '../App/PanelFiltros.svelte';
 
 	let { listaAgrupada } = $props<{
 		listaAgrupada: any[];
