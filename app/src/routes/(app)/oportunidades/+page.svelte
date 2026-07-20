@@ -58,7 +58,6 @@
 			keyColumns={categoriasOportunidad.map((c) => c.key).concat(['clientes'])}
 			bind:lista
 		/>
-		<PanelNotificaciones />
 		<PanelFiltros>
 			{#snippet header()}
 				<!-- <Leyenda /> -->

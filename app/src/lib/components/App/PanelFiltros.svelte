@@ -176,6 +176,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
+		align-items: center;
 		gap: var(--a);
 		cursor: grab;
 		user-select: none;

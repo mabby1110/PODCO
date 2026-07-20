@@ -64,9 +64,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        height: var(--c);
+        padding: 2px 4px;
     }
 	.btn-exportar img {
-		height: var(--c);
+		height: 100%;
 		aspect-ratio: 1 / 1;
 	}
     .btn-exportar .cantidad {

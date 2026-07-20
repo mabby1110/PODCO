@@ -180,6 +180,13 @@
 	</div>
 
 	<div class="view-controls">
+		<div class="calendar-navigation">
+			<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
+			<button onclick={goToCurrentWeek} class="butter current-week">
+				{weekRangeText}
+			</button>
+			<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
+		</div>
 		<PanelFiltros>
 			{#snippet header()}{/snippet}
 			{#snippet controles()}
@@ -200,14 +207,6 @@
 				<FiltroAgente />
 			{/snippet}
 		</PanelFiltros>
-
-		<div class="calendar-navigation">
-			<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
-			<button onclick={goToCurrentWeek} class="butter current-week">
-				{weekRangeText}
-			</button>
-			<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
-		</div>
 	</div>
 </div>
 

@@ -509,13 +509,17 @@ body {
 .close-btn {
 	border: none;
 	cursor: pointer;
-	width: var(--d);
-	height: var(--d);
+	width: var(--c);
+	height: var(--c);
 	border-radius: 4px;
 	background-color: var(--color-error);
 	color: #000;
 	transition: all 0.2s;
 	aspect-ratio: 1/1;
+}
+.close-btn:hover {
+	background-color: var(--color-error);
+	opacity: 60%;
 }
 .list-button {
 	all: unset;
@@ -530,10 +534,6 @@ body {
 .btn-save-small {
 	background: var(--color-ganada, #4caf50);
 	align-self: flex-end;
-}
-.close-btn:hover {
-	background-color: var(--color-error);
-	opacity: 60%;
 }
 .lost {
 	background-color: var(--color-error);

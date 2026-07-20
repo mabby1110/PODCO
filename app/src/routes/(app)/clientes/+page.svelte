@@ -52,10 +52,9 @@
 	console.log('store', agrupacionesStore.filtersByRoute[currentRoute]);
 </script>
 
-<Lista header="Clientes">
+<Lista>
 	{#snippet acciones()}
 		<Searchbar data={clientes} keyColumns={categoriasCliente.map((a) => a.key)} bind:lista />
-		<PanelNotificaciones />
 		<PanelFiltros>
 			{#snippet header()}
 				<FiltroAgente />
