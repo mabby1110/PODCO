@@ -105,7 +105,7 @@
 		{/if}
 	</div>
 {/if}
-<button class="butter" onclick={() => (show = !show)}> {tituloBoton} </button>
+<button class="butter {show?'active':''}" onclick={() => (show = !show)}> {tituloBoton} </button>
 
 <style>
 	.panel-controls {

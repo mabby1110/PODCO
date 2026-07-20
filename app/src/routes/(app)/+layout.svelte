@@ -1,37 +1,49 @@
 <script lang="ts">
-	import { onNavigate } from '$app/navigation';
-	import ModalActividad from '$lib/components/Actividad/ModalActividad.svelte';
-	import ModalCliente from '$lib/components/Cliente/ModalCliente.svelte';
-	import ModalOportunidad from '$lib/components/Oportunidad/ModalOportunidad.svelte';
-	import ModalInventario from '$lib/components/Inventario/ModalInventario.svelte';
-	import NavButton from '$lib/components/App/NavButton.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte.js';
-	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte.js';
+    import { onNavigate } from '$app/navigation';
+    import ModalActividad from '$lib/components/Actividad/ModalActividad.svelte';
+    import ModalCliente from '$lib/components/Cliente/ModalCliente.svelte';
+    import ModalOportunidad from '$lib/components/Oportunidad/ModalOportunidad.svelte';
+    import ModalInventario from '$lib/components/Inventario/ModalInventario.svelte';
+    import NavButton from '$lib/components/App/NavButton.svelte';
+    import { profile } from '$lib/stores/profileStore.svelte.js';
+    import { selectedGroupStore } from '$lib/stores/groupFilter.svelte.js';
 
-	let { children, data } = $props();
+    let { children, data } = $props();
 
-	onNavigate((navigation) => {
-		// Verificamos si el navegador soporta esta tecnología (Safari 18+, Chrome, Edge)
-		if (!document.startViewTransition) return;
+    function handleKeyDown(event: KeyboardEvent) {
+        if (event.altKey && event.key === 'q') {
+            event.preventDefault();
+            window.history.back();
+        }
+        if (event.altKey && event.key === 'w') {
+            event.preventDefault();
+            window.history.forward();
+        }
+    }
 
-		selectedGroupStore.clearAll();
+    onNavigate((navigation) => {
+        if (!document.startViewTransition) return;
 
-		return new Promise((resolve) => {
-			document.startViewTransition(async () => {
-				resolve();
-				await navigation.complete;
-			});
-		});
-	});
-	$effect(() => {
-		profile.set(data.profile);
-	});
+        selectedGroupStore.clearAll();
+
+        return new Promise((resolve) => {
+            document.startViewTransition(async () => {
+                resolve();
+                await navigation.complete;
+            });
+        });
+    });
+
+    $effect(() => {
+        profile.set(data.profile);
+    });
 </script>
 
+<svelte:window onkeydown={handleKeyDown} />
 <NavButton />
 
 <div class="page-container">
-	{@render children()}
+    {@render children()}
 </div>
 
 <ModalActividad />
@@ -40,7 +52,7 @@
 <ModalInventario />
 
 <style>
-	/* .page-container {
-		background-image: url('bombas.svg');
-	} */
+    /* .page-container {
+        background-image: url('bombas.svg');
+    } */
 </style>
