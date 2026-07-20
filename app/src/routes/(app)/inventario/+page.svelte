@@ -51,7 +51,7 @@
 	let show = $derived($appState.min);
 </script>
 
-<Lista header="Inventario">
+<Lista>
 	{#snippet acciones()}
 		<Searchbar
 			data={inventario}

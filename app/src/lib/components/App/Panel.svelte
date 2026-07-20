@@ -35,7 +35,7 @@
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
-		if (event.altKey && event.key === 'q') {
+		if (event.altKey && event.key === '3') {
 			event.preventDefault(); // Evita el comportamiento por defecto del navegador
 			show = !show;
 		}

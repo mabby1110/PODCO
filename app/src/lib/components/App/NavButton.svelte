@@ -6,15 +6,16 @@
 	import PanelNotificaciones from './Notificaciones/PanelNotificaciones.svelte';
 
 	let expanded = $derived($appState.pageActions);
-
+	let showFilter = $state(false);
 	function togglePanel(e: MouseEvent) {
 		e.stopPropagation();
 		e.preventDefault();
 		appState.togglePageActions();
+		showFilter = false;
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
-		if (event.altKey && event.key === 'a') {
+		if (event.altKey && event.key === '1') {
 			event.preventDefault(); // Evita el comportamiento por defecto del navegador
 			expanded = !expanded;
 		}
@@ -28,12 +29,21 @@
 
 <div class="nav-container">
 	{#if expanded}
-		<Logout />
-		<ControlsPanel />
-		<PanelNotificaciones />
+		<div class="app-actions" in:slide>
+			<Logout />
+			<button class="honey" onclick={() => (showFilter = !showFilter)}>
+				<img src="/notifications.svg" alt="options" />
+			</button>
+			<div class="content">
+				{#if showFilter}
+					<PanelNotificaciones />
+				{:else}
+					<ControlsPanel />
+				{/if}
+			</div>
+		</div>
 	{/if}
-
-	<button onclick={togglePanel} class="butter">
+	<button onclick={togglePanel} class="butter home {expanded ? 'active' : ''}">
 		<div class="logo">
 			<img src="/bms-logo.svg" alt="BMS" />
 			{#if expanded}
@@ -49,17 +59,29 @@
 <style>
 	.nav-container {
 		position: fixed;
-		bottom: var(--a);
-		left: var(--a);
+		bottom: 0;
+		left: 0;
 		z-index: 1000;
 		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-		width: fit-content;
 		flex-wrap: wrap;
+		gap: var(--a);
+		width: var(--h);
+		max-width: 100vw;
 	}
-
-	button {
+	.app-actions {
+		width: 100%;
+		display: flex;
+		gap: var(--a);
+		align-items: flex-end;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		max-height: 90vh;
+	}
+	.app-actions .content {
+		height: 100%;
+		width: 100%;
+	}
+	.home {
 		background: var(--y2k);
 		backdrop-filter: blur(4px);
 		border: 1px solid var(--color-muted);
@@ -72,6 +94,7 @@
 			transform 0.1s;
 		box-shadow: none;
 		background-color: var(--color-primary);
+		border-radius: 0 var(--a) 0 0;
 	}
 
 	.logo {
@@ -92,5 +115,8 @@
 	.title p {
 		margin: 0;
 		font-weight: 600;
+	}
+	.active {
+		width: 100%;
 	}
 </style>

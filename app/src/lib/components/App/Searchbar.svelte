@@ -66,53 +66,56 @@
 	});
 </script>
 
-<div class="block">
-	{#if label}
-		<h3>{label}</h3>
-	{/if}
-	{#if visibleColumns.length < keyColumns.length}
-		<button class="reset-button" onclick={resetColumns}>Resetear Columnas</button>
-	{/if}
+{#if showResults}
+	<div class="searchbar-container">
+		{#if label}
+			<h3>{label}</h3>
+		{/if}
+		{#if visibleColumns.length < keyColumns.length}
+			<button class="reset-button" onclick={resetColumns}>Resetear Columnas</button>
+		{/if}
 
+		<input type="search" bind:value={term} placeholder="Buscar..." />
+
+		{#if results.length > 0 && visibleColumns.length > 0}
+			<div class="results" style="--col-count: {visibleColumns.length};">
+				{#each visibleColumns as col}
+					<button class="grid-header" onclick={() => hideColumn(col)}>
+						{col}
+					</button>
+				{/each}
+
+				{#each results as item}
+					<button
+						class="list-button"
+						onclick={() => {
+							selectedItem = item;
+						}}
+					>
+						{#each visibleColumns as key}
+							<div class="grid-cell">
+								{#if Array.isArray(item[key])}
+									{JSON.stringify(item[key])}
+								{:else if typeof item[key] === 'object' && item[key] !== null}
+									[Objeto]
+								{:else}
+									{item[key] ?? ''}
+								{/if}
+							</div>
+						{/each}
+					</button>
+				{/each}
+			</div>
+		{/if}
+	</div>
+{:else}
 	<input type="search" bind:value={term} placeholder="Buscar..." />
-
-	{#if showResults && results.length > 0 && visibleColumns.length > 0}
-		<div class="results" style="--col-count: {visibleColumns.length};">
-			{#each visibleColumns as col}
-				<button class="grid-header" onclick={() => hideColumn(col)}>
-					{col}
-				</button>
-			{/each}
-
-			{#each results as item}
-				<button
-					class="list-button"
-					onclick={() => {
-						selectedItem = item;
-					}}
-				>
-					{#each visibleColumns as key}
-						<div class="grid-cell">
-							{#if Array.isArray(item[key])}
-								{JSON.stringify(item[key])}
-							{:else if typeof item[key] === 'object' && item[key] !== null}
-								[Objeto]
-							{:else}
-								{item[key] ?? ''}
-							{/if}
-						</div>
-					{/each}
-				</button>
-			{/each}
-		</div>
-	{/if}
-</div>
+{/if}
 
 <style>
-	.block {
+	.searchbar-container {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
 	}
 
 	.reset-button {

@@ -33,7 +33,7 @@
 		quadrantY = centerY > window.innerHeight / 2 ? 'bottom' : 'top';
 	}
 	function handleKeyDown(event: KeyboardEvent) {
-		if (event.altKey && event.key === 'q') {
+		if (event.ctrlKey && event.key === '3') {
 			event.preventDefault();
 			showFilter = !showFilter;
 		}

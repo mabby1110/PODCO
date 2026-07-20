@@ -35,7 +35,7 @@
 
 
 	function handleKeyDown(event: KeyboardEvent) {
-		if (event.altKey && event.key === 's') {
+		if (event.altKey && event.key === '2') {
 			event.preventDefault(); // Evita el comportamiento por defecto del navegador
 			showFilter = !showFilter;
 		}
@@ -189,5 +189,11 @@
 	}
 	.header-actions.is-dragging > * {
 		pointer-events: none;
+	}
+	.honey {
+		height: var(--c);
+	}
+	.honey img {
+		height: 100%;
 	}
 </style>

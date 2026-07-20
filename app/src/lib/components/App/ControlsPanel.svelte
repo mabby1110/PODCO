@@ -10,7 +10,7 @@
     };
 </script>
 
-<div class="container" in:slide={{ delay: 300, duration: 300 }}>
+<div class="controls-container" in:slide>
     <div class="button-group">
         <button onclick={() => navigate('/clientes')} class="butter">
             👨‍💼 Clientes
@@ -42,11 +42,11 @@
 </div>
 
 <style>
-    .container {
+    .controls-container {
         background: var(--color-primary);
         backdrop-filter: blur(4px);
         border: 1px solid var(--color-muted);
-        border-radius: var(--a);
+        border-radius: 0 var(--a) var(--a) 0;
         padding: var(--a);
         display: flex;
         flex-direction: column;

@@ -9,7 +9,7 @@
 	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte.js';
 
 	let { children, data } = $props();
-	
+
 	onNavigate((navigation) => {
 		// Verificamos si el navegador soporta esta tecnología (Safari 18+, Chrome, Edge)
 		if (!document.startViewTransition) return;
@@ -28,9 +28,7 @@
 	});
 </script>
 
-<nav class="nav-container">
-	<NavButton />
-</nav>
+<NavButton />
 
 <div class="page-container">
 	{@render children()}
@@ -42,12 +40,6 @@
 <ModalInventario />
 
 <style>
-	.nav-container {
-		position: fixed;
-		left: var(--a);
-		top: 0;
-		z-index: 999;
-	}
 	/* .page-container {
 		background-image: url('bombas.svg');
 	} */

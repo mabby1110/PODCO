@@ -1,16 +1,11 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	let { header, acciones, contenido }: { header?: string; acciones: Snippet; contenido: Snippet } =
+	let { acciones, contenido }: { acciones: Snippet; contenido: Snippet } =
 		$props();
 </script>
 
 <div class="view-container">
-	{#if header}
-		<div class="header">
-			<h1>{header}</h1>
-		</div>
-	{/if}
 	<div class="view-content">
 		{#if contenido}
 			{@render contenido()}
