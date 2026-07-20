@@ -36,11 +36,13 @@
 	}
 	.view-controls {
 		position: absolute;
-		width: 100%;
 		max-width: 70vw;
-		bottom: var(--a);
-		right: var(--a);
+		bottom: 0;
+		right: 0;
 		z-index: 88;
+		padding: var(--a);
+		border-radius: var(--b) 0 0 0;
+		background-color: var(--y2k);
 
 		display: flex;
 		flex-wrap: wrap;
