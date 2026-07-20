@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { slide } from 'svelte/transition';
 
 	let { notificaciones } = $derived(page.data);
 
@@ -36,7 +35,7 @@
 
 <!-- <svelte:window onkeydown={handleKeyDown} onmousemove={onMouseMove} onmouseup={onMouseUp} /> -->
 
-<div class="panel notif-container" in:slide>
+<div class="panel notif-container">
 	{#each notificaciones as notificacion (notificacion.id)}
 		<div class="notif-card {notificacion.visto ? 'read' : 'unread'}">
 			<div class="notif-header">

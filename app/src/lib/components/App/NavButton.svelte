@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import { appState } from '$lib/stores/appState.svelte';
 	import ControlsPanel from './ControlsPanel.svelte';
 	import Logout from './Logout.svelte';
@@ -29,9 +29,9 @@
 
 <div class="nav-container">
 	{#if expanded}
-		<div class="app-actions" in:slide>
+		<div class="app-actions" in:fade>
 			<Logout />
-			<button class="honey" onclick={() => (showFilter = !showFilter)}>
+			<button class="butter honey" onclick={() => (showFilter = !showFilter)}>
 				<img src="/notifications.svg" alt="options" />
 			</button>
 			<div class="content">
@@ -43,7 +43,7 @@
 			</div>
 		</div>
 	{/if}
-	<button onclick={togglePanel} class="butter home {expanded ? 'active' : ''}">
+	<button onclick={togglePanel} class="home {expanded ? 'active' : ''}">
 		<div class="logo">
 			<img src="/bms-logo.svg" alt="BMS" />
 			{#if expanded}

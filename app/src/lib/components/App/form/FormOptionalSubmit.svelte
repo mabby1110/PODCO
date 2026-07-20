@@ -39,22 +39,5 @@
 	<button class="butter" type="button" onclick={toggleCancel}> Descartar </button>
 	<button class="butter" type="button" onclick={toggleSubmit}> {nextFase} </button>
 {:else}
-	<button class="close-btn" type="button" onclick={close}>✕</button>
+	<button class="butter chile" type="button" onclick={close}>✕</button>
 {/if}
-
-<style>
-	.close-btn {
-		border: none;
-		cursor: pointer;
-		width: var(--d);
-		height: var(--d);
-		border-radius: 4px;
-		background-color: var(--color-error);
-		color: #000;
-		transition: all 0.2s;
-	}
-	.close-btn:hover {
-		background: #f3f4f6;
-		color: #000;
-	}
-</style>

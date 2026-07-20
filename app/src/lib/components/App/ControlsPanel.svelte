@@ -1,7 +1,6 @@
 <script lang="ts">
     import { appState } from '$lib/stores/appState.svelte';
     import { profile } from '$lib/stores/profileStore.svelte';
-    import { slide } from 'svelte/transition';
     import { goto } from '$app/navigation';
 
     const navigate = (path: string) => {
@@ -10,7 +9,7 @@
     };
 </script>
 
-<div class="controls-container" in:slide>
+<div class="controls-container">
     <div class="button-group">
         <button onclick={() => navigate('/clientes')} class="butter">
             👨‍💼 Clientes

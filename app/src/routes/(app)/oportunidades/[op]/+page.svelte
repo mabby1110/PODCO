@@ -15,11 +15,15 @@
 	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
 	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';
 	import SubirOcc from '$lib/components/Documentos/SubirOcc.svelte';
+	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
+	import FormOptionalInput from '$lib/components/App/form/FormOptionalInput.svelte';
+	import Searchbar from '$lib/components/App/Searchbar.svelte';
 
 	let { data } = $props();
 
 	const clientes = $derived(page.data.clientes || []);
 	const agentes = $derived(page.data.agentes || []);
+	const pedidos = $derived(page.data.pedidos || []);
 	const event = $derived(data.oportunidad);
 	const eventData = $derived.by(() => {
 		if (!event) return null;
@@ -153,21 +157,10 @@
 				{isEditing}
 			/>
 
+			<!-- {#if currentFase >= 1}
+				<Searchbar data={pedidos} keyColumns={['id_oportunidad']} showResults />
+			{/if} -->
 			{#if currentFase >= 2}
-				<!-- <section>
-					<h2>Pedidos</h2>
-					{#if eventData.pedidos.length > 0}
-						{#each eventData.pedidos as pedido}
-							<PreviewListaPedido event={pedido} {isEditing} />
-						{/each}
-					{/if}
-					<div class="block-content">
-						<FormOptionalInput title="+Pedido">
-							<FormPedidos id_oportunidad={page.url.href.split('/').pop()} />
-						</FormOptionalInput>
-					</div>
-				</section> -->
-
 				<section class="cotizacion">
 					<div class="block-header">
 						<h2>Cotizaciones</h2>

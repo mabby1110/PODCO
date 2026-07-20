@@ -29,7 +29,7 @@
 
 {#if isOpen}
 	<div class="optional-input" bind:this={input}>
-		<button class="close-btn" type="button" onclick={close}>✕</button>
+		<button class="butter chile" type="button" onclick={close}>✕</button>
 		{#if children}
 			{@render children()}
 		{/if}

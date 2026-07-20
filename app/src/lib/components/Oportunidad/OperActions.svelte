@@ -4,9 +4,9 @@
 	import FormOptionalInput from '$lib/components/App/form/FormOptionalInput.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import FormInput from '../App/form/FormInput.svelte';
-	import UploadFile from '$lib/components/UploadFile.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import FormActions from '../App/form/FormActions.svelte';
+	import UploadFile from '../App/UploadFile.svelte';
 
 	let { eventData } = $props();
 

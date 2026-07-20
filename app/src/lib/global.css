@@ -85,6 +85,7 @@ select {
 	border: 1px solid var(--color-secondary);
 	border-radius: var(--a);
 	height: fit-content;
+	min-height: var(--d);
 	cursor: pointer;
 }
 button {
@@ -171,7 +172,6 @@ body {
 	background-color: var(--color-primary);
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(2px);
-	z-index: 9;
 }
 
 .flex-a {
@@ -472,8 +472,7 @@ body {
 /* ESTILOS PARA BOTONES */
 .butter {
 	color: var(--color-text);
-	height: fit-content;
-	width: fit-content;
+	height: var(--d);
 	border: 1px solid var(--color-secondary);
 	border-radius: var(--a);
 	padding: 4px var(--a);
@@ -481,18 +480,24 @@ body {
 	backdrop-filter: blur(16px);
 	cursor: pointer;
 }
+.butter img {
+	height: 100%;
+	width: 100%;
+}
 .honey {
-	color: var(--color-text);
-	height: var(--d);
-	min-width: fit-content;
-	border: 1px solid var(--color-secondary);
-	border-radius: var(--a);
+	min-width: var(--d);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
 	background-color: var(--color-background);
-	backdrop-filter: blur(16px);
-	cursor: pointer;
-	aspect-ratio: 1 / 1;
 }
 .chile {
+	min-width: var(--d);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
 	background-color: var(--color-error);
 }
 .active {
@@ -505,17 +510,6 @@ body {
 	font-size: 16px;
 	padding: 4px;
 	opacity: 0.7;
-}
-.close-btn {
-	border: none;
-	cursor: pointer;
-	width: var(--c);
-	height: var(--c);
-	border-radius: 4px;
-	background-color: var(--color-error);
-	color: #000;
-	transition: all 0.2s;
-	aspect-ratio: 1/1;
 }
 .close-btn:hover {
 	background-color: var(--color-error);

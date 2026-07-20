@@ -114,7 +114,7 @@
 							</label>
 							<div class="form-actions">
 								<button type="button" class="butter" onclick={saveEdit}>Guardar</button>
-								<button type="button" class="close-btn" onclick={cancelEdit}>X</button>
+								<button type="button" class="butter chile" onclick={cancelEdit}>X</button>
 							</div>
 						{:else}
 							{#if (item.nombre_perfil === $profile?.nombre && isEditing) || (!item.nombre_perfil && isEditing)}

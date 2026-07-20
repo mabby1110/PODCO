@@ -20,7 +20,7 @@
 		unique = $bindable(false),
 		showResults = false
 	}: Props = $props();
-
+	console.log(data, lista);
 	let term = $state('');
 	let visibleColumns = $state([...keyColumns]);
 

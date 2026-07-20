@@ -63,5 +63,7 @@
 		flex-direction: column;
 		gap: var(--a);
 		padding: var(--a);
+		max-height: 70vh;
+		overflow-y: auto;
 	}
 </style>

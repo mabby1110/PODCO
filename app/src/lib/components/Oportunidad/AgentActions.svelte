@@ -4,13 +4,14 @@
 	import FormOptionalInput from '$lib/components/App/form/FormOptionalInput.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import { fases, motivosOportunidad } from '$lib';
-	import FormSelectMotivo from '$lib/components/FormSelectMotivo.svelte';
 	import FormInput from '../App/form/FormInput.svelte';
-	import UploadFile from '$lib/components/UploadFile.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import FormActions from '../App/form/FormActions.svelte';
 
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import FormSelectMotivo from '../App/form/FormSelectMotivo.svelte';
+	import UploadFile from '../App/UploadFile.svelte';
+	import CustomInput from '../App/form/CustomInput.svelte';
 
 	let { eventData, isEditing = $bindable() }: { eventData: any; isEditing?: boolean } = $props();
 
@@ -88,14 +89,6 @@
 						name="necesidades"
 						bind:value={necesidades}
 						placeholder="Requerimiento técnico u operacional detectados"
-						type="textarea"
-						required
-					/>
-					<FormInput
-						label="Potencial de venta"
-						name="potencial_venta"
-						bind:value={potencial_venta}
-						placeholder="Producto o servicio que tiene mayor probabilidad de venta"
 						type="textarea"
 						required
 					/>

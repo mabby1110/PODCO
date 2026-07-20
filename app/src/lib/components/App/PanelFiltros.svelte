@@ -33,7 +33,6 @@
 		quadrantY = centerY > window.innerHeight / 2 ? 'bottom' : 'top';
 	}
 
-
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.altKey && event.key === '2') {
 			event.preventDefault(); // Evita el comportamiento por defecto del navegador
@@ -94,13 +93,13 @@
 		style="transform: translate({x}px, {y}px);"
 	>
 		<div class="panel header-actions" onmousedown={onMouseDown}>
-			<button class="close-btn" type="button" onclick={() => (showFilter = false)}>✕</button>
-			<button class="honey" type="button" onclick={resetPosition}><img src="/reset-pos.svg" alt="options" /></button>
 			<div class="custom">
 				{#if header}
 					{@render header()}
 				{/if}
 			</div>
+			<button class="butter honey" type="button" onclick={resetPosition}>⇱</button>
+			<button class="butter chile" type="button" onclick={() => (showFilter = false)}>✕</button>
 		</div>
 		<div class="panel content-actions">
 			{#if controles}
@@ -109,7 +108,7 @@
 		</div>
 	</div>
 {/if}
-<button class="honey {showFilter?'active':''}" onclick={() => (showFilter = !showFilter)}>
+<button class="butter honey {showFilter ? 'active' : ''}" onclick={() => (showFilter = !showFilter)}>
 	<img src="/options.svg" alt="options" />
 </button>
 
@@ -180,21 +179,16 @@
 		gap: var(--a);
 		cursor: grab;
 		user-select: none;
-	}.header-actions .custom {
+	}
+	.header-actions .custom {
 		flex-grow: 1;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0 var(--a);
-		justify-content: flex-end;
+		justify-content: flex-start;
 		align-items: center;
 	}
 	.header-actions.is-dragging > * {
 		pointer-events: none;
-	}
-	.honey {
-		height: var(--c);
-	}
-	.honey img {
-		height: 100%;
 	}
 </style>

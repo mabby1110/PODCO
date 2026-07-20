@@ -6,7 +6,6 @@
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import Lista from '$lib/components/App/Listas/Lista.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
-	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
 	import Grupo from '$lib/components/App/Grupo.svelte';
@@ -14,6 +13,7 @@
 	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
 	import Panel from '$lib/components/App/Panel.svelte';
 	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
+	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 
 	let { inventario } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -65,8 +65,8 @@
 		</Panel>
 		<PanelFiltros>
 			{#snippet header()}
-				<ExportarCSV {lista_ordenada} />
 				<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
+				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
 				<Filtro categorias={categoriasInventario} />

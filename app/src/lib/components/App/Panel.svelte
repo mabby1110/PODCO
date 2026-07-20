@@ -93,19 +93,21 @@
 		style="transform: translate({x}px, {y}px);"
 	>
 		<div class="header-actions" onmousedown={onMouseDown}>
-			<p class="panel-title">{tituloBoton}</p>
 			{#if header}
-				{@render header()}
+			{@render header()}
 			{/if}
-			<button class="butter" type="button" onclick={resetPosition}>Resetear posición</button>
-			<button class="close-btn" type="button" onclick={() => (show = false)}>✕</button>
+			<p class="panel-title">{tituloBoton}</p>
+			<button class="butter honey" type="button" onclick={resetPosition}>⇱</button>
+			<button class="butter chile" type="button" onclick={() => (show = false)}>✕</button>
 		</div>
 		{#if contenido}
 			{@render contenido()}
 		{/if}
 	</div>
 {/if}
-<button class="butter {show?'active':''}" onclick={() => (show = !show)}> {tituloBoton} </button>
+<button class="butter {show ? 'active' : ''}" onclick={() => (show = !show)}>
+	{tituloBoton}
+</button>
 
 <style>
 	.panel-controls {
