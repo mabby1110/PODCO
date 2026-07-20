@@ -19,7 +19,6 @@
 		<b class="tiny">{producto?.serie || producto?.codigo}</b>
 		<p>{producto?.descripcion}</p>
 	{/snippet}
-
 	{#snippet meta()}
 		<p>{producto?.ubicacion_fisica}</p>
 		<p>{producto?.categorias}</p>

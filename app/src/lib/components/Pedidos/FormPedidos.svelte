@@ -187,7 +187,7 @@
 		justify-items: center;
 	}
 	.producto .descripcion {
-		grid-column: span 6;
+		grid-column: span 5;
 		word-break: break-all;
 		justify-self: flex-start;
 	}

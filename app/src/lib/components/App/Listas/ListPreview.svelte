@@ -91,6 +91,11 @@
 	}
 	.list-card-header {
 		flex-grow: 3;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+	}
+	:global(.list-card-header > *:nth-child(2)) {
+		grid-column: span 3;
 	}
 	.list-card-content {
 		width: 100%;
