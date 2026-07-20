@@ -39,6 +39,7 @@
 <div class="contenedor-filtro">
 	{#if !calendar}
 		<div class="filter-actions">
+			<p class="tiny">Filtrar</p>
 			<select bind:value={selectedColumnKey}>
 				<option value="" disabled>Campo</option>
 				{#each categorias as col}
@@ -125,16 +126,12 @@
 	.contenedor-filtro {
 		width: 100%;
 	}
-	.panel {
-		gap: var(--a);
-		width: fit-content;
-		background-color: var(--color-contrast);
-	}
 	.chop {
 		background-color: var(--color-error);
 		padding: 4px var(--a);
 		border-radius: 16px;
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 0.4rem;
 	}

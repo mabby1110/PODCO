@@ -42,6 +42,7 @@
 
 <div class="contenedor-agrupaciones">
 	<div class="acciones">
+		<p class="tiny">Agrupar</p>
 		<Select
 			options={categorias}
 			defaultOption="Agrupar todos"
@@ -81,6 +82,7 @@
 	}
 	.acciones {
 		display: flex;
+		flex-wrap: wrap;
 		gap: var(--a);
 	}
 	.agrupaciones {
