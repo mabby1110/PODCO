@@ -64,7 +64,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: var(--c);
         padding: 2px 4px;
     }
 	.btn-exportar img {
@@ -73,7 +72,7 @@
 	}
     .btn-exportar .cantidad {
         position: absolute;
-        bottom: -2px;
+        bottom: -5px;
         right: -4px;
         font-size: 0.65rem;
         opacity: 0.7;

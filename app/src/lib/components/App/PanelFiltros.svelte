@@ -5,8 +5,9 @@
 	let {
 		controles,
 		header,
-		absolute
-	}: { controles?: Snippet; header?: Snippet; absolute?: boolean } = $props();
+		absolute,
+		tituloBoton = 'controles'
+	}: { controles?: Snippet; header?: Snippet; absolute?: boolean; tituloBoton?: string } = $props();
 
 	let showFilter = $state(false);
 
@@ -93,13 +94,14 @@
 		style="transform: translate({x}px, {y}px);"
 	>
 		<div class="panel header-actions" onmousedown={onMouseDown}>
+			<button class="butter chile" type="button" onclick={() => (showFilter = false)}>✕</button>
+			<button class="butter honey" type="button" onclick={resetPosition}>◥</button>
+			<p class="panel-title">{tituloBoton}</p>
 			<div class="custom">
 				{#if header}
 					{@render header()}
 				{/if}
 			</div>
-			<button class="butter honey" type="button" onclick={resetPosition}>⇱</button>
-			<button class="butter chile" type="button" onclick={() => (showFilter = false)}>✕</button>
 		</div>
 		<div class="panel content-actions">
 			{#if controles}
@@ -108,7 +110,10 @@
 		</div>
 	</div>
 {/if}
-<button class="butter honey {showFilter ? 'active' : ''}" onclick={() => (showFilter = !showFilter)}>
+<button
+	class="butter honey {showFilter ? 'active' : ''}"
+	onclick={() => (showFilter = !showFilter)}
+>
 	<img src="/options.svg" alt="options" />
 </button>
 
@@ -185,10 +190,13 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0 var(--a);
-		justify-content: flex-start;
+		justify-content: flex-end;
 		align-items: center;
 	}
 	.header-actions.is-dragging > * {
 		pointer-events: none;
+	}
+	.panel-title {
+		flex-grow: 1;
 	}
 </style>

@@ -94,7 +94,8 @@ const CLAVES_PEDIDO: (keyof Pedido)[] = [
 	'id_oportunidad',
 	'id_producto',
 	'cantidad',
-	'precio_unitario'
+	'precio_unitario',
+	'id_agrupacion'
 ];
 
 const CLAVES_HISTORIAL: (keyof Historial)[] = [
@@ -213,7 +214,6 @@ export function construirDatosActividad(
 
 export function construirDatosPedido(data: Record<string, any>, id?: string): Partial<Pedido> {
 	const datosBrutos: Partial<Pedido> = {};
-	console.log('brutos: ', datosBrutos);
 	for (const clave of CLAVES_PEDIDO) {
 		// Asignación de ID
 		if (clave === 'id') {

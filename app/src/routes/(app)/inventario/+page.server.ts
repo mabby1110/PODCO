@@ -1,10 +1,5 @@
-// page.server.ts
 import { generateId } from '$lib/server/google/sheets';
-import {
-	construirDatosCliente,
-	construirDatosOportunidad,
-	construirDatosPedido
-} from '$lib/server/supabase/util';
+import { construirDatosPedido } from '$lib/server/supabase/util';
 import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
@@ -63,6 +58,60 @@ export const actions: Actions = {
 			.single();
 		if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
 		console.log('\nNotificación creada:\n', notificacion);
+
+		return {
+			success: true,
+			op: result.map((r) => r.id)
+		};
+	},
+	crearPedido: async ({ request, locals: { supabase, user } }) => {
+		const formData = await request.formData();
+		const payloadData = JSON.parse(formData.get('payload') as string);
+
+		const grupo = generateId('BMS-GP');
+		const objetosAInsertar = payloadData.map((pedido) => {
+			pedido.id = generateId('BMS-PD');
+			pedido.id_agente = user?.id;
+			pedido.id_agrupacion = grupo;
+			return construirDatosPedido(pedido);
+		});
+		console.log(objetosAInsertar);
+		const { data: result, error } = await supabase
+			.from('pedidos')
+			.insert(objetosAInsertar)
+			.select();
+
+		if (error) return fail(500, { error: error.message });
+
+		const registrosHistorial = result.map((pedido) => ({
+			id: generateId('BMS-H'),
+			id_agente: user?.id,
+			tipo_objeto: 'pedidos',
+			id_objeto: pedido.id,
+			accion: 'insert',
+			cambios: pedido
+		}));
+
+		const { data: historial, error: errorHistorial } = await supabase
+			.from('historial')
+			.insert(registrosHistorial)
+			.select();
+
+		if (errorHistorial) console.error('Fallo al registrar historial:', errorHistorial);
+
+		if (historial) {
+			const registrosNotificacion = historial.map((h) => ({
+				id: generateId('BMS-N'),
+				id_agente: user?.id,
+				id_historial: h.id
+			}));
+
+			const { error: errorNotif } = await supabase
+				.from('notificaciones')
+				.insert(registrosNotificacion);
+
+			if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
+		}
 
 		return {
 			success: true,

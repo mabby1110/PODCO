@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { fade, slide } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 	import { appState } from '$lib/stores/appState.svelte';
 	import ControlsPanel from './ControlsPanel.svelte';
 	import Logout from './Logout.svelte';
 	import PanelNotificaciones from './Notificaciones/PanelNotificaciones.svelte';
 
 	let expanded = $derived($appState.pageActions);
-	let showFilter = $state(false);
+	let show = $state(false);
 	function togglePanel(e: MouseEvent) {
 		e.stopPropagation();
 		e.preventDefault();
 		appState.togglePageActions();
-		showFilter = false;
+		show = false;
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
@@ -29,13 +29,13 @@
 
 <div class="nav-container">
 	{#if expanded}
-		<div class="app-actions" in:fade>
+		<div class="app-actions" in:slide>
 			<Logout />
-			<button class="butter honey" onclick={() => (showFilter = !showFilter)}>
+			<button class="butter honey  {show ? 'active' : ''}" onclick={() => (show = !show)}>
 				<img src="/notifications.svg" alt="options" />
 			</button>
 			<div class="content">
-				{#if showFilter}
+				{#if show}
 					<PanelNotificaciones />
 				{:else}
 					<ControlsPanel />
@@ -78,8 +78,9 @@
 		max-height: 90vh;
 	}
 	.app-actions .content {
-		height: 90%;
 		width: 100%;
+		height: 100%;
+		max-height: 80vh;
 	}
 	.home {
 		background: var(--y2k);

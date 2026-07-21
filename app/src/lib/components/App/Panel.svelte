@@ -9,7 +9,8 @@
 		tituloBoton = 'boton'
 	}: { contenido?: Snippet; header?: Snippet; absolute?: boolean; tituloBoton: string } = $props();
 
-	let show = $state(false);
+	let show = $state(true);
+	let isMaximized = $state(false); // Estado para controlar la maximización
 
 	let x = $state(0);
 	let y = $state(0);
@@ -36,13 +37,14 @@
 
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.altKey && event.key === '3') {
-			event.preventDefault(); // Evita el comportamiento por defecto del navegador
+			event.preventDefault();
 			show = !show;
 		}
 		if (event.key === 'Escape') show = false;
 	}
 
 	function onMouseDown(event: MouseEvent) {
+		if (isMaximized) return; // Desactiva arrastre si está maximizado
 		isDragging = true;
 		startX = event.clientX;
 		startY = event.clientY;
@@ -68,6 +70,7 @@
 		event.stopPropagation();
 		x = 0;
 		y = 0;
+		isMaximized = false;
 		setTimeout(calculateQuadrant, 0);
 	}
 
@@ -89,16 +92,28 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={panel}
-		class="panel {quadrantY} {quadrantX} {absolute ? 'panel-controls-local' : 'panel-controls'}"
-		style="transform: translate({x}px, {y}px);"
+		class="panel {quadrantY} {quadrantX} {absolute
+			? 'panel-controls-local'
+			: 'panel-controls'} {isMaximized ? 'maximized' : ''}"
+		style={isMaximized ? '' : `transform: translate(${x}px, ${y}px);`}
 	>
 		<div class="header-actions" onmousedown={onMouseDown}>
-			{#if header}
-			{@render header()}
-			{/if}
-			<p class="panel-title">{tituloBoton}</p>
-			<button class="butter honey" type="button" onclick={resetPosition}>⇱</button>
 			<button class="butter chile" type="button" onclick={() => (show = false)}>✕</button>
+            <button class="butter honey" type="button" onclick={resetPosition}>◥</button>
+			<p class="panel-title">{tituloBoton}</p>
+			{#if header}
+				{@render header()}
+			{/if}
+			<button
+				class="butter honey max-window"
+				type="button"
+				onclick={(e) => {
+					e.stopPropagation();
+					isMaximized = !isMaximized;
+				}}
+			>
+				<img src="/max-win.svg" alt="max-win" />
+			</button>
 		</div>
 		{#if contenido}
 			{@render contenido()}
@@ -163,12 +178,32 @@
 		width: 100%;
 		display: flex;
 		flex-wrap: wrap;
-		align-items: baseline;
+		align-items: center;
+		flex-flow: row;
 		gap: var(--a);
 		cursor: grab;
 		user-select: none;
 	}
 	.panel-title {
 		flex-grow: 1;
+	}
+
+	/* Reglas para la ventana maximizada */
+	.maximized {
+		position: fixed !important;
+		top: 1vh !important;
+		left: 1vw !important;
+		right: auto !important;
+		width: 98vw !important;
+		height: 90vh !important;
+		max-width: none !important;
+		z-index: 9999;
+	}
+
+	.maximized .header-actions {
+		cursor: default;
+	}
+	.maximized .header-actions:active {
+		cursor: default;
 	}
 </style>

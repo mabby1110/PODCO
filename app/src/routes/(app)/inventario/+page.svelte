@@ -14,6 +14,7 @@
 	import Panel from '$lib/components/App/Panel.svelte';
 	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
+	import ListaPedidos from '$lib/components/Pedidos/ListaPedidos.svelte';
 
 	let { inventario } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -49,6 +50,11 @@
 	});
 
 	let show = $derived($appState.min);
+
+	let view = $state(true);
+	function handleview() {
+		view = !view;
+	}
 </script>
 
 <Lista>
@@ -58,9 +64,16 @@
 			keyColumns={['serie', 'codigo', 'descripcion', 'categorias']}
 			bind:lista
 		/>
-		<Panel tituloBoton="Pedido">
+		<Panel tituloBoton="Pedidos">
+			{#snippet header()}
+				<button class="butter" onclick={handleview}>{view ? '+Nuevo Pedido' : 'Pedidos'}</button>
+			{/snippet}
 			{#snippet contenido()}
-				<FormPedidos />
+				{#if view == false}
+					<FormPedidos />
+				{:else}
+					<ListaPedidos />
+				{/if}
 			{/snippet}
 		</Panel>
 		<PanelFiltros>

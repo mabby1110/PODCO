@@ -10,9 +10,11 @@
 
 	let { id_oportunidad }: { id_oportunidad?: string } = $props();
 
-	let no_orden = $state('');
 	let tipo = $state('');
-
+	let movimientos = [
+		{ value: 'borrador', label: 'Borrador' },
+		{ value: 'cotizacion', label: 'Cotización' }
+	];
 	const copiarAExcel = () => {
 		const cabeceras = 'Cantidad\tCódigo\tDescripción\tSerie\tMoneda\tPrecio';
 		const filas = productosSeleccionadosStore.items
@@ -63,6 +65,12 @@
 					>
 				</div>
 			{/each}
+			<div class="acciones-tabla">
+				<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
+				<button class="butter" type="button" onclick={() => productosSeleccionadosStore.limpiar()}>
+					Borrar
+				</button>
+			</div>
 		</div>
 		{#if $profile?.isAdmin || $profile?.isOper}
 			<form
@@ -88,25 +96,14 @@
 			>
 				<!-- formulario -->
 				<div class="acciones">
-					<Select
-						bind:selected={tipo}
-						title="Tipo de movimiento"
-						options={[{ value: 'cotizacion', label: 'Cotización' }]}
-					/>
-					{#if tipo === 'entrada'}
-						<FormInput
-							label="Número de Orden BMS"
-							name="no_orden"
-							placeholder="Serial BMS"
-							type="text"
-							bind:value={no_orden}
-						/>
+					<Select bind:selected={tipo} title="Tipo de movimiento" options={movimientos} />
+					{#if tipo === 'borrador'}
 						<button
 							class="butter submit"
 							type="submit"
 							disabled={productosSeleccionadosStore.items.length === 0}
 						>
-							Procesar Entrada
+							Guardar
 						</button>
 					{:else if tipo === 'salida'}
 						<button
@@ -129,13 +126,6 @@
 			</form>
 		{/if}
 	{/if}
-
-	<div class="acciones-tabla">
-		<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
-		<button class="butter" type="button" onclick={() => productosSeleccionadosStore.limpiar()}>
-			Borrar
-		</button>
-	</div>
 </div>
 
 <style>
@@ -146,11 +136,9 @@
 		flex-direction: column;
 		gap: var(--a);
 		width: 100%;
-		max-width: 800px;
 	}
 	.acciones {
 		display: flex;
-		flex-direction: column;
 		justify-content: space-between;
 		width: 100%;
 		gap: var(--a);

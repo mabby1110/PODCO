@@ -12,7 +12,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 
 	console.log('perfil:');
 	console.log('\nadmin: ', profile?.isAdmin);
-	console.log('\noper: ', profile?.isOper);
+	console.log('oper: ', profile?.isOper);
 
 	let agentes: any[] = [];
 	let queryOportunidades = supabase
@@ -72,7 +72,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		queryCotizaciones,
 		queryNotificaciones
 	]);
-	console.log('actividades: ', actividades?.length);
+	console.log('\nactividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
 	console.log('clientes: ', clientes?.length);
 	console.log('documentos: ', documentos?.length);

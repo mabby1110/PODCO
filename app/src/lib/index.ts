@@ -114,6 +114,7 @@ export type Pedido = {
 	id_producto: string;
 	cantidad: string;
 	precio_unitario: string;
+	id_agrupacion: string;
 };
 // MAPEO CON SHEETS
 export const historialFieldMap = {

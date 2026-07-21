@@ -71,6 +71,7 @@
 		gap: var(--a);
         height: 100%;
 		overflow-y: scroll;
+		max-height: 60vh;
 	}
 
 	/* Tarjeta individual de notificación */
