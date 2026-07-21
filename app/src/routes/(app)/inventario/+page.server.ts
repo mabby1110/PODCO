@@ -64,7 +64,7 @@ export const actions: Actions = {
 			op: result.map((r) => r.id)
 		};
 	},
-	crearPedido: async ({ request, locals: { supabase, user } }) => {
+	addPedido: async ({ request, locals: { supabase, user } }) => {
 		const formData = await request.formData();
 		const payloadData = JSON.parse(formData.get('payload') as string);
 
@@ -90,6 +90,72 @@ export const actions: Actions = {
 			id_objeto: pedido.id,
 			accion: 'insert',
 			cambios: pedido
+		}));
+
+		const { data: historial, error: errorHistorial } = await supabase
+			.from('historial')
+			.insert(registrosHistorial)
+			.select();
+
+		if (errorHistorial) console.error('Fallo al registrar historial:', errorHistorial);
+
+		if (historial) {
+			const registrosNotificacion = historial.map((h) => ({
+				id: generateId('BMS-N'),
+				id_agente: user?.id,
+				id_historial: h.id
+			}));
+
+			const { error: errorNotif } = await supabase
+				.from('notificaciones')
+				.insert(registrosNotificacion);
+
+			if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
+		}
+
+		return {
+			success: true,
+			op: result.map((r) => r.id)
+		};
+	},
+	updatePedido: async ({ request, locals: { supabase, user } }) => {
+		const formData = await request.formData();
+		const payloadData = JSON.parse(formData.get('payload') as string);
+
+		const pedidosAActualizar = payloadData.filter((p: any) => p.id_pedido);
+
+		const updatePromises = pedidosAActualizar.map(async (pedido: any) => {
+			const { data, error } = await supabase
+				.from('pedidos')
+				.update({
+					cantidad: pedido.cantidad,
+					precio_unitario: pedido.precio_unitario
+				})
+				.eq('id', pedido.id_pedido)
+				.select()
+				.single();
+
+			if (error) throw new Error(error.message);
+			return data;
+		});
+
+		let result;
+		try {
+			result = await Promise.all(updatePromises);
+		} catch (error: any) {
+			return fail(500, { error: error.message });
+		}
+
+		const registrosHistorial = result.map((pedido) => ({
+			id: generateId('BMS-H'),
+			id_agente: user?.id,
+			tipo_objeto: 'pedidos',
+			id_objeto: pedido.id,
+			accion: 'update',
+			cambios: {
+				cantidad: pedido.cantidad,
+				precio_unitario: pedido.precio_unitario
+			}
 		}));
 
 		const { data: historial, error: errorHistorial } = await supabase

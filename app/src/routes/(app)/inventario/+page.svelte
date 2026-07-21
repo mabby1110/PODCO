@@ -56,10 +56,6 @@
 	function handleview() {
 		view = !view;
 	}
-	$effect(() => {
-		productosSeleccionadosStore;
-		view = true;
-	});
 </script>
 
 <Lista>
@@ -71,7 +67,7 @@
 		/>
 		<Panel tituloBoton="Pedidos">
 			{#snippet header()}
-				<button class="butter" onclick={handleview}>{view ? '+Nuevo Pedido' : 'Pedidos'}</button>
+				<button class="butter" onclick={handleview}>{view ? 'Lista' : 'Borrador'}</button>
 			{/snippet}
 			{#snippet contenido()}
 				{#if view}

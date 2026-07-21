@@ -4,21 +4,22 @@ export interface DatosProducto {
 }
 
 export interface ProductoKardex {
-	producto: DatosProducto;
+	pedido?: string;
+	producto?: DatosProducto | null;
 	piezas: number;
 }
 
 class Productos {
 	items = $state<ProductoKardex[]>([]);
 
-	agregar(producto: DatosProducto) {
+	agregar(producto: DatosProducto, pedido?: string) {
 		const existente = this.items.find((i) => i.producto.id === producto.id);
 		if (existente) {
 			if (producto.cantidad > existente.piezas) {
 				existente.piezas += 1;
 			}
 		} else {
-			this.items.push({ producto, piezas: 1 });
+			this.items.push({ producto, piezas: 1, pedido });
 		}
 	}
 
