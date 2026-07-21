@@ -15,6 +15,7 @@
 	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 	import ListaPedidos from '$lib/components/Pedidos/ListaPedidos.svelte';
+	import { productosSeleccionadosStore } from '$lib/stores/productosSeleccionadosStore.svelte';
 
 	let { inventario } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -55,6 +56,10 @@
 	function handleview() {
 		view = !view;
 	}
+	$effect(() => {
+		productosSeleccionadosStore;
+		view = true;
+	});
 </script>
 
 <Lista>
@@ -69,10 +74,10 @@
 				<button class="butter" onclick={handleview}>{view ? '+Nuevo Pedido' : 'Pedidos'}</button>
 			{/snippet}
 			{#snippet contenido()}
-				{#if view == false}
+				{#if view}
 					<FormPedidos />
 				{:else}
-					<ListaPedidos />
+					<ListaPedidos bind:view/>
 				{/if}
 			{/snippet}
 		</Panel>
