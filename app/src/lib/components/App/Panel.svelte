@@ -9,7 +9,7 @@
 		tituloBoton = 'boton'
 	}: { contenido?: Snippet; header?: Snippet; absolute?: boolean; tituloBoton: string } = $props();
 
-	let show = $state(true);
+	let show = $state(false);
 	let isMaximized = $state(false); // Estado para controlar la maximización
 
 	let x = $state(0);

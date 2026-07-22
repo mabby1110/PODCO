@@ -66,13 +66,13 @@
 		/>
 		<Panel tituloBoton="Pedidos">
 			{#snippet header()}
-				<button class="butter" onclick={handleview}>{view ? 'Lista' : 'Borrador'}</button>
+				<button class="butter" onclick={handleview}>{view ? 'Borrador' : 'Lista'}</button>
 			{/snippet}
 			{#snippet contenido()}
 				{#if view}
 					<ListaPedidos bind:view />
 				{:else}
-					<FormPedidos />
+					<FormPedidos bind:view />
 				{/if}
 			{/snippet}
 		</Panel>

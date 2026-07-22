@@ -9,7 +9,7 @@
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import EditarCantidadPedido from './EditarCantidadPedido.svelte';
 
-	let { id_oportunidad }: { id_oportunidad?: string } = $props();
+	let { id_oportunidad, view = $bindable() }: { id_oportunidad?: string; view: boolean } = $props();
 
 	let tipo = $state('');
 	let movimientos = [
@@ -91,12 +91,14 @@
 			<div class="productos">
 				<h3>{StorePedido.items.length > 0 ? 'Agregar a' : 'Nuevo'} Pedido</h3>
 				{#each StorePedidoNuevo.items as item}
-					{@const cantidadUso = StorePedidoNuevo.obtenerCantidad(item.id) + StorePedido.obtenerCantidad(item.id)}
+					{@const cantidadUso =
+						StorePedidoNuevo.obtenerCantidad(item.id) + StorePedido.obtenerCantidad(item.id)}
 					{@const sinStock = cantidadUso >= item.producto.cantidad}
-					
+
 					<div class="producto">
 						<span class="descripcion">{item.producto.descripcion || '-'}</span>
-						<span class="codigo">{item.producto.serie || item.producto.codigo || 'sin código'}</span>
+						<span class="codigo">{item.producto.serie || item.producto.codigo || 'sin código'}</span
+						>
 						<span>USD</span>
 						<span class="cantidad">
 							<input type="number" name="total" bind:value={item.producto.precio} />
@@ -171,6 +173,7 @@
 					if (result.type === 'success') {
 						StorePedido.limpiar();
 						StorePedidoNuevo.limpiar();
+						view = true;
 						invalidateAll();
 					}
 				};

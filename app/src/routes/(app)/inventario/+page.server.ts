@@ -189,11 +189,14 @@ export const actions: Actions = {
 
 		// PEDIDOS A CREAR
 		console.log('pedidos a crear: ', pedidosACrear);
+		if (!idAgrupacion) {
+			idAgrupacion = generateId('BMS-GP');
+		}
 		if (pedidosACrear.length > 0) {
 			const registrosACrear = pedidosACrear.map((pedido) => {
 				pedido.id = generateId('BMS-PD');
 				pedido.id_agente = user?.id;
-				pedido.id_agrupacion = idAgrupacion ||  generateId('BMS-GP');
+				pedido.id_agrupacion = idAgrupacion;
 				return construirDatosPedido(pedido);
 			});
 
@@ -235,10 +238,10 @@ export const actions: Actions = {
 	},
 
 	deletePedido: async ({ request, locals: { supabase } }) => {
-		console.log("\nBorrar Pedido\n")
+		console.log('\nBorrar Pedido\n');
 		const formData = await request.formData();
 		const id = formData.get('id') as string;
-		console.log("\n", id);
+		console.log('\n', id);
 
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
