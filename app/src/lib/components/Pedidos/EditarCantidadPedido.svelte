@@ -16,7 +16,7 @@
 			StorePedido.agregar(pedido);
 		}
 	}
-	
+
 	async function quitar(e: Event) {
 		e.stopPropagation();
 
@@ -43,8 +43,6 @@
 	}
 </script>
 
-{cantidad}
-{cantidad > 0}
 <div class="control-contador">
 	<button type="button" class="butter" onclick={quitar} disabled={pedido.cantidad == 0}> - </button>
 	<span class="cantidad-viva"

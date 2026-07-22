@@ -20,7 +20,8 @@
 		StorePedidoNuevo.quitar(producto);
 	}
 </script>
-{#if StorePedidoNuevo.obtenerCantidad(producto.id)-cantidad <= 0}
+
+{#if cantidad > 0}
 	<div class="control-contador">
 		<button type="button" class="butter" onclick={quitar} disabled={cantidad === 0}> - </button>
 

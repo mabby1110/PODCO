@@ -123,5 +123,6 @@
 		flex-direction: row-reverse;
 		flex-wrap: wrap-reverse;
 		align-items: baseline;
+		z-index: 1;
 	}
 </style>

@@ -43,97 +43,102 @@
 	{#if StorePedidoNuevo.items.length === 0 && StorePedido.items.length === 0}
 		<p class="vacio">No hay productos seleccionados.</p>
 	{:else}
-		<div class="producto" style="font-weight: bold;">
-			<span class="descripcion">Descripción</span>
-			<span class="codigo">Código</span>
-			<span>Moneda</span>
-			<span class="cantidad">P/U</span>
-			<span>Stock</span>
-			<span class="cantidad">Cantidad</span>
-			<span class="total">Total</span>
-		</div>
-		{#if StorePedido.items.length !== 0}
-			<div class="productos">
-				<h3>ID: {StorePedido.items[0].pedido.id_agrupacion}</h3>
-				{#each StorePedido.items as item}
-					<div class="producto">
-						<span class="descripcion">{item.pedido.inventario.descripcion || '-'}</span>
-						<span class="codigo"
-							>{item.pedido.inventario.serie || item.pedido.inventario.codigo || 'sin código'}</span
-						>
-						<span>USD</span>
-						<span class="cantidad">
-							<input type="number" name="total" bind:value={item.pedido.precio_unitario} />
-						</span>
-						<span>
-							<input type="checkbox" disabled checked={item.pedido.stock} />
-						</span>
-						<span class="cantidad">
-							<EditarCantidadPedido pedido={item.pedido} />
-						</span>
-						<span class="total"
-							>{formatCurrency(
-								String(item.pedido.precio_unitario * item.pedido.cantidad),
-								'USD'
-							)}</span
-						>
-					</div>
-				{/each}
-				<div class="acciones-tabla">
-					<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
-					<button class="butter" type="button" onclick={() => StorePedido.limpiar()}>
-						Borrar
-					</button>
-				</div>
+		<div class="productos">
+			<div class="producto" style="font-weight: bold;">
+				<span class="descripcion">Descripción</span>
+				<span class="codigo">Código</span>
+				<span>Moneda</span>
+				<span class="cantidad">P/U</span>
+				<span>Stock</span>
+				<span class="cantidad">Cantidad</span>
+				<span class="total">Total</span>
 			</div>
-		{/if}
-		{#if StorePedidoNuevo.items.length !== 0}
-			<div class="productos">
-				<h3>{StorePedido.items.length > 0 ? 'Agregar a' : 'Nuevo'} Pedido</h3>
-				{#each StorePedidoNuevo.items as item}
-					{@const cantidadUso =
-						StorePedidoNuevo.obtenerCantidad(item.id) + StorePedido.obtenerCantidad(item.id)}
-					{@const sinStock = cantidadUso >= item.producto.cantidad}
+			{#if StorePedido.items.length !== 0}
+				<div class="productos">
+					<h3>ID: {StorePedido.items[0].pedido.id_agrupacion}</h3>
+					{#each StorePedido.items as item}
+						<div class="producto">
+							<span class="descripcion">{item.pedido.inventario.descripcion || '-'}</span>
+							<span class="codigo"
+								>{item.pedido.inventario.serie ||
+									item.pedido.inventario.codigo ||
+									'sin código'}</span
+							>
+							<span>USD</span>
+							<span class="cantidad">
+								<input type="number" name="total" bind:value={item.pedido.precio_unitario} />
+							</span>
+							<span>
+								<input type="checkbox" disabled checked={item.pedido.stock} />
+							</span>
+							<span class="cantidad">
+								<EditarCantidadPedido pedido={item.pedido} />
+							</span>
+							<span class="total"
+								>{formatCurrency(
+									String(item.pedido.precio_unitario * item.pedido.cantidad),
+									'USD'
+								)}</span
+							>
+						</div>
+					{/each}
+					<div class="acciones-tabla">
+						<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
+						<button class="butter" type="button" onclick={() => StorePedido.limpiar()}>
+							Borrar
+						</button>
+					</div>
+				</div>
+			{/if}
+			{#if StorePedidoNuevo.items.length !== 0}
+				<div class="productos">
+					<h3>{StorePedido.items.length > 0 ? 'Agregar a' : 'Nuevo'} Pedido</h3>
+					{#each StorePedidoNuevo.items as item}
+						{@const cantidadUso =
+							StorePedidoNuevo.obtenerCantidad(item.id) + StorePedido.obtenerCantidad(item.id)}
+						{@const sinStock = cantidadUso >= item.producto.cantidad}
 
-					<div class="producto">
-						<span class="descripcion">{item.producto.descripcion || '-'}</span>
-						<span class="codigo">{item.producto.serie || item.producto.codigo || 'sin código'}</span
-						>
-						<span>USD</span>
-						<span class="cantidad">
-							<input type="number" name="total" bind:value={item.producto.precio} />
-						</span>
-						<span>
-							<input
-								type="checkbox"
-								checked={sinStock ? false : item.stock}
-								disabled={sinStock}
-								onchange={(e) => {
-									item.stock = e.currentTarget.checked;
-									item.piezas = item.stock ? 0 : 1;
-								}}
-							/>
-						</span>
-						<span class="cantidad">
-							{#if item.stock}
-								<ContadorProducto producto={item.producto} />
-							{:else}
-								<input type="number" bind:value={item.piezas} min="1" />
-							{/if}
-						</span>
-						<span class="total"
-							>{formatCurrency(String(item.producto.precio * item.piezas), 'USD')}</span
-						>
+						<div class="producto">
+							<span class="descripcion">{item.producto.descripcion || '-'}</span>
+							<span class="codigo"
+								>{item.producto.serie || item.producto.codigo || 'sin código'}</span
+							>
+							<span>USD</span>
+							<span class="cantidad">
+								<input type="number" name="total" bind:value={item.producto.precio} />
+							</span>
+							<span>
+								<input
+									type="checkbox"
+									checked={sinStock ? false : item.stock}
+									disabled={sinStock}
+									onchange={(e) => {
+										item.stock = e.currentTarget.checked;
+										item.piezas = item.stock ? 0 : 1;
+									}}
+								/>
+							</span>
+							<span class="cantidad">
+								{#if item.stock}
+									<ContadorProducto producto={item.producto} />
+								{:else}
+									<input type="number" bind:value={item.piezas} min="1" />
+								{/if}
+							</span>
+							<span class="total"
+								>{formatCurrency(String(item.producto.precio * item.piezas), 'USD')}</span
+							>
+						</div>
+					{/each}
+					<div class="acciones-tabla">
+						<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
+						<button class="butter" type="button" onclick={() => StorePedidoNuevo.limpiar()}>
+							Borrar
+						</button>
 					</div>
-				{/each}
-				<div class="acciones-tabla">
-					<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
-					<button class="butter" type="button" onclick={() => StorePedidoNuevo.limpiar()}>
-						Borrar
-					</button>
 				</div>
-			</div>
-		{/if}
+			{/if}
+		</div>
 	{/if}
 	{#if $profile?.isAdmin || $profile?.isOper}
 		<form
@@ -219,6 +224,8 @@
 		flex-direction: column;
 		gap: var(--a);
 		width: 100%;
+		max-height: 60vh;
+		overflow: auto;
 	}
 	.acciones {
 		display: flex;
@@ -231,8 +238,6 @@
 		flex-direction: column;
 		gap: var(--a);
 		padding: var(--a);
-		max-height: 60vh;
-		overflow: auto;
 		border-radius: var(--a);
 		padding: var(--a);
 		background-color: var(--color-foreground);
@@ -258,14 +263,17 @@
 		justify-items: center;
 	}
 	.producto .descripcion {
-		grid-column: span 4;
+		grid-column: span 5;
 		word-break: break-all;
 		justify-self: flex-start;
 	}
-	.producto .codigo,
+	.producto .codigo {
+		grid-column: span 4;
+		word-break: break-all;
+	}
 	.producto .cantidad,
 	.producto .total {
-		grid-column: span 2;
+		grid-column: span 3;
 		word-break: break-all;
 	}
 	.vacio {

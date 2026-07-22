@@ -35,14 +35,12 @@
 		padding-bottom: 11vh;
 	}
 	.view-controls {
-		position: absolute;
+		position: fixed;
 		max-width: 70vw;
 		bottom: 0;
 		right: 0;
 		z-index: 88;
 		padding: var(--a);
-		border-radius: var(--b) 0 0 0;
-		background-color: var(--y2k);
 
 		display: flex;
 		flex-wrap: wrap;

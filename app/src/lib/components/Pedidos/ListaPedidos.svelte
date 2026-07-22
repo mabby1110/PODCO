@@ -87,6 +87,8 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
         gap: var(--a);
+        max-height: 70vh;
+        overflow: auto;
     }
     .pedido {
         grid-column: span 6;
