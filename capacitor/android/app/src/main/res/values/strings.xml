@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PODCO</string>
+    <string name="title_activity_main">PODCO</string>
+    <string name="package_name">com.podco.app</string>
+    <string name="custom_url_scheme">com.podco.app</string>
+</resources>

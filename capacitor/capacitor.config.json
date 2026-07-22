@@ -1,0 +1,9 @@
+{
+  "appId": "com.podco.app",
+  "appName": "PODCO",
+  "webDir": "./build",
+  "server": {
+    "url": "https://podco-bms.com",
+    "cleartext": true
+  }
+}

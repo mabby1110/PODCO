@@ -1,0 +1,31 @@
+# Dependencias
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+
+# Directorios de compilación web (usa el de tu framework: React, Angular, Vue, etc.)
+build/
+dist/
+www/
+.next/
+.nuxt/
+
+# Archivos locales de entorno (¡nunca subas tus secretos!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Archivos del sistema y de editores de código
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.log
+
+# Archivos de caché de herramientas (opcional pero recomendado)
+.eslintcache
+.stylelintcache
