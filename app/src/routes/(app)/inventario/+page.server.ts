@@ -3,7 +3,7 @@ import { construirDatosPedido } from '$lib/server/supabase/util';
 import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
-	add: async ({ request, locals: { supabase, user } }) => {
+	addProducto: async ({ request, locals: { supabase, user } }) => {
 		const formData = await request.formData();
 		const payloadData = JSON.parse(formData.get('payload') as string);
 
@@ -120,70 +120,120 @@ export const actions: Actions = {
 	},
 	updatePedido: async ({ request, locals: { supabase, user } }) => {
 		const formData = await request.formData();
-		const payloadData = JSON.parse(formData.get('payload') as string);
+		const pedidosAActualizar = JSON.parse((formData.get('pedidosAActualizar') as string) || '[]');
+		const pedidosACrear = JSON.parse((formData.get('pedidosACrear') as string) || '[]');
+		let resultActualizacion: any[] = [];
+		let idAgrupacion: string | null = null;
 
-		const pedidosAActualizar = payloadData.filter((p: any) => p.id_pedido);
+		// PEDIDOS A ACTUALIZAR
+		console.log('pedidos a actualizar: ', pedidosAActualizar);
+		if (pedidosAActualizar.length > 0) {
+			const updatePromises = pedidosAActualizar.map(async (pedido: any) => {
+				const { data, error } = await supabase
+					.from('pedidos')
+					.update({
+						cantidad: pedido.cantidad,
+						precio_unitario: pedido.precio_unitario
+					})
+					.eq('id', pedido.id)
+					.select()
+					.single();
 
-		const updatePromises = pedidosAActualizar.map(async (pedido: any) => {
-			const { data, error } = await supabase
-				.from('pedidos')
-				.update({
-					cantidad: pedido.cantidad,
-					precio_unitario: pedido.precio_unitario
-				})
-				.eq('id', pedido.id_pedido)
-				.select()
-				.single();
+				if (error) throw new Error(error.message);
+				return data;
+			});
 
-			if (error) throw new Error(error.message);
-			return data;
-		});
+			try {
+				resultActualizacion = await Promise.all(updatePromises);
+			} catch (error: any) {
+				return fail(500, { error: error.message });
+			}
 
-		let result;
-		try {
-			result = await Promise.all(updatePromises);
-		} catch (error: any) {
-			return fail(500, { error: error.message });
+			if (resultActualizacion && resultActualizacion.length > 0) {
+				idAgrupacion = resultActualizacion[0].id_agrupacion;
+
+				const registrosHistorial = resultActualizacion.map((pedido) => ({
+					id: generateId('BMS-H'),
+					id_agente: user?.id,
+					tipo_objeto: 'pedidos',
+					id_objeto: pedido.id,
+					accion: 'update',
+					cambios: {
+						cantidad: pedido.cantidad,
+						precio_unitario: pedido.precio_unitario
+					}
+				}));
+
+				const { data: historial, error: errorHistorial } = await supabase
+					.from('historial')
+					.insert(registrosHistorial)
+					.select();
+
+				if (errorHistorial) console.error('Fallo al registrar historial:', errorHistorial);
+
+				if (historial && historial.length > 0) {
+					const registrosNotificacion = historial.map((h) => ({
+						id: generateId('BMS-N'),
+						id_agente: user?.id,
+						id_historial: h.id
+					}));
+
+					const { error: errorNotif } = await supabase
+						.from('notificaciones')
+						.insert(registrosNotificacion);
+
+					if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
+				}
+			}
 		}
 
-		const registrosHistorial = result.map((pedido) => ({
-			id: generateId('BMS-H'),
-			id_agente: user?.id,
-			tipo_objeto: 'pedidos',
-			id_objeto: pedido.id,
-			accion: 'update',
-			cambios: {
-				cantidad: pedido.cantidad,
-				precio_unitario: pedido.precio_unitario
+		// PEDIDOS A CREAR
+		console.log('pedidos a crear: ', pedidosACrear);
+		if (pedidosACrear.length > 0) {
+			const registrosACrear = pedidosACrear.map((pedido) => {
+				pedido.id = generateId('BMS-PD');
+				pedido.id_agente = user?.id;
+				pedido.id_agrupacion = idAgrupacion ||  generateId('BMS-GP');
+				return construirDatosPedido(pedido);
+			});
+
+			const { data: resultCreacion, error: errorCreacion } = await supabase
+				.from('pedidos')
+				.insert(registrosACrear)
+				.select();
+
+			if (errorCreacion) {
+				console.log(errorCreacion);
+				return fail(500, { error: errorCreacion.message });
 			}
-		}));
 
-		const { data: historial, error: errorHistorial } = await supabase
-			.from('historial')
-			.insert(registrosHistorial)
-			.select();
+			if (resultCreacion && resultCreacion.length > 0) {
+				const registrosHistorialCreacion = resultCreacion.map((pedido) => ({
+					id: generateId('BMS-H'),
+					id_agente: user?.id,
+					tipo_objeto: 'pedidos',
+					id_objeto: pedido.id,
+					accion: 'insert',
+					cambios: {
+						cantidad: pedido.cantidad,
+						precio_unitario: pedido.precio_unitario
+					}
+				}));
 
-		if (errorHistorial) console.error('Fallo al registrar historial:', errorHistorial);
+				const { error: errorHistorialCreacion } = await supabase
+					.from('historial')
+					.insert(registrosHistorialCreacion);
 
-		if (historial) {
-			const registrosNotificacion = historial.map((h) => ({
-				id: generateId('BMS-N'),
-				id_agente: user?.id,
-				id_historial: h.id
-			}));
-
-			const { error: errorNotif } = await supabase
-				.from('notificaciones')
-				.insert(registrosNotificacion);
-
-			if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
+				if (errorHistorialCreacion)
+					console.error('Fallo al registrar historial de creación:', errorHistorialCreacion);
+			}
 		}
 
 		return {
-			success: true,
-			op: result.map((r) => r.id)
+			success: true
 		};
 	},
+
 	delete: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const id = formData.get('id') as string;

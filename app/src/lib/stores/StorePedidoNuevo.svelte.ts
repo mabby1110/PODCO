@@ -4,22 +4,23 @@ export interface DatosProducto {
 }
 
 export interface ProductoKardex {
-	pedido?: string;
 	producto?: DatosProducto | null;
 	piezas: number;
+	stock: boolean;
 }
 
 class Productos {
 	items = $state<ProductoKardex[]>([]);
 
-	agregar(producto: DatosProducto, pedido?: string) {
+	agregar(producto: DatosProducto) {
 		const existente = this.items.find((i) => i.producto.id === producto.id);
 		if (existente) {
 			if (producto.cantidad > existente.piezas) {
 				existente.piezas += 1;
+				existente.stock = true;
 			}
 		} else {
-			this.items.push({ producto, piezas: 1, pedido });
+			this.items.push({ producto, piezas: 1, stock: true});
 		}
 	}
 
@@ -42,4 +43,4 @@ class Productos {
 	}
 }
 
-export const productosSeleccionadosStore = new Productos();
+export const StorePedidoNuevo = new Productos();

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { page } from '$app/state';
-    import { productosSeleccionadosStore } from '$lib/stores/productosSeleccionadosStore.svelte';
+    import { StorePedido } from '$lib/stores/StorePedido.svelte';
+	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
     import { agruparDatos } from '$lib/utils/filtro';
     import { formatCurrency } from '$lib/utils/util';
 
@@ -11,22 +12,17 @@
     let lista_agrupada = $derived(agruparDatos(lista, agrupacion));
     function handleEdit(elementos: any[]) {
         view = true;
-        productosSeleccionadosStore.limpiar();
+        StorePedido.limpiar();
         
         elementos.forEach((item) => {
             if (item.id_agrupacion) {
-                productosSeleccionadosStore.ruta = 'updatePedido';
-                productosSeleccionadosStore.camposPermitidos = ['cantidad', 'precio_unitario'];
-                
-                // Se agrega consolidado para permitir la edición del bloque completo de cantidad
-                productosSeleccionadosStore.agregar(item.inventario, item);
+                // si el pedido ya pertenece a una agrupacion solo agregar para editar
+                StorePedido.agregar(item);
             } else {
-                productosSeleccionadosStore.ruta = 'create';
-                productosSeleccionadosStore.camposPermitidos = ['*'];
-
+                // es un articulo nuevo
                 const cantidad = item.inventario.cantidad || 1;
                 for (let i = 0; i < cantidad; i++) {
-                    productosSeleccionadosStore.agregar(item.inventario, item);
+                    StorePedidoNuevo.agregar(item.inventario);
                 }
             }
         });

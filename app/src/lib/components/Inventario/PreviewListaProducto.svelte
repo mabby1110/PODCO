@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { productosSeleccionadosStore } from '$lib/stores/productosSeleccionadosStore.svelte';
+	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
 	import ListPreview from '../App/Listas/ListPreview.svelte';
 	import ContadorProducto from '../Pedidos/ContadorProducto.svelte';
 
 	let { producto } = $props();
 
 	let esSeleccionado = $derived(
-		productosSeleccionadosStore.items.some((p: any) => p.producto.id === producto?.id)
+		StorePedidoNuevo.items.some((p: any) => p.producto.id === producto?.id)
 	);
 
 	function handleClick() {
-		productosSeleccionadosStore.agregar(producto);
+		StorePedidoNuevo.agregar(producto);
 	}
 </script>
 
@@ -24,13 +24,6 @@
 		<p>{producto?.categorias}</p>
 	{/snippet}
 	{#snippet acciones()}
-		{#if esSeleccionado}
-			<ContadorProducto {producto} />
-		{:else}
-			<button class="butter" onclick={handleClick}>+</button>
-			<p class="header-meta">
-				cantidad: {producto?.cantidad}
-			</p>
-		{/if}
+		<ContadorProducto {producto} />
 	{/snippet}
 </ListPreview>

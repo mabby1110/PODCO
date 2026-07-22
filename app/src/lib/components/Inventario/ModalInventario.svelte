@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
-	import { categoriasInventario } from '$lib';
 	import { appState } from '$lib/stores/appState.svelte';
 	import Searchbar from '../App/Searchbar.svelte';
 	import FormInventario from './FormInventario.svelte';
