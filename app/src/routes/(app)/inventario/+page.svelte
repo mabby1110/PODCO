@@ -70,9 +70,9 @@
 			{/snippet}
 			{#snippet contenido()}
 				{#if view}
-					<FormPedidos />
+					<ListaPedidos bind:view />
 				{:else}
-					<ListaPedidos bind:view/>
+					<FormPedidos />
 				{/if}
 			{/snippet}
 		</Panel>

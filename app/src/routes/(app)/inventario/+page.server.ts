@@ -234,14 +234,16 @@ export const actions: Actions = {
 		};
 	},
 
-	delete: async ({ request, locals: { supabase } }) => {
+	deletePedido: async ({ request, locals: { supabase } }) => {
+		console.log("\nBorrar Pedido\n")
 		const formData = await request.formData();
 		const id = formData.get('id') as string;
+		console.log("\n", id);
 
 		if (!id) {
 			return fail(400, { error: 'ID requerido' });
 		}
-		const { error } = await supabase.from('oportunidades').delete().eq('id', id);
+		const { error } = await supabase.from('pedidos').delete().eq('id', id);
 
 		if (error) {
 			return fail(500, { error: error.message });

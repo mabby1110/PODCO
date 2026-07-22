@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
 
@@ -15,16 +16,37 @@
 			StorePedido.agregar(pedido);
 		}
 	}
-
-	function quitar(e: Event) {
+	
+	async function quitar(e: Event) {
 		e.stopPropagation();
-		StorePedido.quitar(pedido);
+
+		if (cantidad > 1) {
+			StorePedido.quitar(pedido);
+		} else {
+			const confirmado = confirm('¿Confirmas que deseas borrar este pedido?');
+
+			if (confirmado) {
+				const formData = new FormData();
+				formData.append('id', pedido.id);
+
+				const response = await fetch('inventario?/deletePedido', {
+					method: 'POST',
+					body: formData
+				});
+
+				if (response.ok) {
+					StorePedido.quitar(pedido);
+					await invalidateAll();
+				}
+			}
+		}
 	}
 </script>
 
+{cantidad}
+{cantidad > 0}
 <div class="control-contador">
 	<button type="button" class="butter" onclick={quitar} disabled={pedido.cantidad == 0}> - </button>
-
 	<span class="cantidad-viva"
 		>{StorePedido.obtenerCantidad(pedido.inventario.id)}/{pedido.inventario.cantidad}</span
 	>

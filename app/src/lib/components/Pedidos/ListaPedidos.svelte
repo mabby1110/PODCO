@@ -11,7 +11,7 @@
     let agrupacion = $state('id_agrupacion');
     let lista_agrupada = $derived(agruparDatos(lista, agrupacion));
     function handleEdit(elementos: any[]) {
-        view = true;
+        view = false;
         StorePedido.limpiar();
         
         elementos.forEach((item) => {
@@ -43,7 +43,7 @@
 
 <div class="pedidos">
     {#each lista_agrupada as grupo}
-        <div class="pedido panel">
+        <div class="panel pedido">
             <div class="producto" style="font-weight: bold;">
                 <span class="descripcion">Descripción</span>
                 <span class="codigo">Código</span>
@@ -90,7 +90,7 @@
     }
     .pedido {
         grid-column: span 6;
-        background-color: var(--color-secondary);
+        background-color: var(--color-foreground);
     }
     .producto {
         display: grid;

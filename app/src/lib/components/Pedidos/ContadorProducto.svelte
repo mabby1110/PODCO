@@ -8,6 +8,7 @@
 	);
 
 	function agregar(e: Event) {
+		console.log('agregar', cantidad);
 		e.stopPropagation();
 		if (producto.cantidad - cantidad > 0) {
 			StorePedidoNuevo.agregar(producto);
@@ -19,7 +20,7 @@
 		StorePedidoNuevo.quitar(producto);
 	}
 </script>
-{#if StorePedidoNuevo.obtenerCantidad(producto.id)-cantidad}
+{#if StorePedidoNuevo.obtenerCantidad(producto.id)-cantidad <= 0}
 	<div class="control-contador">
 		<button type="button" class="butter" onclick={quitar} disabled={cantidad === 0}> - </button>
 
