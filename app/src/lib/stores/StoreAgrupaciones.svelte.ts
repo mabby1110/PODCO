@@ -43,4 +43,4 @@ class FiltroStore {
 	}
 }
 
-export const agrupacionesStore = new FiltroStore();
+export const StoreAgrupaciones = new FiltroStore();

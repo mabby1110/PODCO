@@ -1,11 +1,11 @@
 <script>
 	import { page } from '$app/state';
 	import { fases, fases_actividad } from '$lib';
-	import { agrupacionesStore } from '$lib/stores/agrupacionesStore.svelte';
+	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 
 	let { agrupacion, showByDefault = false, children } = $props();
 	let { clientes, agentes, oportunidades } = $state(page.data);
-	let categoria = String(agrupacionesStore.filtersByRoute[page.url.pathname]);
+	let categoria = String(StoreAgrupaciones.filtersByRoute[page.url.pathname]);
 	let show = $derived(showByDefault);
 	let groupTitle = $derived(agrupacion.grupo);
 

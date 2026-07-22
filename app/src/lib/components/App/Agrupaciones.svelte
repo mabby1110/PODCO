@@ -2,7 +2,7 @@
 	import Select from './Select.svelte';
 	import { page } from '$app/state';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
+	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 
 	let {
 		agrupacionesSeleccionadas = $bindable(),
@@ -46,7 +46,7 @@
 		<Select
 			options={categorias}
 			defaultOption="Agrupar todos"
-			bind:selected={agrupacionesStore.filtersByRoute[cookies]}
+			bind:selected={StoreAgrupaciones.filtersByRoute[cookies]}
 		/>
 
 		<button onclick={appState.toggleMin} class="butter">

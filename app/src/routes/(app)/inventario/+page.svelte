@@ -12,7 +12,7 @@
 	import PreviewListaProducto from '$lib/components/Inventario/PreviewListaProducto.svelte';
 	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
 	import Panel from '$lib/components/App/Panel.svelte';
-	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
+	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 	import ListaPedidos from '$lib/components/Pedidos/ListaPedidos.svelte';
 
@@ -88,7 +88,7 @@
 		</PanelFiltros>
 	{/snippet}
 	{#snippet contenido()}
-		{#if !agrupacionesStore.filtersByRoute[currentRoute]}
+		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
 			{#each lista_ordenada as elemento}
 				<PreviewListaProducto producto={elemento} />
 			{/each}

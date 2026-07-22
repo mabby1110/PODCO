@@ -12,7 +12,7 @@
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
 	import Grupo from '$lib/components/App/Grupo.svelte';
 	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
-	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
+	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 
 	let { documentos } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -66,7 +66,7 @@
 		</PanelFiltros>
 	{/snippet}
 	{#snippet contenido()}
-		{#if !agrupacionesStore.filtersByRoute[currentRoute]}
+		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
 			{#each lista_ordenada as elemento}
 				<CardDocPreview event={elemento} />
 			{/each}

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
 	import Lista from '$lib/components/App/Listas/Lista.svelte';
@@ -13,6 +12,7 @@
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
 	import Grupo from '$lib/components/App/Grupo.svelte';
 	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
+	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -76,7 +76,7 @@
 	{/snippet}
 
 	{#snippet contenido()}
-		{#if !agrupacionesStore.filtersByRoute[currentRoute]}
+		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
 			{#each lista_ordenada as elemento}
 				<CardOpListPreview event={elemento} />
 			{/each}

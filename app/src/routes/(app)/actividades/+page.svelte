@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
+	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 	import { categoriasActividad, agrupacionesActividades } from '$lib';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import CardActividadListPreview from '$lib/components/Actividad/CardActividadListPreview.svelte';
@@ -76,7 +76,7 @@
 		</PanelFiltros>
 	{/snippet}
 	{#snippet contenido()}
-		{#if !agrupacionesStore.filtersByRoute[currentRoute]}
+		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
 			{#each lista_ordenada as elemento}
 				<CardActividadListPreview event={elemento} />
 			{/each}

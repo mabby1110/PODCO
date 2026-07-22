@@ -1,5 +1,5 @@
 // lib/util/filtro.ts
-import { agrupacionesStore } from '$lib/stores/AgrupacionesStore.svelte';
+import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 import { filtroStore } from '$lib/stores/filtroStore.svelte';
 import { selectedGroupStore } from '$lib/stores/groupFilter.svelte';
 import { formatDateFull, parseDateTimeLocal } from './agenda';
@@ -152,6 +152,6 @@ export function obtenerDatosFiltrados(actividades: any[], currentRoute: string) 
 export function agruparDatosPorRuta(datos: any[], currentRoute: string) {
 	if (!datos || !Array.isArray(datos)) return [];
 
-	const reglasAgrupacion = agrupacionesStore.filtersByRoute[currentRoute];
+	const reglasAgrupacion = StoreAgrupaciones.filtersByRoute[currentRoute];
 	return agruparDatos(datos, reglasAgrupacion);
 }
