@@ -42,7 +42,7 @@
 		await tick();
 
 		if (listRef) {
-			listRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			listRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		}
 	}
 </script>

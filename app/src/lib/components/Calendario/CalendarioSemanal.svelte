@@ -20,10 +20,14 @@
 	import CardActividadCalendarPreview from '../Actividad/CardActividadCalendarPreview.svelte';
 	import FiltroAgente from '../App/FiltroAgente.svelte';
 	import PanelFiltros from '../App/PanelFiltros.svelte';
+	import { page } from '$app/state';
+	import { procesarDatosReactivos } from '$lib/utils/filtro';
 
-	let { listaAgrupada } = $props<{
-		listaAgrupada: any[];
-	}>();
+	let { oportunidades, actividades } = $derived(page.data);
+	let allActivities = $derived(oportunidades.concat(actividades));
+	let currentRoute = $derived(page.url.pathname);
+
+	const listaAgrupada = $derived.by(() => procesarDatosReactivos(allActivities, currentRoute));
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
 
@@ -176,37 +180,6 @@
 				{/each}
 			</tbody>
 		</table>
-	</div>
-
-	<div class="view-controls">
-		<div class="calendar-navigation">
-			<button onclick={previousWeek} class="butter nav-btn" title="Semana anterior"> ← </button>
-			<button onclick={goToCurrentWeek} class="butter current-week">
-				{weekRangeText}
-			</button>
-			<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
-		</div>
-		<PanelFiltros>
-			{#snippet header()}
-				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-			{/snippet}
-			{#snippet controles()}
-				<FiltroAgente />
-				{#if $profile?.isAdmin}
-					<button
-						onclick={() => appState.toggleDnd()}
-						class="butter toggle"
-						class:active={$appState.dnd}
-					>
-						✏️ Editar
-					</button>
-				{/if}
-				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-					{$appState.calendarCards ? '📏 Min' : '📐 Max'}
-				</button>
-			{/snippet}
-		</PanelFiltros>
 	</div>
 </div>
 

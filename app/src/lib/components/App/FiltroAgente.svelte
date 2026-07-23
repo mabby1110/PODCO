@@ -35,6 +35,5 @@
         display: flex;
         flex-wrap: wrap;
         gap: var(--a);
-        justify-content: end;
     }
 </style>

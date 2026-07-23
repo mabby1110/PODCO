@@ -89,7 +89,8 @@
 						fechaFin = item.fecha_pedido ? new Date(item.fecha_pedido).getTime() : Date.now();
 						break;
 					default:
-						fechaFin = item.fecha_cierre ? new Date(item.fecha_cierre).getTime()
+						fechaFin = item.fecha_cierre
+							? new Date(item.fecha_cierre).getTime()
 							: new Date(item.fecha_creacion).getTime() + 24 * 60 * 60 * 1000;
 						break;
 				}
@@ -110,49 +111,34 @@
 	);
 </script>
 
-<Lista>
-	{#snippet acciones()}
-		<PanelFiltros>
-			{#snippet header()}
-				<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-			{/snippet}
-			{#snippet controles()}
-				<FiltroAgente />
-				<Filtro categorias={categoriasOportunidad} />
-			{/snippet}
-		</PanelFiltros>
-	{/snippet}
-	{#snippet contenido()}
-		<div class="calendario-contenedor panel">
-			<div class="cabecera-meses">
-				{#each columnasMeses as mes (mes.indice)}
-					<button
-						class="columna-mes"
-						style="width: {mes.ancho}px;"
-						onclick={() => ocultarMes(mes.indice)}
-						aria-label="Ocultar mes de {mes.nombre}"
-					>
-						{mes.nombre}
-					</button>
-				{/each}
-			</div>
-			<div class="contenedor-tarjetas">
-				<!-- Grid de fondo para las líneas de los meses -->
-				<div class="grid-fondo">
-					{#each columnasMeses as mes (mes.indice)}
-						<div class="grid-linea" style="width: {mes.ancho}px;"></div>
-					{/each}
-				</div>
-
-				{#each eventosProcesados as evento}
-					<div class="fila-evento">
-						<TarjetaCalendarioAnual {evento} />
-					</div>
-				{/each}
-			</div>
+<div class="calendario-contenedor panel">
+	<div class="cabecera-meses">
+		{#each columnasMeses as mes (mes.indice)}
+			<button
+				class="columna-mes"
+				style="width: {mes.ancho}px;"
+				onclick={() => ocultarMes(mes.indice)}
+				aria-label="Ocultar mes de {mes.nombre}"
+			>
+				{mes.nombre}
+			</button>
+		{/each}
+	</div>
+	<div class="contenedor-tarjetas">
+		<!-- Grid de fondo para las líneas de los meses -->
+		<div class="grid-fondo">
+			{#each columnasMeses as mes (mes.indice)}
+				<div class="grid-linea" style="width: {mes.ancho}px;"></div>
+			{/each}
 		</div>
-	{/snippet}
-</Lista>
+
+		{#each eventosProcesados as evento}
+			<div class="fila-evento">
+				<TarjetaCalendarioAnual {evento} />
+			</div>
+		{/each}
+	</div>
+</div>
 
 <style>
 	.calendario-contenedor {
