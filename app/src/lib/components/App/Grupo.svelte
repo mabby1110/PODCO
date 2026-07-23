@@ -1,7 +1,9 @@
 <script>
 	import { page } from '$app/state';
 	import { fases, fases_actividad } from '$lib';
+	import { appState } from '$lib/stores/appState.svelte';
 	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
+	import { tick } from 'svelte';
 
 	let { agrupacion, showByDefault = false, children } = $props();
 	let { clientes, agentes, oportunidades } = $state(page.data);
@@ -19,8 +21,7 @@
 				break;
 			default:
 				break;
-		}	
-		
+		}
 	} else if (categoria == 'id_cliente') {
 		let cliente = clientes.find((c) => c.id == agrupacion.grupo);
 		groupTitle = cliente.nombre_comercial || cliente.razon_social;
@@ -34,36 +35,49 @@
 	} else {
 		groupTitle = agrupacion.grupo;
 	}
+	let listRef = $state();
+
+	async function handleToggle() {
+		appState.toggleMin();
+		await tick();
+
+		if (listRef) {
+			listRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
+	}
 </script>
 
-<button class="group-header" onclick={() => (show = !show)}>
-	<p class="dia-header">{groupTitle} ({agrupacion.elementos.length})</p>
-</button>
+<div class="group-container">
+	<button class="group-header" onclick={handleToggle}>
+		<p class="dia-header">{groupTitle} ({agrupacion.elementos.length})</p>
+	</button>
 
-<hr />
-{#if show}
-	<div class="group-list">
-		{@render children()}
-	</div>
-{/if}
+	{#if show}
+		<div class="group-list" bind:this={listRef}>
+			{@render children()}
+		</div>
+	{/if}
+</div>
 
 <style>
 	.group-header {
 		all: unset;
 		padding: var(--a);
 		border-radius: var(--a);
+		z-index: 9;
+		background-color: white;
+		width: fit-content;
+		position: sticky;
+		top: 0;
 	}
 	.group-header:hover {
 		cursor: pointer;
-		opacity: 60%;
-		background-color: var(--color-highlight);
+		background-color: white;
 	}
 	.group-list {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
 		padding: var(--a);
-		max-height: 70vh;
-		overflow-y: auto;
 	}
 </style>

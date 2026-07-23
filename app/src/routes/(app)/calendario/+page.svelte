@@ -13,6 +13,6 @@
 </script>
 
 <div class="page-content">
-	<!-- <CalendarWeek {listaAgrupada} /> -->
-	 <CalendarioAnual/>
+	<CalendarWeek {listaAgrupada} />
+	 <!-- <CalendarioAnual/> -->
 </div>

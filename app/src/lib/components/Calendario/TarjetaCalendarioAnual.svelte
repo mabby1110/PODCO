@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { getStyleForPhase } from '$lib/utils/util';
+	import { goto } from '$app/navigation';
+import { getStyleForPhase } from '$lib/utils/util';
 
 	let { evento } = $props<{
 		evento: {
@@ -11,8 +12,8 @@
 	let style = $derived(getStyleForPhase(evento.fase));
 </script>
 
-<div class="tarjeta-wrapper" style="left: {evento.left}px; width: {evento.width}px; {style}">
-	
+<div class="tarjeta-wrapper" style="left: {evento.left}px; width: {evento.width}px; {style}" onclick={()=>goto(`/oportunidades/${evento.id}`)}>
+	{evento.clientes.nombre_comercial||evento.clientes.razon_social}
 </div>
 
 <style>
@@ -28,10 +29,12 @@
 			z-index 0s; /*[cite: 1] */
 		user-select: none; /*[cite: 1] */
 		-webkit-user-select: none; /*[cite: 1] */
+		overflow: hidden;
 	}
 
 	.tarjeta-wrapper:hover {
 		z-index: 999 !important; /*[cite: 1] */
 		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+		min-width: fit-content;
 	}
 </style>
