@@ -2,7 +2,7 @@
     import { enhance } from '$app/forms';
     import { appState } from '$lib/stores/appState.svelte';
     import FormNewClient from './FormNewClient.svelte';
-    import FormSelectAgente from '../App/form/FormSelectAgente.svelte';
+    import FormSelectAgente from '../form/FormSelectAgente.svelte';
     import { page } from '$app/state';
 	import { invalidateAll } from '$app/navigation';
 

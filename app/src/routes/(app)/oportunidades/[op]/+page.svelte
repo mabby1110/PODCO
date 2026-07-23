@@ -7,11 +7,11 @@
 	import OperActions from '$lib/components/Oportunidad/OperActions.svelte';
 	import Card from '$lib/components/App/Card.svelte';
 	import Entradas from '$lib/components/App/Entradas.svelte';
-	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
-	import CustomInput from '$lib/components/App/form/CustomInput.svelte';
+	import EditableInput from '$lib/components/form/EditableInput.svelte';
+	import CustomInput from '$lib/components/form/CustomInput.svelte';
 	import DatePicker from '$lib/components/App/DatePicker.svelte';
 	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
-	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
+	import TarjetaListaDocumentos from '$lib/components/Documentos/TarjetaListaDocumentos.svelte';
 	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
 	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';
 	import SubirOcc from '$lib/components/Documentos/SubirOcc.svelte';
@@ -168,7 +168,7 @@
 					{#if eventData.cotizaciones.length > 0}
 						<div class="block-content">
 							{#each eventData.cotizaciones as documento}
-								<CardDocPreview event={documento} />
+								<TarjetaListaDocumentos event={documento} />
 							{/each}
 						</div>
 					{/if}
@@ -195,7 +195,7 @@
 					{#if eventData.occ.length > 0}
 						<div class="block-content">
 							{#each eventData.occ as documento}
-								<CardDocPreview event={documento} />
+								<TarjetaListaDocumentos event={documento} />
 							{/each}
 						</div>
 					{/if}
@@ -233,7 +233,7 @@
 					/>
 					<div class="block-content">
 						{#each eventData.adjuntos as documento}
-							<CardDocPreview event={documento} />
+							<TarjetaListaDocumentos event={documento} />
 						{/each}
 					</div>
 				</section>
@@ -244,7 +244,7 @@
 					</div>
 					<div class="block-content">
 						{#each eventData.adjuntos as documento}
-							<CardDocPreview event={documento} />
+							<TarjetaListaDocumentos event={documento} />
 						{/each}
 					</div>
 				</section>

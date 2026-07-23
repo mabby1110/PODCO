@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import FormNewClient from '../Cliente/FormNewClient.svelte';
-	import FormConditionalInput from '../App/form/FormConditionalInput.svelte';
+	import FormConditionalInput from '../form/FormConditionalInput.svelte';
 
 	interface DataItem {
 		[key: string]: string | number | null | undefined;

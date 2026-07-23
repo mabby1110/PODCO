@@ -2,9 +2,9 @@
 	import { motivosProspeccion } from '$lib';
 	import { page } from '$app/state';
 	import FormInputAddContact from '$lib/components/Cliente/FormInputAddContact.svelte';
-	import FormOptionalInput from '../App/form/FormOptionalInput.svelte';
-	import FormInput from '../App/form/FormInput.svelte';
-	import FormSelectMotivo from '../App/form/FormSelectMotivo.svelte';
+	import FormOptionalInput from '../form/FormOptionalInput.svelte';
+	import FormInput from '../form/FormInput.svelte';
+	import FormSelectMotivo from '../form/FormSelectMotivo.svelte';
 
 	let {
 		isDuplicate = $bindable()

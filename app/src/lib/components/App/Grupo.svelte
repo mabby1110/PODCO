@@ -47,13 +47,13 @@
 	}
 </script>
 
-<div class="group-container">
+<div class="group-container" bind:this={listRef}>
 	<button class="group-header" onclick={handleToggle}>
 		<p class="dia-header">{groupTitle} ({agrupacion.elementos.length})</p>
 	</button>
 
 	{#if show}
-		<div class="group-list" bind:this={listRef}>
+		<div class="group-list">
 			{@render children()}
 		</div>
 	{/if}

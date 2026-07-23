@@ -4,7 +4,7 @@
 	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 	import { categoriasActividad, agrupacionesActividades } from '$lib';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import CardActividadListPreview from '$lib/components/Actividad/CardActividadListPreview.svelte';
+	import TarjetaListaActividades from '$lib/components/Actividad/TarjetaListaActividades.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 	import FiltroAgente from '$lib/components/App/FiltroAgente.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
@@ -12,7 +12,7 @@
 	import Filtro from '$lib/components/App/Filtro.svelte';
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
 	import Grupo from '$lib/components/App/Grupo.svelte';
-	import Lista from '$lib/components/App/Listas/Lista.svelte';
+	import Vista from '$lib/components/Listas/Vista.svelte';
 
 	let { actividades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -55,7 +55,7 @@
 	];
 </script>
 
-<Lista>
+<Vista>
 	{#snippet acciones()}
 		<Searchbar data={actividades} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
@@ -78,13 +78,13 @@
 	{#snippet contenido()}
 		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
 			{#each lista_ordenada as elemento}
-				<CardActividadListPreview event={elemento} />
+				<TarjetaListaActividades event={elemento} />
 			{/each}
 		{:else}
 			{#each lista_agrupada_filtrada as agrupacion (agrupacion.grupo)}
 				<Grupo {agrupacion} showByDefault={show}>
 					{#each agrupacion.elementos as event (event.id)}
-						<CardActividadListPreview {event} />
+						<TarjetaListaActividades {event} />
 					{/each}
 				</Grupo>
 			{:else}
@@ -94,4 +94,4 @@
 			{/each}
 		{/if}
 	{/snippet}
-</Lista>
+</Vista>

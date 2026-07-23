@@ -3,7 +3,6 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
-	import Lista from '$lib/components/App/Listas/Lista.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
@@ -11,8 +10,9 @@
 	import Filtro from '$lib/components/App/Filtro.svelte';
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
 	import Grupo from '$lib/components/App/Grupo.svelte';
-	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
+	import TarjetaListaOportunidades from '$lib/components/Oportunidad/TarjetaListaOportunidades.svelte';
 	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
+	import Vista from '$lib/components/Listas/Vista.svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -50,7 +50,7 @@
 	let show = $derived($appState.min);
 </script>
 
-<Lista>
+<Vista>
 	{#snippet acciones()}
 		<Searchbar
 			data={oportunidades}
@@ -78,13 +78,13 @@
 	{#snippet contenido()}
 		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
 			{#each lista_ordenada as elemento}
-				<CardOpListPreview event={elemento} />
+				<TarjetaListaOportunidades event={elemento} />
 			{/each}
 		{:else}
 			{#each lista_agrupada_filtrada as agrupacion (agrupacion.grupo)}
 				<Grupo {agrupacion} showByDefault={show}>
 					{#each agrupacion.elementos as event (event.id)}
-						<CardOpListPreview {event} />
+						<TarjetaListaOportunidades {event} />
 					{/each}
 				</Grupo>
 			{:else}
@@ -94,4 +94,4 @@
 			{/each}
 		{/if}
 	{/snippet}
-</Lista>
+</Vista>

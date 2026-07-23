@@ -4,9 +4,9 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import EditableSelect from '$lib/components/Cliente/EditableSelect.svelte';
 	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
-	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
+	import TarjetaListaOportunidades from '$lib/components/Oportunidad/TarjetaListaOportunidades.svelte';
 	import Card from '$lib/components/App/Card.svelte';
-	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
+	import EditableInput from '$lib/components/form/EditableInput.svelte';
 
 	let { cliente, agentes } = $derived(page.data);
 
@@ -172,7 +172,7 @@
 		<div class="op-list">
 			{#if cliente.oportunidades.length > 0}
 				{#each cliente.oportunidades as op}
-					<CardOpListPreview event={op} />
+					<TarjetaListaOportunidades event={op} />
 				{/each}
 			{/if}
 		</div>

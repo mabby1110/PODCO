@@ -4,32 +4,44 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { getStyleForPhase } from '$lib/utils/util';
-	import ListPreview from '../App/Listas/ListPreview.svelte';
+	import ListPreview from '../Listas/ListPreview.svelte';
 
 	let { event } = $props();
-	const { agentes } = $derived(page.data);
+	const { clientes, agentes } = $derived(page.data);
 
 	const eventData = $derived.by(() => {
 		if (!event) return null;
-
 		return {
 			id: event.id,
+			nombre_comercial:
+				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.nombre_comercial ?? '',
+			razon_social:
+				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases.find((f) => f.id_fase == event.fase),
 			motivo: event?.motivo,
-			inicio: event?.inicio,
+			inicio: event?.inicio.split(' ')[0],
+			fin: event?.fin,
 			historia: event.historia,
 			requisitos: event.requisitos,
+			observaciones: event.observaciones,
+			cotizaciones_ganadas: event.cotizaciones_ganadas,
+			cotizaciones_presentadas: event.cotizaciones_presentadas,
+			oc_cliente: event.oc_cliente,
+			documentos_operacion: event.documentos_operacion,
+			documentos: event.documentos,
 			objetivo: event.objetivo,
 			style: getStyleForPhase(event.fase)
 		};
 	});
 </script>
 
-<ListPreview href="/actividades/{event.id}" style={eventData?.style}>
+<ListPreview href="/oportunidades/{event.id}" style={eventData?.style}>
 	{#snippet header()}
-		<h3>{eventData?.motivo}</h3>
+		<h3>{eventData?.razon_social || eventData?.nombre_comercial}</h3>
+		<p>{eventData?.motivo}</p>
 	{/snippet}
+
 	{#snippet content()}
 		{#if eventData?.objetivo}
 			<div class="brief">
@@ -37,9 +49,10 @@
 				<p>{eventData?.objetivo}</p>
 			</div>
 		{/if}
+
 		{#if eventData?.historia}
 			<div class="brief">
-				<h3>Historia</h3>
+				<b>Historia</b>
 				<div class="entradas">
 					{#each JSON.parse(eventData?.historia) as item}
 						<div class="entrada">
@@ -52,13 +65,10 @@
 					{/each}
 				</div>
 			</div>
-		{:else}
-			<p>no hay entradas</p>
 		{/if}
 	{/snippet}
-
 	{#snippet meta()}
-		<p>{formatDateFull(parseDateTimeLocal(eventData?.inicio))}</p>
 		<p>{eventData?.agente?.nombre}</p>
+		<p>{eventData?.inicio}</p>
 	{/snippet}
 </ListPreview>

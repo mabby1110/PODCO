@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { formatCurrency } from '$lib/utils/util';
-	import ListPreview from '../App/Listas/ListPreview.svelte';
+	import ListPreview from '../Listas/ListPreview.svelte';
 
 	let { event } = $props();
 </script>
@@ -11,19 +11,19 @@
 		<h3>{event?.titulo}</h3>
 	{/snippet}
 	{#snippet content()}
-		{#if event?.id_agente}
-			<div class="brief">
-				<p>
-					<b>id_agente:</b>
-					{event.id_agente}
-				</p>
-			</div>
-		{/if}
 		{#if event?.id_oportunidad}
 			<div class="brief">
 				<a href="/oportunidades/{event.id_oportunidad}">
 					<b>id_oportunidad:</b>
 					{event.id_oportunidad}
+				</a>
+			</div>
+		{/if}
+		{#if event?.id_actividad}
+			<div class="brief">
+				<a href="/actividades/{event.id_actividad}">
+					<b>id_actividad:</b>
+					{event.id_actividad}
 				</a>
 			</div>
 		{/if}
@@ -43,6 +43,7 @@
 					title="Descripción del documento"
 					loading="lazy"
 					height="100%"
+					width="100%"
 				></iframe>
 			</div>
 		{/if}

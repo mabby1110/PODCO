@@ -1,17 +1,17 @@
 <script lang="ts">
 	import DatePicker from '$lib/components/App/DatePicker.svelte';
-	import FormOptionalSubmit from '$lib/components/App/form/FormOptionalSubmit.svelte';
-	import FormOptionalInput from '$lib/components/App/form/FormOptionalInput.svelte';
+	import FormOptionalSubmit from '$lib/components/form/FormOptionalSubmit.svelte';
+	import FormOptionalInput from '$lib/components/form/FormOptionalInput.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
 	import { fases, motivosOportunidad } from '$lib';
-	import FormInput from '../App/form/FormInput.svelte';
+	import FormInput from '../form/FormInput.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
-	import FormActions from '../App/form/FormActions.svelte';
+	import FormActions from '../form/FormActions.svelte';
 
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import FormSelectMotivo from '../App/form/FormSelectMotivo.svelte';
+	import FormSelectMotivo from '../form/FormSelectMotivo.svelte';
 	import UploadFile from '../App/UploadFile.svelte';
-	import CustomInput from '../App/form/CustomInput.svelte';
+	import CustomInput from '../form/CustomInput.svelte';
 
 	let { eventData, isEditing = $bindable() }: { eventData: any; isEditing?: boolean } = $props();
 

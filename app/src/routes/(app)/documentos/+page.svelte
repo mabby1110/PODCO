@@ -4,14 +4,14 @@
 	import { agrupacionesDocumentos, categoriasDocumentos } from '$lib';
 	import { page } from '$app/state';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import Lista from '$lib/components/App/Listas/Lista.svelte';
+	import Vista from '$lib/components/Listas/Vista.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 	import FiltroAgente from '$lib/components/App/FiltroAgente.svelte';
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
 	import Grupo from '$lib/components/App/Grupo.svelte';
-	import CardDocPreview from '$lib/components/Documentos/CardDocPreview.svelte';
+	import TarjetaListaDocumentos from '$lib/components/Documentos/TarjetaListaDocumentos.svelte';
 	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 
 	let { documentos } = $derived(page.data);
@@ -51,7 +51,7 @@
 	let show = $derived($appState.min);
 </script>
 
-<Lista>
+<Vista>
 	{#snippet acciones()}
 		<Searchbar data={documentos} keyColumns={categoriasDocumentos.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
@@ -68,16 +68,16 @@
 	{#snippet contenido()}
 		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
 			{#each lista_ordenada as elemento}
-				<CardDocPreview event={elemento} />
+				<TarjetaListaDocumentos event={elemento} />
 			{/each}
 		{:else}
 			{#each lista_agrupada_filtrada as agrupacion (agrupacion.grupo)}
 				<Grupo {agrupacion} showByDefault={show}>
 					{#each agrupacion.elementos as event (event.id)}
-						<CardDocPreview {event} />
+						<TarjetaListaDocumentos {event} />
 					{/each}
 				</Grupo>
 			{/each}
 		{/if}
 	{/snippet}
-</Lista>
+</Vista>

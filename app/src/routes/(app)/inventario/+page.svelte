@@ -4,12 +4,12 @@
 	import { agrupacionesInventario, categoriasInventario } from '$lib';
 	import { page } from '$app/state';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import Lista from '$lib/components/App/Listas/Lista.svelte';
+	import Vista from '$lib/components/Listas/Vista.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
 	import Grupo from '$lib/components/App/Grupo.svelte';
-	import PreviewListaProducto from '$lib/components/Inventario/PreviewListaProducto.svelte';
+	import TarjetaListaInventario from '$lib/components/Inventario/TarjetaListaInventario.svelte';
 	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
 	import Panel from '$lib/components/App/Panel.svelte';
 	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
@@ -57,7 +57,7 @@
 	}
 </script>
 
-<Lista>
+<Vista>
 	{#snippet acciones()}
 		<Searchbar
 			data={inventario}
@@ -90,13 +90,13 @@
 	{#snippet contenido()}
 		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
 			{#each lista_ordenada as elemento}
-				<PreviewListaProducto producto={elemento} />
+				<TarjetaListaInventario producto={elemento} />
 			{/each}
 		{:else}
 			{#each lista_agrupada_filtrada as agrupacion (agrupacion.grupo)}
 				<Grupo {agrupacion} showByDefault={show}>
 					{#each agrupacion.elementos as elemento (elemento.id)}
-						<PreviewListaProducto producto={elemento} />
+						<TarjetaListaInventario producto={elemento} />
 					{/each}
 				</Grupo>
 			{:else}
@@ -106,4 +106,4 @@
 			{/each}
 		{/if}
 	{/snippet}
-</Lista>
+</Vista>

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import DatePicker from '$lib/components/App/DatePicker.svelte';
-	import FormOptionalSubmit from '$lib/components/App/form/FormOptionalSubmit.svelte';
-	import FormOptionalInput from '$lib/components/App/form/FormOptionalInput.svelte';
+	import FormOptionalSubmit from '$lib/components/form/FormOptionalSubmit.svelte';
+	import FormOptionalInput from '$lib/components/form/FormOptionalInput.svelte';
 	import { getStyleForPhase } from '$lib/utils/util';
-	import FormInput from '../App/form/FormInput.svelte';
+	import FormInput from '../form/FormInput.svelte';
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
-	import FormActions from '../App/form/FormActions.svelte';
+	import FormActions from '../form/FormActions.svelte';
 	import UploadFile from '../App/UploadFile.svelte';
 
 	let { eventData } = $props();

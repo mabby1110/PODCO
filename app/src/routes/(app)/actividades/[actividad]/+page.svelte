@@ -11,8 +11,8 @@
 	import { postActivityUpdate } from '$lib/utils/actions.js';
 	import { invalidateAll } from '$app/navigation';
 	import Entradas from '$lib/components/App/Entradas.svelte';
-	import EditableInput from '$lib/components/App/form/EditableInput.svelte';
-	import CustomInput from '$lib/components/App/form/CustomInput.svelte';
+	import EditableInput from '$lib/components/form/EditableInput.svelte';
+	import CustomInput from '$lib/components/form/CustomInput.svelte';
 	import DatePicker from '$lib/components/App/DatePicker.svelte';
 
 	let { data } = $props();

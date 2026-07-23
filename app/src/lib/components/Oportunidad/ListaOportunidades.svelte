@@ -1,17 +1,17 @@
 <script lang="ts">
-	import CardOpListPreview from '$lib/components/Oportunidad/CardOpListPreview.svelte';
-	import Filtro from '$lib/components/App/Filtro.svelte';
-	import { appState } from '$lib/stores/appState.svelte';
-	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
-	import Agrupaciones from '../App/Agrupaciones.svelte';
-	import Grupo from '../App/Grupo.svelte';
-	import Leyenda from '../Leyenda.svelte';
-	import PanelFiltros from '../App/PanelFiltros.svelte';
-	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import { page } from '$app/state';
-	import Searchbar from '../App/Searchbar.svelte';
-	import FiltroAgente from '../App/FiltroAgente.svelte';
-	import ExportarCSV from '../App/ExportarCSV.svelte';
+	import { page } from "$app/state";
+	import { agrupacionesOportunidades, categoriasOportunidad } from "$lib";
+	import { appState } from "$lib/stores/appState.svelte";
+	import { agruparDatosPorRuta, obtenerDatosFiltrados } from "$lib/utils/filtro";
+	import Agrupaciones from "../App/Agrupaciones.svelte";
+	import ExportarCSV from "../App/ExportarCSV.svelte";
+	import Filtro from "../App/Filtro.svelte";
+	import FiltroAgente from "../App/FiltroAgente.svelte";
+	import Grupo from "../App/Grupo.svelte";
+	import PanelFiltros from "../App/PanelFiltros.svelte";
+	import Searchbar from "./Searchbar.svelte";
+	import TarjetaListaOportunidades from "./TarjetaListaOportunidades.svelte";
+
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -78,7 +78,7 @@
 		{#each lista_agrupada_filtrada as agrupacion (agrupacion.grupo)}
 			<Grupo {agrupacion} showByDefault={show}>
 				{#each agrupacion.elementos as event (event.id)}
-					<CardOpListPreview {event} />
+					<TarjetaListaOportunidades {event} />
 				{/each}
 			</Grupo>
 		{:else}
