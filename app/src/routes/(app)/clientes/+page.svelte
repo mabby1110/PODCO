@@ -56,11 +56,11 @@
 		<Searchbar data={clientes} keyColumns={categoriasCliente.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
-				<FiltroAgente />
+				<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
-				<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
+				<FiltroAgente />
 				<Filtro categorias={categoriasCliente} />
 				<Agrupaciones categorias={agrupacionesCliente} bind:agrupacionesSeleccionadas {grupos} />
 			{/snippet}

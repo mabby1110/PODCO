@@ -60,12 +60,12 @@
 		<Searchbar data={actividades} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
-				<FiltroAgente />
+				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 				<ExportarCSV {lista_ordenada} />
 				<!-- <Leyenda {steps} /> -->
 			{/snippet}
 			{#snippet controles()}
-				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+				<FiltroAgente />
 				<Filtro categorias={categoriasActividad} />
 				<Agrupaciones
 					categorias={agrupacionesActividades}

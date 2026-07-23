@@ -51,15 +51,15 @@
 	let show = $derived($appState.min);
 </script>
 
-<Lista header="Documentos">
+<Lista>
 	{#snippet acciones()}
 		<Searchbar data={documentos} keyColumns={categoriasDocumentos.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
-				<FiltroAgente />
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
+				<FiltroAgente />
 				<Filtro categorias={categoriasDocumentos} />
 				<Agrupaciones categorias={agrupacionesDocumentos} bind:agrupacionesSeleccionadas {grupos} />
 			{/snippet}

@@ -60,10 +60,10 @@
 		<PanelFiltros>
 			{#snippet header()}
 				<!-- <Leyenda /> -->
+				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
-				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 				<FiltroAgente />
 				<Filtro categorias={categoriasOportunidad} />
 				<Agrupaciones

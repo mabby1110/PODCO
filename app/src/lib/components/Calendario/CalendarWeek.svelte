@@ -187,10 +187,12 @@
 			<button onclick={nextWeek} class="butter nav-btn" title="Semana siguiente"> → </button>
 		</div>
 		<PanelFiltros>
-			{#snippet header()}{/snippet}
-			{#snippet controles()}
+			{#snippet header()}
 				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+			{/snippet}
+			{#snippet controles()}
+				<FiltroAgente />
 				{#if $profile?.isAdmin}
 					<button
 						onclick={() => appState.toggleDnd()}
@@ -203,7 +205,6 @@
 				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
 					{$appState.calendarCards ? '📏 Min' : '📐 Max'}
 				</button>
-				<FiltroAgente />
 			{/snippet}
 		</PanelFiltros>
 	</div>
@@ -355,8 +356,6 @@
 		right: 0;
 		z-index: 88;
 		padding: var(--a);
-		border-radius: var(--b) 0 0 0;
-		background-color: var(--y2k);
 
 		display: flex;
 		flex-wrap: wrap;
