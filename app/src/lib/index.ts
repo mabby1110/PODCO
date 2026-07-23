@@ -225,8 +225,7 @@ export const categoriasCliente = [
 	{ key: 'ciudad', label: 'Ciudad' },
 	{ key: 'estado', label: 'Estado' },
 	{ key: 'tipo_prospeccion', label: 'Origen/Prospección' },
-	{ key: 'op', label: 'Oportunidades abiertas' },
-	{ key: 'visitas', label: 'Visitas' },
+	{ key: 'oportunidades', label: 'Oportunidades' },
 	{ key: 'contactos', label: 'Contactos' }
 ];
 export const categoriasDocumentos = [
@@ -284,6 +283,7 @@ export const agrupacionesCalendario = [
 	{ value: 'fase', label: 'fase' },
 	{ value: 'motivo', label: 'motivo' }
 ];
+
 export const agrupacionesInventario = [
 	// {value: 'id', label:'id'},
 	{ value: 'categorias', label: 'categorias' },

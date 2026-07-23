@@ -37,7 +37,7 @@
 </script>
 
 <button class="group-header" onclick={() => (show = !show)}>
-	<h3 class="dia-header">{groupTitle} ({agrupacion.elementos.length})</h3>
+	<p class="dia-header">{groupTitle} ({agrupacion.elementos.length})</p>
 </button>
 
 <hr />

@@ -18,7 +18,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	let queryOportunidades = supabase
 		.from('oportunidades')
 		.select(
-			`*, profiles(*), clientes(*), docs_cotizaciones(*), docs_adjuntos(*), docs_occ(*),  docs_ocp(*)`
+			`*, profiles(*), clientes(*), docs_cotizaciones(*), docs_adjuntos(*), docs_occ(*),  docs_ocp(*), pedidos(*)`
 		)
 		.order('inicio', { ascending: false });
 	let queryActividades = supabase

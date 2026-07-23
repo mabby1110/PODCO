@@ -132,13 +132,13 @@ export const actions: Actions = {
 				const { data, error } = await supabase
 					.from('pedidos')
 					.update({
-						cantidad: pedido.cantidad,
-						precio_unitario: pedido.precio_unitario
+						...pedido
 					})
 					.eq('id', pedido.id)
 					.select()
 					.single();
 
+				console.log(error);
 				if (error) throw new Error(error.message);
 				return data;
 			});

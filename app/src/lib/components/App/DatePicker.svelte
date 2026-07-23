@@ -155,6 +155,10 @@
 
 	<div class="datetime-split">
 		<div class="datetime-item">
+			<span>Fecha</span>
+			<input class="butter" type="date" bind:value={fecha} required />
+		</div>
+		<div class="datetime-item">
 			<span>Duración</span>
 			<select class="butter" bind:value={duracion} required>
 				<option value="" disabled selected>Duración</option>
@@ -162,10 +166,6 @@
 					<option value={opcion.value}>{opcion.label}</option>
 				{/each}
 			</select>
-		</div>
-		<div class="datetime-item">
-			<span>Fecha</span>
-			<input class="butter" type="date" bind:value={fecha} required />
 		</div>
 		<div class="datetime-item">
 			<span>Hora</span>
@@ -217,7 +217,6 @@
 <style>
 	.datepicker {
 		display: flex;
-		width: 100%;
 		flex-wrap: wrap;
 		gap: var(--a, 16px);
 	}

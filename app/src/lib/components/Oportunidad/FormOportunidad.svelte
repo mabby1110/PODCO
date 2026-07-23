@@ -18,7 +18,6 @@
 	let clientes = $derived(data.clientes ?? []);
 
 	let necesidades = $state('');
-	let potencial_venta = $state('');
 	let objetivo = $state('');
 	let observaciones = $state(opModalStore.observaciones || '');
 
@@ -44,7 +43,7 @@
 		const baseValid = !!(objetivo && (selectedClient || newCLient) && selectedAgent);
 
 		if (isOpen) {
-			isValid = baseValid && !!(necesidades && potencial_venta);
+			isValid = baseValid && necesidades;
 		} else {
 			isValid = baseValid;
 		}
@@ -73,7 +72,7 @@
 		hint="ej. levantamiento técnico en sitio,  o presentar cotización"
 		required
 	/>
-	<FormOptionalInput title="+Observaciones" openByDefault>
+	<FormOptionalInput title="+Observaciones">
 		<FormInput
 			label="Observaciones"
 			name="observaciones"
@@ -89,14 +88,6 @@
 				name="necesidades"
 				bind:value={necesidades}
 				placeholder="Requerimiento técnico u operacional detectados"
-				type="textarea"
-				required
-			/>
-			<FormInput
-				label="Potencial de venta"
-				name="potencial_venta"
-				bind:value={potencial_venta}
-				placeholder="Producto o servicio que tiene mayor probabilidad de venta"
 				type="textarea"
 				required
 			/>

@@ -15,9 +15,7 @@
 	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
 	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';
 	import SubirOcc from '$lib/components/Documentos/SubirOcc.svelte';
-	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
-	import FormOptionalInput from '$lib/components/App/form/FormOptionalInput.svelte';
-	import Searchbar from '$lib/components/App/Searchbar.svelte';
+	import ActualizarPedido from '$lib/components/Pedidos/ActualizarPedido.svelte';
 
 	let { data } = $props();
 
@@ -57,7 +55,7 @@
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let isEditing = $state(false);
 
-	console.log(eventData?.pedidos);
+	console.log('eventData?.pedidos', eventData?.pedidos);
 </script>
 
 {#if eventData}
@@ -157,9 +155,11 @@
 				{isEditing}
 			/>
 
-			<!-- {#if currentFase >= 1}
-				<Searchbar data={pedidos} keyColumns={['id_oportunidad']} showResults />
-			{/if} -->
+			{#if eventData.pedidos}
+				{eventData.pedidos.length}
+			{:else if currentFase >= 1 && currentFase <= 3}
+				<ActualizarPedido />
+			{/if}
 			{#if currentFase >= 2}
 				<section class="cotizacion">
 					<div class="block-header">
