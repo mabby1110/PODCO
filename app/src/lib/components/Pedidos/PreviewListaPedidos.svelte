@@ -51,7 +51,7 @@
 				disabled={sinStock}
 				onchange={(e) => {
 					item.stock = e.currentTarget.checked;
-					item.piezas = item.stock ? 0 : 1;
+					item.piezas = 1;
 				}}
 			/>
 		</span>

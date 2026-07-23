@@ -44,9 +44,9 @@
 <div class="headers">
 	<span>Descripción</span>
 	<span>Código</span>
-	<span>Moneda</span>
-	<span>P/U</span>
 	<span>Cantidad</span>
+	<span>P/U</span>
+	<span>Moneda</span>
 	<span>total</span>
 </div>
 <div class="pedidos">
@@ -58,13 +58,13 @@
 					<span class="codigo">
 						{item.inventario.serie || item.inventario.codigo || 'sin código'}
 					</span>
-					<span>USD</span>
-					<span>
-						<p>${item.precio_unitario}</p>
-					</span>
 					<span>
 						{item.cantidad}
 					</span>
+					<span>
+						<p>${item.precio_unitario||0}</p>
+					</span>
+					<span>USD</span>
 					<span class="total">
 						{formatCurrency(String(item.precio_unitario * item.cantidad), 'USD')}
 					</span>

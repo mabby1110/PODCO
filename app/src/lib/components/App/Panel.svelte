@@ -98,12 +98,10 @@
 		style={isMaximized ? '' : `transform: translate(${x}px, ${y}px);`}
 	>
 		<div class="header-actions" onmousedown={onMouseDown}>
-			<button class="butter chile" type="button" onclick={() => (show = false)}>✕</button>
-			<button class="butter honey" type="button" onclick={resetPosition}>◥</button>
-			<p class="panel-title">{tituloBoton}</p>
 			{#if header}
 				{@render header()}
 			{/if}
+			<p class="panel-title">{tituloBoton}</p>
 			<button
 				class="butter honey max-window"
 				type="button"
@@ -114,6 +112,8 @@
 			>
 				<img src="/max-win.svg" alt="max-win" />
 			</button>
+			<button class="butter honey" type="button" onclick={resetPosition}>◥</button>
+			<button class="butter chile" type="button" onclick={() => (show = false)}>✕</button>
 		</div>
 		<div class="contenido">
 			{#if contenido}
@@ -130,10 +130,11 @@
 	.panel-controls {
 		position: fixed;
 		top: 0;
-		right: var(--a);
+		right: 0;
 		max-width: 700px;
-		width: 94%;
-		height: 80%;
+		height: fit-content;
+		max-height: 60%;
+		min-height: var(--g);
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;
@@ -173,13 +174,13 @@
 	/* Reglas para la ventana maximizada */
 	.maximized {
 		position: fixed !important;
-		top: 1vh !important;
-		left: 1vw !important;
-		right: auto !important;
-		width: 98vw !important;
-		height: 90% !important;
-		max-width: none !important;
+		top: 0 !important;
+		width: 100% !important;
+		height: 100% !important;
+		max-height: 88dvh !important;
+		max-width: 100dvw !important;
 		z-index: 9999;
+		min-height: var(--g);
 	}
 
 	.maximized .header-actions {

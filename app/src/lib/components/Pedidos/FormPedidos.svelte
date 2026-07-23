@@ -37,13 +37,13 @@
 	});
 </script>
 
-<div class="headers" style="font-weight: bold;">
+<div class="headers">
 	<span>Descripción</span>
 	<span>Código</span>
-	<span>Cantidad</span>
-	<span>Moneda</span>
-	<span>P/U</span>
 	<span>Stock</span>
+	<span>Cantidad</span>
+	<span>P/U</span>
+	<span>Moneda</span>
 	<span>Total</span>
 </div>
 <div class="movimiento">

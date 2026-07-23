@@ -66,7 +66,7 @@
 		/>
 		<Panel tituloBoton="Pedidos">
 			{#snippet header()}
-				<button class="butter" onclick={handleview}>{view ? 'Borrador' : 'Lista'}</button>
+				<button class="butter" onclick={handleview}>{view ? '+Borrador' : 'Lista'}</button>
 			{/snippet}
 			{#snippet contenido()}
 				{#if view}

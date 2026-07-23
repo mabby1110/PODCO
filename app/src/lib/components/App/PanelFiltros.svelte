@@ -90,20 +90,20 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={panel}
-		class="{quadrantY} {quadrantX} {absolute ? 'panel-controls-local' : 'panel-controls'}"
+		class="panel {absolute ? 'panel-controls-local' : 'panel-controls'}"
 		style="transform: translate({x}px, {y}px);"
 	>
-		<div class="panel header-actions" onmousedown={onMouseDown}>
-			<button class="butter chile" type="button" onclick={() => (showFilter = false)}>✕</button>
-			<button class="butter honey" type="button" onclick={resetPosition}>◥</button>
-			<p class="panel-title">{tituloBoton}</p>
+		<div class="header-actions" onmousedown={onMouseDown}>
 			<div class="custom">
 				{#if header}
 					{@render header()}
 				{/if}
 			</div>
+			<p class="panel-title">{tituloBoton}</p>
+			<button class="butter honey" type="button" onclick={resetPosition}>◥</button>
+			<button class="butter chile" type="button" onclick={() => (showFilter = false)}>✕</button>
 		</div>
-		<div class="panel content-actions">
+		<div class="content-actions">
 			{#if controles}
 				{@render controles()}
 			{/if}
@@ -122,11 +122,12 @@
 		position: fixed;
 		top: 0;
 		right: 0;
-		right: var(--a);
 		display: flex;
 		gap: var(--a);
 		max-width: fit-content;
 		z-index: 99;
+		display: flex;
+		flex-direction: column;
 	}
 	.panel-controls-local {
 		position: absolute;
@@ -137,38 +138,14 @@
 		flex-wrap: wrap;
 		gap: var(--a);
 		z-index: 99;
+		display: flex;
+		flex-direction: column;
 	}
 	.content-actions {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
-	}
-	.panel-controls.top,
-	.panel-controls.bottom {
-		flex-direction: column;
-	}
-	.panel-controls.left :global(.contenedor-agrupaciones:last-child),
-	.panel-controls.left :global(.contenedor-filtro) {
-		display: flex;
-		justify-content: flex-start;
-	}
-
-	.panel-controls.right :global(.contenedor-agrupaciones:last-child),
-	.panel-controls.right :global(.contenedor-filtro) {
-		display: flex;
-		justify-content: flex-end;
-	}
-
-	.panel-controls-local.left :global(.contenedor-agrupaciones:last-child),
-	.panel-controls-local.left :global(.contenedor-filtro) {
-		display: flex;
-		justify-content: flex-start;
-	}
-
-	.panel-controls-local.right :global(.contenedor-agrupaciones:last-child),
-	.panel-controls-local.right :global(.contenedor-filtro) {
-		display: flex;
-		justify-content: flex-end;
+		padding: var(--a);
 	}
 
 	.header-actions:active {
@@ -184,13 +161,13 @@
 		gap: var(--a);
 		cursor: grab;
 		user-select: none;
+		padding: var(--a) var(--a) 4px;
 	}
 	.header-actions .custom {
 		flex-grow: 1;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0 var(--a);
-		justify-content: flex-end;
 		align-items: center;
 	}
 	.header-actions.is-dragging > * {
