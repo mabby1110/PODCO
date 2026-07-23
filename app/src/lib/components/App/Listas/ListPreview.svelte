@@ -86,7 +86,7 @@
 	.list-card-preview {
 		display: flex;
 		flex-wrap: wrap;
-		padding-right: 4px;
+		padding: 4px;
 		cursor: pointer;
 	}
 	.list-card-header {

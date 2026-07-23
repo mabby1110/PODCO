@@ -92,14 +92,14 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={panel}
-		class="panel {quadrantY} {quadrantX} {absolute
-			? 'panel-controls-local'
-			: 'panel-controls'} {isMaximized ? 'maximized' : ''}"
+		class="panel {absolute ? 'panel-controls-local' : 'panel-controls'} {isMaximized
+			? 'maximized'
+			: ''}"
 		style={isMaximized ? '' : `transform: translate(${x}px, ${y}px);`}
 	>
 		<div class="header-actions" onmousedown={onMouseDown}>
 			<button class="butter chile" type="button" onclick={() => (show = false)}>✕</button>
-            <button class="butter honey" type="button" onclick={resetPosition}>◥</button>
+			<button class="butter honey" type="button" onclick={resetPosition}>◥</button>
 			<p class="panel-title">{tituloBoton}</p>
 			{#if header}
 				{@render header()}
@@ -115,9 +115,11 @@
 				<img src="/max-win.svg" alt="max-win" />
 			</button>
 		</div>
-		{#if contenido}
-			{@render contenido()}
-		{/if}
+		<div class="contenido">
+			{#if contenido}
+				{@render contenido()}
+			{/if}
+		</div>
 	</div>
 {/if}
 <button class="butter {show ? 'active' : ''}" onclick={() => (show = !show)}>
@@ -129,10 +131,12 @@
 		position: fixed;
 		top: 0;
 		right: var(--a);
-		display: flex;
-		gap: var(--a);
 		max-width: 700px;
 		width: 94%;
+		height: 80%;
+		display: flex;
+		gap: var(--a);
+		flex-direction: column;
 	}
 	.panel-controls-local {
 		position: sticky;
@@ -143,33 +147,7 @@
 		flex-wrap: wrap;
 		gap: var(--a);
 	}
-	.panel-controls.top,
-	.panel-controls.bottom {
-		flex-direction: column;
-	}
-	.panel-controls.left :global(.contenedor-agrupaciones:last-child),
-	.panel-controls.left :global(.contenedor-filtro) {
-		display: flex;
-		justify-content: flex-end;
-	}
 
-	.panel-controls.right :global(.contenedor-agrupaciones:last-child),
-	.panel-controls.right :global(.contenedor-filtro) {
-		display: flex;
-		justify-content: flex-start;
-	}
-
-	.panel-controls-local.left :global(.contenedor-agrupaciones:last-child),
-	.panel-controls-local.left :global(.contenedor-filtro) {
-		display: flex;
-		justify-content: flex-end;
-	}
-
-	.panel-controls-local.right :global(.contenedor-agrupaciones:last-child),
-	.panel-controls-local.right :global(.contenedor-filtro) {
-		display: flex;
-		justify-content: flex-start;
-	}
 	.header-actions:active {
 		cursor: grabbing;
 	}
@@ -183,11 +161,15 @@
 		gap: var(--a);
 		cursor: grab;
 		user-select: none;
+		padding: var(--a) var(--a) 4px;
 	}
 	.panel-title {
 		flex-grow: 1;
 	}
-
+	.contenido {
+		flex-grow: 1;
+		overflow-y: auto;
+	}
 	/* Reglas para la ventana maximizada */
 	.maximized {
 		position: fixed !important;
@@ -195,7 +177,7 @@
 		left: 1vw !important;
 		right: auto !important;
 		width: 98vw !important;
-		height: 90vh !important;
+		height: 90% !important;
 		max-width: none !important;
 		z-index: 9999;
 	}

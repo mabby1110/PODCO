@@ -168,7 +168,6 @@ body {
 .panel {
 	border: none;
 	border-radius: var(--a);
-	padding: 4px var(--a);
 	background-color: var(--color-primary);
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(2px);
