@@ -198,6 +198,7 @@
 					<input type="hidden" name="fecha_pedido" value={new Date().toISOString()} />
 				{/if}
 			{:else if submitCancel}
+				<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 				<FormInput
 					label="Pérdida"
 					name="nuevaHistoria"

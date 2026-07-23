@@ -2,6 +2,7 @@
 	import CalendarWeek from '$lib/components/Calendario/CalendarWeek.svelte';
 	import { page } from '$app/state';
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
+	import CalendarioAnual from '$lib/components/Calendario/CalendarioAnual.svelte';
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));
@@ -12,5 +13,6 @@
 </script>
 
 <div class="page-content">
-	<CalendarWeek {listaAgrupada} />
+	<!-- <CalendarWeek {listaAgrupada} /> -->
+	 <CalendarioAnual/>
 </div>

@@ -97,12 +97,12 @@
 	<div class="form-group">
 		<DatePicker title="Fecha de seguimiento" />
 	</div>
-	{#if isOpen}
-		<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
-	{/if}
 
 	{#if selectedClient}
 		<input type="hidden" name="id_cliente" value={selectedClient?.id} required />
+	{/if}
+	{#if fase == 2}
+		<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
 	{/if}
 	<input type="hidden" name="fase" bind:value={fase} />
 </div>

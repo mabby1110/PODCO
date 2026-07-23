@@ -277,6 +277,10 @@ export function construirDatosOportunidad(
 			datosBrutos.fecha_creacion = new Date().toISOString();
 			continue;
 		}
+		if (clave === 'fecha_cierre' && !data.fecha_cierre) {
+			datosBrutos.fecha_cierre = new Date().toISOString();
+			continue;
+		}
 
 		// Conversión de Fase a Número
 		if (clave === 'fase' && datosBrutos.fase) {

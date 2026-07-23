@@ -1,16 +1,13 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	let { acciones, contenido }: { acciones: Snippet; contenido: Snippet } =
-		$props();
+	let { acciones, contenido }: { acciones: Snippet; contenido: Snippet } = $props();
 </script>
 
 <div class="view-container">
-	<div class="view-content">
-		{#if contenido}
-			{@render contenido()}
-		{/if}
-	</div>
+	{#if contenido}
+		{@render contenido()}
+	{/if}
 </div>
 <div class="view-controls">
 	{#if acciones}
@@ -27,12 +24,7 @@
 		overflow: auto;
 		max-width: 1200px;
 		margin: auto;
-	}
-	.view-content {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-		padding-bottom: 11vh;
+		padding-bottom: 12vh;
 	}
 	.view-controls {
 		position: fixed;
