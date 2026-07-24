@@ -131,7 +131,8 @@
 		position: fixed;
 		top: 0;
 		right: 0;
-		max-width: 700px;
+		max-width: 800px;
+		width: 100%;
 		height: fit-content;
 		max-height: 60%;
 		min-height: var(--g);

@@ -144,6 +144,7 @@
 						Procesar Salida
 					</button>
 				{:else if tipo === 'cotizacion'}
+				a
 					<button
 						class="butter submit"
 						type="submit"
