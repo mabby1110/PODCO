@@ -6,6 +6,7 @@ interface AppState {
 	dnd: boolean;
 	panelMinimized: boolean;
 	calendarCards: boolean;
+	calendarView: string;
 	ModalActivity: boolean;
 	ModalOp: boolean;
 	ModalClient: boolean;
@@ -22,6 +23,7 @@ const defaultState: AppState = {
 	dnd: false,
 	panelMinimized: false,
 	calendarCards: false,
+	calendarView: 'gant',
 	ModalActivity: false,
 	ModalOp: false,
 	ModalClient: false,
@@ -60,6 +62,12 @@ function createAppState() {
 		toggleMinimizedCalendarCards: () =>
 			update((state) => {
 				const newState = { ...state, calendarCards: !state.calendarCards };
+				saveToCookie(newState);
+				return newState;
+			}),
+		setCalendarView: (view: string) =>
+			update((state) => {
+				const newState = { ...state, calendarView: view };
 				saveToCookie(newState);
 				return newState;
 			}),

@@ -15,35 +15,32 @@
 		getMonth
 	} from '$lib/utils/agenda';
 
-	import { profile } from '$lib/stores/profileStore.svelte';
-	import { type Oportunidad } from '$lib';
+	import { categoriasOportunidad, type Oportunidad } from '$lib';
 	import CardActividadCalendarPreview from '../Actividad/CardActividadCalendarPreview.svelte';
-	import FiltroAgente from '../App/FiltroAgente.svelte';
-	import PanelFiltros from '../App/PanelFiltros.svelte';
 	import { page } from '$app/state';
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
+	import Vista from '../Listas/Vista.svelte';
+	import Select from '../App/Select.svelte';
+	import PanelFiltros from '../App/PanelFiltros.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
+	import FiltroAgente from '../App/FiltroAgente.svelte';
+	import Filtro from '../App/Filtro.svelte';
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));
 	let currentRoute = $derived(page.url.pathname);
 
-	const listaAgrupada = $derived.by(() => procesarDatosReactivos(allActivities, currentRoute));
-
-	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
-
-	const hoursRangePerDay = { start: 8, end: 19 };
-	const totalHours = hoursRangePerDay.end - hoursRangePerDay.start;
-
 	let SLOT_MINUTES = $derived($appState.calendarCards ? 10 : 60);
-
 	let calendarHeight = $state(0);
 
+	const listaAgrupada = $derived.by(() => procesarDatosReactivos(allActivities, currentRoute));
+	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
+	const hoursRangePerDay = { start: 8, end: 19 };
+	const totalHours = hoursRangePerDay.end - hoursRangePerDay.start;
 	const PIXELS_PER_HOUR = $derived(
 		$appState.calendarCards ? 120 : calendarHeight > 0 ? (calendarHeight - 60) / totalHours : 60
 	);
-
 	let CELL_HEIGHT = $derived((PIXELS_PER_HOUR / 60) * SLOT_MINUTES);
-
 	const hours = $derived(
 		Array.from({ length: (totalHours * 60) / SLOT_MINUTES }, (_, i) => {
 			const total = hoursRangePerDay.start * 60 + i * SLOT_MINUTES;
@@ -53,11 +50,9 @@
 			};
 		})
 	);
-
 	const eventList = $derived(listaAgrupada.flatMap((agrupacion: any) => agrupacion.elementos));
 	const weekDates = $derived(getWeekDates(calendarStore.weekOffset));
 	const weekRangeText = $derived(formatWeekRange(weekDates));
-
 	const weekEvents = $derived.by(() => {
 		return eventList.filter((event: Oportunidad) => {
 			const eventDate = new Date(event.inicio);
@@ -100,93 +95,132 @@
 			);
 		});
 	}
-
-	function previousWeek() {
-		calendarStore.weekOffset -= 1;
-	}
-	function nextWeek() {
-		calendarStore.weekOffset += 1;
-	}
-	function goToCurrentWeek() {
-		calendarStore.weekOffset = 0;
-	}
 </script>
 
-<div class="view-container">
-	<div
-		class="calendar"
-		bind:clientHeight={calendarHeight}
-		style="--dynamic-cell-height: {CELL_HEIGHT}px;"
-	>
-		<table>
-			<thead>
-				<tr>
-					<th class="corner">{getMonth(weekDates[0])}</th>
-					{#each weekDates as date, i}
-						<th>
-							<div class="day-header">
-								<div>{weekdays[i]}</div>
-								<div class="date-label">{formatDate(date)}</div>
-							</div>
-						</th>
-					{/each}
-				</tr>
-			</thead>
-			<tbody>
-				{#each hours as h}
+<Vista>
+	{#snippet acciones()}
+		<PanelFiltros>
+			{#snippet header()}
+				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+				<!-- {#if $profile?.isAdmin}
+					<button
+						onclick={() => appState.toggleDnd()}
+						class="butter toggle"
+						class:active={$appState.dnd}
+					>
+						✏️ Editar
+					</button>
+				{/if} -->
+				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+					{$appState.calendarCards ? 'Min' : 'Max'}
+				</button>
+			{/snippet}
+			{#snippet controles()}
+				<FiltroAgente />
+				<Filtro categorias={categoriasOportunidad} />
+			{/snippet}
+		</PanelFiltros>
+		<select
+			value={$appState.calendarView}
+			onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
+		>
+			<option value="gant">Gant Anual</option>
+			<option value="semanal">Semanal</option>
+		</select>
+		<div class="calendar-navigation">
+			<button
+				onclick={() => (calendarStore.weekOffset -= 1)}
+				class="butter nav-btn"
+				title="Semana anterior"
+			>
+				←
+			</button>
+			<button onclick={() => (calendarStore.weekOffset = 0)} class="butter current-week">
+				{weekRangeText}
+			</button>
+			<button
+				onclick={() => (calendarStore.weekOffset += 1)}
+				class="butter nav-btn"
+				title="Semana siguiente"
+			>
+				→
+			</button>
+		</div>
+	{/snippet}
+	{#snippet contenido()}
+		<div
+			class="calendar"
+			bind:clientHeight={calendarHeight}
+			style="--dynamic-cell-height: {CELL_HEIGHT}px;"
+		>
+			<table>
+				<thead>
 					<tr>
-						<td class="hour-cell">
-							{String(h.hour).padStart(2, '0')}:{String(h.minute).padStart(2, '0')}
-						</td>
-						{#each weekDates as date}
-							{@const eventosSuperpuestos = getEventsForSlot(h.hour, h.minute, date)}
-							<td
-								class="{$appState.calendarCards ? 'max' : ''} event-cell"
-								use:dropzone={{
-									on_dropzone: (eventId: string) => handleDrop(eventId, h.hour, h.minute, date)
-								}}
-							>
-								{#if eventosSuperpuestos.length > 0}
-									<div class="event-stack">
-										{#each eventosSuperpuestos as event, index}
-											{@const slots = calculateSlots(event.inicio, event.fin, SLOT_MINUTES)}
-											{@const totalConcurrentes = eventosSuperpuestos.length}
+						<th class="corner">{getMonth(weekDates[0])}</th>
+						{#each weekDates as date, i}
+							<th>
+								<div class="day-header">
+									<div>{weekdays[i]}</div>
+									<div class="date-label">{formatDate(date)}</div>
+								</div>
+							</th>
+						{/each}
+					</tr>
+				</thead>
+				<tbody>
+					{#each hours as h}
+						<tr>
+							<td class="hour-cell">
+								{String(h.hour).padStart(2, '0')}:{String(h.minute).padStart(2, '0')}
+							</td>
+							{#each weekDates as date}
+								{@const eventosSuperpuestos = getEventsForSlot(h.hour, h.minute, date)}
+								<td
+									class="{$appState.calendarCards ? 'max' : ''} event-cell"
+									use:dropzone={{
+										on_dropzone: (eventId: string) => handleDrop(eventId, h.hour, h.minute, date)
+									}}
+								>
+									{#if eventosSuperpuestos.length > 0}
+										<div class="event-stack">
+											{#each eventosSuperpuestos as event, index}
+												{@const slots = calculateSlots(event.inicio, event.fin, SLOT_MINUTES)}
+												{@const totalConcurrentes = eventosSuperpuestos.length}
 
-											<div
-												class="event-wrapper"
-												style="
+												<div
+													class="event-wrapper"
+													style="
                                                     width: {100 / totalConcurrentes}%;
                                                     left: {(100 / totalConcurrentes) * index}%;
                                                     height: {slots * CELL_HEIGHT}px;
 													min-height: var(--d);
                                                     z-index: {10 + index};
                                                 "
-											>
-												{#if event.id.toLowerCase().includes('op')}
-													<CardOpCalendarPreview {event} style="height: 100%; width: 100%;" />
-												{:else}
-													<CardActividadCalendarPreview
-														{event}
-														style="height: 100%; width: 100%;"
-													/>
-												{/if}
-											</div>
-										{/each}
-									</div>
-								{/if}
-							</td>
-						{/each}
-					</tr>
-				{/each}
-			</tbody>
-		</table>
-	</div>
-</div>
+												>
+													{#if event.id.toLowerCase().includes('op')}
+														<CardOpCalendarPreview {event} style="height: 100%; width: 100%;" />
+													{:else}
+														<CardActividadCalendarPreview
+															{event}
+															style="height: 100%; width: 100%;"
+														/>
+													{/if}
+												</div>
+											{/each}
+										</div>
+									{/if}
+								</td>
+							{/each}
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+	{/snippet}
+</Vista>
 
 <style>
-	.view-container {
-		height: 100%;
-	}
 	.calendar {
 		flex-grow: 1;
 		overflow: auto;

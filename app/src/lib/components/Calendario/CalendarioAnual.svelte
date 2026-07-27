@@ -2,14 +2,19 @@
 	import { page } from '$app/state';
 	import { categoriasOportunidad } from '$lib';
 	import { appState } from '$lib/stores/appState.svelte';
+	import { calendarStore } from '$lib/stores/calendarStore.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
+	import { formatWeekRange, getWeekDates } from '$lib/utils/agenda';
 	import { obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import Filtro from '../App/Filtro.svelte';
 	import FiltroAgente from '../App/FiltroAgente.svelte';
-	import Lista from '../App/Listas/Lista.svelte';
 	import PanelFiltros from '../App/PanelFiltros.svelte';
+	import Select from '../App/Select.svelte';
+	import Vista from '../Listas/Vista.svelte';
 	import TarjetaCalendarioAnual from './TarjetaCalendarioAnual.svelte';
+	import { onMount } from 'svelte';
 
-	let { oportunidades, actividades } = $derived(page.data);
+	let { oportunidades } = $derived(page.data);
 	let lista = $derived(obtenerDatosFiltrados(oportunidades, page.url.pathname));
 	const PX_POR_DIA = 8;
 	const MESES = [
@@ -31,7 +36,9 @@
 	const getDiasMes = (mes: number, anio: number) => new Date(anio, mes + 1, 0).getDate();
 
 	let mesesOcultos = $state<number[]>([]);
-
+	let contenedor = $state<HTMLElement>();
+	const weekDates = $derived(getWeekDates(calendarStore.weekOffset));
+	const weekRangeText = $derived(formatWeekRange(weekDates));
 	function ocultarMes(indice: number) {
 		if (!mesesOcultos.includes(indice)) {
 			mesesOcultos = [...mesesOcultos, indice];
@@ -66,6 +73,14 @@
 		}
 		return x;
 	}
+
+	const posicionHoy = $derived(calcularPosicionX(Date.now()));
+
+	onMount(() => {
+		if (contenedor) {
+			contenedor.scrollLeft = posicionHoy - contenedor.clientWidth / 2;
+		}
+	});
 
 	const eventosProcesados = $derived(
 		lista
@@ -111,34 +126,91 @@
 	);
 </script>
 
-<div class="calendario-contenedor panel">
-	<div class="cabecera-meses">
-		{#each columnasMeses as mes (mes.indice)}
+<Vista>
+	{#snippet acciones()}
+		<PanelFiltros>
+			{#snippet header()}
+				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+				{#if $profile?.isAdmin}
+					<button
+						onclick={() => appState.toggleDnd()}
+						class="butter toggle"
+						class:active={$appState.dnd}
+					>
+						✏️ Editar
+					</button>
+				{/if}
+				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+					{$appState.calendarCards ? '📏 Min' : '📐 Max'}
+				</button>
+			{/snippet}
+			{#snippet controles()}
+				<FiltroAgente />
+				<Filtro categorias={categoriasOportunidad} />
+			{/snippet}
+		</PanelFiltros>
+		<select
+			value={$appState.calendarView}
+			onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
+		>
+			<option value="gant">Gant Anual</option>
+			<option value="semanal">Semanal</option>
+		</select>
+		<div class="calendar-navigation">
 			<button
-				class="columna-mes"
-				style="width: {mes.ancho}px;"
-				onclick={() => ocultarMes(mes.indice)}
-				aria-label="Ocultar mes de {mes.nombre}"
+				onclick={() => (calendarStore.weekOffset -= 1)}
+				class="butter nav-btn"
+				title="Semana anterior"
 			>
-				{mes.nombre}
+				←
 			</button>
-		{/each}
-	</div>
-	<div class="contenedor-tarjetas">
-		<!-- Grid de fondo para las líneas de los meses -->
-		<div class="grid-fondo">
-			{#each columnasMeses as mes (mes.indice)}
-				<div class="grid-linea" style="width: {mes.ancho}px;"></div>
-			{/each}
+			<button onclick={() => (calendarStore.weekOffset = 0)} class="butter current-week">
+				{weekRangeText}
+			</button>
+			<button
+				onclick={() => (calendarStore.weekOffset += 1)}
+				class="butter nav-btn"
+				title="Semana siguiente"
+			>
+				→
+			</button>
 		</div>
-
-		{#each eventosProcesados as evento}
-			<div class="fila-evento">
-				<TarjetaCalendarioAnual {evento} />
+	{/snippet}
+	{#snippet contenido()}
+		<div class="calendario-contenedor panel" bind:this={contenedor}>
+			<div class="cabecera-meses">
+				{#each columnasMeses as mes (mes.indice)}
+					<button
+						class="columna-mes"
+						style="width: {mes.ancho}px;"
+						onclick={() => ocultarMes(mes.indice)}
+						aria-label="Ocultar mes de {mes.nombre}"
+					>
+						{mes.nombre}
+					</button>
+				{/each}
 			</div>
-		{/each}
-	</div>
-</div>
+			<div class="contenedor-tarjetas">
+				<!-- Grid de fondo para las líneas de los meses -->
+				<div class="grid-fondo">
+					{#each columnasMeses as mes (mes.indice)}
+						<div class="grid-linea" style="width: {mes.ancho}px;"></div>
+					{/each}
+				</div>
+
+				<!-- Línea indicadora de fecha actual -->
+				<div class="linea-fecha-actual" style="left: {posicionHoy}px;"></div>
+
+				{#each eventosProcesados as evento}
+					<div class="fila-evento">
+						<TarjetaCalendarioAnual {evento} />
+					</div>
+				{/each}
+			</div>
+		</div>
+	{/snippet}
+</Vista>
 
 <style>
 	.calendario-contenedor {
@@ -146,6 +218,7 @@
 		flex-direction: column;
 		width: 100%;
 		overflow: auto;
+		scroll-behavior: smooth;
 	}
 
 	.cabecera-meses {
@@ -171,19 +244,6 @@
 		display: flex;
 		flex-direction: column;
 		position: relative;
-	}
-
-	.fila-evento {
-		position: relative;
-		height: var(--d);
-		min-width: max-content;
-	}
-
-	.contenedor-tarjetas {
-		display: flex;
-		flex-direction: column;
-		position: relative;
-		/* Asegurar que el padding no desalinee el grid absoluto */
 		padding-top: var(--b);
 	}
 
@@ -203,10 +263,28 @@
 		height: 100%;
 	}
 
+	.linea-fecha-actual {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 1px;
+		background-color: var(--color-text, #ff0000);
+		z-index: 2;
+		pointer-events: none;
+	}
+
 	.fila-evento {
 		position: relative;
 		height: var(--d);
 		min-width: max-content;
-		z-index: 1; /* Posiciona las tarjetas sobre el grid de fondo */
+		z-index: 1;
+	}
+	.calendar-navigation {
+		display: flex;
+		gap: var(--a);
+	}
+	.calendar-navigation .current-week {
+		min-width: var(--g);
+		width: 100%;
 	}
 </style>

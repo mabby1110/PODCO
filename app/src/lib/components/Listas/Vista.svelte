@@ -22,7 +22,6 @@
 		gap: var(--a);
 		position: relative;
 		overflow: auto;
-		max-width: 1200px;
 		margin: auto;
 		padding-bottom: 12vh;
 	}
