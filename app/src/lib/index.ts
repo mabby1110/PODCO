@@ -21,12 +21,12 @@ export type Actividad = {
 export type Oportunidad = {
 	// del sistema
 	id: string;
-	id_agente: string;
 	fecha_creacion: string | Date;
 	historial_cambios: string;
 	inicio: string | Date;
 	fin: string | Date;
 	fecha_cierre: string | Date;
+	id_agente: string;
 	fase: number;
 	documentos: string;
 

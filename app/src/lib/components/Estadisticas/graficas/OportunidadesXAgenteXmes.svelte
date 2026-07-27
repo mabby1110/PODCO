@@ -1,10 +1,7 @@
 <script lang="ts">
-    import { page } from '$app/state';
-    import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
     import * as echarts from 'echarts';
     
     let {data} = $props();
-    let currentRoute = $derived(page.url.pathname);
 
     let lista_agrupada = $derived(data);
     console.log(lista_agrupada);

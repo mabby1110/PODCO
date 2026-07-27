@@ -92,10 +92,15 @@
 	.list-card-header {
 		flex-grow: 3;
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
+		gap: 0 var(--a);
 	}
 	:global(.list-card-header > *:nth-child(1)) {
-		grid-column: span 3;
+		grid-column: span 5;
+	}
+	:global(.list-card-header > *:nth-child(2)) {
+		grid-column: span 2;
+		font-weight: bold;
 	}
 	.list-card-content {
 		width: 100%;
@@ -112,6 +117,8 @@
 		font-size: smaller;
 		display: flex;
 		flex-wrap: wrap;
+		gap: 0 var(--a);
+		font-weight: bold;
 	}
 	.list-card-meta .actions {
 		font-size: smaller;
