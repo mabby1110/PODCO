@@ -126,33 +126,13 @@
 			}}
 		>
 			<div class="acciones">
-				<Select bind:selected={tipo} title="Tipo de movimiento" options={movimientos} />
-				{#if tipo === 'borrador'}
-					<button
-						class="butter submit"
-						type="submit"
-						disabled={StorePedidoNuevo.items.length === 0 && StorePedido.items.length === 0}
-					>
-						Guardar
-					</button>
-				{:else if tipo === 'salida'}
-					<button
-						class="butter submit"
-						type="submit"
-						disabled={StorePedidoNuevo.items.length === 0 && StorePedido.items.length === 0}
-					>
-						Procesar Salida
-					</button>
-				{:else if tipo === 'cotizacion'}
-				a
-					<button
-						class="butter submit"
-						type="submit"
-						disabled={StorePedidoNuevo.items.length === 0 && StorePedido.items.length === 0}
-					>
-						Crear Pedido
-					</button>
-				{/if}
+				<button
+					class="butter submit"
+					type="submit"
+					disabled={StorePedidoNuevo.items.length === 0 && StorePedido.items.length === 0}
+				>
+					Guardar
+				</button>
 			</div>
 		</form>
 	{/if}
@@ -171,7 +151,7 @@
 	}
 	.acciones {
 		display: flex;
-		justify-content: space-between;
+		justify-content: flex-end;
 		width: 100%;
 		gap: var(--a);
 	}

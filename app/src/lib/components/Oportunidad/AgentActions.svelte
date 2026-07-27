@@ -267,33 +267,31 @@
 		{/snippet}
 
 		{#snippet submitContent(isSubmitting: boolean)}
-			<div class="submit">
-				{#if !submit && !submitCancel}
-					<button type="button" class="butter {isEditing}" onclick={() => (isEditing = !isEditing)}>
-						Editar
-					</button>
-				{/if}
-				<FormOptionalSubmit
-					nextFase={eventData.fase.accion}
-					bind:submit
-					bind:submitCancel
-					bind:isOpen
-				/>
-				{#if submit}
-					<input type="hidden" name="fase" value={nextPhase} />
-					<button type="submit" class="butter" {style} disabled={isSubmitting || !canSubmit}>
-						{isSubmitting ? 'Procesando...' : eventData.fase.accion}
-					</button>
-				{:else if submitUpdate}
-					<input type="hidden" name="fase" value={currentPhase} />
-					<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}
-						>Actualizar</button
-					>
-				{:else if submitCancel}
-					<input type="hidden" name="fase" value={0} />
-					<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}>Perder</button>
-				{/if}
-			</div>
+			{#if !submit && !submitCancel}
+				<button type="button" class="butter {isEditing}" onclick={() => (isEditing = !isEditing)}>
+					Editar
+				</button>
+			{/if}
+			<FormOptionalSubmit
+				nextFase={eventData.fase.accion}
+				bind:submit
+				bind:submitCancel
+				bind:isOpen
+			/>
+			{#if submit}
+				<input type="hidden" name="fase" value={nextPhase} />
+				<button type="submit" class="butter" {style} disabled={isSubmitting || !canSubmit}>
+					{isSubmitting ? 'Procesando...' : eventData.fase.accion}
+				</button>
+			{:else if submitUpdate}
+				<input type="hidden" name="fase" value={currentPhase} />
+				<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}
+					>Actualizar</button
+				>
+			{:else if submitCancel}
+				<input type="hidden" name="fase" value={0} />
+				<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}>Perder</button>
+			{/if}
 		{/snippet}
 	</FormActions>
 {/if}
@@ -323,9 +321,5 @@
 		width: 100%;
 		flex-wrap: wrap;
 		gap: var(--a);
-	}
-	.submit {
-		position: fixed;
-		bottom: 0;
 	}
 </style>

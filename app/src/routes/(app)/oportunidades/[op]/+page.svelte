@@ -15,7 +15,8 @@
 	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
 	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';
 	import SubirOcc from '$lib/components/Documentos/SubirOcc.svelte';
-	import ActualizarPedido from '$lib/components/Pedidos/ActualizarPedido.svelte';
+	import RelacionarPedido from '$lib/components/Oportunidad/RelacionarPedido.svelte';
+	import PedidoRelacionado from '$lib/components/Oportunidad/PedidoRelacionado.svelte';
 
 	let { data } = $props();
 
@@ -54,8 +55,6 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let isEditing = $state(false);
-
-	console.log('eventData?.pedidos', eventData?.pedidos);
 </script>
 
 {#if eventData}
@@ -78,17 +77,15 @@
 				<p class="date">{eventData.inicio}</p>
 				<p class="date">|</p>
 				<p>{eventData?.agente?.nombre}</p>
+				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
 			</div>
 		{/snippet}
 
 		{#snippet content()}
-			<section>
-				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
-			</section>
-
-			<CustomInput action="/oportunidades?/update" id={eventData.id} {isEditing}>
-				<DatePicker />
+			<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData.id} {isEditing}>
+				<DatePicker/>
 			</CustomInput>
+
 			<EditableInput
 				{isEditing}
 				id={eventData.id}
@@ -147,6 +144,7 @@
 				action="/oportunidades?/update"
 				placeholder="Observaciones"
 			/>
+
 			<FormEditableContact
 				lista={eventData.cliente.contactos}
 				id={eventData.cliente.id}
@@ -155,36 +153,54 @@
 				{isEditing}
 			/>
 
-			{#if eventData.pedidos}
-				{eventData.pedidos.length}
-			{:else if currentFase >= 1 && currentFase <= 3}
-				<ActualizarPedido />
+			{#if currentFase == 1}
+				<section>
+					<div class="block-header">
+						<h2>Potencial de venta</h2>
+					</div>
+					<div class="block-content">
+						{#if eventData.pedidos.length > 0}
+							{#each eventData.pedidos as pedido}
+								<PedidoRelacionado {pedido} />
+							{/each}
+						{:else}
+							<RelacionarPedido id_oportunidad={eventData.id} />
+						{/if}
+					</div>
+				</section>
 			{/if}
 			{#if currentFase >= 2}
-				<section class="cotizacion">
+				<section>
 					<div class="block-header">
-						<h2>Cotizaciones</h2>
+						<h2>Cotizacion(es)</h2>
 					</div>
-					{#if eventData.cotizaciones.length > 0}
-						<div class="block-content">
-							{#each eventData.cotizaciones as documento}
-								<TarjetaListaDocumentos event={documento} />
+					<div class="block-content">
+						{#if eventData.pedidos.length > 0}
+							{#each eventData.pedidos as pedido}
+								<PedidoRelacionado {pedido} />
 							{/each}
-						</div>
-					{/if}
-					{#if currentFase >= 2 && currentFase <= 3 && (eventData.cotizaciones.length <= 0 || isEditing)}
-						<SubirCotizacion
-							name={'docs_cotizaciones'}
-							amountLabel="Total cotizado"
-							amountName="totales"
-							id_nodo_p={eventData.id}
-							cliente={eventData.cliente}
-							agente={eventData.agente}
-							action="/documentos?/add"
-							required
-							multiple
-						/>
-					{/if}
+							{#if eventData.cotizaciones.length > 0}
+								{#each eventData.cotizaciones as documento}
+									<TarjetaListaDocumentos event={documento} />
+								{/each}
+							{/if}
+							{#if currentFase >= 2 && currentFase <= 3 && (eventData.cotizaciones.length <= 0 || isEditing)}
+								<SubirCotizacion
+									name={'docs_cotizaciones'}
+									amountLabel="Total cotizado"
+									amountName="totales"
+									id_nodo_p={eventData.id}
+									cliente={eventData.cliente}
+									agente={eventData.agente}
+									action="/documentos?/add"
+									required
+									multiple
+								/>
+							{/if}
+						{:else}
+							<RelacionarPedido id_oportunidad={eventData.id} />
+						{/if}
+					</div>
 				</section>
 			{/if}
 			{#if currentFase >= 3}

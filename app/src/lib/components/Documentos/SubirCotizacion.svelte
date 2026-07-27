@@ -192,6 +192,7 @@
 		flex-direction: column;
 		gap: var(--a);
 		width: 100%;
+		padding: var(--a);
 	}
 	.file-input {
 		width: 100%;

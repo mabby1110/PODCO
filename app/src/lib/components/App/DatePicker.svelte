@@ -4,9 +4,7 @@
 	import { page } from '$app/stores';
 	import DatePickerCard from './DatePickerCard.svelte';
 
-	let {
-		title = ''
-	} = $props<{
+	let { title = '' } = $props<{
 		title?: string;
 	}>();
 
@@ -145,74 +143,68 @@
 	}
 </script>
 
-<div class="datepicker">
-	<input type="hidden" name="inicio" value={inicio} />
-	<input type="hidden" name="fin" value={fin} />
+<input type="hidden" name="inicio" value={inicio} />
+<input type="hidden" name="fin" value={fin} />
 
-	{#if title}
-		<h3>{title}</h3>
-	{/if}
-
-	<div class="datetime-split">
-		<div class="datetime-item">
-			<span>Fecha</span>
-			<input class="butter" type="date" bind:value={fecha} required />
-		</div>
-		<div class="datetime-item">
-			<span>Duración</span>
-			<select class="butter" bind:value={duracion} required>
-				<option value="" disabled selected>Duración</option>
-				{#each opcionesDuracion as opcion}
-					<option value={opcion.value}>{opcion.label}</option>
-				{/each}
-			</select>
-		</div>
-		<div class="datetime-item">
-			<span>Hora</span>
-			<select class="butter" bind:value={hora} required>
-				<option value="" disabled selected>inicio</option>
-				{#each horasGeneradas as h}
-					<option value={h}>{h}</option>
-				{/each}
-			</select>
-		</div>
+<div class="datetime-split">
+	<div class="datetime-item">
+		<input class="butter" type="date" bind:value={fecha} required />
+		<span>Fecha</span>
 	</div>
+	<div class="datetime-item">
+		<select class="butter" bind:value={duracion} required>
+			<option value="" disabled selected>Duración</option>
+			{#each opcionesDuracion as opcion}
+				<option value={opcion.value}>{opcion.label}</option>
+			{/each}
+		</select>
+		<span>Duración</span>
+	</div>
+	<div class="datetime-item">
+		<select class="butter" bind:value={hora} required>
+			<option value="" disabled selected>inicio</option>
+			{#each horasGeneradas as h}
+				<option value={h}>{h}</option>
+			{/each}
+		</select>
+		<span>Hora</span>
+	</div>
+</div>
 
-	{#if fecha && duracion}
-		<div class="lane-container" bind:this={datepicker}>
-			<span class="lane-title">Disponibilidad del {fecha}</span>
+{#if fecha && duracion}
+	<div class="lane-container" bind:this={datepicker}>
+		<span class="lane-title">Disponibilidad del {fecha}</span>
 
-			<div class="lane">
-				<div class="lane-grid">
-					{#each Array.from({ length: 11 }, (_, i) => i + 8) as hr, i}
-						<div class="lane-hour" style="top: {i * 10}%;">
-							<span class="hour-label">{hr}:00</span>
-							<div class="hour-line"></div>
-						</div>
-					{/each}
-				</div>
+		<div class="lane">
+			<div class="lane-grid">
+				{#each Array.from({ length: 11 }, (_, i) => i + 8) as hr, i}
+					<div class="lane-hour" style="top: {i * 10}%;">
+						<span class="hour-label">{hr}:00</span>
+						<div class="hour-line"></div>
+					</div>
+				{/each}
+			</div>
 
-				<div class="lane-events">
-					{#each eventosDelDia.reverse() as evento}
-						<div
-							class="event-block"
-							style="top: {evento._top}%; height: {evento._height}%; width: {evento._width}%; left: {evento._left}%;"
-						>
-							<DatePickerCard event={evento} />
-						</div>
-					{/each}
+			<div class="lane-events">
+				{#each eventosDelDia.reverse() as evento}
+					<div
+						class="event-block"
+						style="top: {evento._top}%; height: {evento._height}%; width: {evento._width}%; left: {evento._left}%;"
+					>
+						<DatePickerCard event={evento} />
+					</div>
+				{/each}
 
-					{#if hora && duracion}
-						{@const pre = getLayoutProps(inicio, fin)}
-						<div class="new-event" style="top: {pre.top}%; height: {pre.height}%;">
-							<p>✨ Nuevo evento</p>
-						</div>
-					{/if}
-				</div>
+				{#if hora && duracion}
+					{@const pre = getLayoutProps(inicio, fin)}
+					<div class="new-event" style="top: {pre.top}%; height: {pre.height}%;">
+						<p>✨ Nuevo evento</p>
+					</div>
+				{/if}
 			</div>
 		</div>
-	{/if}
-</div>
+	</div>
+{/if}
 
 <style>
 	.datepicker {
@@ -220,12 +212,8 @@
 		flex-wrap: wrap;
 		gap: var(--a, 16px);
 	}
-	.datepicker h3 {
-		width: 100%;
-	}
 	.datetime-split {
 		display: flex;
-		width: 100%;
 		flex-wrap: wrap;
 		gap: var(--a, 16px);
 	}

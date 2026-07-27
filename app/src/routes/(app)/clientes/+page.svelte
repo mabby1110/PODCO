@@ -4,7 +4,6 @@
 	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
 	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
 	import Filtro from '$lib/components/App/Filtro.svelte';
-	import Lista from '$lib/components/App/Listas/Lista.svelte';
 	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
 	import Searchbar from '$lib/components/App/Searchbar.svelte';
 	import CardClienteListPreview from '$lib/components/Cliente/CardClienteListPreview.svelte';
@@ -13,6 +12,7 @@
 	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
+	import Vista from '$lib/components/Listas/Vista.svelte';
 
 	let { clientes } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -51,7 +51,7 @@
 	console.log('store', StoreAgrupaciones.filtersByRoute[currentRoute]);
 </script>
 
-<Lista>
+<Vista>
 	{#snippet acciones()}
 		<Searchbar data={clientes} keyColumns={categoriasCliente.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
@@ -86,4 +86,4 @@
 			{/each}
 		{/if}
 	{/snippet}
-</Lista>
+</Vista>

@@ -47,12 +47,7 @@
 	}
 </script>
 
-<form
-	method="POST"
-	{action}
-	enctype="multipart/form-data"
-	use:enhance={handleSubmit}
->
+<form method="POST" {action} enctype="multipart/form-data" use:enhance={handleSubmit}>
 	{#if isOpen}
 		<div class="actions" bind:this={actionsElement}>
 			{#if fieldsContent}
@@ -66,6 +61,18 @@
 	{/if}
 
 	{#if submitContent}
-		{@render submitContent(isSubmitting)}
+		<div class="submit panel">
+			{@render submitContent(isSubmitting)}
+		</div>
 	{/if}
 </form>
+
+<style>
+	.submit {
+		margin-left: var(--f);
+		position: fixed;
+		bottom: 0;
+		width: fit-content;
+		right: var(--a);
+	}
+</style>

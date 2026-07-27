@@ -7,11 +7,13 @@
 		id,
 		action = '/clientes?/updateClient',
 		isEditing = false,
+		label = 'Custom',
 		children
 	}: {
 		id: string;
 		action?: string;
 		isEditing?: boolean;
+		label?: string;
 		children?: Snippet;
 	} = $props();
 
@@ -31,37 +33,27 @@
 {#if isEditing}
 	<form method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={id} />
-
-		<section class="container editable-fields-grid">
-			{#if isEditing}
+		<section>
+			<div class="block-header">
+				{#if label}
+					<h3>{label}:</h3>
+				{/if}
+			</div>
+			<div class="block-content">
 				{#if children}
 					{@render children()}
 				{/if}
+
 				<button
 					type="submit"
-					class="btn-save-small butter"
+					class="butter matcha"
 					disabled={isSubmitting}
 					style:opacity={isSubmitting ? 0.5 : 1}
 					style:cursor={isSubmitting ? 'not-allowed' : 'pointer'}
 				>
 					Guardar
 				</button>
-			{/if}
+			</div>
 		</section>
 	</form>
 {/if}
-
-<style>
-	form {
-		grid-column: span 2;
-		width: 100%;
-	}
-	.container {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-	}
-	input {
-		flex-grow: 1;
-	}
-</style>

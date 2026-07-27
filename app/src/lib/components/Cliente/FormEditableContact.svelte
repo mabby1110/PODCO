@@ -134,15 +134,14 @@
 	}
 </script>
 
-<section>
-	<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
+<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
+	<section>
 		<input type="hidden" name="id_cliente" value={id} />
 		<input type="hidden" name="contactos" value={JSON.stringify(contacto_compuesto)} />
-
-		<div class="detail-header">
+		<div class="block-header">
 			<h3 class="label">Contactos:</h3>
 		</div>
-		<div class="detail-body">
+		<div class="block-content">
 			<div class="contact-list">
 				{#if (lista || []).length > 0}
 					{#each lista || [] as persona, i}
@@ -246,22 +245,13 @@
 				</div>
 			{/if}
 		</div>
-	</form>
-</section>
+	</section>
+</form>
 
 <style>
 	.detail-header {
 		display: flex;
 		align-items: center;
-	}
-
-	.detail-body {
-		padding: var(--a);
-		display: flex;
-		gap: var(--a);
-		flex-wrap: wrap;
-		width: 100%;
-		max-width: 1000px;
 	}
 	.contact-list {
 		flex-grow: 5;

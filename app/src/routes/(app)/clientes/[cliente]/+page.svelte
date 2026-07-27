@@ -199,7 +199,7 @@
 	{/snippet}
 
 	{#snippet actions()}
-		<div class="submit">
+		<div class="submit panel">
 			<button onclick={() => (isEditing = !isEditing)} class="butter {isEditing}">Editar</button>
 			<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		</div>
@@ -238,5 +238,13 @@
 		width: 100%;
 		padding: 0 var(--a);
 		margin-bottom: var(--e);
+	}
+	.submit {
+		margin-left: var(--f);
+		position: fixed;
+		bottom: 0;
+		width: fit-content;
+		right: var(--a);
+		width: fit-content;
 	}
 </style>

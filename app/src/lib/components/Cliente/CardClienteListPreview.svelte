@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ListPreview from '../App/Listas/ListPreview.svelte';
+	import ListPreview from "../Listas/ListPreview.svelte";
 
 	let { client } = $props();
 </script>
@@ -8,7 +8,7 @@
 	{#snippet header()}
 		<h3>{client.nombre_comercial || client.razon_social}</h3>
 		{#if client.razon_social}
-			<p class="tiny">{client.razon_social}</p>
+			<p class="tiny">R.S: {client.razon_social}</p>
 		{/if}
 	{/snippet}
 	{#snippet content()}

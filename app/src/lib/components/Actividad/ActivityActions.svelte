@@ -60,7 +60,7 @@
 		{#snippet hiddenContent()}
 			<input type="hidden" name="id" value={eventData.id} />
 			{#if nuevaHistoria}
-			{eventData?.agente.nombre}
+				{eventData?.agente.nombre}
 				<input
 					type="hidden"
 					name="historia"
@@ -89,32 +89,30 @@
 			{/if}
 		{/snippet}
 		{#snippet submitContent()}
-			<div class="submit">
-				{#if !submit && !submitCancel}
-					<button type="button" class="butter {isEditing}" onclick={() => (isEditing = !isEditing)}>
-						Editar
-					</button>
-				{/if}
-				{#if submit}
-					<input type="hidden" name="fase" value={nextPhase} />
-					<button type="submit" class="butter" {style} disabled={isSubmitting}>
-						{isSubmitting ? 'Procesando...' : 'Finzalizar'}
-					</button>
-				{:else if newOp}
-					<button type="submit" class="butter" {style} disabled={isSubmitting}>
-						{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
-					</button>
-				{:else if submitCancel}
-					<input type="hidden" name="fase" value={0} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
-				{/if}
-				<ActivityOptionalSubmit
-					nextFase={eventData.fase.accion}
-					bind:isOpen
-					bind:submit
-					bind:submitCancel
-				/>
-			</div>
+			{#if !submit && !submitCancel}
+				<button type="button" class="butter {isEditing}" onclick={() => (isEditing = !isEditing)}>
+					Editar
+				</button>
+			{/if}
+			{#if submit}
+				<input type="hidden" name="fase" value={nextPhase} />
+				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					{isSubmitting ? 'Procesando...' : 'Finzalizar'}
+				</button>
+			{:else if newOp}
+				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
+				</button>
+			{:else if submitCancel}
+				<input type="hidden" name="fase" value={0} />
+				<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
+			{/if}
+			<ActivityOptionalSubmit
+				nextFase={eventData.fase.accion}
+				bind:isOpen
+				bind:submit
+				bind:submitCancel
+			/>
 		{/snippet}
 	</FormActions>
 {/if}
