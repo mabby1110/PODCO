@@ -100,7 +100,6 @@
 	}
 	:global(.list-card-header > *:nth-child(2)) {
 		grid-column: span 2;
-		font-weight: bold;
 	}
 	.list-card-content {
 		width: 100%;
@@ -118,7 +117,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0 var(--a);
-		font-weight: bold;
 	}
 	.list-card-meta .actions {
 		font-size: smaller;

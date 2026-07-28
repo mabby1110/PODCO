@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import { profile } from '$lib/stores/profileStore.svelte';
-	import { appState } from '$lib/stores/appState.svelte';
-	import EditableSelect from '$lib/components/Cliente/EditableSelect.svelte';
-	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
-	import TarjetaListaOportunidades from '$lib/components/Oportunidad/TarjetaListaOportunidades.svelte';
-	import Card from '$lib/components/App/Card.svelte';
-	import EditableInput from '$lib/components/form/EditableInput.svelte';
+	import { page } from "$app/state";
+	import EditableInput from "$lib/components/Formularios/EditableInput.svelte";
+	import Card from "$lib/components/Tarjetas/Card.svelte";
+	import EditableSelect from "$lib/components/Vistas/Cliente/EditableSelect.svelte";
+	import FormEditableContact from "$lib/components/Vistas/Cliente/FormEditableContact.svelte";
+	import TarjetaListaOportunidades from "$lib/components/Vistas/Oportunidad/TarjetaListaOportunidades.svelte";
+	import { appState } from "$lib/stores/appState.svelte";
+	import { profile } from "$lib/stores/profileStore.svelte";
+
 
 	let { cliente, agentes } = $derived(page.data);
 

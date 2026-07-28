@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { appState } from '$lib/stores/appState.svelte';
-	import FormOptionalInput from '$lib/components/form/FormOptionalInput.svelte';
-	import FormInput from '$lib/components/form/FormInput.svelte';
 	import { motivosActividades } from '$lib';
-	import FormSelectAgente from '../form/FormSelectAgente.svelte';
-	import DatePicker from '../App/DatePicker.svelte';
-	import FormSelectMotivo from '../form/FormSelectMotivo.svelte';
+	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
+	import FormInput from '$lib/components/Formularios/FormInput.svelte';
+	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
+	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
+	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
+	import { appState } from '$lib/stores/appState.svelte';
 
 	let objetivo = $state('');
 	let observaciones = $state('');

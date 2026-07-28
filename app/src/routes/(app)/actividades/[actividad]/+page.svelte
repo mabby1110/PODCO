@@ -1,19 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { getStyleForPhase } from '$lib/utils/util';
-	import { profile } from '$lib/stores/profileStore.svelte';
 	import { fases_actividad } from '$lib';
-	import ActivityActions from '$lib/components/Actividad/ActivityActions.svelte';
-	import Card from '$lib/components/App/Card.svelte';
-	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda.js';
-	import { appState } from '$lib/stores/appState.svelte.js';
+	import Entradas from '$lib/components/Acciones/Entradas.svelte';
+	import CustomInput from '$lib/components/Formularios/CustomInput.svelte';
+	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
+	import EditableInput from '$lib/components/Formularios/EditableInput.svelte';
+	import Card from '$lib/components/Tarjetas/Card.svelte';
+	import ActivityActions from '$lib/components/Vistas/Actividad/ActivityActions.svelte';
 	import { opModalStore } from '$lib/stores/opModalStore.svelte.js';
+	import { profile } from '$lib/stores/profileStore.svelte.js';
 	import { postActivityUpdate } from '$lib/utils/actions.js';
-	import { invalidateAll } from '$app/navigation';
-	import Entradas from '$lib/components/App/Entradas.svelte';
-	import EditableInput from '$lib/components/form/EditableInput.svelte';
-	import CustomInput from '$lib/components/form/CustomInput.svelte';
-	import DatePicker from '$lib/components/App/DatePicker.svelte';
+	import { getStyleForPhase } from '$lib/utils/util.js';
+
 
 	let { data } = $props();
 	const event = $derived(data.actividad);

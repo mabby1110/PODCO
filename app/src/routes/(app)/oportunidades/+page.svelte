@@ -1,18 +1,19 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import { appState } from '$lib/stores/appState.svelte';
-	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
-	import Searchbar from '$lib/components/App/Searchbar.svelte';
-	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
-	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
-	import FiltroAgente from '$lib/components/App/FiltroAgente.svelte';
-	import Filtro from '$lib/components/App/Filtro.svelte';
-	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
-	import Grupo from '$lib/components/App/Grupo.svelte';
-	import TarjetaListaOportunidades from '$lib/components/Oportunidad/TarjetaListaOportunidades.svelte';
-	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
-	import Vista from '$lib/components/Listas/Vista.svelte';
+	import { page } from "$app/state";
+	import ExportarCSV from "$lib/components/Acciones/ExportarCSV.svelte";
+	import Agrupaciones from "$lib/components/Acciones/Agrupaciones.svelte";
+	import PanelFiltros from "$lib/components/Panel/PanelFiltros.svelte";
+	import Grupo from "$lib/components/Tarjetas/Grupo.svelte";
+	import Vista from "$lib/components/Tarjetas/Vista.svelte";
+	import TarjetaListaOportunidades from "$lib/components/Vistas/Oportunidad/TarjetaListaOportunidades.svelte";
+	import { appState } from "$lib/stores/appState.svelte";
+	import { StoreAgrupaciones } from "$lib/stores/StoreAgrupaciones.svelte";
+	import { agrupacionesOportunidades, categoriasOportunidad } from "$lib";
+	import { agruparDatosPorRuta, obtenerDatosFiltrados } from "$lib/utils/filtro";
+	import Searchbar from "$lib/components/Acciones/Searchbar.svelte";
+	import FiltroAgente from "$lib/components/Acciones/FiltroAgente.svelte";
+	import Filtro from "$lib/components/Acciones/Filtro.svelte";
+
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);

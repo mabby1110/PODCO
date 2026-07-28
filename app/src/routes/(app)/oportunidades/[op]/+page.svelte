@@ -1,22 +1,23 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { formatCurrency, getStyleForPhase } from '$lib/utils/util';
+	import { profile } from '$lib/stores/profileStore.svelte.js';
+	import Entradas from '$lib/components/Acciones/Entradas.svelte';
+	import CustomInput from '$lib/components/Formularios/CustomInput.svelte';
+	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
+	import EditableInput from '$lib/components/Formularios/EditableInput.svelte';
+	import Card from '$lib/components/Tarjetas/Card.svelte';
+	import FormEditableContact from '$lib/components/Vistas/Cliente/FormEditableContact.svelte';
+	import SubirAdjunto from '$lib/components/Vistas/Documentos/SubirAdjunto.svelte';
+	import SubirCotizacion from '$lib/components/Vistas/Documentos/SubirCotizacion.svelte';
+	import SubirOcc from '$lib/components/Vistas/Documentos/SubirOcc.svelte';
+	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
+	import AgentActions from '$lib/components/Vistas/Oportunidad/AgentActions.svelte';
+	import OperActions from '$lib/components/Vistas/Oportunidad/OperActions.svelte';
+	import PedidoRelacionado from '$lib/components/Vistas/Oportunidad/PedidoRelacionado.svelte';
+	import RelacionarPedido from '$lib/components/Vistas/Oportunidad/RelacionarPedido.svelte';
 	import { fases } from '$lib';
-	import { profile } from '$lib/stores/profileStore.svelte';
-	import AgentActions from '$lib/components/Oportunidad/AgentActions.svelte';
-	import OperActions from '$lib/components/Oportunidad/OperActions.svelte';
-	import Card from '$lib/components/App/Card.svelte';
-	import Entradas from '$lib/components/App/Entradas.svelte';
-	import EditableInput from '$lib/components/form/EditableInput.svelte';
-	import CustomInput from '$lib/components/form/CustomInput.svelte';
-	import DatePicker from '$lib/components/App/DatePicker.svelte';
-	import FormEditableContact from '$lib/components/Cliente/FormEditableContact.svelte';
-	import TarjetaListaDocumentos from '$lib/components/Documentos/TarjetaListaDocumentos.svelte';
-	import SubirAdjunto from '$lib/components/Documentos/SubirAdjunto.svelte';
-	import SubirCotizacion from '$lib/components/Documentos/SubirCotizacion.svelte';
-	import SubirOcc from '$lib/components/Documentos/SubirOcc.svelte';
-	import RelacionarPedido from '$lib/components/Oportunidad/RelacionarPedido.svelte';
-	import PedidoRelacionado from '$lib/components/Oportunidad/PedidoRelacionado.svelte';
+	import { formatCurrency, getStyleForPhase } from '$lib/utils/util.js';
+
 
 	let { data } = $props();
 

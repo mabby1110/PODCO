@@ -1,20 +1,20 @@
 <script lang="ts">
-	import Filtro from '$lib/components/App/Filtro.svelte';
-	import { appState } from '$lib/stores/appState.svelte';
-	import { agrupacionesInventario, categoriasInventario } from '$lib';
-	import { page } from '$app/state';
-	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import Vista from '$lib/components/Listas/Vista.svelte';
-	import Searchbar from '$lib/components/App/Searchbar.svelte';
-	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
-	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
-	import Grupo from '$lib/components/App/Grupo.svelte';
-	import TarjetaListaInventario from '$lib/components/Inventario/TarjetaListaInventario.svelte';
-	import FormPedidos from '$lib/components/Pedidos/FormPedidos.svelte';
-	import Panel from '$lib/components/App/Panel.svelte';
-	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
-	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
-	import ListaPedidos from '$lib/components/Pedidos/ListaPedidos.svelte';
+	import { page } from "$app/state";
+	import { agrupacionesInventario, categoriasInventario } from "$lib";
+	import Agrupaciones from "$lib/components/Acciones/Agrupaciones.svelte";
+	import ExportarCSV from "$lib/components/Acciones/ExportarCSV.svelte";
+	import Filtro from "$lib/components/Acciones/Filtro.svelte";
+	import Searchbar from "$lib/components/Acciones/Searchbar.svelte";
+	import Panel from "$lib/components/Panel/Panel.svelte";
+	import PanelFiltros from "$lib/components/Panel/PanelFiltros.svelte";
+	import Grupo from "$lib/components/Tarjetas/Grupo.svelte";
+	import Vista from "$lib/components/Tarjetas/Vista.svelte";
+	import TarjetaListaInventario from "$lib/components/Vistas/Inventario/TarjetaListaInventario.svelte";
+	import FormPedidos from "$lib/components/Vistas/Pedidos/FormPedidos.svelte";
+	import ListaPedidos from "$lib/components/Vistas/Pedidos/ListaPedidos.svelte";
+	import { appState } from "$lib/stores/appState.svelte";
+	import { StoreAgrupaciones } from "$lib/stores/StoreAgrupaciones.svelte";
+	import { agruparDatosPorRuta, obtenerDatosFiltrados } from "$lib/utils/filtro";
 
 	let { inventario } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);

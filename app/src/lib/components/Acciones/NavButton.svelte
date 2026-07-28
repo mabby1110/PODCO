@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
-	import { appState } from '$lib/stores/appState.svelte';
-	import ControlsPanel from './ControlsPanel.svelte';
-	import Logout from './Logout.svelte';
-	import PanelNotificaciones from '../Notificaciones/PanelNotificaciones.svelte';
+	import { appState } from "$lib/stores/appState.svelte";
+	import PanelNotificaciones from "$lib/components/Notificaciones/PanelNotificaciones.svelte";
+	import Logout from "./Logout.svelte";
+	import ControlsPanel from "$lib/components/Panel/ControlsPanel.svelte";
+	import { slide } from "svelte/transition";
 
 	let expanded = $derived($appState.pageActions);
 	let show = $state(false);

@@ -1,18 +1,19 @@
 <script lang="ts">
-	import Filtro from '$lib/components/App/Filtro.svelte';
-	import { appState } from '$lib/stores/appState.svelte';
-	import { agrupacionesDocumentos, categoriasDocumentos } from '$lib';
-	import { page } from '$app/state';
-	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import Vista from '$lib/components/Listas/Vista.svelte';
-	import Searchbar from '$lib/components/App/Searchbar.svelte';
-	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
-	import FiltroAgente from '$lib/components/App/FiltroAgente.svelte';
-	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
-	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
-	import Grupo from '$lib/components/App/Grupo.svelte';
-	import TarjetaListaDocumentos from '$lib/components/Documentos/TarjetaListaDocumentos.svelte';
-	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
+	import { page } from "$app/state";
+	import { agrupacionesDocumentos, categoriasDocumentos } from "$lib";
+	import Agrupaciones from "$lib/components/Acciones/Agrupaciones.svelte";
+	import ExportarCSV from "$lib/components/Acciones/ExportarCSV.svelte";
+	import Filtro from "$lib/components/Acciones/Filtro.svelte";
+	import FiltroAgente from "$lib/components/Acciones/FiltroAgente.svelte";
+	import Searchbar from "$lib/components/Acciones/Searchbar.svelte";
+	import PanelFiltros from "$lib/components/Panel/PanelFiltros.svelte";
+	import Grupo from "$lib/components/Tarjetas/Grupo.svelte";
+	import Vista from "$lib/components/Tarjetas/Vista.svelte";
+	import TarjetaListaDocumentos from "$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte";
+	import { appState } from "$lib/stores/appState.svelte";
+	import { StoreAgrupaciones } from "$lib/stores/StoreAgrupaciones.svelte";
+	import { agruparDatosPorRuta, obtenerDatosFiltrados } from "$lib/utils/filtro";
+
 
 	let { documentos } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);

@@ -1,7 +1,7 @@
 <script lang="ts">
+	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { formatCurrency } from '$lib/utils/util';
-	import ListPreview from '../Listas/ListPreview.svelte';
 
 	let { event } = $props();
 </script>

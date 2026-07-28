@@ -1,13 +1,14 @@
 <script lang="ts">
-	import Filtro from '$lib/components/App/Filtro.svelte';
-	import Agrupaciones from '../App/Agrupaciones.svelte';
-	import PanelFiltros from '../App/PanelFiltros.svelte';
-	import Searchbar from '../App/Searchbar.svelte';
-	import { page } from '$app/state';
-	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import FiltroAgente from '../App/FiltroAgente.svelte';
-	import OrdenadosTotalXDocumento from './graficas/OrdenadosTotalXDocumento.svelte';
-	import AgrupadosTotalXDocumento from './graficas/AgrupadosTotalXDocumento.svelte';
+	import { page } from "$app/state";
+	import Agrupaciones from "$lib/components/Acciones/Agrupaciones.svelte";
+	import Filtro from "$lib/components/Acciones/Filtro.svelte";
+	import FiltroAgente from "$lib/components/Acciones/FiltroAgente.svelte";
+	import PanelFiltros from "$lib/components/Panel/PanelFiltros.svelte";
+	import { agruparDatosPorRuta, obtenerDatosFiltrados } from "$lib/utils/filtro";
+	import Searchbar from "../Oportunidad/Searchbar.svelte";
+	import AgrupadosTotalXDocumento from "./graficas/AgrupadosTotalXDocumento.svelte";
+	import OrdenadosTotalXDocumento from "./graficas/OrdenadosTotalXDocumento.svelte";
+
 
 	let { cotizaciones } = $derived(page.data);
 	// guardamos lista para poder manipular data

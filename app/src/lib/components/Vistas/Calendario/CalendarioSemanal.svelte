@@ -1,6 +1,5 @@
 <script lang="ts">
-	import CardOpCalendarPreview from '$lib/components/Oportunidad/CardOpCalendarPreview.svelte';
-	import { dropzone } from '$lib/actions/dnd';
+import { dropzone } from '$lib/actions/dnd';
 	import { calendarStore } from '$lib/stores/calendarStore.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { invalidateAll } from '$app/navigation';
@@ -19,12 +18,11 @@
 	import CardActividadCalendarPreview from '../Actividad/CardActividadCalendarPreview.svelte';
 	import { page } from '$app/state';
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
-	import Vista from '../Listas/Vista.svelte';
-	import Select from '../App/Select.svelte';
-	import PanelFiltros from '../App/PanelFiltros.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
-	import FiltroAgente from '../App/FiltroAgente.svelte';
-	import Filtro from '../App/Filtro.svelte';
+	import Vista from '$lib/components/Tarjetas/Vista.svelte';
+	import PanelFiltros from '$lib/components/Panel/PanelFiltros.svelte';
+	import FiltroAgente from '$lib/components/Acciones/FiltroAgente.svelte';
+	import Filtro from '$lib/components/Acciones/Filtro.svelte';
+	import CardOpCalendarPreview from '../Oportunidad/CardOpCalendarPreview.svelte';
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));

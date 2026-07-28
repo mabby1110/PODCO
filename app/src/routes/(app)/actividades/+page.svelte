@@ -4,15 +4,15 @@
 	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 	import { categoriasActividad, agrupacionesActividades } from '$lib';
 	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
-	import TarjetaListaActividades from '$lib/components/Actividad/TarjetaListaActividades.svelte';
-	import PanelFiltros from '$lib/components/App/PanelFiltros.svelte';
-	import FiltroAgente from '$lib/components/App/FiltroAgente.svelte';
-	import Searchbar from '$lib/components/App/Searchbar.svelte';
-	import ExportarCSV from '$lib/components/App/ExportarCSV.svelte';
-	import Filtro from '$lib/components/App/Filtro.svelte';
-	import Agrupaciones from '$lib/components/App/Agrupaciones.svelte';
-	import Grupo from '$lib/components/App/Grupo.svelte';
-	import Vista from '$lib/components/Listas/Vista.svelte';
+	import TarjetaListaActividades from '$lib/components/Vistas/Actividad/TarjetaListaActividades.svelte';
+	import Vista from '$lib/components/Tarjetas/Vista.svelte';
+	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
+	import PanelFiltros from '$lib/components/Panel/PanelFiltros.svelte';
+	import ExportarCSV from '$lib/components/Acciones/ExportarCSV.svelte';
+	import FiltroAgente from '$lib/components/Acciones/FiltroAgente.svelte';
+	import Filtro from '$lib/components/Acciones/Filtro.svelte';
+	import Agrupaciones from '$lib/components/Acciones/Agrupaciones.svelte';
+	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
 
 	let { actividades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);

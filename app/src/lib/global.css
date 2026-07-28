@@ -59,6 +59,23 @@ Especiales
 }
 
 /* GLOBAL */
+
+html {
+	width: 100vh;
+	height: 100vh;
+}
+
+body {
+	max-width: 1800px;
+	margin: auto;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: var(--color-background);
+}
+
 h1 {
 	font-size: 1.6rem;
 }
@@ -80,9 +97,9 @@ label {
 }
 
 section {
-	/* siempre tendra header y content */
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
+	/* siempre tendra header y contenido */
+	display: flex;
+	flex-wrap: wrap;
 	gap: var(--a);
 }
 
@@ -103,53 +120,7 @@ button {
 	padding: 0;
 }
 
-html,
-body {
-	max-width: 1800px;
-	margin: auto;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	background-color: var(--color-background);
-}
-
-/* +PAGE */
-.page-container {
-	width: 100%;
-	height: 100%;
-}
-
-.page-content {
-	height: 100%;
-	overflow-y: auto;
-}
-
-.filtros {
-	width: 50%;
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
-}
-
-.view-container {
-	display: flex;
-	flex-direction: column;
-	overflow: auto;
-	width: 100%;
-	height: 100%;
-	gap: var(--b);
-	position: relative;
-	padding: var(--a);
-}
-
-.selected {
-	padding: var(--a);
-	max-height: 90vh;
-	height: 100%;
-}
-
+/* +Vistas */
 .contenedor-controles-graficas {
 	display: flex;
 	flex-wrap: wrap;
@@ -164,6 +135,13 @@ body {
 	position: relative;
 }
 
+.flex-a {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+}
+
+/* ESTILOS PARA TARJETAS */
 .panel {
 	border: none;
 	border-radius: var(--a);
@@ -172,72 +150,6 @@ body {
 	backdrop-filter: blur(2px);
 }
 
-.flex-a {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
-}
-
-/* GRAFICAS */
-.contenedor-graficas {
-	padding: var(--a);
-	display: flex;
-	flex-direction: column;
-	gap: var(--a);
-	height: 100%;
-	max-height: 80vh;
-	width: 100%;
-}
-
-.contenido-graficas {
-	height: 100%;
-	overflow: auto;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-	grid-auto-flow: column;
-	gap: var(--b);
-	grid-auto-columns: 250px;
-}
-
-.contenedor-grafica {
-	grid-column: span 2;
-	width: 100%;
-	max-width: 94vw;
-	height: 100%;
-}
-
-.contenido-graficas h1 {
-	width: 100%;
-}
-
-.chart-container {
-	display: flex;
-	width: 100%;
-	height: 100%;
-	gap: 1rem;
-}
-
-.chart {
-	flex: 1;
-	position: relative;
-	min-width: 0;
-	/* Crítico: permite que el ResizeObserver de Chart.js recalcule hacia arriba y hacia abajo dentro de un flexbox */
-}
-
-.chart-resume {
-	flex: 0 0 350px;
-	/* Fija el ancho del panel lateral al abrirse */
-	overflow-y: auto;
-	position: relative;
-}
-
-.graficas {
-	display: flex;
-	flex-direction: column;
-	gap: var(--a);
-}
-
-/* ESTILOS PARA TARJETAS */
 .card-full {
 	display: flex;
 	flex-direction: column;
@@ -359,12 +271,12 @@ body {
 	flex-direction: column;
 }
 
-/* CARD-FULL */
+/* Vistas */
 .card-full .card-content {
 	overflow: auto;
 	display: flex;
 	flex-direction: column;
-	gap: var(--b);
+	gap: var(--a);
 	height: 100%;
 	padding-bottom: var(--e);
 }
@@ -390,6 +302,65 @@ body {
 	position: fixed;
 	bottom: 0;
 	border-radius: var(--a) var(--a) 0 0;
+}
+
+/* GRAFICAS */
+.contenedor-graficas {
+	padding: var(--a);
+	display: flex;
+	flex-direction: column;
+	gap: var(--a);
+	height: 100%;
+	max-height: 80vh;
+	width: 100%;
+}
+
+.contenido-graficas {
+	height: 100%;
+	overflow: auto;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	grid-auto-flow: column;
+	gap: var(--b);
+	grid-auto-columns: 250px;
+}
+
+.contenedor-grafica {
+	grid-column: span 2;
+	width: 100%;
+	max-width: 94vw;
+	height: 100%;
+}
+
+.contenido-graficas h1 {
+	width: 100%;
+}
+
+.chart-container {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	gap: 1rem;
+}
+
+.chart {
+	flex: 1;
+	position: relative;
+	min-width: 0;
+	/* Crítico: permite que el ResizeObserver de Chart.js recalcule hacia arriba y hacia abajo dentro de un flexbox */
+}
+
+.chart-resume {
+	flex: 0 0 350px;
+	/* Fija el ancho del panel lateral al abrirse */
+	overflow-y: auto;
+	position: relative;
+}
+
+.graficas {
+	display: flex;
+	flex-direction: column;
+	gap: var(--a);
 }
 
 /* ESTILOS PARA MODALES */
@@ -434,16 +405,17 @@ body {
 /* SECCIONES */
 
 .block-header {
-	grid-column: span 2;
 	display: flex;
-	justify-content: flex-end;
+	min-width: var(--g);
 }
 
 .block-content {
-	grid-column: span 6;
+	flex-grow: 5;
 	display: flex;
+	flex-wrap: wrap;
 	gap: var(--a);
 	align-items: flex-end;
+	min-width: 60vw;
 }
 
 /* FUENTES */

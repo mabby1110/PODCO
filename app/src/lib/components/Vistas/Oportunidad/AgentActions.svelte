@@ -1,17 +1,15 @@
 <script lang="ts">
-	import DatePicker from '$lib/components/App/DatePicker.svelte';
-	import FormOptionalSubmit from '$lib/components/form/FormOptionalSubmit.svelte';
-	import FormOptionalInput from '$lib/components/form/FormOptionalInput.svelte';
-	import { getStyleForPhase } from '$lib/utils/util';
-	import { fases, motivosOportunidad } from '$lib';
-	import FormInput from '../form/FormInput.svelte';
-	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
-	import FormActions from '../form/FormActions.svelte';
+	import DatePicker from "$lib/components/Formularios/DatePicker.svelte";
+	import FormActions from "$lib/components/Formularios/FormActions.svelte";
+	import FormInput from "$lib/components/Formularios/FormInput.svelte";
+	import FormOptionalInput from "$lib/components/Formularios/FormOptionalInput.svelte";
+	import FormOptionalSubmit from "$lib/components/Formularios/FormOptionalSubmit.svelte";
+	import FormSelectMotivo from "$lib/components/Formularios/FormSelectMotivo.svelte";
+	import UploadFile from "$lib/components/Formularios/UploadFile.svelte";
+	import { fases, motivosOportunidad } from "$lib";
+	import { agregarEntrada, concatStrings } from "$lib/utils/cardActions";
+	import { getStyleForPhase } from "$lib/utils/util";
 
-	import { profile } from '$lib/stores/profileStore.svelte';
-	import FormSelectMotivo from '../form/FormSelectMotivo.svelte';
-	import UploadFile from '../App/UploadFile.svelte';
-	import CustomInput from '../form/CustomInput.svelte';
 
 	let { eventData, isEditing = $bindable() }: { eventData: any; isEditing?: boolean } = $props();
 

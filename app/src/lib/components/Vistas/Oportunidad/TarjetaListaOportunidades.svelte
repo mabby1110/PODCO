@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { fases } from '$lib';
+	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { getStyleForPhase } from '$lib/utils/util';
-	import ListPreview from '../Listas/ListPreview.svelte';
 
 	let { event } = $props();
 	const { clientes, agentes } = $derived(page.data);

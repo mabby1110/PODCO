@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Select from './Select.svelte';
 	import { page } from '$app/state';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
+	import Select from '../Formularios/Select.svelte';
 
 	let {
 		agrupacionesSeleccionadas = $bindable(),

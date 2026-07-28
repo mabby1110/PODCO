@@ -236,12 +236,11 @@
 								</button>
 							</div>
 						</div>
-					{:else}
-						<div class="form-actions">
-							<button type="button" class="butter" onclick={openNewPerson}>Nueva persona</button>
-							<button type="submit" class="butter btn-save-small">Guardar</button>
-						</div>
 					{/if}
+					<div class="form-actions">
+						<button type="button" class="butter" onclick={openNewPerson}>Nueva persona</button>
+						<button type="submit" class="butter btn-save-small">Guardar</button>
+					</div>
 				</div>
 			{/if}
 		</div>
@@ -249,20 +248,12 @@
 </form>
 
 <style>
-	.detail-header {
-		display: flex;
-		align-items: center;
-	}
 	.contact-list {
-		flex-grow: 5;
 		display: flex;
 		flex-direction: column;
 		min-width: 200px;
 		gap: var(--a);
-	}
-	.form-persona {
-		flex-grow: 3;
-		align-self: flex-end;
+		align-self: flex-start;
 	}
 	.person-card {
 		display: flex;
@@ -291,12 +282,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
-	}
-
-	.value {
-		margin: 0;
-		white-space: pre-wrap;
-		word-break: break-word;
 	}
 	.person-form {
 		display: flex;

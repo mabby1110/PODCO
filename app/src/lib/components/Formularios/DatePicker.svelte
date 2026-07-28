@@ -148,26 +148,26 @@
 
 <div class="datetime-split">
 	<div class="datetime-item">
-		<input class="butter" type="date" bind:value={fecha} required />
 		<span>Fecha</span>
+		<input class="butter" type="date" bind:value={fecha} required />
 	</div>
 	<div class="datetime-item">
+		<span>Duración</span>
 		<select class="butter" bind:value={duracion} required>
 			<option value="" disabled selected>Duración</option>
 			{#each opcionesDuracion as opcion}
 				<option value={opcion.value}>{opcion.label}</option>
 			{/each}
 		</select>
-		<span>Duración</span>
 	</div>
 	<div class="datetime-item">
+		<span>Hora</span>
 		<select class="butter" bind:value={hora} required>
 			<option value="" disabled selected>inicio</option>
 			{#each horasGeneradas as h}
 				<option value={h}>{h}</option>
 			{/each}
 		</select>
-		<span>Hora</span>
 	</div>
 </div>
 
@@ -207,11 +207,6 @@
 {/if}
 
 <style>
-	.datepicker {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a, 16px);
-	}
 	.datetime-split {
 		display: flex;
 		flex-wrap: wrap;

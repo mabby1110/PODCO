@@ -4,28 +4,28 @@
 	let { acciones, contenido }: { acciones: Snippet; contenido: Snippet } = $props();
 </script>
 
-<div class="view-container">
+<div class="vista">
 	{#if contenido}
 		{@render contenido()}
 	{/if}
 </div>
-<div class="view-controls">
+<div class="controles">
 	{#if acciones}
 		{@render acciones()}
 	{/if}
 </div>
 
 <style>
-	.view-container {
+	.vista {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
 		display: flex;
 		flex-direction: column;
-		gap: var(--a);
-		position: relative;
-		overflow: auto;
-		margin: auto;
-		padding-bottom: 12vh;
+		gap: var(--b);
 	}
-	.view-controls {
+	.controles{
 		position: fixed;
 		max-width: 70vw;
 		bottom: 0;

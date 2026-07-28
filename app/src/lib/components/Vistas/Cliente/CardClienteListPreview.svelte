@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ListPreview from "../Listas/ListPreview.svelte";
+	import ListPreview from "$lib/components/Tarjetas/ListPreview.svelte";
 
 	let { client } = $props();
 </script>
