@@ -43,11 +43,11 @@ Especiales
 	--c: 24px;
 	--d: 32px;
 	--e: 64px;
-	--f: 104px;
-	--g: 168px;
-	--h: 272px;
-	--i: 440px;
-	--j: 912px;
+	--f: 124px;
+	--g: 188px;
+	--h: 248px;
+	--i: 496px;
+	--j: 1024px;
 }
 
 * {
@@ -111,33 +111,11 @@ select {
 	height: fit-content;
 	min-height: var(--d);
 	cursor: pointer;
-	max-width: 800px;
 }
 
 button {
 	margin: 0;
 	padding: 0;
-}
-
-/* +Vistas */
-.contenedor-controles-graficas {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
-	align-items: flex-start;
-	top: 0;
-	z-index: 1;
-	position: sticky;
-}
-
-.contenedor-controles-graficas {
-	position: relative;
-}
-
-.flex-a {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
 }
 
 /* ESTILOS PARA TARJETAS */
@@ -149,48 +127,43 @@ button {
 	backdrop-filter: blur(2px);
 }
 
-.card-full {
+.card-calendar-preview {
+	text-decoration: none;
+	color: inherit;
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	height: fit-content;
-	max-height: 100dvh;
-	overflow: hidden;
-	position: relative;
-	height: 100%;
-	position: relative;
-}
-
-.card-full header {
-	display: flex;
-	gap: var(--a);
-	position: relative;
-	flex-direction: column;
-	justify-content: space-between;
+	border: 1px solid var(--color-muted);
+	border-radius: var(--a);
+	padding: 4px var(--a);
+	text-align: left;
 	align-items: flex-start;
-	background-color: var(--color-primary);
 	backdrop-filter: blur(16px);
-	padding: var(--a);
-	position: sticky;
+	overflow: hidden;
+	z-index: 1;
+	position: absolute;
 	top: 0;
-	z-index: 99;
-	border-radius: 0 0 var(--b) var(--b);
+	left: 0;
+	right: 0;
+	pointer-events: auto;
+	cursor: pointer;
 }
 
-.card-full .actions {
+.card-actions .submit {
 	display: flex;
 	flex-wrap: wrap;
-	gap: var(--b);
+	gap: var(--a);
+	justify-content: flex-end;
+	align-items: flex-end;
+	flex-grow: 1;
+	padding: 4px;
 	width: 100%;
-	padding: 0 var(--a);
-	margin-top: var(--b);
+	position: fixed;
+	bottom: 0;
+	border-radius: var(--a) var(--a) 0 0;
 }
 
-.actions .optional-button {
-	order: 1;
-}
-
-.card-full .close,
+.card .close,
 .panel .close {
 	position: absolute;
 	top: 0;
@@ -206,6 +179,7 @@ button {
 	text-decoration: none;
 }
 
+/* CHAT */
 .entradas {
 	flex-grow: 1;
 	display: flex;
@@ -236,71 +210,6 @@ button {
 
 .entradas .butter {
 	aspect-ratio: 1 / 1;
-}
-
-.card-calendar-preview {
-	text-decoration: none;
-	color: inherit;
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	border: 1px solid var(--color-muted);
-	border-radius: var(--a);
-	padding: 4px var(--a);
-	text-align: left;
-	align-items: flex-start;
-	backdrop-filter: blur(16px);
-	overflow: hidden;
-	z-index: 1;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	pointer-events: auto;
-	cursor: pointer;
-}
-
-.brief {
-	display: flex;
-	flex-direction: column;
-}
-
-.brief-content {
-	display: flex;
-	flex-direction: column;
-}
-
-/* Vistas */
-.card-full .card-content {
-	overflow: auto;
-	display: flex;
-	flex-direction: column;
-	gap: var(--a);
-	height: 100%;
-	padding-bottom: var(--e);
-}
-
-.card-actions {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: var(--b);
-	border-top: 1px solid var(--color-secondary);
-}
-
-.card-actions .submit {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
-	justify-content: flex-end;
-	align-items: flex-end;
-	flex-grow: 1;
-	padding: var(--a);
-	width: 100%;
-	position: fixed;
-	bottom: 0;
-	border-radius: var(--a) var(--a) 0 0;
 }
 
 /* GRAFICAS */
@@ -362,6 +271,26 @@ button {
 	gap: var(--a);
 }
 
+.contenedor-controles-graficas {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+	align-items: flex-start;
+	top: 0;
+	z-index: 1;
+	position: sticky;
+}
+
+.contenedor-controles-graficas {
+	position: relative;
+}
+
+.flex-a {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+}
+
 /* ESTILOS PARA MODALES */
 .modal {
 	background: white;
@@ -414,7 +343,9 @@ button {
 	flex-wrap: wrap;
 	gap: var(--a);
 	align-items: flex-end;
-	min-width: 60vw;
+	/* min-width: 60vw; */
+	min-width: var(--h);
+	max-width: var(--j);
 }
 
 /* FUENTES */

@@ -9,6 +9,7 @@
 	import { fases, motivosOportunidad } from "$lib";
 	import { agregarEntrada, concatStrings } from "$lib/utils/cardActions";
 	import { getStyleForPhase } from "$lib/utils/util";
+	import { profile } from "$lib/stores/profileStore.svelte";
 
 
 	let { eventData, isEditing = $bindable() }: { eventData: any; isEditing?: boolean } = $props();

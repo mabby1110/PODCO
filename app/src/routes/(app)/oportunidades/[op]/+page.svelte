@@ -17,7 +17,7 @@
 	import RelacionarPedido from '$lib/components/Vistas/Oportunidad/RelacionarPedido.svelte';
 	import { fases } from '$lib';
 	import { formatCurrency, getStyleForPhase } from '$lib/utils/util.js';
-
+	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
 
 	let { data } = $props();
 
@@ -58,245 +58,249 @@
 	let isEditing = $state(false);
 </script>
 
-{#if eventData}
-	<Card headerStyle={eventData.style}>
-		{#snippet header()}
-			<button
-				onclick={() => history.back()}
-				class="close {currentFase == 6 ? 'w' : ''}"
-				aria-label="Cerrar"
+<Card headerStyle={eventData?.style}>
+	{#snippet header()}
+		<button
+			onclick={() => history.back()}
+			class="close {currentFase == 6 ? 'w' : ''}"
+			aria-label="Cerrar"
+		>
+			✕
+		</button>
+		<div class="title">
+			<h1>{eventData?.motivo}</h1>
+			<a href="/clientes/{eventData?.cliente.id}"
+				><h3>{eventData?.cliente.razon_social || eventData?.cliente.nombre_comercial}</h3></a
 			>
-				✕
-			</button>
-			<div class="title">
-				<h1>{eventData.motivo}</h1>
-				<a href="/clientes/{eventData.cliente.id}"
-					><h3>{eventData.cliente.razon_social || eventData.cliente.nombre_comercial}</h3></a
-				>
-			</div>
-			<div class="meta">
-				<p class="date">{eventData.inicio}</p>
-				<p class="date">|</p>
-				<p>{eventData?.agente?.nombre}</p>
-				<p>Fase: <strong>{eventData.fase?.actual}</strong></p>
-			</div>
-		{/snippet}
+		</div>
+		<div class="meta">
+			<p class="date">{eventData?.inicio}</p>
+			<p class="date">|</p>
+			<p>{eventData?.agente?.nombre}</p>
+			<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
+		</div>
+	{/snippet}
 
-		{#snippet content()}
-			<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData.id} {isEditing}>
-				<DatePicker/>
-			</CustomInput>
+	{#snippet content()}
+		<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData?.id} {isEditing}>
+			<DatePicker />
+		</CustomInput>
 
-			<EditableInput
-				{isEditing}
-				id={eventData.id}
-				label="Objetivo"
-				name="objetivo"
-				type="textarea"
-				value={eventData.objetivo}
-				action="/oportunidades?/update"
-				placeholder="Objetivo"
-			>
-				{#snippet header()}
-					<input type="hidden" name="id" value={eventData.id} />
-				{/snippet}
-			</EditableInput>
+		<EditableInput
+			{isEditing}
+			id={eventData?.id}
+			label="Objetivo"
+			name="objetivo"
+			type="textarea"
+			value={eventData?.objetivo}
+			action="/oportunidades?/update"
+			placeholder="Objetivo"
+		>
+			{#snippet header()}
+				<input type="hidden" name="id" value={eventData?.id} />
+			{/snippet}
+		</EditableInput>
 
-			<EditableInput
-				{isEditing}
-				id={eventData.id}
-				label="Potencial de venta"
-				name="potencial_venta"
-				type="text"
-				value={eventData.potencial_venta}
-				action="/oportunidades?/update"
-				placeholder="Potencial de venta"
-			/>
+		<EditableInput
+			{isEditing}
+			id={eventData?.id}
+			label="Potencial de venta"
+			name="potencial_venta"
+			type="text"
+			value={eventData?.potencial_venta}
+			action="/oportunidades?/update"
+			placeholder="Potencial de venta"
+		/>
 
-			<EditableInput
-				{isEditing}
-				id={eventData.id}
-				label="Necesidades"
-				name="necesidades"
-				type="text"
-				value={eventData.necesidades}
-				action="/oportunidades?/update"
-				placeholder="Necesidades"
-			/>
+		<EditableInput
+			{isEditing}
+			id={eventData?.id}
+			label="Necesidades"
+			name="necesidades"
+			type="text"
+			value={eventData?.necesidades}
+			action="/oportunidades?/update"
+			placeholder="Necesidades"
+		/>
 
-			<EditableInput
-				{isEditing}
-				id={eventData.id}
-				label="Requisitos"
-				name="requisitos"
-				type="text"
-				value={eventData.requisitos}
-				action="/oportunidades?/update"
-				placeholder="Requisitos"
-			/>
+		<EditableInput
+			{isEditing}
+			id={eventData?.id}
+			label="Requisitos"
+			name="requisitos"
+			type="text"
+			value={eventData?.requisitos}
+			action="/oportunidades?/update"
+			placeholder="Requisitos"
+		/>
 
-			<EditableInput
-				{isEditing}
-				id={eventData.id}
-				label="Observaciones"
-				name="observaciones"
-				type="text"
-				value={eventData.observaciones}
-				action="/oportunidades?/update"
-				placeholder="Observaciones"
-			/>
+		<EditableInput
+			{isEditing}
+			id={eventData?.id}
+			label="Observaciones"
+			name="observaciones"
+			type="text"
+			value={eventData?.observaciones}
+			action="/oportunidades?/update"
+			placeholder="Observaciones"
+		/>
 
-			<FormEditableContact
-				lista={eventData.cliente.contactos}
-				id={eventData.cliente.id}
-				id_agente={$profile?.isAdmin ? eventData.cliente.id_agente : $profile?.id}
-				action="/clientes?/update"
-				{isEditing}
-			/>
+		<FormEditableContact
+			lista={eventData?.cliente.contactos}
+			id={eventData?.cliente.id}
+			id_agente={$profile?.isAdmin ? eventData?.cliente.id_agente : $profile?.id}
+			action="/clientes?/update"
+			{isEditing}
+		/>
 
-			{#if currentFase == 1}
-				<section>
-					<div class="block-header">
-						<h2>Potencial de venta</h2>
-					</div>
-					<div class="block-content">
-						{#if eventData.pedidos.length > 0}
-							{#each eventData.pedidos as pedido}
+		{#if currentFase == 1}
+			<section>
+				<div class="block-header">
+					<h3>Potencial de venta:</h3>
+				</div>
+				<div class="block-content">
+					<FormOptionalInput title="+Potencial de venta">
+						{#if eventData?.pedidos.length > 0}
+							{#each eventData?.pedidos as pedido}
 								<PedidoRelacionado {pedido} />
 							{/each}
 						{:else}
-							<RelacionarPedido id_oportunidad={eventData.id} />
+							<RelacionarPedido id_oportunidad={eventData?.id} />
 						{/if}
-					</div>
-				</section>
-			{/if}
-			{#if currentFase >= 2}
-				<section>
-					<div class="block-header">
-						<h2>Cotizacion(es)</h2>
-					</div>
-					<div class="block-content">
-						{#if eventData.pedidos.length > 0}
-							{#each eventData.pedidos as pedido}
+					</FormOptionalInput>
+				</div>
+			</section>
+		{/if}
+		{#if currentFase >= 2}
+			<section>
+				<div class="block-header">
+					<h3>Cotizacion(es):</h3>
+				</div>
+				<div class="block-content">
+					<FormOptionalInput title="+Cotización">
+						{#if eventData?.pedidos.length > 0}
+							{#each eventData?.pedidos as pedido}
 								<PedidoRelacionado {pedido} />
 							{/each}
-							{#if eventData.cotizaciones.length > 0}
-								{#each eventData.cotizaciones as documento}
+							{#if eventData?.cotizaciones.length > 0}
+								{#each eventData?.cotizaciones as documento}
 									<TarjetaListaDocumentos event={documento} />
 								{/each}
 							{/if}
-							{#if currentFase >= 2 && currentFase <= 3 && (eventData.cotizaciones.length <= 0 || isEditing)}
+							{#if currentFase >= 2 && currentFase <= 3 && (eventData?.cotizaciones.length <= 0 || isEditing)}
 								<SubirCotizacion
 									name={'docs_cotizaciones'}
 									amountLabel="Total cotizado"
 									amountName="totales"
-									id_nodo_p={eventData.id}
-									cliente={eventData.cliente}
-									agente={eventData.agente}
+									id_nodo_p={eventData?.id}
+									cliente={eventData?.cliente}
+									agente={eventData?.agente}
 									action="/documentos?/add"
 									required
 									multiple
 								/>
 							{/if}
 						{:else}
-							<RelacionarPedido id_oportunidad={eventData.id} />
+							<RelacionarPedido id_oportunidad={eventData?.id} />
 						{/if}
+					</FormOptionalInput>
+				</div>
+			</section>
+		{/if}
+		{#if currentFase >= 3}
+			<section class="occ">
+				<div class="block-header">
+					<h3>Orden de compra:</h3>
+				</div>
+				{#if eventData?.occ.length > 0}
+					<div class="block-content">
+						{#each eventData?.occ as documento}
+							<TarjetaListaDocumentos event={documento} />
+						{/each}
 					</div>
-				</section>
-			{/if}
-			{#if currentFase >= 3}
-				<section class="occ">
-					<div class="block-header">
-						<h2>Orden de compra</h2>
-					</div>
-					{#if eventData.occ.length > 0}
-						<div class="block-content">
-							{#each eventData.occ as documento}
-								<TarjetaListaDocumentos event={documento} />
-							{/each}
-						</div>
-					{/if}
-					{#if (!$profile?.isOper || $profile?.isAdmin) && currentFase == 3 && (eventData.occ.length <= 0 || isEditing)}
-						<SubirOcc
-							name="docs_occ"
-							amountLabel="Total"
-							amountName="totales"
-							id_nodo_p={eventData.id}
-							cliente={eventData.cliente}
-							agente={eventData.agente}
-							action="/documentos?/add"
-							required
-							multiple
-						/>
-					{/if}
-				</section>
-			{/if}
-
-			{#if isEditing}
-				<section class="adjunto">
-					<div class="block-header">
-						<h2>Adjuntos</h2>
-					</div>
-					<SubirAdjunto
-						label="Adjuntos"
-						name="docs_adjuntos"
+				{/if}
+				{#if (!$profile?.isOper || $profile?.isAdmin) && currentFase == 3 && (eventData?.occ.length <= 0 || isEditing)}
+					<SubirOcc
+						name="docs_occ"
+						amountLabel="Total"
 						amountName="totales"
-						id_nodo_p={eventData.id}
-						cliente={eventData.cliente}
-						agente={eventData.agente}
+						id_nodo_p={eventData?.id}
+						cliente={eventData?.cliente}
+						agente={eventData?.agente}
 						action="/documentos?/add"
 						required
 						multiple
 					/>
-					<div class="block-content">
-						{#each eventData.adjuntos as documento}
-							<TarjetaListaDocumentos event={documento} />
-						{/each}
-					</div>
-				</section>
-			{:else if eventData.adjuntos.length > 0}
-				<section>
-					<div class="block-header">
-						<h2>Adjuntos</h2>
-					</div>
-					<div class="block-content">
-						{#each eventData.adjuntos as documento}
-							<TarjetaListaDocumentos event={documento} />
-						{/each}
-					</div>
-				</section>
-			{/if}
+				{/if}
+			</section>
+		{/if}
 
-			<section>
+		{#if isEditing}
+			<section class="adjunto">
 				<div class="block-header">
-					<h2>Historia</h2>
+					<h3>Adjuntos:</h3>
 				</div>
 				<div class="block-content">
-					<Entradas
-						{isEditing}
-						historia={eventData.historia}
-						objId={eventData.id}
-						action={'/oportunidades?/update'}
-					/>
+					<FormOptionalInput title="+Potencial de venta">
+						<SubirAdjunto
+							label="Adjuntos"
+							name="docs_adjuntos"
+							amountName="totales"
+							id_nodo_p={eventData?.id}
+							cliente={eventData?.cliente}
+							agente={eventData?.agente}
+							action="/documentos?/add"
+							required
+							multiple
+						/>
+					</FormOptionalInput>
+					{#each eventData?.adjuntos as documento}
+						<TarjetaListaDocumentos event={documento} />
+					{/each}
 				</div>
 			</section>
-		{/snippet}
+		{:else if eventData?.adjuntos.length > 0}
+			<section>
+				<div class="block-header">
+					<h3>Adjuntos</h3>
+				</div>
+				<div class="block-content">
+					{#each eventData?.adjuntos as documento}
+						<TarjetaListaDocumentos event={documento} />
+					{/each}
+				</div>
+			</section>
+		{/if}
 
-		{#snippet actions()}
-			{#if $profile?.isAdmin}
-				{#if currentFase < 4}
-					<AgentActions {eventData} bind:isEditing />
-				{:else}
-					<OperActions {eventData} />
-				{/if}
-			{:else if $profile?.isOper}
-				<OperActions {eventData} />
-			{:else}
+		<section>
+			<div class="block-header">
+				<h3>Historia:</h3>
+			</div>
+			<div class="block-content">
+				<Entradas
+					{isEditing}
+					historia={eventData?.historia}
+					objId={eventData?.id}
+					action={'/oportunidades?/update'}
+				/>
+			</div>
+		</section>
+	{/snippet}
+
+	{#snippet actions()}
+		{#if $profile?.isAdmin}
+			{#if currentFase < 4}
 				<AgentActions {eventData} bind:isEditing />
+			{:else}
+				<OperActions {eventData} />
 			{/if}
-		{/snippet}
-	</Card>
-{/if}
+		{:else if $profile?.isOper}
+			<OperActions {eventData} />
+		{:else}
+			<AgentActions {eventData} bind:isEditing />
+		{/if}
+	{/snippet}
+</Card>
 
 <style>
 	.meta {

@@ -4,6 +4,7 @@
 	import { StoreEditarPedido } from '$lib/stores/StoreEditarPedido.svelte';
 	import { agruparDatos } from '$lib/utils/filtro';
 	import { formatCurrency } from '$lib/utils/util';
+	import { goto } from '$app/navigation';
 
 	// Recibe el parámetro de la página actual
 	let { id_oportunidad }: { id_oportunidad: string } = $props();
@@ -26,15 +27,8 @@
 	$effect(() => console.log(StoreEditarPedido.items));
 </script>
 
+<button class="butter" onclick={()=>goto('/inventario')}>+Pedido nuevo</button>
 <div class="pedidos">
-	<div class="headers tiny butter">
-		<span>Descripción</span>
-		<span>Código</span>
-		<span>Cantidad</span>
-		<span>P/U</span>
-		<span>Moneda</span>
-		<span>total</span>
-	</div>
 	{#if StoreEditarPedido.items.length === 0}
 		{#each lista_agrupada as grupo}
 			<button class="panel grupo" onclick={() => seleccionarAgrupacion(grupo.elementos)}>
@@ -119,7 +113,6 @@
 		cursor: pointer;
 	}
 	.grupo:hover {
-
 	}
 	.pedido {
 		display: grid;
