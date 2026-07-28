@@ -97,6 +97,7 @@
 
 <style>
 	.pedidos {
+		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
@@ -111,8 +112,6 @@
 		display: flex;
 		flex-direction: column;
 		cursor: pointer;
-	}
-	.grupo:hover {
 	}
 	.pedido {
 		display: grid;

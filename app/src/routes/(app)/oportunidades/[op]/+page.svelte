@@ -235,42 +235,29 @@
 			</section>
 		{/if}
 
-		{#if isEditing}
-			<section class="adjunto">
-				<div class="block-header">
-					<h3>Adjuntos:</h3>
-				</div>
-				<div class="block-content">
-					<FormOptionalInput title="+Potencial de venta">
-						<SubirAdjunto
-							label="Adjuntos"
-							name="docs_adjuntos"
-							amountName="totales"
-							id_nodo_p={eventData?.id}
-							cliente={eventData?.cliente}
-							agente={eventData?.agente}
-							action="/documentos?/add"
-							required
-							multiple
-						/>
-					</FormOptionalInput>
-					{#each eventData?.adjuntos as documento}
-						<TarjetaListaDocumentos event={documento} />
-					{/each}
-				</div>
-			</section>
-		{:else if eventData?.adjuntos.length > 0}
-			<section>
-				<div class="block-header">
-					<h3>Adjuntos</h3>
-				</div>
-				<div class="block-content">
-					{#each eventData?.adjuntos as documento}
-						<TarjetaListaDocumentos event={documento} />
-					{/each}
-				</div>
-			</section>
-		{/if}
+		<section class="adjunto">
+			<div class="block-header">
+				<h3>Adjuntos:</h3>
+			</div>
+			<div class="block-content">
+				<FormOptionalInput title="+Adjuntos">
+					<SubirAdjunto
+						label="Adjuntos"
+						name="docs_adjuntos"
+						amountName="totales"
+						id_nodo_p={eventData?.id}
+						cliente={eventData?.cliente}
+						agente={eventData?.agente}
+						action="/documentos?/add"
+						required
+						multiple
+					/>
+				</FormOptionalInput>
+				{#each eventData?.adjuntos as documento}
+					<TarjetaListaDocumentos event={documento} />
+				{/each}
+			</div>
+		</section>
 
 		<section>
 			<div class="block-header">
