@@ -4,7 +4,6 @@
 	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import Select from '../App/Select.svelte';
 	import PreviewListaPedidos from './PreviewListaPedidos.svelte';
 
 	let { id_oportunidad, view = $bindable() }: { id_oportunidad?: string; view: boolean } = $props();
