@@ -13,7 +13,8 @@
 		id_nodo_p,
 		cliente,
 		agente,
-		action = '',
+		action = '/documentos?/add',
+		pedidos,
 		required = false,
 		disabled = false,
 		multiple = true,
@@ -26,6 +27,7 @@
 		cliente?: any;
 		agente?: any;
 		action?: string;
+		pedidos?: any;
 		required?: boolean;
 		disabled?: boolean;
 		multiple?: boolean;
@@ -37,6 +39,11 @@
 	let formEl: HTMLFormElement;
 	let isDragging = $state(false);
 	let isSubmitting = $state(false);
+	let totalPedidos = $derived(
+		pedidos.reduce((acc: number, item: any) => {
+			return acc + item.precio_unitario * item.cantidad;
+		}, 0) // 0 es el valor inicial del acumulador
+	);
 
 	function handleChange(e: Event) {
 		const input = e.target as HTMLInputElement;
@@ -160,7 +167,7 @@
 							</p>
 							<input
 								type="number"
-								bind:value={item.amount}
+								bind:value={totalPedidos}
 								placeholder={amountLabel}
 								min="0"
 								step="0.01"

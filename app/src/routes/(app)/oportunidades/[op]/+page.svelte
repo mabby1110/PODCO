@@ -195,7 +195,7 @@
 							id_nodo_p={eventData?.id}
 							cliente={eventData?.cliente}
 							agente={eventData?.agente}
-							action="/documentos?/add"
+							pedidos={eventData?.pedidos}
 							required
 							multiple
 						/>
