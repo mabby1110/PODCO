@@ -80,6 +80,11 @@
 		align-items: baseline;
 		justify-items: center;
 	}
+	input,
+	button, .cantidad {
+		pointer-events: all;
+		cursor: pointer;
+	}
 	.producto .descripcion {
 		grid-column: span 6;
 		word-break: break-all;

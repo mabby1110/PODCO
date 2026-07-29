@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { page } from "$app/state";
-	import { agrupacionesInventario, categoriasInventario } from "$lib";
-	import Agrupaciones from "$lib/components/Acciones/Agrupaciones.svelte";
-	import ExportarCSV from "$lib/components/Acciones/ExportarCSV.svelte";
-	import Filtro from "$lib/components/Acciones/Filtro.svelte";
-	import Searchbar from "$lib/components/Acciones/Searchbar.svelte";
-	import Panel from "$lib/components/Panel/Panel.svelte";
-	import PanelFiltros from "$lib/components/Panel/PanelFiltros.svelte";
-	import Grupo from "$lib/components/Tarjetas/Grupo.svelte";
-	import Vista from "$lib/components/Tarjetas/Vista.svelte";
-	import TarjetaListaInventario from "$lib/components/Vistas/Inventario/TarjetaListaInventario.svelte";
-	import FormPedidos from "$lib/components/Vistas/Pedidos/FormPedidos.svelte";
-	import ListaPedidos from "$lib/components/Vistas/Pedidos/ListaPedidos.svelte";
-	import { appState } from "$lib/stores/appState.svelte";
-	import { StoreAgrupaciones } from "$lib/stores/StoreAgrupaciones.svelte";
-	import { agruparDatosPorRuta, obtenerDatosFiltrados } from "$lib/utils/filtro";
+	import { page } from '$app/state';
+	import { agrupacionesInventario, categoriasInventario } from '$lib';
+	import Agrupaciones from '$lib/components/Acciones/Agrupaciones.svelte';
+	import ExportarCSV from '$lib/components/Acciones/ExportarCSV.svelte';
+	import Filtro from '$lib/components/Acciones/Filtro.svelte';
+	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
+	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
+	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
+	import Panel from '$lib/components/Tarjetas/Panel.svelte';
+	import Vista from '$lib/components/Tarjetas/Vista.svelte';
+	import TarjetaListaInventario from '$lib/components/Vistas/Inventario/TarjetaListaInventario.svelte';
+	import FormPedidos from '$lib/components/Vistas/Inventario/Pedidos/FormPedidos.svelte';
+	import ListaPedidos from '$lib/components/Vistas/Inventario/Pedidos/ListaPedidos.svelte';
+	import { appState } from '$lib/stores/appState.svelte';
+	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
+	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 
 	let { inventario } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -66,13 +66,13 @@
 		/>
 		<Panel tituloBoton="Pedidos">
 			{#snippet header()}
-				<button class="butter" onclick={handleview}>{view ? '+Borrador' : 'Lista'}</button>
+				<button class="butter" onclick={handleview}>{view ? 'Lista' : '+Borrador'}</button>
 			{/snippet}
 			{#snippet contenido()}
 				{#if view}
-					<ListaPedidos bind:view />
-				{:else}
 					<FormPedidos bind:view />
+				{:else}
+					<ListaPedidos bind:view />
 				{/if}
 			{/snippet}
 		</Panel>

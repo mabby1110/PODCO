@@ -2,7 +2,6 @@
 	import { page } from "$app/state";
 	import ExportarCSV from "$lib/components/Acciones/ExportarCSV.svelte";
 	import Agrupaciones from "$lib/components/Acciones/Agrupaciones.svelte";
-	import PanelFiltros from "$lib/components/Panel/PanelFiltros.svelte";
 	import Grupo from "$lib/components/Tarjetas/Grupo.svelte";
 	import Vista from "$lib/components/Tarjetas/Vista.svelte";
 	import TarjetaListaOportunidades from "$lib/components/Vistas/Oportunidad/TarjetaListaOportunidades.svelte";
@@ -13,6 +12,7 @@
 	import Searchbar from "$lib/components/Acciones/Searchbar.svelte";
 	import FiltroAgente from "$lib/components/Acciones/FiltroAgente.svelte";
 	import Filtro from "$lib/components/Acciones/Filtro.svelte";
+	import PanelFiltros from "$lib/components/Acciones/PanelFiltros.svelte";
 
 
 	let { oportunidades } = $derived(page.data);

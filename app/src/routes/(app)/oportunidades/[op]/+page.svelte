@@ -161,9 +161,7 @@
 				<div class="block-content">
 					<FormOptionalInput title="+Potencial de venta">
 						{#if eventData?.pedidos.length > 0}
-							{#each eventData?.pedidos as pedido}
-								<PedidoRelacionado {pedido} />
-							{/each}
+							<PedidoRelacionado pedidos={eventData?.pedidos ?? []} />
 						{:else}
 							<RelacionarPedido id_oportunidad={eventData?.id} />
 						{/if}
@@ -179,9 +177,7 @@
 				<div class="block-content">
 					<FormOptionalInput title="+Cotización">
 						{#if eventData?.pedidos.length > 0}
-							{#each eventData?.pedidos as pedido}
-								<PedidoRelacionado {pedido} />
-							{/each}
+							<PedidoRelacionado {pedidos} />
 							{#if eventData?.cotizaciones.length > 0}
 								{#each eventData?.cotizaciones as documento}
 									<TarjetaListaDocumentos event={documento} />

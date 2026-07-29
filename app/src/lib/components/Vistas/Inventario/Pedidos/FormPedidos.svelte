@@ -7,13 +7,6 @@
 	import PreviewListaPedidos from './PreviewListaPedidos.svelte';
 
 	let { id_oportunidad, view = $bindable() }: { id_oportunidad?: string; view: boolean } = $props();
-
-	let tipo = $state('');
-	let movimientos = [
-		{ value: 'borrador', label: 'Borrador' },
-		{ value: 'cotizacion', label: 'Cotización' }
-	];
-
 	const copiarAExcel = () => {
 		const cabeceras = 'Cantidad\tDescripción\tSerie\tMoneda\tPrecio';
 		const filas = StorePedidoNuevo.items
@@ -147,6 +140,11 @@
 		width: 100%;
 		overflow: auto;
 		padding: var(--a);
+		pointer-events: none;
+	}
+	button {
+		pointer-events: all;
+		cursor: pointer;
 	}
 	.acciones {
 		display: flex;

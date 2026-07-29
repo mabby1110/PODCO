@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
-	import ContadorProducto from '../Pedidos/ContadorProducto.svelte';
+	import ContadorProducto from './Pedidos/ContadorProducto.svelte';
 
 	let { producto } = $props();
 </script>
