@@ -30,7 +30,7 @@
 		{#each lista_agrupada as grupo}
 			<button class="panel grupo" onclick={() => seleccionarAgrupacion(grupo.elementos)}>
 				{#each grupo.elementos as item}
-					<Pedido {item} />
+					<Pedido {item} selected/>
 				{/each}
 			</button>
 		{/each}

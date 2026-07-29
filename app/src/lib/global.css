@@ -98,7 +98,6 @@ label {
 section {
 	/* siempre tendra header y contenido */
 	display: flex;
-	flex-wrap: wrap;
 	gap: var(--a);
 }
 
@@ -354,16 +353,25 @@ button {
 }
 
 /* ESTILOS PARA BOTONES */
+.butter:hover {
+	opacity: 60%;
+}
+
 .butter {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	color: var(--color-text);
 	height: var(--d);
 	border: 1px solid var(--color-secondary);
 	border-radius: var(--a);
-	padding: 4px var(--a);
 	background-color: var(--color-background);
 	backdrop-filter: blur(16px);
 	cursor: pointer;
 	width: fit-content;
+	min-width: var(--d);
+
+	padding: 4px var(--a);
 }
 
 .butter img {
@@ -372,26 +380,19 @@ button {
 }
 
 .honey {
-	min-width: var(--d);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 0;
 	background-color: var(--color-background);
+	padding: 0;
 }
 
 .chile {
-	min-width: var(--d);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 0;
 	background-color: var(--color-error);
+	padding: 0;
 }
 
-.chile:hover {
-	background-color: var(--color-error);
-	opacity: 60%;
+.milk {
+	background-color: none;
+	padding: 0;
+	border: none;
 }
 
 .matcha {
@@ -477,6 +478,10 @@ button {
 
 	::-webkit-scrollbar-thumb {
 		background: rgba(136, 136, 136, 0.55);
+	}
+
+	section {
+		flex-wrap: wrap;
 	}
 }
 

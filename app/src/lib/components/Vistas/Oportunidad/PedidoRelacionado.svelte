@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Pedido from '$lib/components/Tarjetas/Pedido.svelte';
 	import { formatCurrency } from '$lib/utils/util';
 
 	let { pedidos }: { pedidos: any[] } = $props();
@@ -14,26 +15,7 @@
 				value={JSON.stringify([{ id: pedido.id, id_oportunidad: null }])}
 			/>
 
-			<div class="entrada">
-				<div class="descripcion">
-					<b>{pedido.inventario?.descripcion || '-'}</b>
-				</div>
-
-				<span class="codigo">{pedido.inventario?.codigo || 'sin código'}</span>
-
-				<span>{pedido.cantidad}</span>
-
-				<span>
-					<p>${pedido.precio_unitario || 0}</p>
-				</span>
-
-				<span>USD</span>
-
-				<span class="total">
-					{formatCurrency(String(pedido.precio_unitario * pedido.cantidad), 'USD')}
-				</span>
-				<button type="submit" class="butter chile" title="Desvincular">✕</button>
-			</div>
+			<Pedido item={pedido} selected/>
 		</form>
 	{/each}
 </div>
@@ -50,7 +32,6 @@
 		gap: var(--a);
 		align-items: baseline;
 		justify-items: center;
-		padding: var(--a);
 	}
 
 	.entrada .descripcion {
@@ -62,7 +43,7 @@
 	}
 
 	.entrada .codigo {
-		grid-column: span 2;
+		grid-column: span 3;
 		word-break: break-all;
 		justify-self: flex-start;
 	}

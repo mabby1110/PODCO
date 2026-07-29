@@ -4,7 +4,7 @@
 
 	// Definimos los pasos por defecto usando las variables y colores que proporcionaste.
 	// Al usar $props(), permitimos que este array sea sobreescrito si lo necesitas en el futuro.
-	let { item } = $props();
+	let { item, selected }: { item: any; selected?: boolean } = $props();
 	function removerItem(item: any) {
 		// Ajustar la propiedad identificadora según la implementación del Store
 		StoreEditarPedido.remover(item);
@@ -13,6 +13,9 @@
 
 <div class="leyenda">
 	<div class="pedido">
+		{#if !selected}
+			<button type="button" class="butter milk" onclick={() => removerItem(item)}>✕</button>
+		{/if}
 		<div class="descripcion">
 			<b>{item.inventario.descripcion || '-'}</b>
 			<a href="/oportunidades/{item.id_oportunidad}">{item.id_oportunidad}</a>
@@ -22,7 +25,6 @@
 		<span><p>${item.precio_unitario || 0}</p></span>
 		<span>USD</span>
 		<span class="total">{formatCurrency(String(item.precio_unitario * item.cantidad), 'USD')}</span>
-		<button type="button" class="btn-remover" onclick={() => removerItem(item)}>X</button>
 	</div>
 </div>
 
@@ -43,7 +45,7 @@
 		flex-direction: column;
 	}
 	.pedido .codigo {
-		grid-column: span 2;
+		grid-column: span 3;
 		word-break: break-all;
 		justify-self: flex-start;
 	}

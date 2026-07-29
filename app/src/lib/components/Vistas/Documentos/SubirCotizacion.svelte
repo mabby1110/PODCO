@@ -152,7 +152,7 @@
 			<div class="files">
 				{#each items as item, i}
 					<div class="item">
-						<button type="button" class="close-btn" onclick={() => removeItem(i)}> × </button>
+						<button type="button" class="close-btn" onclick={() => removeItem(i)}> ✕ </button>
 
 						<div class="info">
 							<p class="filename">
@@ -183,19 +183,13 @@
 </form>
 
 <style>
-	form {
-		width: 100%;
-	}
-
 	.upload-container {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
-		width: 100%;
 		padding: var(--a);
 	}
 	.file-input {
-		width: 100%;
 		max-width: 800px;
 		padding: var(--c);
 		border: 1px dashed #d4d4d8;

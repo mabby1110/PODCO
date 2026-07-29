@@ -159,13 +159,13 @@
 					<h3>Potencial de venta:</h3>
 				</div>
 				<div class="block-content">
-					<FormOptionalInput title="+Potencial de venta">
-						{#if eventData?.pedidos.length > 0}
-							<PedidoRelacionado pedidos={eventData?.pedidos ?? []} />
-						{:else}
+					{#if eventData?.pedidos.length > 0}
+						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} />
+					{:else}
+						<FormOptionalInput title="+Potencial de venta">
 							<RelacionarPedido id_oportunidad={eventData?.id} />
-						{/if}
-					</FormOptionalInput>
+						</FormOptionalInput>
+					{/if}
 				</div>
 			</section>
 		{/if}
@@ -175,31 +175,31 @@
 					<h3>Cotizacion(es):</h3>
 				</div>
 				<div class="block-content">
-					<FormOptionalInput title="+Cotización">
-						{#if eventData?.pedidos.length > 0}
-							<PedidoRelacionado {pedidos} />
-							{#if eventData?.cotizaciones.length > 0}
-								{#each eventData?.cotizaciones as documento}
-									<TarjetaListaDocumentos event={documento} />
-								{/each}
-							{/if}
-							{#if currentFase >= 2 && currentFase <= 3 && (eventData?.cotizaciones.length <= 0 || isEditing)}
-								<SubirCotizacion
-									name={'docs_cotizaciones'}
-									amountLabel="Total cotizado"
-									amountName="totales"
-									id_nodo_p={eventData?.id}
-									cliente={eventData?.cliente}
-									agente={eventData?.agente}
-									action="/documentos?/add"
-									required
-									multiple
-								/>
-							{/if}
-						{:else}
+					{#if eventData?.pedidos.length > 0}
+						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} />
+					{:else}
+						<FormOptionalInput title="+Potencial de venta">
 							<RelacionarPedido id_oportunidad={eventData?.id} />
-						{/if}
-					</FormOptionalInput>
+						</FormOptionalInput>
+					{/if}
+					{#if eventData?.cotizaciones.length > 0}
+						{#each eventData?.cotizaciones as documento}
+							<TarjetaListaDocumentos event={documento} />
+						{/each}
+					{/if}
+					{#if eventData?.pedidos.length > 0}
+						<SubirCotizacion
+							name={'docs_cotizaciones'}
+							amountLabel="Total cotizado"
+							amountName="totales"
+							id_nodo_p={eventData?.id}
+							cliente={eventData?.cliente}
+							agente={eventData?.agente}
+							action="/documentos?/add"
+							required
+							multiple
+						/>
+					{/if}
 				</div>
 			</section>
 		{/if}
