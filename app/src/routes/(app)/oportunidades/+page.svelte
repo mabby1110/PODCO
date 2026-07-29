@@ -17,25 +17,18 @@
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
-
-	// guardamos lista para poder manipular data
 	let lista = $derived(oportunidades);
-
-	// cadena de variables reactivas, data > lista > lista_odenada > lista_agrupada
 	let lista_ordenada = $derived(obtenerDatosFiltrados(lista, currentRoute));
 	let lista_agrupada = $derived(agruparDatosPorRuta(lista_ordenada, currentRoute));
-
+	
 	let grupos = $derived(
 		lista_agrupada.map((e) => {
 			return { grupo: e.grupo, tamaño: e.elementos.length };
 		})
 	);
-
-	/* Es necesario una variable reactiva ya que los derived son solo de lectura,
-	lista_agrupada ya maneja la reactividad contra lista ordenada
-	por lo que bloquea todo lo demas que modifique su valor actual
-	*/
+	
 	let agrupacionesSeleccionadas: string[] = $state(grupos.map((a: any) => a.grupo));
+	
 	let lista_agrupada_filtrada = $derived(
 		agrupacionesSeleccionadas.length > 0
 			? lista_agrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))

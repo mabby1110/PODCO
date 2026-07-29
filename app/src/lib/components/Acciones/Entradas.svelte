@@ -101,7 +101,6 @@
 <form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
 	<input type="hidden" name="id" value={objId} />
 	<input type="hidden" name="historia" value={list_stringified} />
-
 	<div class="detail-body">
 		<div class="entradas">
 			{#if lista.length > 0}
@@ -119,7 +118,7 @@
 						{:else}
 							{#if (item.nombre_perfil === $profile?.nombre && isEditing) || (!item.nombre_perfil && isEditing)}
 								{#if !item.id_op}
-									<button type="button" class="butter" onclick={()=>handleHotOp(i, item.entrada)}>
+									<button type="button" class="butter" onclick={() => handleHotOp(i, item.entrada)}>
 										+Oportundiad
 									</button>
 								{/if}
@@ -155,6 +154,9 @@
 </form>
 
 <style>
+	form {
+		flex-grow: 1;
+	}
 	.empty-msg {
 		font-style: italic;
 		margin: 16px 0;
@@ -165,8 +167,7 @@
 		flex-grow: 1;
 	}
 	.field-input textarea {
-		margin-top: 4px;
-		min-height: 60px;
+		min-height: var(--e);
 	}
 	.form-actions {
 		display: flex;
@@ -176,12 +177,11 @@
 		margin-top: 8px;
 	}
 	.detail-body {
-		padding: var(--a);
+		flex-grow: 1;
 		display: flex;
 		gap: var(--a);
 		flex-wrap: wrap;
 		width: 100%;
-		max-width: 1000px;
 		pointer-events: none;
 	}
 	.profile {

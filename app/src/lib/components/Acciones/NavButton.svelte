@@ -65,7 +65,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		width: var(--h);
 		max-width: 100vw;
 	}
 	.app-actions {

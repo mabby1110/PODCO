@@ -23,7 +23,7 @@ const defaultState: AppState = {
 	dnd: false,
 	panelMinimized: false,
 	calendarCards: false,
-	calendarView: 'gant',
+	calendarView: 'semanal',
 	ModalActivity: false,
 	ModalOp: false,
 	ModalClient: false,

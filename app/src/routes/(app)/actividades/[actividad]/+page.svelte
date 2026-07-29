@@ -12,7 +12,6 @@
 	import { postActivityUpdate } from '$lib/utils/actions.js';
 	import { getStyleForPhase } from '$lib/utils/util.js';
 
-
 	let { data } = $props();
 	const event = $derived(data.actividad);
 	const { agentes } = $derived(page.data);
@@ -129,13 +128,17 @@
 			</EditableInput>
 
 			<section>
-				<h2>Historia</h2>
-				<Entradas
-					{isEditing}
-					historia={eventData.historia}
-					objId={eventData.id}
-					action={'/actividades?/update'}
-				/>
+				<div class="block-header">
+					<h3>Historia</h3>
+				</div>
+				<div class="block-content">
+					<Entradas
+						{isEditing}
+						historia={eventData.historia}
+						objId={eventData.id}
+						action={'/actividades?/update'}
+					/>
+				</div>
 			</section>
 		{/snippet}
 
