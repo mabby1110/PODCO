@@ -7,12 +7,14 @@
 	import TarjetaListaActividades from '$lib/components/Vistas/Actividad/TarjetaListaActividades.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
 	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
-	import PanelFiltros from '$lib/components/Panel/PanelFiltros.svelte';
 	import ExportarCSV from '$lib/components/Acciones/ExportarCSV.svelte';
 	import FiltroAgente from '$lib/components/Acciones/FiltroAgente.svelte';
 	import Filtro from '$lib/components/Acciones/Filtro.svelte';
 	import Agrupaciones from '$lib/components/Acciones/Agrupaciones.svelte';
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
+	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
+	import { onMount } from 'svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let { actividades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -41,18 +43,23 @@
 			: lista_agrupada
 	);
 
+	
+	let show = $derived($appState.min);
+	
 	$effect(() => {
 		if (agrupacionesSeleccionadas.length > 0) {
 			lista_agrupada?.filter((a) => agrupacionesSeleccionadas.includes(a.grupo));
 		}
 	});
-
-	let show = $derived($appState.min);
-
-	const steps = [
-		{ label: 'Actividad programada', color: 'var(--color-secondary)' },
-		{ label: 'Finalizada', color: '#000000ee' }
-	];
+	onMount(() => {
+		if ($profile?.isAdmin && ) {
+			agrupacionesActividades.push({ label: 'Agente', value: 'profiles' });
+		}
+	});
+	// const steps = [
+	// 	{ label: 'Actividad programada', color: 'var(--color-secondary)' },
+	// 	{ label: 'Finalizada', color: '#000000ee' }
+	// ];
 </script>
 
 <Vista>
@@ -65,7 +72,6 @@
 				<!-- <Leyenda {steps} /> -->
 			{/snippet}
 			{#snippet controles()}
-				<FiltroAgente />
 				<Filtro categorias={categoriasActividad} />
 				<Agrupaciones
 					categorias={agrupacionesActividades}

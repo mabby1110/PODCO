@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { appState } from '$lib/stores/appState.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 	import Select from '../Formularios/Select.svelte';
 

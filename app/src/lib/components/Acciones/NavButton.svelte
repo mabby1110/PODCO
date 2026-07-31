@@ -63,12 +63,11 @@
 		left: 0;
 		z-index: 1000;
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		gap: var(--a);
 		max-width: 100vw;
 	}
 	.app-actions {
-		width: 100%;
 		display: flex;
 		gap: var(--a);
 		align-items: flex-end;

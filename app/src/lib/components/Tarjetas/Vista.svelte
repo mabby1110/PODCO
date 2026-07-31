@@ -36,7 +36,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		flex-direction: row-reverse;
 		flex-wrap: wrap-reverse;
 	}
 </style>

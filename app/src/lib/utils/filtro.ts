@@ -89,15 +89,20 @@ export function agruparDatos<T>(
 ): { grupo: string; elementos: T[] }[] {
 	if (!campo) return [{ grupo: valorPorDefecto, elementos: items }];
 	const grupos = new Map<string, T[]>();
+
 	for (const item of items) {
 		const valor = (item as any)[campo];
-		const nombreGrupo = ['inicio', 'fecha_creacion', 'fecha_cierre'].includes(campo as string)
-			? valor
-				? String(formatDateFull(parseDateTimeLocal(valor)))
-				: valorPorDefecto
-			: valor
-				? String(valor)
-				: valorPorDefecto;
+		let nombreGrupo = valorPorDefecto;
+
+		if (valor) {
+			if (campo === 'profiles') {
+				nombreGrupo = valor.nombre ? String(valor.nombre) : valorPorDefecto;
+			} else if (['inicio', 'fecha_creacion', 'fecha_cierre'].includes(campo)) {
+				nombreGrupo = String(formatDateFull(parseDateTimeLocal(valor)));
+			} else {
+				nombreGrupo = String(valor);
+			}
+		}
 
 		if (!grupos.has(nombreGrupo)) {
 			grupos.set(nombreGrupo, []);
