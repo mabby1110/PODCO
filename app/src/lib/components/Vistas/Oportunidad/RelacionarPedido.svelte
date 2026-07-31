@@ -6,11 +6,13 @@
 	import { formatCurrency } from '$lib/utils/util';
 	import { goto } from '$app/navigation';
 	import Pedido from '$lib/components/Tarjetas/Pedido.svelte';
+	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	// Recibe el parámetro de la página actual
 	let { id_oportunidad }: { id_oportunidad: string } = $props();
 
-	let { pedidos } = $derived(page.data);
+	let { pedidos, agentes } = $derived(page.data);
 	let agrupacion = $state('id_agrupacion');
 	let lista_agrupada = $derived(agruparDatos(pedidos, agrupacion));
 
@@ -20,7 +22,7 @@
 			StoreEditarPedido.agregar(item);
 		});
 	}
-
+	let agente = $state(null);
 	$effect(() => console.log(StoreEditarPedido.items));
 </script>
 
@@ -30,7 +32,7 @@
 		{#each lista_agrupada as grupo}
 			<button class="panel grupo" onclick={() => seleccionarAgrupacion(grupo.elementos)}>
 				{#each grupo.elementos as item}
-					<Pedido {item} selected/>
+					<Pedido {item} selected />
 				{/each}
 			</button>
 		{/each}
@@ -48,13 +50,28 @@
 				if (StoreEditarPedido.items.length > 0) {
 					const pedidosAActualizar = StoreEditarPedido.items.map((item) => ({
 						id: item.id,
-						id_oportunidad: id_oportunidad
+						id_oportunidad: id_oportunidad,
+						id_agente: agente
 					}));
 
 					formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
 				}
 			}}
 		>
+			{#if $profile?.isAdmin}
+				<label>
+					<select name="id_agente" class="butter" bind:value={agente} required>
+						<option value="" disabled selected>Selecciona un agente</option>
+						{#each agentes as agente}
+							<option value={String(agente.id)}>
+								{agente.nombre}
+							</option>
+						{/each}
+					</select>
+				</label>
+			{:else}
+				<input type="hidden" name="id_agente" value={$profile?.id} />
+			{/if}
 			<button class="butter chile" type="button" onclick={() => StoreEditarPedido.limpiar()}
 				>Cancelar</button
 			>

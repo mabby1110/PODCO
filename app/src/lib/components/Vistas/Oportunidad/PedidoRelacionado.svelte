@@ -14,7 +14,7 @@
 				value={JSON.stringify([{ id: item.id, id_oportunidad: null }])}
 			/>
 
-			<Pedido {item} selected/>
+			<Pedido {item} />
 		</form>
 	{/each}
 </div>

@@ -1,13 +1,38 @@
 <script lang="ts">
+	import { invalidate, invalidateAll } from '$app/navigation';
 	import { StoreEditarPedido } from '$lib/stores/StoreEditarPedido.svelte';
 	import { formatCurrency } from '$lib/utils/util';
 
 	// Definimos los pasos por defecto usando las variables y colores que proporcionaste.
 	// Al usar $props(), permitimos que este array sea sobreescrito si lo necesitas en el futuro.
 	let { item, selected }: { item: any; selected?: boolean } = $props();
-	function removerItem(item: any) {
-		// Ajustar la propiedad identificadora según la implementación del Store
-		StoreEditarPedido.remover(item);
+	async function removerItem(item: any) {
+		if (item.id_oportunidad) {
+			item.id_oportunidad = null;
+
+			const formData = new FormData();
+			const pedidosAActualizar = [
+				{
+					id: item.id,
+					id_oportunidad: item.id_oportunidad
+				}
+			];
+			formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
+
+			const response = await fetch('/inventario?/updatePedido', {
+				method: 'POST',
+				body: formData
+			});
+
+			if (response.ok) {
+				StoreEditarPedido.remover(item);
+				invalidateAll();
+			} else {
+				console.error('Error en la acción de SvelteKit');
+			}
+		} else {
+			StoreEditarPedido.remover(item);
+		}
 	}
 </script>
 
