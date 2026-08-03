@@ -5,7 +5,7 @@
 
 	// Definimos los pasos por defecto usando las variables y colores que proporcionaste.
 	// Al usar $props(), permitimos que este array sea sobreescrito si lo necesitas en el futuro.
-	let { item, selected }: { item: any; selected?: boolean } = $props();
+	let { item, selected, edit }: { item: any; selected?: boolean; edit?: boolean } = $props();
 	async function removerItem(item: any) {
 		if (item.id_oportunidad) {
 			item.id_oportunidad = null;
@@ -19,7 +19,7 @@
 			];
 			formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
 
-			const response = await fetch('/inventario?/updatePedido', {
+			const response = await fetch('?/updatePedido', {
 				method: 'POST',
 				body: formData
 			});
@@ -34,11 +34,17 @@
 			StoreEditarPedido.remover(item);
 		}
 	}
+	function removerPedidoAEditar(item: any) {
+		StoreEditarPedido.remover(item);
+	}
 </script>
 
 <div class="leyenda">
 	<div class="pedido">
-		{#if !selected}
+		{#if edit}
+			<button type="button" class="butter milk" onclick={() => removerPedidoAEditar(item)}>✕</button
+			>
+		{:else if !selected}
 			<button type="button" class="butter milk" onclick={() => removerItem(item)}>✕</button>
 		{/if}
 		<div class="descripcion">

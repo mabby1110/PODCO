@@ -24,6 +24,7 @@
 
 <div class="producto">
 	{#if isEdicion}
+		<button type="button" class="butter milk" onclick={() => StorePedido.quitar(item.pedido)}>✕</button>
 		<b class="descripcion">{item.pedido.inventario.descripcion || '-'}</b>
 		<span class="codigo"
 			>{item.pedido.inventario.serie || item.pedido.inventario.codigo || 'sin código'}</span
@@ -81,7 +82,8 @@
 		justify-items: center;
 	}
 	input,
-	button, .cantidad {
+	button,
+	.cantidad {
 		pointer-events: all;
 		cursor: pointer;
 	}

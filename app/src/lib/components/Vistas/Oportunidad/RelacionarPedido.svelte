@@ -26,20 +26,20 @@
 </script>
 
 <button class="butter" onclick={() => goto('/inventario')}>+Pedido nuevo</button>
-<p class="agente">Agente: {agente.nombre}</p>
+<p class="agente">Agente: {agente?.nombre}</p>
 <div class="pedidos">
 	{#if StoreEditarPedido.items.length === 0}
 		{#each lista_agrupada as grupo}
 			<button class="panel grupo" onclick={() => seleccionarAgrupacion(grupo.elementos)}>
 				{#each grupo.elementos as item}
-					<Pedido {item} selected />
+					<Pedido {item} edit />
 				{/each}
 			</button>
 		{/each}
 	{:else}
 		<div class="panel grupo">
 			{#each StoreEditarPedido.items as item}
-				<Pedido {item} />
+				<Pedido {item} edit/>
 			{/each}
 		</div>
 		<form
@@ -56,6 +56,7 @@
 
 					formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
 				}
+				StoreEditarPedido.limpiar();
 			}}
 		>
 			<button class="butter chile" type="button" onclick={() => StoreEditarPedido.limpiar()}
