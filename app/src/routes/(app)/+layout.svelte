@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { onNavigate } from '$app/navigation';
 	import NavButton from '$lib/components/Acciones/NavButton.svelte';import { selectedGroupStore } from '$lib/stores/groupFilter.svelte.js';
+	import ModalActividad from '$lib/components/Vistas/Actividad/ModalActividad.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte.js';
+	import ModalOportunidad from '$lib/components/Vistas/Oportunidad/ModalOportunidad.svelte';
+	import ModalCliente from '$lib/components/Vistas/Cliente/ModalCliente.svelte';
+	import ModalInventario from '$lib/components/Vistas/Inventario/ModalInventario.svelte';
 
 	let { children, data } = $props();
 
@@ -40,10 +44,10 @@
 
 {@render children()}
 
-<!-- <ModalActividad />
+<ModalActividad />
 <ModalOportunidad />
 <ModalCliente />
-<ModalInventario /> -->
+<ModalInventario />
 
 <style>
 	/* .page-container {

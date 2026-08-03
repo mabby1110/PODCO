@@ -1,32 +1,27 @@
 <script lang="ts">
-	import { page } from "$app/state";
-	import { agrupacionesCliente, categoriasCliente } from "$lib";
-	import Agrupaciones from "$lib/components/Acciones/Agrupaciones.svelte";
-	import ExportarCSV from "$lib/components/Acciones/ExportarCSV.svelte";
-	import Filtro from "$lib/components/Acciones/Filtro.svelte";
-	import FiltroAgente from "$lib/components/Acciones/FiltroAgente.svelte";
-	import PanelFiltros from "$lib/components/Acciones/PanelFiltros.svelte";
-	import Searchbar from "$lib/components/Acciones/Searchbar.svelte";
-	import Grupo from "$lib/components/Tarjetas/Grupo.svelte";
-	import Vista from "$lib/components/Tarjetas/Vista.svelte";
-	import CardClienteListPreview from "$lib/components/Vistas/Cliente/CardClienteListPreview.svelte";
-	import { appState } from "$lib/stores/appState.svelte";
-	import { StoreAgrupaciones } from "$lib/stores/StoreAgrupaciones.svelte";
-	import { StoreModList } from "$lib/stores/StoreModList.svelte";
-	import { extraerColumnas, filterData, groupData, sortData } from "$lib/utils/ModList";
+	import { page } from '$app/state';
+	import ExportarCSV from '$lib/components/Acciones/ExportarCSV.svelte';
+	import ModList from '$lib/components/Acciones/ModList.svelte';
+	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
+	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
+	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
+	import Vista from '$lib/components/Tarjetas/Vista.svelte';
+	import CardClienteListPreview from '$lib/components/Vistas/Cliente/CardClienteListPreview.svelte';
+	import { appState } from '$lib/stores/appState.svelte';
+	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
+	import { StoreModList } from '$lib/stores/StoreModList.svelte';
+	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 
-
-
-	let { oportunidades } = $derived(page.data);
+	let { clientes } = $derived(page.data);
 	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
 
 	// Convertido a $state para soportar bind:lista
-	let lista = $state(oportunidades);
-	let columnasDinamicas = $derived(extraerColumnas(oportunidades));
-
+	let lista = $state(clientes);
+	let columnasDinamicas = $derived(extraerColumnas(clientes));
+	console.log(lista);
 	$effect(() => {
-		lista = oportunidades;
+		lista = clientes;
 	});
 
 	let lista_ordenada = $derived(sortData(lista, currentRoute));
@@ -38,22 +33,19 @@
 
 <Vista>
 	{#snippet acciones()}
-		<Searchbar data={clientes} keyColumns={categoriasCliente.map((a) => a.key)} bind:lista />
+		<Searchbar data={clientes} keyColumns={columnasDinamicas.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
-				<FiltroAgente />
-				<Filtro categorias={categoriasCliente} />
-				<Agrupaciones categorias={agrupacionesCliente} bind:agrupacionesSeleccionadas {grupos} />
-			{/snippet}
+				<ModList {columnasDinamicas} route={currentRoute} />{/snippet}
 		</PanelFiltros>
 	{/snippet}
 
 	{#snippet contenido()}
-		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
+		{#if !isGrouped}
 			{#each lista_ordenada as elemento}
 				<CardClienteListPreview client={elemento} />
 			{/each}

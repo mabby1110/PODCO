@@ -5,7 +5,7 @@
 	let { producto } = $props();
 </script>
 
-<ListPreview href="/oportunidades/{producto.id}" style={producto?.style}>
+<ListPreview href="/oportunidades/{producto.id}" style={producto?.style} ocultarAcciones>
 	{#snippet header()}
 		<p>{producto?.descripcion}</p>
 		<p>{producto?.serie || producto?.codigo}</p>

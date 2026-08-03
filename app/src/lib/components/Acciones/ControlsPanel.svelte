@@ -23,9 +23,9 @@
         <button onclick={() => navigate('/calendario')} class="butter">
             📆 Calendario
         </button>
-        <button onclick={() => navigate('/documentos')} class="butter">
+        <!-- <button onclick={() => navigate('/documentos')} class="butter">
             📄 Documentos
-        </button>
+        </button> -->
         <button onclick={() => navigate('/inventario')} class="butter">
             📦 Inventario
         </button>

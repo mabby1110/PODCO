@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { motivosOportunidad } from '$lib';
-	import FormInput from '$lib/components/form/FormInput.svelte';
-	import FormSelectAgente from '../form/FormSelectAgente.svelte';
 	import { filtrarPorAgente } from '$lib/utils/util';
 	import { page } from '$app/state';
-	import DatePicker from '../App/DatePicker.svelte';
-	import FormConditionalInput from '../form/FormConditionalInput.svelte';
 	import { opModalStore } from '$lib/stores/opModalStore.svelte';
-	import FormOptionalInput from '../form/FormOptionalInput.svelte';
+	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
+	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
+	import FormInput from '$lib/components/Formularios/FormInput.svelte';
+	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
+	import FormConditionalInput from '$lib/components/Formularios/FormConditionalInput.svelte';
+	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
 	import Searchbar from './Searchbar.svelte';
-	import FormSelectMotivo from '../form/FormSelectMotivo.svelte';
 
 	let data = $derived(page.data);
 

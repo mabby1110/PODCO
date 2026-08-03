@@ -36,6 +36,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		flex-wrap: wrap-reverse;
+		flex-wrap: wrap-reverse;justify-content: flex-end;
 	}
 </style>

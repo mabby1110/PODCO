@@ -124,7 +124,8 @@
 		right: 0;
 		display: flex;
 		gap: var(--a);
-		max-width: fit-content;
+		width: fit-content;
+		max-width: 100vw;
 		z-index: 99;
 		display: flex;
 		flex-direction: column;
