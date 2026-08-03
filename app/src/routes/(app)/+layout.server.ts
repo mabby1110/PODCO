@@ -8,7 +8,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	if (!session || !user) {
 		throw redirect(303, '/auth');
 	}
-	const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+	const { data: profile } = await supabase.from('agentes').select('*').eq('id', user.id).single();
 
 	console.log('perfil:');
 	console.log('\nadmin: ', profile?.isAdmin);
@@ -18,29 +18,29 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	let queryOportunidades = supabase
 		.from('oportunidades')
 		.select(
-			`*, profiles(*), clientes(*), docs_cotizaciones(*), docs_adjuntos(*), docs_occ(*),  docs_ocp(*), pedidos(*, inventario(*))`
+			`*, agentes(*), clientes(*), docs_cotizaciones(*), docs_adjuntos(*), docs_occ(*),  docs_ocp(*), pedidos(*, inventario(*))`
 		)
 		.order('inicio', { ascending: false });
 	let queryActividades = supabase
 		.from('actividades')
-		.select('*, profiles(*)')
+		.select('*, agentes(*)')
 		.order('inicio', { ascending: false });
 	let queryClientes = supabase.from('clientes').select('*, oportunidades(*)');
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
 	let queryInventario = supabase.from('inventario').select('*');
-	let queryPedidos = supabase.from('pedidos').select('*, profiles(*), inventario(*)');
+	let queryPedidos = supabase.from('pedidos').select('*, agentes(*), inventario(*)');
 	let queryCotizaciones = supabase
 		.from('docs_cotizaciones')
-		.select('*, profiles(nombre), oportunidades(motivo), clientes(nombre_comercial)');
+		.select('*, agentes(nombre), oportunidades(motivo), clientes(nombre_comercial)');
 	let queryNotificaciones = supabase
 		.from('notificaciones')
-		.select('*, profiles(nombre), historial(*)');
+		.select('*, agentes(nombre), historial(*)');
 
 	if (profile?.isAdmin) {
-		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
+		const { data: perfiles } = await supabaseAdmin.from('agentes').select('*').is('isOper', false);
 		agentes = perfiles || [];
 	} else if (profile?.isOper) {
-		const { data: perfiles } = await supabaseAdmin.from('profiles').select('*').is('isOper', false);
+		const { data: perfiles } = await supabaseAdmin.from('agentes').select('*').is('isOper', false);
 		agentes = perfiles || [];
 		queryOportunidades = queryOportunidades.gte('fase', 3);
 		queryActividades = queryActividades.eq('id_agente', profile.id);
@@ -56,7 +56,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	const [
 		{ data: clientes },
 		{ data: oportunidades },
-		{ data: actividades },
+		{ data: actividades, error: errorOp },
 		{ data: documentos },
 		{ data: inventario },
 		{ data: pedidos },
@@ -72,6 +72,8 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		queryCotizaciones,
 		queryNotificaciones
 	]);
+
+console.log('Error Oportunidades:', errorOp);
 	console.log('\nactividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
 	console.log('clientes: ', clientes?.length);

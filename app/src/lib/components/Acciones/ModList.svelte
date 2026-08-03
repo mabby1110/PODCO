@@ -1,16 +1,14 @@
 <script lang="ts">
     import { StoreModList, type FilterRule, type SortRule, type Operator } from '$lib/stores/StoreModList.svelte';
 
-    type FieldType = 'string' | 'number' | 'date';
+    type FieldType = 'string' | 'number' | 'date' | 'object';
 
     let {
         route,
-        camposFiltro,
-        camposAgrupacion
+        columnasDinamicas
     }: {
         route: string;
-        camposFiltro: { key: string; label: string; type: FieldType }[];
-        camposAgrupacion: { key: string; label: string }[];
+        columnasDinamicas: { key: string; label: string; type: FieldType }[];
     } = $props();
 
     let estado = $derived(StoreModList.get(route));
@@ -32,21 +30,27 @@
             { valor: 'neq', label: '!=' },
             { valor: 'gt', label: '>' },
             { valor: 'lt', label: '<' }
+        ],
+        object: [
+            { valor: 'eq', label: '=' },
+            { valor: 'neq', label: '!=' },
+            { valor: 'contains', label: 'Contiene' }
         ]
     };
 
     const inputTypeMap: Record<FieldType, string> = {
         string: 'text',
         number: 'number',
-        date: 'datetime-local'
+        date: 'datetime-local',
+        object: 'text'
     };
 
     function getCampoDef(key: string) {
-        return camposFiltro.find(c => c.key === key) || camposFiltro[0];
+        return columnasDinamicas.find(c => c.key === key) || columnasDinamicas[0];
     }
 
     function agregarFiltro() {
-        const defaultCampo = camposFiltro[0];
+        const defaultCampo = columnasDinamicas[0];
         if (!defaultCampo) return;
         
         const filters = [
@@ -84,9 +88,12 @@
     }
 
     function agregarOrden() {
+        const defaultCampo = columnasDinamicas[0];
+        if (!defaultCampo) return;
+
         const sorts = [
             ...estado.sorts,
-            { field: camposFiltro[0]?.key ?? '', direction: 'asc' as const }
+            { field: defaultCampo.key, direction: 'asc' as const }
         ];
         StoreModList.update(route, { sorts });
     }
@@ -114,7 +121,7 @@
             onchange={(e) => actualizarAgrupacion(e.currentTarget.value || null)}
         >
             <option value="">Sin Agrupación</option>
-            {#each camposAgrupacion as campo}
+            {#each columnasDinamicas as campo}
                 <option value={campo.key}>{campo.label}</option>
             {/each}
         </select>
@@ -129,7 +136,7 @@
                     value={orden.field}
                     onchange={(e) => actualizarOrden(i, { ...orden, field: e.currentTarget.value })}
                 >
-                    {#each camposFiltro as campo}
+                    {#each columnasDinamicas as campo}
                         <option value={campo.key}>{campo.label}</option>
                     {/each}
                 </select>
@@ -154,7 +161,7 @@
                     value={filtro.field}
                     onchange={(e) => cambiarCampoFiltro(i, e.currentTarget.value)}
                 >
-                    {#each camposFiltro as campo}
+                    {#each columnasDinamicas as campo}
                         <option value={campo.key}>{campo.label}</option>
                     {/each}
                 </select>

@@ -66,34 +66,33 @@ export function sortData<T extends Record<string, any>>(data: T[], route: string
 }
 
 export function filterData<T extends Record<string, any>>(data: T[], route: string): T[] {
-	const filters = StoreModList.get(route)?.filters;
-	if (!filters?.length) return data;
+    const filters = StoreModList.get(route)?.filters;
+    if (!filters?.length) return data;
 
-	const activeFilters = filters.filter((f) => f.field && f.value != null && f.value !== '');
-	if (!activeFilters.length) return data;
+    const activeFilters = filters.filter((f) => f.field && f.value != null && f.value !== '');
+    if (!activeFilters.length) return data;
 
-	return data.filter((item) =>
-		activeFilters.every((rule) => {
-			const rawVal = item[rule.field];
-			const parsedVal = parseValue(rawVal);
-			const parsedRuleVal = parseValue(rule.value);
+    return data.filter((item) =>
+        activeFilters.every((rule) => {
+            let rawVal = item[rule.field];
 
-			switch (rule.operator) {
-				case 'eq':
-					return parsedVal === parsedRuleVal;
-				case 'neq':
-					return parsedVal !== parsedRuleVal;
-				case 'gt':
-					return parsedVal > parsedRuleVal;
-				case 'lt':
-					return parsedVal < parsedRuleVal;
-				case 'contains':
-					return String(rawVal).toLowerCase().includes(String(rule.value).toLowerCase());
-				default:
-					return false;
-			}
-		})
-	);
+            if (rawVal !== null && typeof rawVal === 'object' && !(rawVal instanceof Date)) {
+                rawVal = rawVal.nombre ?? rawVal.nombre_comercial ?? rawVal.razon_social ?? JSON.stringify(rawVal);
+            }
+
+            const parsedVal = parseValue(rawVal);
+            const parsedRuleVal = parseValue(rule.value);
+
+            switch (rule.operator) {
+                case 'eq': return parsedVal === parsedRuleVal;
+                case 'neq': return parsedVal !== parsedRuleVal;
+                case 'gt': return parsedVal > parsedRuleVal;
+                case 'lt': return parsedVal < parsedRuleVal;
+                case 'contains': return String(rawVal).toLowerCase().includes(String(rule.value).toLowerCase());
+                default: return false;
+            }
+        })
+    );
 }
 
 export function groupData<T extends Record<string, any>>(
@@ -107,8 +106,10 @@ export function groupData<T extends Record<string, any>>(
     for (const item of data) {
         let val = item[groupBy];
 
-        if (val !== null && typeof val === 'object') {
+        if (val !== null && typeof val === 'object' && !(val instanceof Date)) {
             val = val.nombre ?? val.nombre_comercial ?? val.razon_social ?? JSON.stringify(val);
+        } else if (val instanceof Date || (typeof val === 'string' && !isNaN(Date.parse(val)) && isNaN(Number(val)))) {
+            val = new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(new Date(val));
         }
 
         const key = String(val ?? 'undefined');

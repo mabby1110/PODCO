@@ -5,50 +5,35 @@
 	import ExportarCSV from "$lib/components/Acciones/ExportarCSV.svelte";
 	import Filtro from "$lib/components/Acciones/Filtro.svelte";
 	import FiltroAgente from "$lib/components/Acciones/FiltroAgente.svelte";
+	import PanelFiltros from "$lib/components/Acciones/PanelFiltros.svelte";
 	import Searchbar from "$lib/components/Acciones/Searchbar.svelte";
-	import PanelFiltros from "$lib/components/Panel/PanelFiltros.svelte";
 	import Grupo from "$lib/components/Tarjetas/Grupo.svelte";
 	import Vista from "$lib/components/Tarjetas/Vista.svelte";
 	import CardClienteListPreview from "$lib/components/Vistas/Cliente/CardClienteListPreview.svelte";
 	import { appState } from "$lib/stores/appState.svelte";
 	import { StoreAgrupaciones } from "$lib/stores/StoreAgrupaciones.svelte";
-	import { agruparDatosPorRuta, obtenerDatosFiltrados } from "$lib/utils/filtro";
+	import { StoreModList } from "$lib/stores/StoreModList.svelte";
+	import { extraerColumnas, filterData, groupData, sortData } from "$lib/utils/ModList";
 
 
-	let { clientes } = $derived(page.data);
+
+	let { oportunidades } = $derived(page.data);
+	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
 
-	// guardamos lista para poder manipular data
-	let lista = $derived(clientes);
-
-	// cadena de variables reactivas, data > lista > lista_odenada > lista_agrupada
-	let lista_ordenada = $derived(obtenerDatosFiltrados(lista, currentRoute));
-	let lista_agrupada = $derived(agruparDatosPorRuta(lista_ordenada, currentRoute));
-
-	let grupos = $derived(
-		lista_agrupada.map((e) => {
-			return { grupo: e.grupo, tamaño: e.elementos.length };
-		})
-	);
-
-	/* Es necesario una variable reactiva ya que los derived son solo de lectura,
-	lista_agrupada ya maneja la reactividad contra lista ordenada
-	por lo que bloquea todo lo demas que modifique su valor actual
-	*/
-	let agrupacionesSeleccionadas: string[] = $state(grupos.map((a: any) => a.grupo));
-	let lista_agrupada_filtrada = $derived(
-		agrupacionesSeleccionadas.length > 0
-			? lista_agrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
-			: lista_agrupada
-	);
+	// Convertido a $state para soportar bind:lista
+	let lista = $state(oportunidades);
+	let columnasDinamicas = $derived(extraerColumnas(oportunidades));
 
 	$effect(() => {
-		if (agrupacionesSeleccionadas.length > 0) {
-			lista_agrupada?.filter((a) => agrupacionesSeleccionadas.includes(a.grupo));
-		}
+		lista = oportunidades;
 	});
 
-	let show = $derived($appState.min);
+	let lista_ordenada = $derived(sortData(lista, currentRoute));
+	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
+	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
+
+	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 </script>
 
 <Vista>
@@ -73,9 +58,9 @@
 				<CardClienteListPreview client={elemento} />
 			{/each}
 		{:else}
-			{#each lista_agrupada_filtrada as agrupacion (agrupacion.grupo)}
+			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={show}>
-					{#each agrupacion.elementos as elemento (elemento.id)}
+					{#each agrupacion.items as elemento (elemento.id)}
 						<CardClienteListPreview client={elemento} />
 					{/each}
 				</Grupo>

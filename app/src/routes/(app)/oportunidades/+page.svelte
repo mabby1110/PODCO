@@ -30,12 +30,6 @@
 	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
 
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
-
-	$effect(() => {
-		console.log('Ordenada:', lista_ordenada);
-		console.log('Filtrada:', lista_filtrada);
-		console.log('Agrupada:', lista_agrupada);
-	});
 </script>
 
 <Vista>
@@ -51,11 +45,7 @@
 				<ExportarCSV lista_ordenada={lista_filtrada} />
 			{/snippet}
 			{#snippet controles()}
-				<ModList
-					camposAgrupacion={columnasDinamicas}
-					camposFiltro={columnasDinamicas}
-					route={currentRoute}
-				/>
+                <ModList {columnasDinamicas} route={currentRoute}/>
 			{/snippet}
 		</PanelFiltros>
 	{/snippet}

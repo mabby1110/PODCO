@@ -1,51 +1,37 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
-	import { categoriasActividad, agrupacionesActividades } from '$lib';
-	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import TarjetaListaActividades from '$lib/components/Vistas/Actividad/TarjetaListaActividades.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
 	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
 	import ExportarCSV from '$lib/components/Acciones/ExportarCSV.svelte';
-	import FiltroAgente from '$lib/components/Acciones/FiltroAgente.svelte';
-	import Filtro from '$lib/components/Acciones/Filtro.svelte';
-	import Agrupaciones from '$lib/components/Acciones/Agrupaciones.svelte';
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
-	import { onMount } from 'svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
-	import { filterData, groupData, sortData } from '$lib/utils/ModList';
+	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 
-    let { actividades } = $derived(page.data);
-    let show = $derived($appState.min);
-    let currentRoute = $derived(page.url.pathname);
-    
-    // Convertido a $state para soportar bind:lista
-    let lista = $state(actividades);
-    
-    $effect(() => {
-        lista = actividades;
-    });
+	let { actividades } = $derived(page.data);
+	let show = $derived($appState.min);
+	let currentRoute = $derived(page.url.pathname);
 
-    let lista_ordenada = $derived(sortData(lista, currentRoute));
-    let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
-    let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
-    
-    let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
+	// Convertido a $state para soportar bind:lista
+	let lista = $state(actividades);
+	let columnasDinamicas = $derived(extraerColumnas(actividades));
+	$effect(() => {
+		lista = actividades;
+	});
 
-    $effect(() => {
-        console.log('Ordenada:', lista_ordenada);
-        console.log('Filtrada:', lista_filtrada);
-        console.log('Agrupada:', lista_agrupada);
-    });
+	let lista_ordenada = $derived(sortData(lista, currentRoute));
+	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
+	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
+
+	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 </script>
 
 <Vista>
 	{#snippet acciones()}
-		<Searchbar data={actividades} keyColumns={categoriasActividad.map((a) => a.key)} bind:lista />
+		<Searchbar data={actividades} keyColumns={columnasDinamicas.map((a) => a.key)} bind:lista />
 		<PanelFiltros>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
@@ -53,7 +39,7 @@
 				<!-- <Leyenda {steps} /> -->
 			{/snippet}
             {#snippet controles()}
-                <ModList camposAgrupacion={categoriasActividad} camposFiltro={categoriasActividad} route={currentRoute}/>
+                <ModList {columnasDinamicas} route={currentRoute}/>
             {/snippet}
 		</PanelFiltros>
 	{/snippet}
