@@ -5,6 +5,7 @@
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import PreviewListaPedidos from './PreviewListaPedidos.svelte';
+	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
 
 	let { id_oportunidad, view = $bindable() }: { id_oportunidad?: string; view: boolean } = $props();
 	const copiarAExcel = () => {
@@ -20,6 +21,7 @@
 	};
 
 	let selectedItem: any = $state(null);
+	let id_agente = $state('')
 	$effect(() => {
 		if (selectedItem) {
 			selectedItem.stock = true;
@@ -27,6 +29,7 @@
 			selectedItem = null;
 		}
 	});
+
 </script>
 
 <div class="headers">
@@ -46,7 +49,7 @@
 			<h3>Editar: {StorePedido.items[0].pedido.id_agrupacion}</h3>
 			<div class="productos">
 				{#each StorePedido.items as item}
-					<PreviewListaPedidos {item} isEdicion={true} />
+				<PreviewListaPedidos {item} isEdicion={true} />
 				{/each}
 				<div class="acciones-tabla">
 					<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
@@ -73,61 +76,62 @@
 		{/if}
 	{/if}
 
-	{#if $profile?.isAdmin || $profile?.isOper}
-		<form
-			method="POST"
-			action="?/updatePedido"
-			use:enhance={({ formData }) => {
-				let id_agrupacion_base = null;
+	<form
+		method="POST"
+		action="?/updatePedido"
+		use:enhance={({ formData }) => {
+			let id_agrupacion_base = null;
 
-				if (StorePedido.items.length > 0) {
-					id_agrupacion_base = StorePedido.items[0].pedido.id_agrupacion;
+			if (StorePedido.items.length > 0) {
+				id_agrupacion_base = StorePedido.items[0].pedido.id_agrupacion;
 
-					const pedidosAActualizar = StorePedido.items.map((item) => ({
-						id: item.pedido.id,
-						id_producto: item.pedido.inventario.id,
-						cantidad: item.pedido.cantidad,
-						precio_unitario: item.pedido.precio_unitario,
-						stock: item.pedido.stock
-					}));
+				const pedidosAActualizar = StorePedido.items.map((item) => ({
+					id: item.pedido.id,
+					id_agente,
+					id_producto: item.pedido.inventario.id,
+					cantidad: item.pedido.cantidad,
+					precio_unitario: item.pedido.precio_unitario,
+					stock: item.pedido.stock
+				}));
 
-					formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
+				formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
+			}
+
+			if (StorePedidoNuevo.items.length > 0) {
+				const nuevoPedido = StorePedidoNuevo.items.map((item) => ({
+					id_producto: item.producto.id,
+					id_agente,
+					id_oportunidad: id_oportunidad || null,
+					cantidad: item.piezas,
+					precio_unitario: item.producto.precio,
+					stock: item.stock !== false,
+					...(id_agrupacion_base && { id_agrupacion: id_agrupacion_base })
+				}));
+
+				formData.append('pedidosACrear', JSON.stringify(nuevoPedido));
+			}
+
+			return async ({ result }) => {
+				if (result.type === 'success') {
+					StorePedido.limpiar();
+					StorePedidoNuevo.limpiar();
+					view = true;
+					invalidateAll();
 				}
-
-				if (StorePedidoNuevo.items.length > 0) {
-					const nuevoPedido = StorePedidoNuevo.items.map((item) => ({
-						id_producto: item.producto.id,
-						id_oportunidad: id_oportunidad || null,
-						cantidad: item.piezas,
-						precio_unitario: item.producto.precio,
-						stock: item.stock !== false,
-						...(id_agrupacion_base && { id_agrupacion: id_agrupacion_base })
-					}));
-
-					formData.append('pedidosACrear', JSON.stringify(nuevoPedido));
-				}
-
-				return async ({ result }) => {
-					if (result.type === 'success') {
-						StorePedido.limpiar();
-						StorePedidoNuevo.limpiar();
-						view = true;
-						invalidateAll();
-					}
-				};
-			}}
-		>
-			<div class="acciones">
-				<button
-					class="butter submit"
-					type="submit"
-					disabled={StorePedidoNuevo.items.length === 0 && StorePedido.items.length === 0}
-				>
-					Guardar
-				</button>
-			</div>
-		</form>
-	{/if}
+			};
+		}}
+	>
+		<div class="acciones">
+			<FormSelectAgente bind:selected={id_agente}/>
+			<button
+				class="butter submit"
+				type="submit"
+				disabled={StorePedidoNuevo.items.length === 0 && StorePedido.items.length === 0}
+			>
+				Guardar
+			</button>
+		</div>
+	</form>
 </div>
 
 <style>
@@ -151,6 +155,7 @@
 		justify-content: flex-end;
 		width: 100%;
 		gap: var(--a);
+		pointer-events: all;
 	}
 	.productos {
 		display: flex;

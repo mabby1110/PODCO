@@ -1,5 +1,5 @@
 <script lang="ts">
-import { dropzone } from '$lib/actions/dnd';
+	import { dropzone } from '$lib/actions/dnd';
 	import { calendarStore } from '$lib/stores/calendarStore.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { invalidateAll } from '$app/navigation';
@@ -14,24 +14,40 @@ import { dropzone } from '$lib/actions/dnd';
 		getMonth
 	} from '$lib/utils/agenda';
 
-	import { categoriasOportunidad, type Oportunidad } from '$lib';
 	import CardActividadCalendarPreview from '../Actividad/CardActividadCalendarPreview.svelte';
 	import { page } from '$app/state';
-	import { procesarDatosReactivos } from '$lib/utils/filtro';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
-	import PanelFiltros from '$lib/components/Panel/PanelFiltros.svelte';
-	import FiltroAgente from '$lib/components/Acciones/FiltroAgente.svelte';
-	import Filtro from '$lib/components/Acciones/Filtro.svelte';
 	import CardOpCalendarPreview from '../Oportunidad/CardOpCalendarPreview.svelte';
+	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
+	import ModList from '$lib/components/Acciones/ModList.svelte';
+	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));
 	let currentRoute = $derived(page.url.pathname);
 
+	// Convertido a $state para soportar bind:lista
+	let lista = $state(allActivities);
+	let columnasDinamicas = $derived(
+		Array.from(
+			new Map(
+				[...extraerColumnas(oportunidades), ...extraerColumnas(actividades)].map((col) => [
+					col.key,
+					col
+				])
+			).values()
+		)
+	);
+	$effect(() => {
+		lista = allActivities;
+	});
+
+	let lista_ordenada = $derived(sortData(lista, currentRoute));
+	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
+	
 	let SLOT_MINUTES = $derived($appState.calendarCards ? 10 : 60);
 	let calendarHeight = $state(0);
 
-	const listaAgrupada = $derived.by(() => procesarDatosReactivos(allActivities, currentRoute));
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
 	const hoursRangePerDay = { start: 8, end: 19 };
 	const totalHours = hoursRangePerDay.end - hoursRangePerDay.start;
@@ -48,18 +64,18 @@ import { dropzone } from '$lib/actions/dnd';
 			};
 		})
 	);
-	const eventList = $derived(listaAgrupada.flatMap((agrupacion: any) => agrupacion.elementos));
+	const eventList = $derived(lista_filtrada);
 	const weekDates = $derived(getWeekDates(calendarStore.weekOffset));
 	const weekRangeText = $derived(formatWeekRange(weekDates));
 	const weekEvents = $derived.by(() => {
-		return eventList.filter((event: Oportunidad) => {
+		return eventList.filter((event) => {
 			const eventDate = new Date(event.inicio);
 			return weekDates.some((weekDate) => isSameDay(eventDate, weekDate));
 		});
 	});
 
 	async function handleDrop(eventId: string, hour: number, minute: number, targetDate: Date) {
-		const event = eventList.find((e: { id: string }) => e.id === eventId);
+		const event = eventList.find((e) => e.id === eventId);
 		if (!event) return;
 
 		const duration = calculateDuration(event.inicio, event.fin);
@@ -81,7 +97,7 @@ import { dropzone } from '$lib/actions/dnd';
 	}
 
 	function getEventsForSlot(hour: number, minute: number, targetDate: Date) {
-		return weekEvents.filter((event: Oportunidad) => {
+		return weekEvents.filter((event) => {
 			const eventDate = new Date(event.inicio);
 			const eventTotalMin = eventDate.getHours() * 60 + eventDate.getMinutes();
 			const slotTotalMin = hour * 60 + minute;
@@ -97,35 +113,6 @@ import { dropzone } from '$lib/actions/dnd';
 
 <Vista>
 	{#snippet acciones()}
-		<PanelFiltros>
-			{#snippet header()}
-				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-				<!-- {#if $profile?.isAdmin}
-					<button
-						onclick={() => appState.toggleDnd()}
-						class="butter toggle"
-						class:active={$appState.dnd}
-					>
-						✏️ Editar
-					</button>
-				{/if} -->
-				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-					{$appState.calendarCards ? 'Min' : 'Max'}
-				</button>
-			{/snippet}
-			{#snippet controles()}
-				<FiltroAgente />
-				<Filtro categorias={categoriasOportunidad} />
-			{/snippet}
-		</PanelFiltros>
-		<select
-			value={$appState.calendarView}
-			onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
-		>
-			<option value="gant">Gant Anual</option>
-			<option value="semanal">Semanal</option>
-		</select>
 		<div class="calendar-navigation">
 			<button
 				onclick={() => (calendarStore.weekOffset -= 1)}
@@ -145,6 +132,34 @@ import { dropzone } from '$lib/actions/dnd';
 				→
 			</button>
 		</div>
+		<select
+			value={$appState.calendarView}
+			onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
+		>
+			<option value="gant">Gant Anual</option>
+			<option value="semanal">Semanal</option>
+		</select>
+		<PanelFiltros>
+			{#snippet header()}
+				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+				<!-- {#if $profile?.isAdmin}
+					<button
+						onclick={() => appState.toggleDnd()}
+						class="butter toggle"
+						class:active={$appState.dnd}
+					>
+						✏️ Editar
+					</button>
+				{/if} -->
+				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+					{$appState.calendarCards ? 'Min' : 'Max'}
+				</button>
+			{/snippet}
+			{#snippet controles()}
+				<ModList {columnasDinamicas} route={currentRoute} />
+			{/snippet}
+		</PanelFiltros>
 	{/snippet}
 	{#snippet contenido()}
 		<div
@@ -322,7 +337,7 @@ import { dropzone } from '$lib/actions/dnd';
 
 	.event-wrapper:hover {
 		z-index: 999 !important;
-		width: 120% !important;
+		width: 40vw !important;
 		max-width: 80vw;
 		min-height: 40vh !important;
 	}
@@ -344,28 +359,11 @@ import { dropzone } from '$lib/actions/dnd';
 		flex-grow: 1;
 	}
 
-	.toggle.active {
-		background: var(--color-highlight);
-	}
 	.calendar-navigation {
 		display: flex;
 		gap: var(--a);
 		flex-grow: 1;
-		max-width: var(--h);
+		width: var(--h);
 		align-self: flex-end;
-	}
-	.view-controls {
-		position: absolute;
-		max-width: 70vw;
-		bottom: 0;
-		right: 0;
-		z-index: 88;
-		padding: var(--a);
-
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-		align-items: flex-start;
-		flex-direction: row-reverse;
 	}
 </style>

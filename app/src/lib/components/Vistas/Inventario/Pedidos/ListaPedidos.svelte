@@ -51,8 +51,9 @@
 </div>
 <div class="pedidos">
 	{#each lista_agrupada as grupo}
-		<div class="panel grupo">
-			{#each grupo.elementos as item}
+	<div class="panel grupo">
+		<p class="tiny">{grupo.elementos[0].agentes?.nombre}</p>
+		{#each grupo.elementos as item}
 				<div class="pedido">
 					<b class="descripcion">{item.inventario.descripcion || '-'}</b>
 					<span class="codigo">

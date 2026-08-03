@@ -3,18 +3,32 @@
 	import { categoriasOportunidad } from '$lib';
 	import Filtro from '$lib/components/Acciones/Filtro.svelte';
 	import FiltroAgente from '$lib/components/Acciones/FiltroAgente.svelte';
-	import PanelFiltros from '$lib/components/Panel/PanelFiltros.svelte';
+	import ModList from '$lib/components/Acciones/ModList.svelte';
+	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { calendarStore } from '$lib/stores/calendarStore.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatWeekRange, getWeekDates } from '$lib/utils/agenda';
 	import { obtenerDatosFiltrados } from '$lib/utils/filtro';
+	import { extraerColumnas, filterData, sortData } from '$lib/utils/ModList';
 	import TarjetaCalendarioAnual from './TarjetaCalendarioAnual.svelte';
 	import { onMount } from 'svelte';
 
 	let { oportunidades } = $derived(page.data);
-	let lista = $derived(obtenerDatosFiltrados(oportunidades, page.url.pathname));
+	let currentRoute = $derived(page.url.pathname);
+
+	// Convertido a $state para soportar bind:lista
+	let lista = $state(oportunidades);
+	let columnasDinamicas = $derived(extraerColumnas(oportunidades));
+
+	$effect(() => {
+		lista = oportunidades;
+	});
+
+	let lista_ordenada = $derived(sortData(lista, currentRoute));
+	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
+
 	const PX_POR_DIA = 8;
 	const MESES = [
 		'Ene',
@@ -82,7 +96,7 @@
 	});
 
 	const eventosProcesados = $derived(
-		lista
+		lista_filtrada
 			.map((item) => {
 				const fechaCreacion = new Date(item.fecha_creacion).getTime();
 				let fechaFin = Date.now();
@@ -127,35 +141,6 @@
 
 <Vista>
 	{#snippet acciones()}
-		<PanelFiltros>
-			{#snippet header()}
-				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-				{#if $profile?.isAdmin}
-					<button
-						onclick={() => appState.toggleDnd()}
-						class="butter toggle"
-						class:active={$appState.dnd}
-					>
-						✏️ Editar
-					</button>
-				{/if}
-				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-					{$appState.calendarCards ? '📏 Min' : '📐 Max'}
-				</button>
-			{/snippet}
-			{#snippet controles()}
-				<FiltroAgente />
-				<Filtro categorias={categoriasOportunidad} />
-			{/snippet}
-		</PanelFiltros>
-		<select
-			value={$appState.calendarView}
-			onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
-		>
-			<option value="gant">Gant Anual</option>
-			<option value="semanal">Semanal</option>
-		</select>
 		<div class="calendar-navigation">
 			<button
 				onclick={() => (calendarStore.weekOffset -= 1)}
@@ -175,6 +160,34 @@
 				→
 			</button>
 		</div>
+		<select
+			value={$appState.calendarView}
+			onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
+		>
+			<option value="gant">Gant Anual</option>
+			<option value="semanal">Semanal</option>
+		</select>
+		<PanelFiltros>
+			{#snippet header()}
+				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+				{#if $profile?.isAdmin}
+					<button
+						onclick={() => appState.toggleDnd()}
+						class="butter toggle"
+						class:active={$appState.dnd}
+					>
+						✏️ Editar
+					</button>
+				{/if}
+				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+					{$appState.calendarCards ? '📏 Min' : '📐 Max'}
+				</button>
+			{/snippet}
+			{#snippet controles()}
+				<ModList {columnasDinamicas} route={currentRoute} />
+			{/snippet}
+		</PanelFiltros>
 	{/snippet}
 	{#snippet contenido()}
 		<div class="calendario-contenedor panel" bind:this={contenedor}>

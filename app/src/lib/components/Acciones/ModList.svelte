@@ -10,10 +10,14 @@
 
 	let {
 		route,
-		columnasDinamicas
+		columnasDinamicas,
+		agrupar,
+		ordenar
 	}: {
 		route: string;
 		columnasDinamicas: { key: string; label: string; type: FieldType }[];
+		agrupar?: boolean;
+		ordenar?: boolean;
 	} = $props();
 
 	let estado = $derived(StoreModList.get(route));
@@ -117,42 +121,45 @@
 </script>
 
 <div class="mod-list">
-	<div>
-		<select
-			value={estado.groupBy ?? ''}
-			onchange={(e) => actualizarAgrupacion(e.currentTarget.value || null)}
-		>
-			<option value="">Sin Agrupación</option>
-			{#each columnasDinamicas as campo}
-				<option value={campo.key}>{campo.label}</option>
+	{#if agrupar}
+		<div>
+			<select
+				value={estado.groupBy ?? ''}
+				onchange={(e) => actualizarAgrupacion(e.currentTarget.value || null)}
+			>
+				<option value="">Sin Agrupación</option>
+				{#each columnasDinamicas as campo}
+					<option value={campo.key}>{campo.label}</option>
+				{/each}
+			</select>
+		</div>
+	{/if}
+	{#if ordenar}
+		<div class="accion">
+			<button class="butter" onclick={agregarOrden}>+ Orden</button>
+			{#each estado.sorts as orden, i}
+				<div class="mod">
+					<button class="butter chile" onclick={() => eliminarOrden(i)}>X</button>
+					<select
+						value={orden.field}
+						onchange={(e) => actualizarOrden(i, { ...orden, field: e.currentTarget.value })}
+					>
+						{#each columnasDinamicas as campo}
+							<option value={campo.key}>{campo.label}</option>
+						{/each}
+					</select>
+					<select
+						value={orden.direction}
+						onchange={(e) =>
+							actualizarOrden(i, { ...orden, direction: e.currentTarget.value as 'asc' | 'desc' })}
+					>
+						<option value="asc">Asc</option>
+						<option value="desc">Desc</option>
+					</select>
+				</div>
 			{/each}
-		</select>
-	</div>
-
-	<div class="accion">
-		<button class="butter" onclick={agregarOrden}>+ Orden</button>
-		{#each estado.sorts as orden, i}
-			<div class="mod">
-				<button class="butter chile" onclick={() => eliminarOrden(i)}>X</button>
-				<select
-					value={orden.field}
-					onchange={(e) => actualizarOrden(i, { ...orden, field: e.currentTarget.value })}
-				>
-					{#each columnasDinamicas as campo}
-						<option value={campo.key}>{campo.label}</option>
-					{/each}
-				</select>
-				<select
-					value={orden.direction}
-					onchange={(e) =>
-						actualizarOrden(i, { ...orden, direction: e.currentTarget.value as 'asc' | 'desc' })}
-				>
-					<option value="asc">Asc</option>
-					<option value="desc">Desc</option>
-				</select>
-			</div>
-		{/each}
-	</div>
+		</div>
+	{/if}
 
 	<div class="accion">
 		<button class="butter" onclick={agregarFiltro}>+ Filtro</button>
