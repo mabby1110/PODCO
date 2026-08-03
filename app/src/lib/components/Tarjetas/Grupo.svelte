@@ -62,7 +62,7 @@
 
 <div class="group-container" bind:this={listRef}>
     <button class="group-header" onclick={handleToggle}>
-        <p class="dia-header">{groupTitle} ({agrupacion.items.length})</p>
+        <h3 class="dia-header">{groupTitle} ({agrupacion.items.length})</h3>
     </button>
 
     {#if show}

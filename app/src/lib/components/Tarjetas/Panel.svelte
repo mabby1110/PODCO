@@ -6,10 +6,16 @@
 		contenido,
 		header,
 		absolute,
-		tituloBoton = 'boton'
-	}: { contenido?: Snippet; header?: Snippet; absolute?: boolean; tituloBoton: string } = $props();
+		tituloBoton = 'boton',
+		show
+	}: {
+		contenido?: Snippet;
+		header?: Snippet;
+		absolute?: boolean;
+		tituloBoton: string;
+		show?: boolean;
+	} = $props();
 
-	let show = $state(false);
 	let isMaximized = $state(false); // Estado para controlar la maximización
 
 	let x = $state(0);

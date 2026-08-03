@@ -3,11 +3,10 @@
 	import { invalidateAll } from '$app/navigation';
 	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
 	import PreviewListaPedidos from './PreviewListaPedidos.svelte';
 	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
 
-	let { id_oportunidad, view = $bindable() }: { id_oportunidad?: string; view: boolean } = $props();
+	let { id_oportunidad }: { id_oportunidad?: string } = $props();
 	const copiarAExcel = () => {
 		const cabeceras = 'Cantidad\tDescripción\tSerie\tMoneda\tPrecio';
 		const filas = StorePedidoNuevo.items
@@ -21,7 +20,7 @@
 	};
 
 	let selectedItem: any = $state(null);
-	let id_agente = $state('')
+	let id_agente = $state('');
 	$effect(() => {
 		if (selectedItem) {
 			selectedItem.stock = true;
@@ -29,7 +28,6 @@
 			selectedItem = null;
 		}
 	});
-
 </script>
 
 <div class="headers">
@@ -49,7 +47,7 @@
 			<h3>Editar: {StorePedido.items[0].pedido.id_agrupacion}</h3>
 			<div class="productos">
 				{#each StorePedido.items as item}
-				<PreviewListaPedidos {item} isEdicion={true} />
+					<PreviewListaPedidos {item} isEdicion={true} />
 				{/each}
 				<div class="acciones-tabla">
 					<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
@@ -104,7 +102,7 @@
 					id_oportunidad: id_oportunidad || null,
 					cantidad: item.piezas,
 					precio_unitario: item.producto.precio,
-					stock: item.stock !== false,
+					stock: item.stock,
 					...(id_agrupacion_base && { id_agrupacion: id_agrupacion_base })
 				}));
 
@@ -115,14 +113,13 @@
 				if (result.type === 'success') {
 					StorePedido.limpiar();
 					StorePedidoNuevo.limpiar();
-					view = true;
 					invalidateAll();
 				}
 			};
 		}}
 	>
 		<div class="acciones">
-			<FormSelectAgente bind:selected={id_agente}/>
+			<FormSelectAgente bind:selected={id_agente} />
 			<button
 				class="butter submit"
 				type="submit"

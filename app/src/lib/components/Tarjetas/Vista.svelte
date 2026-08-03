@@ -24,8 +24,10 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--b);
+		padding: var(--a);
+		padding-bottom: var(--f);
 	}
-	.controles{
+	.controles {
 		position: fixed;
 		max-width: 70vw;
 		bottom: 0;
@@ -36,6 +38,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		flex-wrap: wrap-reverse;justify-content: flex-end;
+		flex-wrap: wrap-reverse;
+		justify-content: flex-end;
 	}
 </style>

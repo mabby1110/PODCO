@@ -179,7 +179,7 @@
 						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} />
 					{:else}
 						<FormOptionalInput title="+Potencial de venta">
-							<RelacionarPedido id_oportunidad={eventData?.id} />
+							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente}/>
 						</FormOptionalInput>
 					{/if}
 					{#if eventData?.cotizaciones.length > 0}

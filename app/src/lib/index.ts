@@ -113,6 +113,7 @@ export type Pedido = {
 	id_oportunidad: string;
 	id_producto: string;
 	cantidad: string;
+	stock: boolean;
 	precio_unitario: string;
 	id_agrupacion: string;
 };

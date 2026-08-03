@@ -156,8 +156,8 @@
 	.header-actions {
 		width: 100%;
 		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
+		flex-wrap: wrap-reverse;
+		justify-content: flex-end;
 		align-items: center;
 		gap: var(--a);
 		cursor: grab;
@@ -170,9 +170,6 @@
 		flex-wrap: wrap;
 		gap: 0 var(--a);
 		align-items: center;
-	}
-	.header-actions.is-dragging > * {
-		pointer-events: none;
 	}
 	.panel-title {
 		flex-grow: 1;

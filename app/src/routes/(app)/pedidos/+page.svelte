@@ -6,22 +6,25 @@
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
 	import Panel from '$lib/components/Tarjetas/Panel.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
-	import TarjetaListaInventario from '$lib/components/Vistas/Inventario/TarjetaListaInventario.svelte';
 	import FormPedidos from '$lib/components/Vistas/Pedidos/FormPedidos.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
+	import Pedido from '$lib/components/Tarjetas/Pedido.svelte';
+	import { StorePedido } from '$lib/stores/StorePedido.svelte';
+	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
 
-	let { inventario } = $derived(page.data);
+	let { pedidos } = $derived(page.data);
 	let show = $derived($appState.min);
+	let showPanel = $state(false);
 	let currentRoute = $derived(page.url.pathname);
 
 	// Convertido a $state para soportar bind:lista
-	let lista = $state(inventario);
-	let columnasDinamicas = $derived(extraerColumnas(inventario));
+	let lista = $state(pedidos);
+	let columnasDinamicas = $derived(extraerColumnas(pedidos));
 	$effect(() => {
-		lista = inventario;
+		lista = pedidos;
 	});
 
 	let lista_ordenada = $derived(sortData(lista, currentRoute));
@@ -29,18 +32,47 @@
 	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
 
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
+
+	function handleEdit(elementos: any[]) {
+		StorePedido.limpiar();
+		showPanel = true;
+		elementos.forEach((item) => {
+			if (item.id_agrupacion) {
+				// si el pedido ya pertenece a una agrupacion solo agregar para editar
+				StorePedido.agregar(item);
+			} else {
+				// es un articulo nuevo
+				const cantidad = item.inventario.cantidad || 1;
+				for (let i = 0; i < cantidad; i++) {
+					StorePedidoNuevo.agregar(item.inventario);
+				}
+			}
+		});
+	}
+
+	const copiarAExcel = (elementos: any[]) => {
+		const cabeceras = 'Cantidad\tCódigo\tDescripción\tSerie\tMoneda\tPrecio';
+		const filas = elementos
+			.map(
+				(item) =>
+					`${item.inventario.cantidad || 0}\t${item.inventario.codigo || ''}\t${item.inventario.descripcion || ''}\t${item.inventario.serie || ''}\tUSD\t${item.inventario.precio || 0}`
+			)
+			.join('\n');
+
+		navigator.clipboard.writeText(`${cabeceras}\n${filas}`);
+	};
 </script>
 
 <Vista>
 	{#snippet acciones()}
 		<Searchbar
-			data={inventario}
+			data={pedidos}
 			keyColumns={['serie', 'codigo', 'descripcion', 'categorias']}
 			bind:lista
 		/>
-		<Panel tituloBoton="Pedido">
+		<Panel tituloBoton="Pedido" show={showPanel}>
 			{#snippet header()}
-				<a href="/pedidos" class="butter">Lista pedidos</a>
+				<a href="/inventario" class="butter">Inventario</a>
 			{/snippet}
 			{#snippet contenido()}
 				<FormPedidos />
@@ -52,22 +84,32 @@
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
-				<ModList {columnasDinamicas} route={currentRoute} agrupar ordenar/>
+				<ModList {columnasDinamicas} route={currentRoute} agrupar ordenar />
 			{/snippet}
 		</PanelFiltros>
 	{/snippet}
 	{#snippet contenido()}
 		{#if !isGrouped}
-			{#each lista_ordenada as elemento}
-				<TarjetaListaInventario producto={elemento} />
+			{#each lista_ordenada as item}
+				<Pedido {item} selected />
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={show}>
-					{#each agrupacion.items as elemento (elemento.id)}
-						<TarjetaListaInventario producto={elemento} />
-					{/each}
+					<div class="panel">
+						{#each agrupacion.items as item (item.id)}
+							<Pedido {item} selected />
+						{/each}
+					</div>
 				</Grupo>
+				<div class="acciones-tabla">
+					<button class="butter" type="button" onclick={() => copiarAExcel(agrupacion.items)}>
+						Copiar Datos
+					</button>
+					<button class="butter" type="button" onclick={() => handleEdit(agrupacion.items)}>
+						Editar
+					</button>
+				</div>
 			{:else}
 				<div class="no-results">
 					<p>No se encontraron datos.</p>

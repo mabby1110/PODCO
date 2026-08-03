@@ -94,6 +94,7 @@ const CLAVES_PEDIDO: (keyof Pedido)[] = [
 	'id_oportunidad',
 	'id_producto',
 	'cantidad',
+	'stock',
 	'precio_unitario',
 	'id_agrupacion'
 ];
