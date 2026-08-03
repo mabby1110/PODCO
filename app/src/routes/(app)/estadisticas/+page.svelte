@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import GraficasClientes from '$lib/components/Estadisticas/GraficasClientes.svelte';
 	import GraficasCotizaciones from '$lib/components/Estadisticas/GraficasCotizaciones.svelte';
 	import GraficasInventario from '$lib/components/Estadisticas/GraficasInventario.svelte';
@@ -7,7 +7,7 @@
 
 <div class="page-content">
 	<GraficasOportunidades />
-	<!-- <GraficasCotizaciones />
+	<GraficasCotizaciones />
 	<GraficasInventario />
-	<GraficasClientes /> -->
-</div>
+	<GraficasClientes />
+</div> -->

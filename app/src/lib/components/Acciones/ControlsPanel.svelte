@@ -23,20 +23,20 @@
         <button onclick={() => navigate('/calendario')} class="butter">
             📆 Calendario
         </button>
-        <!-- <button onclick={() => navigate('/documentos')} class="butter">
-            📄 Documentos
-        </button> -->
+        <button onclick={() => navigate('/pedidos')} class="butter">
+            📄 Pedidos
+        </button>
         <button onclick={() => navigate('/inventario')} class="butter">
             📦 Inventario
         </button>
         <!-- <button onclick={() => navigate('/pedidos')} class="butter">
             🛒 Pedidos
         </button> -->
-        {#if $profile?.isAdmin}
+        <!-- {#if $profile?.isAdmin}
             <button onclick={() => navigate('/estadisticas')} class="butter">
                 📊 Estadisticas
             </button>
-        {/if}
+        {/if} -->
     </div>
 </div>
 

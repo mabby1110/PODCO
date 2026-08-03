@@ -5,8 +5,8 @@
 	import ExportarCSV from "$lib/components/Acciones/ExportarCSV.svelte";
 	import Filtro from "$lib/components/Acciones/Filtro.svelte";
 	import FiltroAgente from "$lib/components/Acciones/FiltroAgente.svelte";
+	import PanelFiltros from "$lib/components/Acciones/PanelFiltros.svelte";
 	import Searchbar from "$lib/components/Acciones/Searchbar.svelte";
-	import PanelFiltros from "$lib/components/Panel/PanelFiltros.svelte";
 	import Grupo from "$lib/components/Tarjetas/Grupo.svelte";
 	import Vista from "$lib/components/Tarjetas/Vista.svelte";
 	import TarjetaListaDocumentos from "$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte";
