@@ -91,7 +91,9 @@
 	{#snippet contenido()}
 		{#if !isGrouped}
 			{#each lista_ordenada as item}
-				<Pedido {item} selected />
+				<div class="panel">
+					<Pedido {item} selected />
+				</div>
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}

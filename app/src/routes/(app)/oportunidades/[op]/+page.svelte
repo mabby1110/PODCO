@@ -155,10 +155,10 @@
 
 		{#if currentFase == 1}
 			<section>
-				<div class="block-header">
+				<div class="header">
 					<h3>Potencial de venta:</h3>
 				</div>
-				<div class="block-content">
+				<div class="content">
 					{#if eventData?.pedidos.length > 0}
 						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} />
 					{:else}
@@ -171,22 +171,24 @@
 		{/if}
 		{#if currentFase >= 2}
 			<section>
-				<div class="block-header">
-					<h3>Cotizacion(es):</h3>
+				<div class="header">
+					<h3>Potencial de venta:</h3>
 				</div>
-				<div class="block-content">
+				<div class="content">
 					{#if eventData?.pedidos.length > 0}
 						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} />
 					{:else}
 						<FormOptionalInput title="+Potencial de venta">
-							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente}/>
+							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
 						</FormOptionalInput>
 					{/if}
-					{#if eventData?.cotizaciones.length > 0}
-						{#each eventData?.cotizaciones as documento}
-							<TarjetaListaDocumentos event={documento} />
-						{/each}
-					{/if}
+				</div>
+			</section>
+			<section>
+				<div class="header">
+					<h3>Cotizacion(es):</h3>
+				</div>
+				<div class="content">
 					{#if eventData?.pedidos.length > 0}
 						<SubirCotizacion
 							name={'docs_cotizaciones'}
@@ -200,16 +202,23 @@
 							multiple
 						/>
 					{/if}
+					<div class="block">
+						{#if eventData?.cotizaciones.length > 0}
+							{#each eventData?.cotizaciones as documento}
+								<TarjetaListaDocumentos event={documento} />
+							{/each}
+						{/if}
+					</div>
 				</div>
 			</section>
 		{/if}
 		{#if currentFase >= 3}
 			<section class="occ">
-				<div class="block-header">
-					<h3>Orden de compra:</h3>
+				<div class="header">
+					<h3>Pedidos:</h3>
 				</div>
 				{#if eventData?.occ.length > 0}
-					<div class="block-content">
+					<div class="content">
 						{#each eventData?.occ as documento}
 							<TarjetaListaDocumentos event={documento} />
 						{/each}
@@ -232,10 +241,10 @@
 		{/if}
 
 		<section class="adjunto">
-			<div class="block-header">
+			<div class="header">
 				<h3>Adjuntos:</h3>
 			</div>
-			<div class="block-content">
+			<div class="content">
 				<FormOptionalInput title="+Adjuntos">
 					<SubirAdjunto
 						label="Adjuntos"
@@ -256,10 +265,10 @@
 		</section>
 
 		<section>
-			<div class="block-header">
+			<div class="header">
 				<h3>Historia:</h3>
 			</div>
-			<div class="block-content">
+			<div class="content">
 				<Entradas
 					{isEditing}
 					historia={eventData?.historia}

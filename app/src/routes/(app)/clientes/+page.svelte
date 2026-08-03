@@ -40,7 +40,8 @@
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
-				<ModList {columnasDinamicas} route={currentRoute} />{/snippet}
+				<ModList {columnasDinamicas} route={currentRoute} ordenar agrupar />
+			{/snippet}
 		</PanelFiltros>
 	{/snippet}
 

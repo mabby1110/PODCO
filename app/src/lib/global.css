@@ -95,12 +95,6 @@ label {
 	gap: 0.25rem;
 }
 
-section {
-	/* siempre tendra header y contenido */
-	display: flex;
-	gap: var(--a);
-}
-
 input,
 textarea,
 select {
@@ -330,13 +324,18 @@ button {
 }
 
 /* SECCIONES */
+section {
+	/* siempre tendra header y contenido */
+	display: flex;
+	gap: var(--a);
+}
 
-.block-header {
+section .header {
 	display: flex;
 	min-width: var(--g);
 }
 
-.block-content {
+section .content {
 	flex-grow: 5;
 	display: flex;
 	flex-wrap: wrap;
@@ -346,7 +345,10 @@ button {
 	min-width: var(--h);
 	max-width: var(--j);
 }
+section .block {
+	width: 100%;
 
+}
 /* FUENTES */
 .tiny {
 	font-size: smaller;

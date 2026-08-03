@@ -64,7 +64,7 @@
 			<input type="hidden" name="id_agente" value={id_agente} />
 		{/if}
 		<section>
-			<div class="block-header">
+			<div class="header">
 				<h3>{label}:</h3>
 				{#if hint && !isEditing}
 					<p class="hint">{hint}</p>
@@ -72,7 +72,7 @@
 			</div>
 
 			{#if isEditing}
-				<div class="block-content">
+				<div class="content">
 					{#if type === 'textarea'}
 						<textarea {name} bind:value={editedValue} {rows} {placeholder}></textarea>
 					{:else if type === 'file'}
@@ -100,7 +100,7 @@
 					</button>
 				</div>
 			{:else}
-				<div class="block-content">
+				<div class="content">
 					<p class="value">{editedValue || 'Sin información'}</p>
 				</div>
 			{/if}

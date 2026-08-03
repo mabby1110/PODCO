@@ -138,10 +138,10 @@
 	<section>
 		<input type="hidden" name="id_cliente" value={id} />
 		<input type="hidden" name="contactos" value={JSON.stringify(contacto_compuesto)} />
-		<div class="block-header">
+		<div class="header">
 			<h3 class="label">Contactos:</h3>
 		</div>
-		<div class="block-content">
+		<div class="content">
 			<div class="contact-list">
 				{#if (lista || []).length > 0}
 					{#each lista || [] as persona, i}
