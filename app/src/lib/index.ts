@@ -192,61 +192,61 @@ export const actFieldMap = {
 
 // FILTROS
 export const categoriasActividad = [
-	{ key: 'id', label: 'id' },
-	{ key: 'motivo', label: 'Motivo' },
-	{ key: 'objetivo', label: 'Objetivo' },
-	{ key: 'inicio', label: 'Fecha Inicio' },
-	{ key: 'fase', label: 'Fase' },
-	{ key: 'historia', label: 'Historia' }
+	{ key: 'id', label: 'id', type: 'string' },
+	{ key: 'motivo', label: 'Motivo', type: 'string' },
+	{ key: 'objetivo', label: 'Objetivo', type: 'string' },
+	{ key: 'inicio', label: 'Fecha Inicio', type: 'string' },
+	{ key: 'fase', label: 'Fase', type: 'string' },
+	{ key: 'historia', label: 'Historia', type: 'string' }
 ];
 export const categoriasOportunidad = [
-	{ key: 'id', label: 'id' },
-	{ key: 'motivo', label: 'Motivo de Op.' },
-	{ key: 'historia', label: 'Historia' },
-	{ key: 'potencial_venta', label: 'Potencial de venta' },
-	{ key: 'fase', label: 'Fase' },
-	{ key: 'inicio', label: 'Fecha Inicio' },
-	{ key: 'necesidades', label: 'Necesidades' },
-	{ key: 'objetivo', label: 'Objetivo' }
+	{ key: 'id', label: 'id', type: 'string' },
+	{ key: 'motivo', label: 'Motivo de Op.', type: 'string' },
+	{ key: 'historia', label: 'Historia', type: 'string' },
+	{ key: 'potencial_venta', label: 'Potencial de venta', type: 'string' },
+	{ key: 'fase', label: 'Fase', type: 'string' },
+	{ key: 'inicio', label: 'Fecha Inicio', type: 'string' },
+	{ key: 'necesidades', label: 'Necesidades', type: 'string' },
+	{ key: 'objetivo', label: 'Objetivo', type: 'string' }
 ];
 export const categoriasCalendario = [
-	{ key: 'id', label: 'id' },
-	{ key: 'motivo', label: 'Motivo' },
-	{ key: 'objetivo', label: 'Objetivo' },
-	{ key: 'inicio', label: 'Fecha Inicio' },
-	{ key: 'fase', label: 'Fase' },
-	{ key: 'historia', label: 'Historia' }
+	{ key: 'id', label: 'id', type: 'string' },
+	{ key: 'motivo', label: 'Motivo', type: 'string' },
+	{ key: 'objetivo', label: 'Objetivo', type: 'string' },
+	{ key: 'inicio', label: 'Fecha Inicio', type: 'string' },
+	{ key: 'fase', label: 'Fase', type: 'string' },
+	{ key: 'historia', label: 'Historia', type: 'string' }
 ];
 export const categoriasCliente = [
-	{ key: 'id', label: 'id' },
-	{ key: 'razon_social', label: 'Razón Social' },
-	{ key: 'nombre_comercial', label: 'Nombre Comercial' },
-	{ key: 'sector', label: 'Sector/Industria' },
-	{ key: 'ciudad', label: 'Ciudad' },
-	{ key: 'estado', label: 'Estado' },
-	{ key: 'tipo_prospeccion', label: 'Origen/Prospección' },
-	{ key: 'oportunidades', label: 'Oportunidades' },
-	{ key: 'contactos', label: 'Contactos' }
+	{ key: 'id', label: 'id', type: 'string' },
+	{ key: 'razon_social', label: 'Razón Social', type: 'string' },
+	{ key: 'nombre_comercial', label: 'Nombre Comercial', type: 'string' },
+	{ key: 'sector', label: 'Sector/Industria', type: 'string' },
+	{ key: 'ciudad', label: 'Ciudad', type: 'string' },
+	{ key: 'estado', label: 'Estado', type: 'string' },
+	{ key: 'tipo_prospeccion', label: 'Origen/Prospección', type: 'string' },
+	{ key: 'oportunidades', label: 'Oportunidades', type: 'string' },
+	{ key: 'contactos', label: 'Contactos', type: 'string' }
 ];
 export const categoriasDocumentos = [
-	{ key: 'id', label: 'id' },
-	{ key: 'fecha_creacion', label: 'fecha_creacion' },
-	{ key: 'titulo', label: 'titulo' },
-	// {key: 'url', label:'url'},
-	// {key: 'preview', label:'preview'},
-	{ key: 'id_agente', label: 'id_agente' },
-	{ key: 'id_oportunidad', label: 'id_oportunidad' },
-	{ key: 'id_actividad', label: 'id_actividad' },
-	{ key: 'tipo', label: 'tipo' }
+	{ key: 'id', label: 'id', type: 'string' },
+	{ key: 'fecha_creacion', label: 'fecha_creacion', type: 'string' },
+	{ key: 'titulo', label: 'titulo', type: 'string' },
+	// {key: 'url', label:'url',type: 'string'},
+	// {key: 'preview', label:'preview',type: 'string'},
+	{ key: 'id_agente', label: 'id_agente', type: 'string' },
+	{ key: 'id_oportunidad', label: 'id_oportunidad', type: 'string' },
+	{ key: 'id_actividad', label: 'id_actividad', type: 'string' },
+	{ key: 'tipo', label: 'tipo', type: 'string' }
 ];
 export const categoriasInventario = [
-	{ key: 'id', label: 'id' },
-	{ key: 'categorias', label: 'categorias' },
-	{ key: 'codigo', label: 'codigo' },
-	{ key: 'serie', label: 'serie' },
-	{ key: 'cantidad', label: 'cantidad' },
-	{ key: 'descripcion', label: 'descripcion' },
-	{ key: 'ubicacion_fisica', label: 'ubicacion_fisica' }
+	{ key: 'id', label: 'id', type: 'string' },
+	{ key: 'categorias', label: 'categorias', type: 'string' },
+	{ key: 'codigo', label: 'codigo', type: 'string' },
+	{ key: 'serie', label: 'serie', type: 'string' },
+	{ key: 'cantidad', label: 'cantidad', type: 'string' },
+	{ key: 'descripcion', label: 'descripcion', type: 'string' },
+	{ key: 'ubicacion_fisica', label: 'ubicacion_fisica', type: 'string' }
 ];
 
 // AGRUPACIONES

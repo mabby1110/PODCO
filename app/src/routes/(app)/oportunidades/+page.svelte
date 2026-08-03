@@ -1,51 +1,40 @@
+<!-- +page.svelte -->
 <script lang="ts">
 	import { page } from '$app/state';
 	import ExportarCSV from '$lib/components/Acciones/ExportarCSV.svelte';
-	import Agrupaciones from '$lib/components/Acciones/Agrupaciones.svelte';
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
 	import TarjetaListaOportunidades from '$lib/components/Vistas/Oportunidad/TarjetaListaOportunidades.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
-	import { agrupacionesOportunidades, categoriasOportunidad } from '$lib';
-	import { agruparDatosPorRuta, obtenerDatosFiltrados } from '$lib/utils/filtro';
+	import { categoriasOportunidad } from '$lib';
+	import { sortData, filterData, groupData, extraerColumnas } from '$lib/utils/ModList';
+	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
-	import FiltroAgente from '$lib/components/Acciones/FiltroAgente.svelte';
-	import Filtro from '$lib/components/Acciones/Filtro.svelte';
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
-	import { onMount } from 'svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
+	import ModList from '$lib/components/Acciones/ModList.svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
-	let lista = $derived(oportunidades);
-	let lista_ordenada = $derived(obtenerDatosFiltrados(lista, currentRoute));
-	let lista_agrupada = $derived(agruparDatosPorRuta(lista_ordenada, currentRoute));
 
-	let grupos = $derived(
-		lista_agrupada.map((e) => {
-			return { grupo: e.grupo, tamaño: e.elementos.length };
-		})
-	);
-
-	let agrupacionesSeleccionadas: string[] = $state(grupos.map((a: any) => a.grupo));
-
-	let lista_agrupada_filtrada = $derived(
-		agrupacionesSeleccionadas.length > 0
-			? lista_agrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
-			: lista_agrupada
-	);
+	// Convertido a $state para soportar bind:lista
+	let lista = $state(oportunidades);
+	let columnasDinamicas = $derived(extraerColumnas(oportunidades));
 
 	$effect(() => {
-		if (agrupacionesSeleccionadas.length > 0) {
-			lista_agrupada?.filter((a) => agrupacionesSeleccionadas.includes(a.grupo));
-		}
+		lista = oportunidades;
 	});
-	onMount(() => {
-		if ($profile?.isAdmin) {
-			agrupacionesOportunidades.push({ label: 'Agente', value: 'profiles' });
-		}
+
+	let lista_ordenada = $derived(sortData(lista, currentRoute));
+	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
+	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
+
+	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
+
+	$effect(() => {
+		console.log('Ordenada:', lista_ordenada);
+		console.log('Filtrada:', lista_filtrada);
+		console.log('Agrupada:', lista_agrupada);
 	});
 </script>
 
@@ -58,30 +47,32 @@
 		/>
 		<PanelFiltros>
 			{#snippet header()}
-				<!-- <Leyenda /> -->
 				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-				<ExportarCSV {lista_ordenada} />
+				<ExportarCSV lista_ordenada={lista_filtrada} />
 			{/snippet}
 			{#snippet controles()}
-				<Filtro categorias={categoriasOportunidad} />
-				<Agrupaciones
-					categorias={agrupacionesOportunidades}
-					bind:agrupacionesSeleccionadas
-					{grupos}
+				<ModList
+					camposAgrupacion={columnasDinamicas}
+					camposFiltro={columnasDinamicas}
+					route={currentRoute}
 				/>
 			{/snippet}
 		</PanelFiltros>
 	{/snippet}
 
 	{#snippet contenido()}
-		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
-			{#each lista_ordenada as elemento}
-				<TarjetaListaOportunidades event={elemento} />
+		{#if !isGrouped}
+			{#each lista_filtrada as event (event.id)}
+				<TarjetaListaOportunidades {event} />
+			{:else}
+				<div class="no-results">
+					<p>No se encontraron datos.</p>
+				</div>
 			{/each}
 		{:else}
-			{#each lista_agrupada_filtrada as agrupacion (agrupacion.grupo)}
+			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={show}>
-					{#each agrupacion.elementos as event (event.id)}
+					{#each agrupacion.items as event (event.id)}
 						<TarjetaListaOportunidades {event} />
 					{/each}
 				</Grupo>

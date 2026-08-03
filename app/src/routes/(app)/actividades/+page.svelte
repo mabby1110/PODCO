@@ -15,51 +15,32 @@
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import { onMount } from 'svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import ModList from '$lib/components/Acciones/ModList.svelte';
+	import { filterData, groupData, sortData } from '$lib/utils/ModList';
+	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 
-	let { actividades } = $derived(page.data);
-	let currentRoute = $derived(page.url.pathname);
+    let { actividades } = $derived(page.data);
+    let show = $derived($appState.min);
+    let currentRoute = $derived(page.url.pathname);
+    
+    // Convertido a $state para soportar bind:lista
+    let lista = $state(actividades);
+    
+    $effect(() => {
+        lista = actividades;
+    });
 
-	// guardamos lista para poder manipular data
-	let lista = $derived(actividades);
+    let lista_ordenada = $derived(sortData(lista, currentRoute));
+    let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
+    let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
+    
+    let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 
-	// cadena de variables reactivas, data > lista > lista_odenada > lista_agrupada
-	let lista_ordenada = $derived(obtenerDatosFiltrados(lista, currentRoute));
-	let lista_agrupada = $derived(agruparDatosPorRuta(lista_ordenada, currentRoute));
-
-	let grupos = $derived(
-		lista_agrupada.map((e) => {
-			return { grupo: e.grupo, tamaño: e.elementos.length };
-		})
-	);
-
-	/* Es necesario una variable reactiva ya que los derived son solo de lectura,
-	lista_agrupada ya maneja la reactividad contra lista ordenada
-	por lo que bloquea todo lo demas que modifique su valor actual
-	*/
-	let agrupacionesSeleccionadas: string[] = $state(grupos.map((a: any) => a.grupo));
-	let lista_agrupada_filtrada = $derived(
-		agrupacionesSeleccionadas.length > 0
-			? lista_agrupada.filter((a) => agrupacionesSeleccionadas.includes(a.grupo))
-			: lista_agrupada
-	);
-
-	
-	let show = $derived($appState.min);
-	
-	$effect(() => {
-		if (agrupacionesSeleccionadas.length > 0) {
-			lista_agrupada?.filter((a) => agrupacionesSeleccionadas.includes(a.grupo));
-		}
-	});
-	onMount(() => {
-		if ($profile?.isAdmin && ) {
-			agrupacionesActividades.push({ label: 'Agente', value: 'profiles' });
-		}
-	});
-	// const steps = [
-	// 	{ label: 'Actividad programada', color: 'var(--color-secondary)' },
-	// 	{ label: 'Finalizada', color: '#000000ee' }
-	// ];
+    $effect(() => {
+        console.log('Ordenada:', lista_ordenada);
+        console.log('Filtrada:', lista_filtrada);
+        console.log('Agrupada:', lista_agrupada);
+    });
 </script>
 
 <Vista>
@@ -71,25 +52,20 @@
 				<ExportarCSV {lista_ordenada} />
 				<!-- <Leyenda {steps} /> -->
 			{/snippet}
-			{#snippet controles()}
-				<Filtro categorias={categoriasActividad} />
-				<Agrupaciones
-					categorias={agrupacionesActividades}
-					bind:agrupacionesSeleccionadas
-					{grupos}
-				/>
-			{/snippet}
+            {#snippet controles()}
+                <ModList camposAgrupacion={categoriasActividad} camposFiltro={categoriasActividad} route={currentRoute}/>
+            {/snippet}
 		</PanelFiltros>
 	{/snippet}
 	{#snippet contenido()}
-		{#if !StoreAgrupaciones.filtersByRoute[currentRoute]}
+		{#if !isGrouped}
 			{#each lista_ordenada as elemento}
 				<TarjetaListaActividades event={elemento} />
 			{/each}
 		{:else}
-			{#each lista_agrupada_filtrada as agrupacion (agrupacion.grupo)}
+			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={show}>
-					{#each agrupacion.elementos as event (event.id)}
+					{#each agrupacion.items as event (event.id)}
 						<TarjetaListaActividades {event} />
 					{/each}
 				</Grupo>
