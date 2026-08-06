@@ -54,7 +54,7 @@
 		overflow: auto;
 		display: flex;
 		flex-direction: column;
-		gap: var(--a);
+		gap: var(--c) var(--a);
 		height: 100%;
 		padding:var(--a) var(--a) var(--e);
 	}

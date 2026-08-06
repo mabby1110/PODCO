@@ -19,7 +19,7 @@
 			];
 			formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
 
-			const response = await fetch('?/updatePedido', {
+			const response = await fetch('/pedidos?/updatePedido', {
 				method: 'POST',
 				body: formData
 			});
@@ -39,24 +39,21 @@
 	}
 </script>
 
-<div class="leyenda">
-	<div class="pedido">
-		{#if edit}
-			<button type="button" class="butter milk" onclick={() => removerPedidoAEditar(item)}>✕</button
-			>
-		{:else if !selected}
-			<button type="button" class="butter milk" onclick={() => removerItem(item)}>✕</button>
-		{/if}
-		<div class="descripcion">
-			<b>{item.inventario.descripcion || '-'}</b>
-			<a href="/oportunidades/{item.id_oportunidad}">{item.id_oportunidad}</a>
-		</div>
-		<span class="codigo">{item.inventario.serie || item.inventario.codigo || 'sin código'}</span>
-		<span>{item.cantidad}</span>
-		<span><p>${item.precio_unitario || 0}</p></span>
-		<span>USD</span>
-		<span class="total">{formatCurrency(String(item.precio_unitario * item.cantidad), 'USD')}</span>
+<div class="pedido">
+	{#if edit}
+		<button type="button" class="butter milk" onclick={() => removerPedidoAEditar(item)}>✕</button>
+	{:else if !selected}
+		<button type="button" class="butter milk" onclick={() => removerItem(item)}>✕</button>
+	{/if}
+	<div class="descripcion">
+		<b>{item.inventario.descripcion || '-'}</b>
+		<a href="/oportunidades/{item.id_oportunidad}">{item.id_oportunidad}</a>
 	</div>
+	<span class="codigo">{item.inventario.serie || item.inventario.codigo || 'sin código'}</span>
+	<span>{item.cantidad}</span>
+	<span><p>${item.precio_unitario || 0}</p></span>
+	<span>USD</span>
+	<span class="total">{formatCurrency(String(item.precio_unitario * item.cantidad), 'USD')}</span>
 </div>
 
 <style>
@@ -71,9 +68,11 @@
 	.pedido .descripcion {
 		grid-column: span 5;
 		word-break: break-all;
-		justify-self: flex-start;
 		display: flex;
 		flex-direction: column;
+		justify-self: flex-start;
+		align-items: flex-start;
+		text-align: start;
 	}
 	.pedido .codigo {
 		grid-column: span 3;

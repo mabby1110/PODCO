@@ -3,11 +3,11 @@
 	import { enhance } from '$app/forms';
 	import { StoreEditarPedido } from '$lib/stores/StoreEditarPedido.svelte';
 	import { agruparDatos } from '$lib/utils/filtro';
-	import { formatCurrency } from '$lib/utils/util';
 	import { goto } from '$app/navigation';
 	import Pedido from '$lib/components/Tarjetas/Pedido.svelte';
-	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
+	import { StorePedido } from '$lib/stores/StorePedido.svelte';
+	import { onMount } from 'svelte';
+	import { appState } from '$lib/stores/appState.svelte';
 
 	// Recibe el parámetro de la página actual
 	let { id_oportunidad, agente }: { id_oportunidad: string; agente?: any } = $props();
@@ -22,24 +22,38 @@
 			StoreEditarPedido.agregar(item);
 		});
 	}
+	function editarPedidoSeleccionado() {
+		StorePedido.limpiar();
+		StoreEditarPedido.items.forEach((item) => {
+			StorePedido.agregar(item);
+		});
+		appState.setEditarPedido(true);
+		StoreEditarPedido.limpiar();
+		goto('/inventario');
+	}
 	$effect(() => console.log(StoreEditarPedido.items));
+	onMount(() => StoreEditarPedido.limpiar());
 </script>
 
-<button class="butter" onclick={() => goto('/inventario')}>+Pedido nuevo</button>
+{#if StoreEditarPedido.items.length === 0}
+	<button class="butter" onclick={() => goto('/inventario')}>+Pedido nuevo</button>
+{:else}
+	<button class="butter" onclick={editarPedidoSeleccionado}>Editar</button>
+{/if}
 <p class="agente">Agente: {agente?.nombre}</p>
 <div class="pedidos">
 	{#if StoreEditarPedido.items.length === 0}
 		{#each lista_agrupada as grupo}
 			<button class="panel grupo" onclick={() => seleccionarAgrupacion(grupo.elementos)}>
 				{#each grupo.elementos as item}
-					<Pedido {item} edit />
+					<Pedido {item} selected />
 				{/each}
 			</button>
 		{/each}
 	{:else}
 		<div class="panel grupo">
 			{#each StoreEditarPedido.items as item}
-				<Pedido {item} edit/>
+				<Pedido {item} edit />
 			{/each}
 		</div>
 		<form

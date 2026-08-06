@@ -14,6 +14,7 @@ interface AppState {
 	pageActions: boolean;
 	min: boolean;
 	BI: boolean;
+	editarPedido: boolean;
 }
 
 const COOKIE_NAME = 'appState';
@@ -30,7 +31,8 @@ const defaultState: AppState = {
 	ModalInventario: false,
 	pageActions: false,
 	min: false,
-	BI: false
+	BI: false,
+	editarPedido: false
 };
 
 function getInitialState(): AppState {
@@ -110,6 +112,12 @@ function createAppState() {
 		toggleBI: () =>
 			update((state) => {
 				const newState = { ...state, BI: !state.BI };
+				saveToCookie(newState);
+				return newState;
+			}),
+		setEditarPedido: (value: boolean) =>
+			update((state) => {
+				const newState = { ...state, editarPedido: value };
 				saveToCookie(newState);
 				return newState;
 			}),

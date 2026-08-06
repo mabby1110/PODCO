@@ -38,7 +38,8 @@
 			keyColumns={['serie', 'codigo', 'descripcion', 'categorias']}
 			bind:lista
 		/>
-		<Panel tituloBoton="Pedido">
+		
+		<Panel tituloBoton="Pedido" show={$appState.editarPedido}>
 			{#snippet header()}
 				<a href="/pedidos" class="butter">Lista pedidos</a>
 			{/snippet}

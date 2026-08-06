@@ -194,7 +194,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
-		padding: var(--a);
 	}
 	.file-input {
 		max-width: 800px;
