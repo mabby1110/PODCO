@@ -5,6 +5,6 @@
 </script>
 {#if $appState.calendarView == 'gant'}
 	<CalendarioAnual />
-{:else if $appState.calendarView == 'semanal'}
+{:else}
 	<CalendarioSemanal />
 {/if}
