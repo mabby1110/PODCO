@@ -205,7 +205,7 @@
 							multiple
 						/>
 					{/if}
-					<div class="block">
+					<div class="content">
 						{#if eventData?.cotizaciones.length > 0}
 							{#each eventData?.cotizaciones as documento}
 								<TarjetaListaDocumentos event={documento} />

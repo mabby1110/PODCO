@@ -88,6 +88,7 @@
 		flex-wrap: wrap;
 		padding: 4px;
 		cursor: pointer;
+		width: 100%;
 	}
 	.list-card-header {
 		flex-grow: 3;

@@ -8,7 +8,7 @@
 		nextFase: string;
 		isOpen: boolean;
 		submit: boolean;
-		submitCancel: boolean;
+		submitCancel?: boolean;
 	} = $props();
 
 	function toggleSubmit() {
@@ -36,7 +36,9 @@
 </script>
 
 {#if !isOpen}
-	<button class="butter" type="button" onclick={toggleCancel}> Descartar </button>
+	{#if submitCancel}
+		<button class="butter" type="button" onclick={toggleCancel}> Descartar </button>
+	{/if}
 	<button class="butter matcha" type="button" onclick={toggleSubmit}> {nextFase} </button>
 {:else}
 	<button class="butter chile" type="button" onclick={close}>✕</button>

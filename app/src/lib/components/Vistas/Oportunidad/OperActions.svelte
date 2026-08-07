@@ -1,13 +1,12 @@
 <script lang="ts">
-	import DatePicker from "$lib/components/Formularios/DatePicker.svelte";
-	import FormActions from "$lib/components/Formularios/FormActions.svelte";
-	import FormInput from "$lib/components/Formularios/FormInput.svelte";
-	import FormOptionalInput from "$lib/components/Formularios/FormOptionalInput.svelte";
-	import FormOptionalSubmit from "$lib/components/Formularios/FormOptionalSubmit.svelte";
-	import UploadFile from "$lib/components/Formularios/UploadFile.svelte";
-	import { agregarEntrada, concatStrings } from "$lib/utils/cardActions";
-	import { getStyleForPhase } from "$lib/utils/util";
-
+	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
+	import FormActions from '$lib/components/Formularios/FormActions.svelte';
+	import FormInput from '$lib/components/Formularios/FormInput.svelte';
+	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
+	import FormOptionalSubmit from '$lib/components/Formularios/FormOptionalSubmit.svelte';
+	import UploadFile from '$lib/components/Formularios/UploadFile.svelte';
+	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
+	import { getStyleForPhase } from '$lib/utils/util';
 
 	let { eventData } = $props();
 
@@ -24,7 +23,6 @@
 	let isOpen = $state(false);
 	let submit = $state(false);
 	let submitUpdate = $state(false);
-	let submitCancel = $state(false);
 	let style = $derived(getStyleForPhase(currentPhase + 1));
 
 	function handleSuccess() {
@@ -38,7 +36,7 @@
 
 {#if currentPhase >= 4 && currentPhase != 0 && currentPhase != 6}
 	<FormActions action="/oportunidades?/updateOp" bind:isOpen onSuccess={handleSuccess}>
-		{#snippet fieldsContent()}
+		{#snippet inputs()}
 			{#if submit}
 				{#if currentPhase == 4}
 					<FormInput
@@ -134,33 +132,6 @@
 					<DatePicker title="Salida de paquete" />
 					<input type="hidden" name="fecha_transito" value={new Date().toISOString()} />
 				{/if}
-			{:else if submitCancel}
-				<FormInput
-					label="Pérdida"
-					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Motivo de la pérdida"
-					type="textarea"
-					required
-				/>
-				<div class="opcional">
-					<h3>Informacion adicional</h3>
-					<div class="opciones">
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								bind:value={nuevaObeservacion}
-								placeholder="Detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
-						</FormOptionalInput>
-					</div>
-				</div>
 			{/if}
 		{/snippet}
 
@@ -203,27 +174,16 @@
 		{/snippet}
 
 		{#snippet submitContent(isSubmitting: boolean)}
-			<div class="submit">
-				<FormOptionalSubmit
-					nextFase={eventData.fase.accion}
-					bind:isOpen
-					bind:submit
-					bind:submitCancel
-				/>
-
-				{#if submit}
-					<input type="hidden" name="fase" value={nextPhase} />
-					<button type="submit" class="butter" {style} disabled={isSubmitting}>
-						{isSubmitting ? 'Procesando...' : eventData.fase.accion}
-					</button>
-				{:else if submitUpdate}
-					<input type="hidden" name="fase" value={currentPhase} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
-				{:else if submitCancel}
-					<input type="hidden" name="fase" value={0} />
-					<button type="submit" class="butter" disabled={isSubmitting}>Perder</button>
-				{/if}
-			</div>
+			<FormOptionalSubmit nextFase={eventData.fase.accion} bind:isOpen bind:submit />
+			{#if submit}
+				<input type="hidden" name="fase" value={nextPhase} />
+				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+					{isSubmitting ? 'Procesando...' : eventData.fase.accion}
+				</button>
+			{:else if submitUpdate}
+				<input type="hidden" name="fase" value={currentPhase} />
+				<button type="submit" class="butter" disabled={isSubmitting}>Actualizar</button>
+			{/if}
 		{/snippet}
 	</FormActions>
 {/if}

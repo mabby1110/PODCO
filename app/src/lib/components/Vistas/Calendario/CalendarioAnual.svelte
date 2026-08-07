@@ -141,7 +141,7 @@
 
 <Vista>
 	{#snippet acciones()}
-		<div class="calendar-navigation">
+		<!-- <div class="calendar-navigation">
 			<button
 				onclick={() => (calendarStore.weekOffset -= 1)}
 				class="butter nav-btn"
@@ -159,7 +159,7 @@
 			>
 				→
 			</button>
-		</div>
+		</div> -->
 		<select
 			value={$appState.calendarView}
 			onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
