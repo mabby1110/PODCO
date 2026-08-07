@@ -22,16 +22,17 @@
 		</div>
 	{/if}
 
-	<div class="card-content">
+	<div class="snippets">
 		{#if actions}
 			<section class="card-actions">
 				{@render actions()}
 			</section>
 		{/if}
 		{#if content}
-			{@render content()}
+			<div class="card-content">
+				{@render content()}
+			</div>
 		{/if}
-
 	</div>
 </div>
 
@@ -44,15 +45,17 @@
 		display: flex;
 		flex-direction: column;
 	}
-	.card .card-content {
-		align-self: center;
-		width: 100%;
-		max-width: 1200px;
+	.card .snippets {
+		flex-grow: 1;
 		overflow: auto;
+		padding: var(--a) var(--a) var(--f);
+	}
+	.card-content {
+		max-width: 1200px;
+		width: 100%;
+		margin: auto;
 		display: flex;
 		flex-direction: column;
 		gap: var(--c) var(--a);
-		height: 100%;
-		padding:var(--a) var(--a) var(--e);
 	}
 </style>

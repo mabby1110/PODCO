@@ -24,7 +24,6 @@
 			style: getStyleForPhase(event.fase)
 		};
 	});
-	console.log(eventData)
 	let currentFase = $derived(eventData?.fase?.id_fase == 6 ? 'w' : '');
 
 	let isEditing = $state(false);

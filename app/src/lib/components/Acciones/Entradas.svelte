@@ -4,7 +4,7 @@
 	import { appState } from '$lib/stores/appState.svelte';
 	import { opModalStore } from '$lib/stores/opModalStore.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
+	import { formatDateToReadable } from '$lib/utils/util';
 
 	let {
 		historia = $bindable('[]'),
@@ -43,7 +43,6 @@
 
 		lista.splice(i, 1);
 		syncAndSubmit();
-		invalidateAll();
 	}
 
 	function saveNew() {
@@ -57,7 +56,6 @@
 
 		lista = [...lista, entry];
 		syncAndSubmit();
-		invalidateAll();
 		initNewData();
 	}
 
@@ -68,7 +66,7 @@
 
 	function handleSubmit() {
 		return async ({ update }: any) => {
-			await update();
+			await update({ reset: false });
 		};
 	}
 
@@ -105,7 +103,7 @@
 					<div class="tarjeta-entrada">
 						<div class="encabezado-entrada">
 							<span class="fecha-etiqueta">
-								{formatDateFull(parseDateTimeLocal(item.fecha))}
+								{formatDateToReadable(item.fecha)}
 							</span>
 							{#if item.nombre_perfil}
 								<span class="autor-etiqueta">{item.nombre_perfil}</span>
@@ -119,7 +117,7 @@
 							<div class="campo-edicion">
 								<textarea
 									class="area-texto"
-									value={item.entrada}
+									bind:value={item.entrada}
 									onchange={(e) => actualizarEntrada(i, e.currentTarget.value)}
 								></textarea>
 								<div class="acciones-edicion">
@@ -174,7 +172,8 @@
 		pointer-events: none;
 	}
 	button,
-	textarea, a {
+	textarea,
+	a {
 		pointer-events: all;
 	}
 	.lista-entradas {
@@ -187,13 +186,14 @@
 
 	.tarjeta-entrada {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--g), 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
 		padding: var(--a);
 		border: 1px solid #e0e0e0;
 		border-radius: var(--a);
 	}
 
 	.encabezado-entrada {
+		grid-column: span 5;
 		display: flex;
 		align-items: baseline;
 		gap: var(--a);
@@ -230,7 +230,7 @@
 	}
 	.contenido-texto,
 	.campo-edicion {
-		grid-column: span 3;
+		grid-column: span 9;
 	}
 	.contenido-texto p {
 		white-space: pre-wrap;
@@ -238,19 +238,16 @@
 	}
 
 	.formulario-nueva-entrada {
-		display: grid;
-		grid-template-columns: 1fr;
+		display: flex;
+		align-items: flex-end;
 		gap: 0.75rem;
 		padding: 1rem;
-		background-color: #f0f4f8;
-		border: 1px solid #d0dbe5;
-		border-radius: 6px;
+		border: 1px solid #e0e0e0;
+		border-radius: var(--a);
 	}
 
 	.campo-etiqueta {
-		display: grid;
-		gap: 0.4rem;
-		font-weight: 600;
+		width: 100%;
 	}
 	.mensaje-vacio {
 		text-align: center;

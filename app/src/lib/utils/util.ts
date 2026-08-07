@@ -35,3 +35,8 @@ export const formatCurrency = (value: string, currency: string) => {
 	return null
   }
 };
+
+export function formatDateToReadable(date: string | number | Date): string {
+    if (!date) return '';
+    return new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(new Date(date));
+}

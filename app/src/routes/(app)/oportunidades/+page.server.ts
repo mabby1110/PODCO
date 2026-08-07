@@ -78,11 +78,12 @@ export const actions: Actions = {
 		return { success: true, op: result.id };
 	},
 	update: async ({ request, locals: { supabase, user } }) => {
-		console.log('\nOportunidaddd actualizada\n');
+		console.log('\nAccion: Actualizar Oportunidad\n');
 		if (!user) return 0;
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
-
+		console.log(formData);
+		
 		/* PROCESAR OPORTUNIDAD */
 		const id = (data['id_op'] as string) || (data['id'] as string);
 		if (!id) {
