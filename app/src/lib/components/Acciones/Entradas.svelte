@@ -22,8 +22,6 @@
 		historia && historia !== '' ? JSON.parse(historia) : []
 	);
 
-	let editIndex = $state<number | null>(null);
-	let editData = $state<Record<string, any>>({});
 	let newData = $state({
 		fecha: new Date().toISOString(),
 		entrada: ''
@@ -40,21 +38,12 @@
 		};
 	}
 
-	function editItem(i: number) {
-		editIndex = i;
-		editData = { ...lista[i] };
-	}
+	function eliminarEntrada(i: number) {
+		if (!confirm('Eliminar entrada?')) return;
 
-	function cancelEdit() {
-		editIndex = null;
-	}
-
-	function saveEdit() {
-		editData.nombre_perfil = $profile?.nombre;
-		editData.id = $profile?.id;
-		lista[editIndex as number] = { ...editData };
+		lista.splice(i, 1);
 		syncAndSubmit();
-		cancelEdit();
+		invalidateAll();
 	}
 
 	function saveNew() {
@@ -83,154 +72,189 @@
 		};
 	}
 
+	function asociarOp(i: number, id_op: string) {
+		lista[i].id_op = id_op;
+		syncAndSubmit();
+	}
+
 	function handleHotOp(i: number, entrada: string) {
-		opModalStore.index_entrada = String(i);
-		opModalStore.observaciones = entrada;
+		console.log(i, entrada);
+		opModalStore.open({
+			index: i,
+			observaciones: entrada,
+			onSuccess: (id_op: string) => asociarOp(i, id_op)
+		});
 		appState.toggleModalOp();
 	}
-	// $effect(() => {
-	// 	if (formInput) {
-	// 		formInput.scrollIntoView({
-	// 			behavior: 'smooth',
-	// 			block: 'start'
-	// 		});
-	// 	}
-	// });
+
+	function actualizarEntrada(i: number, nuevoTexto: string) {
+		lista[i].entrada = nuevoTexto;
+		lista[i].nombre_perfil = $profile?.nombre;
+		lista[i].id = $profile?.id;
+	}
 </script>
 
 <form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
 	<input type="hidden" name="id" value={objId} />
 	<input type="hidden" name="historia" value={list_stringified} />
-	<div class="detail-body">
-		<div class="entradas">
+
+	<div class="contenedor-historial">
+		<div class="lista-entradas">
 			{#if lista.length > 0}
 				{#each lista as item, i}
-					<div class="entrada">
-						{#if editIndex === i}
-							<label class="field-input">
-								<span>Editar Entrada</span>
-								<textarea bind:value={editData.entrada}></textarea>
-							</label>
-							<div class="form-actions">
-								<button type="button" class="butter" onclick={saveEdit}>Guardar</button>
-								<button type="button" class="butter chile" onclick={cancelEdit}>X</button>
-							</div>
-						{:else}
-							{#if (item.nombre_perfil === $profile?.nombre && isEditing) || (!item.nombre_perfil && isEditing)}
-								<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
-								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
-								{#if !item.id_op}
+					<div class="tarjeta-entrada">
+						<div class="encabezado-entrada">
+							<span class="fecha-etiqueta">
+								{formatDateFull(parseDateTimeLocal(item.fecha))}
+							</span>
+							{#if item.nombre_perfil}
+								<span class="autor-etiqueta">{item.nombre_perfil}</span>
+							{/if}
+							{#if item.id_op}
+								<a class="enlace-oportunidad" href="/oportunidades/{item.id_op}"> Oportunidad </a>
+							{/if}
+						</div>
+
+						{#if isEditing}
+							<div class="campo-edicion">
+								<textarea
+									class="area-texto"
+									value={item.entrada}
+									onchange={(e) => actualizarEntrada(i, e.currentTarget.value)}
+								></textarea>
+								<div class="acciones-edicion">
 									<button type="button" class="butter" onclick={() => handleHotOp(i, item.entrada)}>
-										+Oportundiad
+										+Oportunidad
 									</button>
-								{/if}
-							{/if}
-							{#if item.entrada}
-								<div class="contenido-entrada">
-									{#if item.id_op}
-										<a href="/oportunidades/{item.id_op}">Oportunidad</a>
-									{/if}
-									<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
-									{#if item.nombre_perfil}
-										<span class="profile">{item.nombre_perfil},</span>
-									{/if}
-									<p>{item.entrada}</p>
+									<button type="button" class="butter" onclick={() => eliminarEntrada(i)}>
+										Eliminar
+									</button>
+									<button type="button" class="butter matcha" onclick={syncAndSubmit}>
+										Guardar
+									</button>
 								</div>
-							{/if}
+							</div>
+						{:else if item.entrada}
+							<div class="contenido-texto">
+								<p>{item.entrada}</p>
+							</div>
 						{/if}
 					</div>
 				{/each}
 			{:else}
-				<p class="empty-msg">No hay entradas</p>
+				<p class="mensaje-vacio">No hay entradas registradas</p>
 			{/if}
 		</div>
-		<div class="entrada form-permanente">
-			<label class="field-input">
-				<textarea bind:value={newData.entrada} bind:this={formInput} placeholder="Nueva Entrada"
+
+		<div class="formulario-nueva-entrada">
+			<label class="campo-etiqueta">
+				<span>Nueva Entrada</span>
+				<textarea
+					bind:value={newData.entrada}
+					bind:this={formInput}
+					class="area-texto"
+					placeholder="Escriba aquí la nueva entrada..."
 				></textarea>
 			</label>
-			<button type="button" class="butter" onclick={saveNew}>Registrar</button>
+			<button type="button" class="butter matcha" onclick={saveNew}> Registrar </button>
 		</div>
 	</div>
 </form>
 
 <style>
 	form {
-		flex-grow: 1;
+		width: 100%;
 	}
-	.empty-msg {
-		font-style: italic;
-		margin: 16px 0;
-	}
-	.field-input {
+
+	.contenedor-historial {
 		display: flex;
 		flex-direction: column;
-		flex-grow: 1;
-	}
-	.field-input textarea {
-		min-height: var(--e);
-		max-width: var(--i);
-	}
-	.form-actions {
-		display: flex;
-		align-self: flex-end;
-		justify-content: flex-end;
-		gap: 8px;
-		margin-top: 8px;
-	}
-	.detail-body {
-		flex-grow: 1;
-		display: flex;
-		gap: var(--a);
-		flex-wrap: wrap;
+		gap: 1rem;
 		width: 100%;
 		pointer-events: none;
 	}
-	.profile {
-		font-style: italic;
-		margin-right: 4px;
-	}
-	.btn-icon:hover {
-		opacity: 1;
-	}
-	.butter {
-		aspect-ratio: unset;
-	}
-	.form-permanente {
-		display: flex;
-		align-items: flex-end;
-		gap: var(--a);
-		width: 100%;
-	}
 	button,
-	input,
-	textarea,
-	a {
+	textarea, a {
 		pointer-events: all;
 	}
-
-	.entradas {
-		flex-grow: 1;
+	.lista-entradas {
 		display: flex;
 		flex-direction: column;
-		gap: var(--a);
-		overflow: auto;
+		gap: 0.75rem;
+		width: 100%;
+		overflow-y: auto;
 	}
 
-	.entradas .entrada {
+	.tarjeta-entrada {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(var(--g), 1fr));
+		padding: var(--a);
+		border: 1px solid #e0e0e0;
+		border-radius: var(--a);
+	}
+
+	.encabezado-entrada {
 		display: flex;
-		flex-wrap: wrap;
+		align-items: baseline;
 		gap: var(--a);
-		margin-bottom: var(--b);
+		font-size: small;
+		font-weight: bold;
 	}
 
-	.contenido-entrada {
+	.fecha-etiqueta {
+		color: #333;
+	}
+
+	.autor-etiqueta {
+		padding: 0.1rem 0.4rem;
+		border-radius: var(--a);
+		justify-self: start;
+	}
+
+	.enlace-oportunidad {
+		color: #0056b3;
+		text-decoration: none;
+		justify-self: start;
+	}
+
+	.area-texto {
+		width: 100%;
+		min-height: 70px;
+		border-radius: var(--a);
+	}
+
+	.acciones-edicion {
 		display: flex;
-		flex-wrap: wrap;
+		justify-content: flex-end;
 		gap: var(--a);
 	}
+	.contenido-texto,
+	.campo-edicion {
+		grid-column: span 3;
+	}
+	.contenido-texto p {
+		white-space: pre-wrap;
+		word-break: break-word;
+	}
 
-	.entradas .butter {
-		aspect-ratio: 1 / 1;
+	.formulario-nueva-entrada {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.75rem;
+		padding: 1rem;
+		background-color: #f0f4f8;
+		border: 1px solid #d0dbe5;
+		border-radius: 6px;
+	}
+
+	.campo-etiqueta {
+		display: grid;
+		gap: 0.4rem;
+		font-weight: 600;
+	}
+	.mensaje-vacio {
+		text-align: center;
+		color: #666;
+		padding: 1rem 0;
 	}
 </style>

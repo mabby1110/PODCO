@@ -105,7 +105,10 @@ select {
 	min-height: var(--d);
 	cursor: pointer;
 }
-
+textarea {
+	font-family: inherit;
+	resize: vertical;
+}
 button {
 	margin: 0;
 	padding: 0;
@@ -300,7 +303,6 @@ section .content {
 }
 section .block {
 	width: 100%;
-
 }
 /* FUENTES */
 .tiny {

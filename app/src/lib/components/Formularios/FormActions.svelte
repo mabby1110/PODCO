@@ -66,7 +66,7 @@
 		{/if}
 
 		{#if submitContent}
-			<div class="submit">
+			<div class="submit panel">
 				{@render submitContent(isSubmitting)}
 			</div>
 		{/if}
@@ -76,6 +76,7 @@
 <style>
 	.form-actions {
 		width: 100%;
+		z-index: 99;
 	}
 	.inputs {
 		display: flex;
@@ -85,12 +86,12 @@
 	.submit {
 		position: fixed;
 		bottom: 0;
-		right: 0;
+		right: var(--a);
 		display: flex;
 		flex-wrap: wrap-reverse;
 		justify-content: flex-end;
 		gap: var(--a);
-		margin-left: var(--e);
+		margin: 0 var(--a) var(--a) var(--e);
 		padding: var(--a);
 	}
 </style>

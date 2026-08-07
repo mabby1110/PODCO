@@ -19,7 +19,7 @@
 
 	let necesidades = $state('');
 	let objetivo = $state('');
-	let observaciones = $state(opModalStore.observaciones || '');
+	let observaciones = $state(opModalStore.observaciones || null);
 
 	let isOpen = $state(false);
 
@@ -54,6 +54,7 @@
 	<div class="form-group">
 		<FormSelectMotivo list={motivosOportunidad} />
 		<FormSelectAgente bind:selected={selectedAgent} />
+		{observaciones}
 	</div>
 
 	<Searchbar
@@ -72,11 +73,11 @@
 		hint="ej. levantamiento técnico en sitio,  o presentar cotización"
 		required
 	/>
-	<FormOptionalInput title="+Observaciones">
+	<FormOptionalInput title="+Observaciones" openByDefault={observaciones?true:false}>
 		<FormInput
 			label="Observaciones"
 			name="observaciones"
-			value={observaciones}
+			bind:value={observaciones}
 			type="textarea"
 			required
 		/>

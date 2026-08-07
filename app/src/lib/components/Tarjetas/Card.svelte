@@ -23,15 +23,15 @@
 	{/if}
 
 	<div class="card-content">
-		{#if content}
-			{@render content()}
-		{/if}
-
 		{#if actions}
 			<section class="card-actions">
 				{@render actions()}
 			</section>
 		{/if}
+		{#if content}
+			{@render content()}
+		{/if}
+
 	</div>
 </div>
 

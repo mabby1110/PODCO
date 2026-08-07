@@ -7,61 +7,28 @@
 	import EditableInput from '$lib/components/Formularios/EditableInput.svelte';
 	import Card from '$lib/components/Tarjetas/Card.svelte';
 	import ActivityActions from '$lib/components/Vistas/Actividad/ActivityActions.svelte';
-	import { opModalStore } from '$lib/stores/opModalStore.svelte.js';
 	import { profile } from '$lib/stores/profileStore.svelte.js';
-	import { postActivityUpdate } from '$lib/utils/actions.js';
 	import { getStyleForPhase } from '$lib/utils/util.js';
 
 	let { data } = $props();
 	const event = $derived(data.actividad);
 	const { agentes } = $derived(page.data);
-
 	const eventData = $derived.by(() => {
 		if (!event) return null;
 
 		return {
+			...event,
 			id: event.id,
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			fase: fases_actividad.find((f) => f.id_fase == event.fase),
-			motivo: event?.motivo,
-			inicio: event?.inicio,
-			historia: event.historia,
-			requisitos: event.requisitos,
-			objetivo: event.objetivo,
-			observaciones: event.observaciones,
-			historial_cambios: event.historial_cambios,
 			style: getStyleForPhase(event.fase)
 		};
 	});
-
+	console.log(eventData)
 	let currentFase = $derived(eventData?.fase?.id_fase == 6 ? 'w' : '');
 
 	let isEditing = $state(false);
-	function handleHotOp(e: Event) {
-		const activeHistoriaIndex = opModalStore.index_entrada;
-		const customEvent = e as CustomEvent<{ id_op: string }>;
-		const id_op = customEvent.detail.id_op;
-		if (activeHistoriaIndex !== null && eventData) {
-			let historiaArray = JSON.parse(eventData.historia || '[]');
-
-			if (historiaArray[activeHistoriaIndex]) {
-				historiaArray[activeHistoriaIndex].id_op = id_op;
-			}
-
-			const updatedHistoria = JSON.stringify(historiaArray);
-
-			postActivityUpdate(
-				eventData.id,
-				{ id: eventData.id, historia: updatedHistoria },
-				'/actividades?/update'
-			).then(() => {
-				opModalStore.clearStore();
-			});
-		}
-	}
 </script>
-
-<svelte:window onmodalOpSuccess={handleHotOp} />
 
 {#if eventData}
 	<Card headerStyle={eventData.style}>
@@ -74,13 +41,11 @@
 				<p class="date">{eventData.inicio}</p>
 				<p>|</p>
 				<p>{eventData?.agente?.nombre}</p>
+				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
 			</div>
 		{/snippet}
 
 		{#snippet content()}
-			<section>
-				<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
-			</section>
 			<CustomInput action="/actividades?/update" id={eventData.id} {isEditing}>
 				<DatePicker />
 			</CustomInput>
@@ -128,14 +93,14 @@
 			</EditableInput>
 
 			<section>
-				<div class="block-header">
-					<h3>Historia</h3>
+				<div class="header">
+					<h3>Historia:</h3>
 				</div>
-				<div class="block-content">
+				<div class="content">
 					<Entradas
 						{isEditing}
-						historia={eventData.historia}
-						objId={eventData.id}
+						historia={eventData?.historia}
+						objId={eventData?.id}
 						action={'/actividades?/update'}
 					/>
 				</div>
