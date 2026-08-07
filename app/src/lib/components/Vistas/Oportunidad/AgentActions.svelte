@@ -67,7 +67,7 @@
 
 {#if currentPhase <= 3 && currentPhase != 0 && currentPhase != 6}
 	<FormActions action="/oportunidades?/update" bind:isOpen onSuccess={handleSuccess}>
-		{#snippet fieldsContent()}
+		{#snippet inputs()}
 			{#if submit}
 				{#if currentPhase == 1}
 					<FormSelectMotivo
@@ -266,17 +266,6 @@
 		{/snippet}
 
 		{#snippet submitContent(isSubmitting: boolean)}
-			{#if !submit && !submitCancel}
-				<button type="button" class="butter {isEditing}" onclick={() => (isEditing = !isEditing)}>
-					Editar
-				</button>
-			{/if}
-			<FormOptionalSubmit
-				nextFase={eventData.fase.accion}
-				bind:submit
-				bind:submitCancel
-				bind:isOpen
-			/>
 			{#if submit}
 				<input type="hidden" name="fase" value={nextPhase} />
 				<button type="submit" class="butter" {style} disabled={isSubmitting || !canSubmit}>
@@ -289,8 +278,18 @@
 				>
 			{:else if submitCancel}
 				<input type="hidden" name="fase" value={0} />
-				<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}>Perder</button>
+				<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}>Descartar</button>
+			{:else}
+				<button type="button" class="butter {isEditing}" onclick={() => (isEditing = !isEditing)}>
+					Editar
+				</button>
 			{/if}
+			<FormOptionalSubmit
+				nextFase={eventData.fase.accion}
+				bind:submit
+				bind:submitCancel
+				bind:isOpen
+			/>
 		{/snippet}
 	</FormActions>
 {/if}

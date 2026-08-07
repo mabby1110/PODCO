@@ -142,20 +142,6 @@ button {
 	cursor: pointer;
 }
 
-.card-actions .submit {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
-	justify-content: flex-end;
-	align-items: flex-end;
-	flex-grow: 1;
-	padding: 4px;
-	width: 100%;
-	position: fixed;
-	bottom: 0;
-	border-radius: var(--a) var(--a) 0 0;
-}
-
 .card .close,
 .panel .close {
 	position: absolute;
@@ -170,39 +156,6 @@ button {
 	flex-shrink: 0;
 	cursor: pointer;
 	text-decoration: none;
-}
-
-/* CHAT */
-.entradas {
-	flex-grow: 1;
-	display: flex;
-	flex-direction: column;
-	gap: var(--a);
-	overflow: auto;
-}
-
-.entradas .entrada {
-	display: flex;
-	gap: var(--a);
-	flex-wrap: wrap;
-	margin-bottom: var(--b);
-	align-items: center;
-}
-
-.titulo-entrada {
-	display: flex;
-	gap: var(--a);
-}
-
-.contenido-entrada {
-	width: 100%;
-	display: flex;
-	gap: var(--a);
-	align-items: center;
-}
-
-.entradas .butter {
-	aspect-ratio: 1 / 1;
 }
 
 /* GRAFICAS */

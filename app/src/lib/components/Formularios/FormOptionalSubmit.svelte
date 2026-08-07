@@ -36,8 +36,8 @@
 </script>
 
 {#if !isOpen}
-	<button class="butter" type="button" onclick={toggleCancel}> Descartar </button>
-	<button class="butter" type="button" onclick={toggleSubmit}> {nextFase} </button>
+	<button class="butter chile" type="button" onclick={toggleCancel}> Descartar </button>
+	<button class="butter matcha" type="button" onclick={toggleSubmit}> {nextFase} </button>
 {:else}
 	<button class="butter chile" type="button" onclick={close}>✕</button>
 {/if}

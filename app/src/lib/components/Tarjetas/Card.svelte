@@ -17,9 +17,9 @@
 
 <div class="card" transition:slide>
 	{#if header}
-		<header style={headerStyle}>
+		<div style={headerStyle}>
 			{@render header()}
-		</header>
+		</div>
 	{/if}
 
 	<div class="card-content">
@@ -28,24 +28,21 @@
 		{/if}
 
 		{#if actions}
-			<div class="card-actions">
+			<section class="card-actions">
 				{@render actions()}
-			</div>
+			</section>
 		{/if}
 	</div>
 </div>
 
 <style>
 	.card {
-		display: flex;
-		flex-direction: column;
+		position: relative;
 		width: 100%;
-		height: fit-content;
 		max-height: 100dvh;
 		overflow: hidden;
-		position: relative;
-		height: 100%;
-		position: relative;
+		display: flex;
+		flex-direction: column;
 	}
 	.card .card-content {
 		align-self: center;
@@ -57,14 +54,5 @@
 		gap: var(--c) var(--a);
 		height: 100%;
 		padding:var(--a) var(--a) var(--e);
-	}
-
-	.card-actions {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: var(--b);
-		border-top: 1px solid var(--color-secondary);
 	}
 </style>

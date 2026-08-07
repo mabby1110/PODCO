@@ -82,9 +82,6 @@
 	{/snippet}
 
 	{#snippet content()}
-		<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData?.id} {isEditing}>
-			<DatePicker />
-		</CustomInput>
 
 		<EditableInput
 			{isEditing}
@@ -101,6 +98,12 @@
 			{/snippet}
 		</EditableInput>
 
+		{#if isEditing}
+			<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData?.id} {isEditing}>
+				<DatePicker />
+			</CustomInput>
+		{/if}
+		
 		<EditableInput
 			{isEditing}
 			id={eventData?.id}

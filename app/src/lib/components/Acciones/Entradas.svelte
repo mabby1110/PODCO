@@ -117,19 +117,20 @@
 							</div>
 						{:else}
 							{#if (item.nombre_perfil === $profile?.nombre && isEditing) || (!item.nombre_perfil && isEditing)}
+								<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
+								<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
 								{#if !item.id_op}
 									<button type="button" class="butter" onclick={() => handleHotOp(i, item.entrada)}>
 										+Oportundiad
 									</button>
 								{/if}
-								<button type="button" class="btn-icon" onclick={() => editItem(i)}>✏️</button>
 							{/if}
-							<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
 							{#if item.entrada}
 								<div class="contenido-entrada">
 									{#if item.id_op}
 										<a href="/oportunidades/{item.id_op}">Oportunidad</a>
 									{/if}
+									<b>{formatDateFull(parseDateTimeLocal(item.fecha))}: </b>
 									{#if item.nombre_perfil}
 										<span class="profile">{item.nombre_perfil},</span>
 									{/if}
@@ -148,7 +149,7 @@
 				<textarea bind:value={newData.entrada} bind:this={formInput} placeholder="Nueva Entrada"
 				></textarea>
 			</label>
-			<button type="button" class="butter btn-save-small" onclick={saveNew}>Guardar</button>
+			<button type="button" class="butter" onclick={saveNew}>Registrar</button>
 		</div>
 	</div>
 </form>
@@ -168,6 +169,7 @@
 	}
 	.field-input textarea {
 		min-height: var(--e);
+		max-width: var(--i);
 	}
 	.form-actions {
 		display: flex;
@@ -200,14 +202,35 @@
 		gap: var(--a);
 		width: 100%;
 	}
-	.btn-save-small {
-		background: var(--color-ganada, #4caf50);
-		align-self: flex-end;
-	}
 	button,
 	input,
 	textarea,
 	a {
 		pointer-events: all;
+	}
+
+	.entradas {
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+		overflow: auto;
+	}
+
+	.entradas .entrada {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		margin-bottom: var(--b);
+	}
+
+	.contenido-entrada {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+	}
+
+	.entradas .butter {
+		aspect-ratio: 1 / 1;
 	}
 </style>

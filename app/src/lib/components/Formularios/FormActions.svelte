@@ -7,14 +7,14 @@
 		action,
 		isOpen = $bindable(false),
 		onSuccess,
-		fieldsContent,
+		inputs,
 		hiddenContent,
 		submitContent
 	}: {
 		action: string;
 		isOpen: boolean;
 		onSuccess?: () => void;
-		fieldsContent?: Snippet;
+		inputs?: Snippet;
 		hiddenContent?: Snippet;
 		submitContent?: Snippet<[boolean]>;
 	} = $props();
@@ -46,33 +46,51 @@
 		};
 	}
 </script>
+{#if isOpen}
+<div class="header">
+	<h3>Acciones</h3>
+</div>
+{/if}
+<div class="form-actions">
+	<form method="POST" {action} enctype="multipart/form-data" use:enhance={handleSubmit}>
+		{#if isOpen}
+			<div class="inputs" bind:this={actionsElement}>
+				{#if inputs}
+					{@render inputs()}
+				{/if}
+			</div>
+		{/if}
 
-<form method="POST" {action} enctype="multipart/form-data" use:enhance={handleSubmit}>
-	{#if isOpen}
-		<div class="actions" bind:this={actionsElement}>
-			{#if fieldsContent}
-				{@render fieldsContent()}
-			{/if}
-		</div>
-	{/if}
+		{#if hiddenContent}
+			{@render hiddenContent()}
+		{/if}
 
-	{#if hiddenContent}
-		{@render hiddenContent()}
-	{/if}
-
-	{#if submitContent}
-		<div class="submit panel">
-			{@render submitContent(isSubmitting)}
-		</div>
-	{/if}
-</form>
+		{#if submitContent}
+			<div class="submit">
+				{@render submitContent(isSubmitting)}
+			</div>
+		{/if}
+	</form>
+</div>
 
 <style>
+	.form-actions {
+		width: 100%;
+	}
+	.inputs {
+		display: flex;
+		flex-direction: column;
+		gap: var(--b);
+	}
 	.submit {
-		margin-left: var(--f);
 		position: fixed;
 		bottom: 0;
-		width: fit-content;
-		right: var(--a);
+		right: 0;
+		display: flex;
+		flex-wrap: wrap-reverse;
+		justify-content: flex-end;
+		gap: var(--a);
+		margin-left: var(--e);
+		padding: var(--a);
 	}
 </style>
