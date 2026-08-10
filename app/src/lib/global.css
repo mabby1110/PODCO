@@ -310,6 +310,11 @@ section .block {
 }
 
 /* ESTILOS PARA BOTONES */
+.butter:disabled {
+	opacity: 60%;
+	background-color: var(--color-secondary);
+}
+
 .butter:hover {
 	opacity: 60%;
 }
@@ -347,9 +352,10 @@ section .block {
 }
 
 .milk {
-	background-color: none;
+	background-color: transparent;
 	padding: 0;
 	border: none;
+	backdrop-filter: none;
 }
 
 .matcha {

@@ -6,7 +6,7 @@
 		lista = $bindable([]),
 		id,
 		id_agente,
-		isEditing = false,
+		editando = false,
 		action = '?/updateClient'
 	} = $props();
 
@@ -37,7 +37,7 @@
 	let formEl = $state<HTMLFormElement | null>(null);
 
 	function openNewPerson() {
-		isEditing = true;
+		editando = true;
 		showPersonForm = true;
 		resetPersonForm();
 	}
@@ -46,7 +46,7 @@
 		const currentLista = lista || [];
 		const p = currentLista[i];
 		if (!p) return;
-		isEditing = true;
+		editando = true;
 		showPersonForm = true;
 		editPersonIndex = i;
 		contact_name = p.nombre;
@@ -78,7 +78,7 @@
 	}
 
 	function cancelAll() {
-		isEditing = false;
+		editando = false;
 		showPersonForm = false;
 		resetPersonForm();
 	}
@@ -147,7 +147,7 @@
 					{#each lista || [] as persona, i}
 						<div class="person-card">
 							<div class="contact-row">
-								{#if isEditing}
+								{#if editando}
 									<div class="row-actions">
 										<button type="button" class="btn-edit-small" onclick={() => editPersona(i)}
 											>✏️</button
@@ -173,7 +173,7 @@
 					<p>No hay contactos registrados</p>
 				{/if}
 			</div>
-			{#if isEditing}
+			{#if editando}
 				<div class="form-persona">
 					{#if showPersonForm}
 						<div class="person-form">

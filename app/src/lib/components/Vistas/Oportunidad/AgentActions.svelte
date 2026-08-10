@@ -12,7 +12,7 @@
 	import { profile } from "$lib/stores/profileStore.svelte";
 
 
-	let { eventData, isEditing = $bindable() }: { eventData: any; isEditing?: boolean } = $props();
+	let { eventData, editando = $bindable(false) }: { eventData: any; editando?: boolean } = $props();
 
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
 	let nextPhase = $derived(Number(currentPhase) + 1);
@@ -280,7 +280,7 @@
 				<input type="hidden" name="fase" value={0} />
 				<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}>Descartar</button>
 			{:else}
-				<button type="button" class="butter {isEditing}" onclick={() => (isEditing = !isEditing)}>
+				<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
 					Editar
 				</button>
 			{/if}

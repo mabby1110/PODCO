@@ -46,14 +46,14 @@
 		{#each lista_agrupada as grupo}
 			<button class="panel grupo" onclick={() => seleccionarAgrupacion(grupo.elementos)}>
 				{#each grupo.elementos as item}
-					<Pedido {item} selected />
+					<Pedido {item} />
 				{/each}
 			</button>
 		{/each}
 	{:else}
 		<div class="panel grupo">
 			{#each StoreEditarPedido.items as item}
-				<Pedido {item} edit />
+				<Pedido {item}/>
 			{/each}
 		</div>
 		<form
@@ -65,7 +65,7 @@
 					const pedidosAActualizar = StoreEditarPedido.items.map((item) => ({
 						id: item.id,
 						id_oportunidad: id_oportunidad,
-						id_agente: agente.id
+						id_agente: agente?.id
 					}));
 
 					formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
@@ -73,7 +73,7 @@
 				StoreEditarPedido.limpiar();
 			}}
 		>
-			<button class="butter chile" type="button" onclick={() => StoreEditarPedido.limpiar()}
+			<button class="butter" type="button" onclick={() => StoreEditarPedido.limpiar()}
 				>Cancelar</button
 			>
 			<button class="butter matcha" type="submit">Relacionar Pedido</button>
@@ -92,13 +92,6 @@
 		height: fit-content;
 		overflow: auto;
 		width: 100%;
-	}
-	.grupo {
-		grid-column: span 6;
-		background-color: var(--color-foreground);
-		display: flex;
-		flex-direction: column;
-		cursor: pointer;
 	}
 	.form-acciones {
 		display: flex;

@@ -55,7 +55,7 @@
 		};
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
-	let isEditing = $state(false);
+	let editando = $state(false);
 </script>
 
 <Card headerStyle={eventData?.style}>
@@ -82,9 +82,8 @@
 	{/snippet}
 
 	{#snippet content()}
-
 		<EditableInput
-			{isEditing}
+			{editando}
 			id={eventData?.id}
 			label="Objetivo"
 			name="objetivo"
@@ -98,14 +97,14 @@
 			{/snippet}
 		</EditableInput>
 
-		{#if isEditing}
-			<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData?.id} {isEditing}>
+		{#if editando}
+			<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData?.id} {editando}>
 				<DatePicker />
 			</CustomInput>
 		{/if}
-		
+
 		<EditableInput
-			{isEditing}
+			{editando}
 			id={eventData?.id}
 			label="Potencial de venta"
 			name="potencial_venta"
@@ -116,7 +115,7 @@
 		/>
 
 		<EditableInput
-			{isEditing}
+			{editando}
 			id={eventData?.id}
 			label="Necesidades"
 			name="necesidades"
@@ -127,7 +126,7 @@
 		/>
 
 		<EditableInput
-			{isEditing}
+			{editando}
 			id={eventData?.id}
 			label="Requisitos"
 			name="requisitos"
@@ -138,7 +137,7 @@
 		/>
 
 		<EditableInput
-			{isEditing}
+			{editando}
 			id={eventData?.id}
 			label="Observaciones"
 			name="observaciones"
@@ -153,7 +152,7 @@
 			id={eventData?.cliente.id}
 			id_agente={$profile?.isAdmin ? eventData?.cliente.id_agente : $profile?.id}
 			action="/clientes?/update"
-			{isEditing}
+			{editando}
 		/>
 
 		{#if currentFase == 1}
@@ -163,10 +162,10 @@
 				</div>
 				<div class="content">
 					{#if eventData?.pedidos.length > 0}
-						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} />
+						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} {editando} />
 					{:else}
 						<FormOptionalInput title="+Potencial de venta">
-							<RelacionarPedido id_oportunidad={eventData?.id} />
+							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente}/>
 						</FormOptionalInput>
 					{/if}
 				</div>
@@ -179,7 +178,7 @@
 				</div>
 				<div class="content">
 					{#if eventData?.pedidos.length > 0}
-						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} />
+						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} {editando} />
 					{:else}
 						<FormOptionalInput title="+Potencial de venta">
 							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
@@ -227,7 +226,7 @@
 						{/each}
 					</div>
 				{/if}
-				{#if (!$profile?.isOper || $profile?.isAdmin) && currentFase == 3 && (eventData?.occ.length <= 0 || isEditing)}
+				{#if (!$profile?.isOper || $profile?.isAdmin) && currentFase == 3 && (eventData?.occ.length <= 0 || editando)}
 					<SubirOcc
 						name="docs_occ"
 						amountLabel="Total"
@@ -273,7 +272,7 @@
 			</div>
 			<div class="content">
 				<Entradas
-					{isEditing}
+					{editando}
 					historia={eventData?.historia}
 					objId={eventData?.id}
 					action={'/oportunidades?/update'}
@@ -285,14 +284,14 @@
 	{#snippet actions()}
 		{#if $profile?.isAdmin}
 			{#if currentFase < 4}
-				<AgentActions {eventData} bind:isEditing />
+				<AgentActions {eventData} bind:editando />
 			{:else}
 				<OperActions {eventData} />
 			{/if}
 		{:else if $profile?.isOper}
 			<OperActions {eventData} />
 		{:else}
-			<AgentActions {eventData} bind:isEditing />
+			<AgentActions {eventData} bind:editando />
 		{/if}
 	{/snippet}
 </Card>

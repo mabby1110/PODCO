@@ -6,13 +6,13 @@
 	let {
 		id,
 		action = '/clientes?/updateClient',
-		isEditing = false,
+		editando = false,
 		label = 'Custom',
 		children
 	}: {
 		id: string;
 		action?: string;
-		isEditing?: boolean;
+		editando?: boolean;
 		label?: string;
 		children?: Snippet;
 	} = $props();
@@ -30,7 +30,7 @@
 	}
 </script>
 
-{#if isEditing}
+{#if editando}
 	<form method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={id} />
 		<section>

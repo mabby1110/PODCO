@@ -10,12 +10,12 @@
 		historia = $bindable('[]'),
 		objId,
 		action = '?/updateHistoria',
-		isEditing = false
+		editando = false
 	}: {
 		historia: string;
 		objId: string;
 		action?: string;
-		isEditing?: boolean;
+		editando?: boolean;
 	} = $props();
 
 	let lista = $state<Record<string, any>[]>(
@@ -113,7 +113,7 @@
 							{/if}
 						</div>
 
-						{#if isEditing}
+						{#if editando}
 							<div class="campo-edicion">
 								<textarea
 									class="area-texto"

@@ -15,7 +15,7 @@
 		placeholder = '',
 		hint = '',
 		options = [],
-		isEditing = false,
+		editando = false,
 		header
 	}: {
 		label: string;
@@ -29,7 +29,7 @@
 		placeholder?: string;
 		hint?: string;
 		options?: Array<{ id: string | number; nombre: string }>;
-		isEditing?: boolean;
+		editando?: boolean;
 		header?: Snippet;
 	} = $props();
 
@@ -48,7 +48,7 @@
 	}
 
 	$effect(() => {
-		if (type === 'select' && !isEditing && options.length > 0) {
+		if (type === 'select' && !editando && options.length > 0) {
 			const selectedOption = options.find((opt) => opt.id == value);
 			if (selectedOption) {
 				editedValue = selectedOption.nombre;
@@ -57,7 +57,7 @@
 	});
 </script>
 
-{#if value || isEditing}
+{#if value || editando}
 	<form method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={id} />
 		{#if id_agente}
@@ -66,12 +66,12 @@
 		<section>
 			<div class="header">
 				<h3>{label}:</h3>
-				{#if hint && !isEditing}
+				{#if hint && !editando}
 					<p class="hint">{hint}</p>
 				{/if}
 			</div>
 
-			{#if isEditing}
+			{#if editando}
 				<div class="content">
 					{#if type === 'textarea'}
 						<textarea {name} bind:value={editedValue} {rows} {placeholder}></textarea>
