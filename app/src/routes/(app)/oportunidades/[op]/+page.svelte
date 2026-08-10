@@ -168,7 +168,7 @@
 				</div>
 				<div class="content">
 					{#if eventData?.pedidos.length > 0}
-						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} {editando} />
+						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} oportunidad={eventData} {editando} {currentFase}/>
 					{:else}
 						<FormOptionalInput title="+Potencial de venta">
 							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />

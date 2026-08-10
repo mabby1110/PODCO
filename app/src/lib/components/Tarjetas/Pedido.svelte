@@ -107,7 +107,7 @@
 		cursor: pointer;
 	}
 	.pedido .descripcion {
-		grid-column: span 5;
+		grid-column: span 8;
 		word-break: break-word;
 		display: flex;
 		flex-direction: column;

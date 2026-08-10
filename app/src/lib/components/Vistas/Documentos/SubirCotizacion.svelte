@@ -17,7 +17,7 @@
 		pedidos,
 		required = false,
 		disabled = false,
-		multiple = true,
+		multiple = false,
 		submitLabel = 'Guardar'
 	}: {
 		name?: string;
@@ -135,26 +135,6 @@
 	{/if}
 
 	<div class="upload-container">
-		<input
-			bind:this={inputEl}
-			type="file"
-			class="file-input"
-			class:dragging={isDragging}
-			{multiple}
-			{disabled}
-			required={required && items.length === 0}
-			onchange={handleChange}
-			ondragover={() => {
-				if (!disabled) isDragging = true;
-			}}
-			ondragleave={() => {
-				isDragging = false;
-			}}
-			ondrop={() => {
-				isDragging = false;
-			}}
-		/>
-
 		{#if items.length > 0}
 			<div class="files">
 				{#each items as item, i}
@@ -185,6 +165,26 @@
 					{/if}
 				</button>
 			</div>
+		{:else}
+			<input
+				bind:this={inputEl}
+				type="file"
+				class="file-input"
+				class:dragging={isDragging}
+				{multiple}
+				{disabled}
+				required={required && items.length === 0}
+				onchange={handleChange}
+				ondragover={() => {
+					if (!disabled) isDragging = true;
+				}}
+				ondragleave={() => {
+					isDragging = false;
+				}}
+				ondrop={() => {
+					isDragging = false;
+				}}
+			/>
 		{/if}
 	</div>
 </form>
@@ -196,7 +196,6 @@
 		gap: var(--a);
 	}
 	.file-input {
-		max-width: 800px;
 		padding: var(--c);
 		border: 1px dashed #d4d4d8;
 		border-radius: 6px;
