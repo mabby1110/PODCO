@@ -101,17 +101,15 @@
 			{#if lista.length > 0}
 				{#each lista as item, i}
 					<div class="tarjeta-entrada">
-						<div class="encabezado-entrada">
-							<span class="fecha-etiqueta">
-								{formatDateToReadable(item.fecha)}
-							</span>
-							{#if item.nombre_perfil}
-								<span class="autor-etiqueta">{item.nombre_perfil}</span>
-							{/if}
-							{#if item.id_op}
-								<a class="enlace-oportunidad" href="/oportunidades/{item.id_op}"> Oportunidad </a>
-							{/if}
-						</div>
+						<span class="fecha-etiqueta">
+							{formatDateToReadable(item.fecha)}
+						</span>
+						{#if item.nombre_perfil}
+							<span class="autor-etiqueta">{item.nombre_perfil}</span>
+						{/if}
+						{#if item.id_op}
+							<a class="enlace-oportunidad" href="/oportunidades/{item.id_op}"> Oportunidad </a>
+						{/if}
 
 						{#if editando}
 							<div class="campo-edicion">
@@ -170,6 +168,8 @@
 		gap: 1rem;
 		width: 100%;
 		pointer-events: none;
+		border: 1px solid #e0e0e0;
+		border-radius: var(--a);
 	}
 	button,
 	textarea,
@@ -179,34 +179,26 @@
 	.lista-entradas {
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
+		gap: var(--a);
 		width: 100%;
 		overflow-y: auto;
 	}
 
 	.tarjeta-entrada {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(var(--d), 1fr));
 		padding: var(--a);
-		border: 1px solid #e0e0e0;
-		border-radius: var(--a);
-	}
-
-	.encabezado-entrada {
-		grid-column: span 5;
-		display: flex;
-		align-items: baseline;
 		gap: var(--a);
-		font-size: small;
-		font-weight: bold;
 	}
 
 	.fecha-etiqueta {
-		color: #333;
+		grid-column: span 3;
+		color: var(--color-muted);
+		font-size: small;
 	}
 
 	.autor-etiqueta {
-		padding: 0.1rem 0.4rem;
+		grid-column: span 4;
 		border-radius: var(--a);
 		justify-self: start;
 	}
@@ -230,7 +222,7 @@
 	}
 	.contenido-texto,
 	.campo-edicion {
-		grid-column: span 9;
+		grid-column: span 12;
 	}
 	.contenido-texto p {
 		white-space: pre-wrap;
@@ -242,8 +234,6 @@
 		align-items: flex-end;
 		gap: 0.75rem;
 		padding: 1rem;
-		border: 1px solid #e0e0e0;
-		border-radius: var(--a);
 	}
 
 	.campo-etiqueta {

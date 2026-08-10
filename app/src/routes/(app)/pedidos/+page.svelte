@@ -14,6 +14,7 @@
 	import Pedido from '$lib/components/Tarjetas/Pedido.svelte';
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
+	import { goto } from '$app/navigation';
 
 	let { pedidos } = $derived(page.data);
 	let show = $derived($appState.min);
@@ -23,6 +24,7 @@
 	// Convertido a $state para soportar bind:lista
 	let lista = $state(pedidos);
 	let columnasDinamicas = $derived(extraerColumnas(pedidos));
+
 	$effect(() => {
 		lista = pedidos;
 	});
@@ -35,6 +37,7 @@
 
 	function handleEdit(elementos: any[]) {
 		StorePedido.limpiar();
+		goto('/inventario');
 		showPanel = true;
 		elementos.forEach((item) => {
 			if (item.id_agrupacion) {
@@ -51,11 +54,11 @@
 	}
 
 	const copiarAExcel = (elementos: any[]) => {
-		const cabeceras = 'Cantidad\tCódigo\tDescripción\tSerie\tMoneda\tPrecio';
+		const cabeceras = 'Cantidad\tDescripción\tMoneda\tPrecio';
 		const filas = elementos
 			.map(
 				(item) =>
-					`${item.inventario.cantidad || 0}\t${item.inventario.codigo || ''}\t${item.inventario.descripcion || ''}\t${item.inventario.serie || ''}\tUSD\t${item.inventario.precio || 0}`
+					`${item.inventario.cantidad || 0}\t${item.inventario.descripcion || ''}\tUSD\t${item.inventario.precio || 0}`
 			)
 			.join('\n');
 
@@ -92,7 +95,7 @@
 		{#if !isGrouped}
 			{#each lista_ordenada as item}
 				<div class="panel">
-					<Pedido {item} selected />
+					<Pedido {item} />
 				</div>
 			{/each}
 		{:else}
@@ -100,18 +103,18 @@
 				<Grupo {agrupacion} showByDefault={show}>
 					<div class="panel">
 						{#each agrupacion.items as item (item.id)}
-							<Pedido {item} selected />
+							<Pedido {item} />
 						{/each}
+						<div class="acciones-tabla">
+							<button class="butter" type="button" onclick={() => copiarAExcel(agrupacion.items)}>
+								Copiar Datos
+							</button>
+							<button class="butter" type="button" onclick={() => handleEdit(agrupacion.items)}>
+								Editar
+							</button>
+						</div>
 					</div>
 				</Grupo>
-				<div class="acciones-tabla">
-					<button class="butter" type="button" onclick={() => copiarAExcel(agrupacion.items)}>
-						Copiar Datos
-					</button>
-					<button class="butter" type="button" onclick={() => handleEdit(agrupacion.items)}>
-						Editar
-					</button>
-				</div>
 			{:else}
 				<div class="no-results">
 					<p>No se encontraron datos.</p>
@@ -120,3 +123,14 @@
 		{/if}
 	{/snippet}
 </Vista>
+
+<style>
+	.panel {
+		padding: var(--a);
+	}
+	.acciones-tabla {
+		display: flex;
+		gap: var(--a);
+		justify-self: flex-end;
+	}
+</style>

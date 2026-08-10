@@ -97,21 +97,12 @@
 			{/snippet}
 		</EditableInput>
 
-		{#if editando}
-			<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData?.id} {editando}>
-				<DatePicker />
-			</CustomInput>
-		{/if}
-
-		<EditableInput
+		<FormEditableContact
+			lista={eventData?.cliente.contactos}
+			id={eventData?.cliente.id}
+			id_agente={$profile?.isAdmin ? eventData?.cliente.id_agente : $profile?.id}
+			action="/clientes?/update"
 			{editando}
-			id={eventData?.id}
-			label="Potencial de venta"
-			name="potencial_venta"
-			type="text"
-			value={eventData?.potencial_venta}
-			action="/oportunidades?/update"
-			placeholder="Potencial de venta"
 		/>
 
 		<EditableInput
@@ -147,13 +138,12 @@
 			placeholder="Observaciones"
 		/>
 
-		<FormEditableContact
-			lista={eventData?.cliente.contactos}
-			id={eventData?.cliente.id}
-			id_agente={$profile?.isAdmin ? eventData?.cliente.id_agente : $profile?.id}
-			action="/clientes?/update"
-			{editando}
-		/>
+
+		{#if editando}
+			<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData?.id} {editando}>
+				<DatePicker />
+			</CustomInput>
+		{/if}
 
 		{#if currentFase == 1}
 			<section>

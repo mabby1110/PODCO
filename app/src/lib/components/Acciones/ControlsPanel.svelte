@@ -1,6 +1,5 @@
 <script lang="ts">
     import { appState } from '$lib/stores/appState.svelte';
-    import { profile } from '$lib/stores/profileStore.svelte';
     import { goto } from '$app/navigation';
 
     const navigate = (path: string) => {

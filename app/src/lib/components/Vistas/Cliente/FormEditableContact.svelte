@@ -174,74 +174,73 @@
 				{/if}
 			</div>
 			{#if editando}
-				<div class="form-persona">
-					{#if showPersonForm}
-						<div class="person-form">
+				{#if showPersonForm}
+					<div class="form-persona panel">
+						<label class="field">
+							<span>Nombre</span>
+							<input bind:value={contact_name} />
+						</label>
+						<label class="field">
+							<span>Puesto</span>
+							<input bind:value={contact_position} />
+						</label>
+
+						<div class="new-contact">
 							<label class="field">
-								<span>Nombre</span>
-								<input bind:value={contact_name} />
+								<span>Dato De Contacto</span>
+								<input bind:value={contact_value} />
 							</label>
 							<label class="field">
-								<span>Puesto</span>
-								<input bind:value={contact_position} />
+								<span>Medio</span>
+								<select bind:value={contact_type}>
+									<option value="telefono">Teléfono</option>
+									<option value="whatsapp">WhatsApp</option>
+									<option value="email">Correo</option>
+									<option value="linkedin">LinkedIn</option>
+									<option value="otro">Otro</option>
+								</select>
 							</label>
 
-							<div class="new-contact">
-								<label class="field">
-									<span>Dato De Contacto</span>
-									<input bind:value={contact_value} />
-								</label>
-								<label class="field">
-									<span>Medio</span>
-									<select bind:value={contact_type}>
-										<option value="telefono">Teléfono</option>
-										<option value="whatsapp">WhatsApp</option>
-										<option value="email">Correo</option>
-										<option value="linkedin">LinkedIn</option>
-										<option value="otro">Otro</option>
-									</select>
-								</label>
+							<button type="button" class="butter" onclick={submitContacto}>
+								{editIndex !== null ? 'Actualizar contacto' : 'Agregar contacto'}
+							</button>
 
-								<button type="button" class="butter" onclick={submitContacto}>
-									{editIndex !== null ? 'Actualizar contacto' : 'Agregar contacto'}
-								</button>
-
-								{#if editIndex !== null}
-									<button type="button" class="butter" onclick={resetForm}>Cancelar</button>
-								{/if}
-							</div>
-
-							<div class="contact-list">
-								{#each contactos as c, i}
-									<div class="contact-row">
-										<button type="button" class="btn-edit-small" onclick={() => editContacto(i)}
-											>✏️</button
-										>
-										<button
-											type="button"
-											class="btn-del-small"
-											onclick={() => confirmRemoveContacto(i)}>🗑️</button
-										>
-										<p>{c.type}: {c.value}</p>
-									</div>
-								{/each}
-							</div>
-
-							<div class="form-actions">
-								<button type="button" class="butter" onclick={() => (showPersonForm = false)}>
-									Cancelar
-								</button>
-								<button type="button" class="butter btn-save-small" onclick={submitPersonaLocal}>
-									{editPersonIndex !== null ? 'Actualizar persona' : 'Guardar'}
-								</button>
-							</div>
+							{#if editIndex !== null}
+								<button type="button" class="butter" onclick={resetForm}>Cancelar</button>
+							{/if}
 						</div>
-					{/if}
+
+						<div class="contact-list">
+							{#each contactos as c, i}
+								<div class="contact-row">
+									<button type="button" class="btn-edit-small" onclick={() => editContacto(i)}
+										>✏️</button
+									>
+									<button
+										type="button"
+										class="btn-del-small"
+										onclick={() => confirmRemoveContacto(i)}>🗑️</button
+									>
+									<p>{c.type}: {c.value}</p>
+								</div>
+							{/each}
+						</div>
+
+						<div class="form-actions">
+							<button type="button" class="butter" onclick={() => (showPersonForm = false)}>
+								Cancelar
+							</button>
+							<button type="button" class="butter" onclick={submitPersonaLocal}>
+								{editPersonIndex !== null ? 'Actualizar persona' : 'Agregar'}
+							</button>
+						</div>
+					</div>
+				{:else}
 					<div class="form-actions">
 						<button type="button" class="butter" onclick={openNewPerson}>Nueva persona</button>
-						<button type="submit" class="butter btn-save-small">Guardar</button>
+						<button type="submit" class="butter matcha">Guardar</button>
 					</div>
-				</div>
+				{/if}
 			{/if}
 		</div>
 	</section>
@@ -250,10 +249,14 @@
 <style>
 	.contact-list {
 		display: flex;
-		flex-direction: column;
+		flex-wrap: wrap;
 		min-width: 200px;
 		gap: var(--a);
 		align-self: flex-start;
+	}
+	.form-persona {
+		width: 100%;
+		padding: var(--a);
 	}
 	.person-card {
 		display: flex;
@@ -283,15 +286,6 @@
 		flex-direction: column;
 		gap: var(--a);
 	}
-	.person-form {
-		display: flex;
-		flex-direction: column;
-		gap: var(--b);
-		padding: var(--b);
-		border-radius: 12px;
-		border: 1px solid var(--color-contrast);
-	}
-
 	.form-actions {
 		display: flex;
 		flex-wrap: wrap;

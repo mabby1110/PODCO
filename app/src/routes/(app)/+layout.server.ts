@@ -28,7 +28,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	let queryClientes = supabase.from('clientes').select('*, agentes(*), oportunidades(*)');
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
 	let queryInventario = supabase.from('inventario').select('*');
-	let queryPedidos = supabase.from('pedidos').select('*, agentes(*), inventario(*)');
+	let queryPedidos = supabase.from('pedidos').select('*, agentes(*), inventario(*), oportunidades(*, clientes(nombre_comercial, razon_social))');
 	let queryCotizaciones = supabase
 		.from('docs_cotizaciones')
 		.select('*, agentes(nombre), oportunidades(motivo), clientes(nombre_comercial)');
