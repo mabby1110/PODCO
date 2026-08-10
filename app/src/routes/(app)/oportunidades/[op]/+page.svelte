@@ -138,7 +138,6 @@
 			placeholder="Observaciones"
 		/>
 
-
 		{#if editando}
 			<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData?.id} {editando}>
 				<DatePicker />
@@ -155,7 +154,7 @@
 						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} {editando} />
 					{:else}
 						<FormOptionalInput title="+Potencial de venta">
-							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente}/>
+							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
 						</FormOptionalInput>
 					{/if}
 				</div>
@@ -168,7 +167,12 @@
 				</div>
 				<div class="content">
 					{#if eventData?.pedidos.length > 0}
-						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} oportunidad={eventData} {editando} {currentFase}/>
+						<PedidoRelacionado
+							pedidos={eventData?.pedidos ?? []}
+							oportunidad={eventData}
+							{editando}
+							{currentFase}
+						/>
 					{:else}
 						<FormOptionalInput title="+Potencial de venta">
 							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
@@ -181,19 +185,6 @@
 					<h3>Cotizacion(es):</h3>
 				</div>
 				<div class="content">
-					{#if eventData?.pedidos.length > 0}
-						<SubirCotizacion
-							name={'docs_cotizaciones'}
-							amountLabel="Total cotizado"
-							amountName="totales"
-							id_nodo_p={eventData?.id}
-							cliente={eventData?.cliente}
-							agente={eventData?.agente}
-							pedidos={eventData?.pedidos}
-							required
-							multiple
-						/>
-					{/if}
 					<div class="content">
 						{#if eventData?.cotizaciones.length > 0}
 							{#each eventData?.cotizaciones as documento}

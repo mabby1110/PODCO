@@ -86,6 +86,10 @@
 				formData.append(amountName, String(item.amount ?? 0));
 			});
 
+			formData.append(
+				'pedidosAActualizar',
+				JSON.stringify(pedidos.map((item) => ({ id: item.id })))
+			);
 			const response = await fetch(action, {
 				method: 'POST',
 				body: formData

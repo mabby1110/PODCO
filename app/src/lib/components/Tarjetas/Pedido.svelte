@@ -14,7 +14,6 @@
 			item.oportunidades?.clientes.razon_social || item.oportunidades?.clientes.nombre_comercial,
 		agente: item.agentes?.nombre
 	});
-	console.log(datos_relacionados);
 	async function removerItem(item: any) {
 		if (item.id_oportunidad) {
 			const formData = new FormData();

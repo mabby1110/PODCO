@@ -18,7 +18,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	let queryOportunidades = supabase
 		.from('oportunidades')
 		.select(
-			`*, agentes(*), clientes(*), docs_cotizaciones(*), docs_adjuntos(*), docs_occ(*),  docs_ocp(*), pedidos(*, inventario(*))`
+			`*, agentes(*), clientes(*), docs_cotizaciones(*), docs_adjuntos(*), docs_occ(*),  docs_ocp(*), pedidos(*, inventario(*), docs_cotizaciones(*))`
 		)
 		.order('inicio', { ascending: false });
 	let queryActividades = supabase
@@ -28,7 +28,11 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	let queryClientes = supabase.from('clientes').select('*, agentes(*), oportunidades(*)');
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
 	let queryInventario = supabase.from('inventario').select('*');
-	let queryPedidos = supabase.from('pedidos').select('*, agentes(*), inventario(*), oportunidades(*, clientes(nombre_comercial, razon_social))');
+	let queryPedidos = supabase
+		.from('pedidos')
+		.select(
+			'*, agentes(*), inventario(*), oportunidades(*, clientes(nombre_comercial, razon_social))'
+		);
 	let queryCotizaciones = supabase
 		.from('docs_cotizaciones')
 		.select('*, agentes(nombre), oportunidades(motivo), clientes(nombre_comercial)');
@@ -73,7 +77,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		queryNotificaciones
 	]);
 
-console.log('Error Oportunidades:', errorOp);
+	console.log('Error Oportunidades:', errorOp);
 	console.log('\nactividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
 	console.log('clientes: ', clientes?.length);
