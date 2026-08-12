@@ -5,7 +5,7 @@
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import PreviewListaPedidos from './PreviewListaPedidos.svelte';
 	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
-	import Pedido from '$lib/components/Tarjetas/Pedido.svelte';
+	import Pedido from '$lib/components/Vistas/Pedidos/Pedido.svelte';
 
 	let { id_oportunidad }: { id_oportunidad?: string } = $props();
 	const copiarAExcel = () => {

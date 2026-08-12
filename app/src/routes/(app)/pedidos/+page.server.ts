@@ -66,7 +66,6 @@ export const actions: Actions = {
 		let idOportunidad: string | null = null;
 
 		// PEDIDOS A ACTUALIZAR
-		idOportunidad = pedidosAActualizar[0].id_oportunidad;
 		console.log('pedidos a actualizar: ', idOportunidad, pedidosAActualizar);
 		if (pedidosAActualizar.length > 0) {
 			const updatePromises = pedidosAActualizar.map(async (pedido: any) => {
@@ -136,9 +135,6 @@ export const actions: Actions = {
 		if (pedidosACrear.length > 0) {
 			const registrosACrear = pedidosACrear.map((pedido) => {
 				pedido.id = generateId('BMS-PD');
-				pedido.id_agente = user?.id;
-				pedido.id_agrupacion = idAgrupacion;
-				pedido.id_oportunidad = idOportunidad;
 				return construirDatosPedido(pedido);
 			});
 
@@ -151,7 +147,7 @@ export const actions: Actions = {
 				console.log(errorCreacion);
 				return fail(500, { error: errorCreacion.message });
 			}
-
+			console.log(resultCreacion);
 			if (resultCreacion && resultCreacion.length > 0) {
 				const registrosHistorialCreacion = resultCreacion.map((pedido) => ({
 					id: generateId('BMS-H'),

@@ -31,54 +31,6 @@ export const actions: Actions = {
 			if (error) return fail(500, { error: error.message });
 			if (!result || result.length === 0)
 				return fail(500, { error: 'Error en retorno de datos de cotización' });
-
-			// Extraer ID de la última cotización insertada
-			const idUltimaCotizacion = result[result.length - 1].id;
-
-			const pedidosRaw = formData.get('pedidosACrear') as string;
-			const pedidosACrear = pedidosRaw ? JSON.parse(pedidosRaw) : [];
-		// PEDIDOS A CREAR
-		console.log('pedidos a crear: ', pedidosACrear);
-		let idAgrupacion = generateId('BMS-GP');
-		if (pedidosACrear.length > 0) {
-			const registrosACrear = pedidosACrear.map((pedido) => {
-				pedido.id = generateId('BMS-PD');
-				pedido.id_agrupacion = idAgrupacion;
-				return construirDatosPedido(pedido);
-			});
-
-			const { data: resultCreacion, error: errorCreacion } = await supabase
-				.from('pedidos')
-				.insert(registrosACrear)
-				.select();
-
-			if (errorCreacion) {
-				console.log(errorCreacion);
-				return fail(500, { error: errorCreacion.message });
-			}
-
-			// if (resultCreacion && resultCreacion.length > 0) {
-			// 	const registrosHistorialCreacion = resultCreacion.map((pedido) => ({
-			// 		id: generateId('BMS-H'),
-			// 		id_agente: user?.id,
-			// 		tipo_objeto: 'pedidos',
-			// 		id_objeto: pedido.id,
-			// 		id_oportunidad: pedido.id_oportunidad,
-			// 		accion: 'insert',
-			// 		cambios: {
-			// 			cantidad: pedido.cantidad,
-			// 			precio_unitario: pedido.precio_unitario
-			// 		}
-			// 	}));
-
-			// 	const { error: errorHistorialCreacion } = await supabase
-			// 		.from('historial')
-			// 		.insert(registrosHistorialCreacion);
-
-			// 	if (errorHistorialCreacion)
-			// 		console.error('Fallo al registrar historial de creación:', errorHistorialCreacion);
-			// }
-		}
 		}
 
 		if (entity == 'docs_occ') {
@@ -116,7 +68,35 @@ export const actions: Actions = {
 
 		return { success: true };
 	},
+	addCotizacion: async ({ request, locals: { supabase } }) => {
+		const formData = await request.formData();
+		const id_nodo = formData.get('id_nodo') as string;
 
+		if (!id_nodo) return fail(400, { error: 'id_nodo requerido' });
+
+		const docs = await procesarDocumentos(formData, id_nodo, 'docs_cotizaciones');
+		const totales = formData.getAll('totales');
+
+		const documentos = docs.map((doc, i) => ({
+			...doc,
+			total: totales[i],
+			id_oportunidad: id_nodo
+		}));
+
+		const { data: result, error } = await supabase
+			.from('docs_cotizaciones')
+			.insert(documentos)
+			.select('id');
+
+		if (error) return fail(500, { error: error.message });
+		if (!result || result.length === 0)
+			return fail(500, { error: 'Error en retorno de datos de cotización' });
+
+		return {
+			success: true,
+			ids: result.map((r) => r.id)
+		};
+	},
 	reload: async () => {
 		return { success: true };
 	},

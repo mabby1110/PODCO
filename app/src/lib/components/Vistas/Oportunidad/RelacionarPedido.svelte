@@ -4,7 +4,7 @@
 	import { StoreEditarPedido } from '$lib/stores/StoreEditarPedido.svelte';
 	import { agruparDatos } from '$lib/utils/filtro';
 	import { goto } from '$app/navigation';
-	import Pedido from '$lib/components/Tarjetas/Pedido.svelte';
+	import Pedido from '$lib/components/Vistas/Pedidos/Pedido.svelte';
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import { onMount } from 'svelte';
 	import { appState } from '$lib/stores/appState.svelte';
@@ -31,7 +31,6 @@
 		StoreEditarPedido.limpiar();
 		goto('/inventario');
 	}
-	$effect(() => console.log(StoreEditarPedido.items));
 	onMount(() => StoreEditarPedido.limpiar());
 </script>
 

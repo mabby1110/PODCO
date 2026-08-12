@@ -1,281 +1,202 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation';
+    import { invalidateAll } from '$app/navigation';
 
-	type Item = {
-		file: File;
-		amount: number | null;
-	};
+    type Item = {
+        file: File;
+    };
 
-	let {
-		name = 'files',
-		amountLabel = 'Monto',
-		amountName = 'amounts',
-		id_nodo_p,
-		cliente,
-		agente,
-		action = '/documentos?/add',
-		pedidos,
-		required = false,
-		disabled = false,
-		multiple = false,
-		submitLabel = 'Guardar'
-	}: {
-		name?: string;
-		amountLabel?: string;
-		amountName?: string;
-		id_nodo_p?: string;
-		cliente?: any;
-		agente?: any;
-		action?: string;
-		pedidos?: any;
-		required?: boolean;
-		disabled?: boolean;
-		multiple?: boolean;
-		submitLabel?: string;
-	} = $props();
+    let {
+        name = 'docs_cotizaciones',
+        amountLabel = 'Total cotizado',
+        amountName = 'totales',
+        id_nodo,
+        id_cliente,
+        id_agente,
+        pedidos = [],
+        required = false
+    }: {
+        name?: string;
+        amountLabel?: string;
+        amountName?: string;
+        id_nodo?: string;
+        id_cliente?: string;
+        id_agente?: string;
+        pedidos?: any[];
+        required?: boolean;
+    } = $props();
 
-	let items = $state<Item[]>([]);
-	let inputEl: HTMLInputElement;
-	let formEl: HTMLFormElement;
-	let isDragging = $state(false);
-	let isSubmitting = $state(false);
-	let totalPedidos = $derived(
-		pedidos.reduce((acc: number, item: any) => {
-			if (item.estatus == 'aprobado') {
-				return acc + item.precio_unitario * item.cantidad;
-			} else {
-				return acc;
-			}
-		}, 0) // 0 es el valor inicial del acumulador
-	);
+    let items = $state<Item[]>([]);
+    let inputEl: HTMLInputElement;
+    let isDragging = $state(false);
+    let isSubmitting = $state(false);
 
-	function handleChange(e: Event) {
-		const input = e.target as HTMLInputElement;
+    let totalPedidos = $derived(
+        pedidos.reduce((acc: number, item: any) => {
+            return item.estatus === 'aprobado' ? acc + (item.precio_unitario * item.cantidad) : acc;
+        }, 0)
+    );
 
-		if (!input.files) return;
+    function handleChange(e: Event) {
+        const input = e.target as HTMLInputElement;
+        if (!input.files) return;
 
-		const selected = Array.from(input.files);
+        items = Array.from(input.files).map(file => ({ file })).slice(0, 1);
+        input.value = '';
+    }
 
-		const newItems = selected.map((file) => ({
-			file,
-			amount: null
-		}));
+    function removeItem(index: number) {
+        items.splice(index, 1);
+        items = [...items];
+    }
 
-		if (multiple) {
-			items = [...items, ...newItems];
-		} else {
-			items = newItems.slice(0, 1);
-		}
+    async function handleSubmit(event: SubmitEvent) {
+        event.preventDefault();
+        if (isSubmitting || items.length === 0) return;
 
-		input.value = '';
-	}
+        isSubmitting = true;
 
-	function removeItem(index: number) {
-		items.splice(index, 1);
-		items = [...items];
-	}
+        try {
+            const formData = new FormData();
+            
+            if (id_nodo) formData.append('id_nodo', id_nodo); 
+            if (id_cliente) formData.append('id_cliente', id_cliente);
+            if (id_agente) formData.append('id_agente', id_agente);
 
-	async function handleSubmit(event: SubmitEvent) {
-		event.preventDefault();
+            items.forEach((item) => {
+                formData.append(name, item.file);
+                formData.append(amountName, String(totalPedidos));
+            });
 
-		if (isSubmitting) return;
+            const response = await fetch('/documentos?/addCotizacion', {
+                method: 'POST',
+                body: formData
+            });
 
-		isSubmitting = true;
+            if (!response.ok) {
+                console.error('Error HTTP:', response.status);
+                return;
+            }
 
-		try {
-			const formData = new FormData(formEl);
+            const result = await response.json();
+            
+            if (result.type === 'success' || result.status === 200) {
+                const data = typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
+                const ids = data?.[1]?.ids || data?.ids;
 
-			items.forEach((item) => {
-				formData.append(name, item.file);
-				formData.append(amountName, String(item.amount ?? 0));
-			});
-			formData.append(
-				'pedidosACrear',
-				JSON.stringify(
-					pedidos
-						.filter((item) => item.estatus === 'aprobado')
-						.map(({ agentes, inventario, oportunidades, ...item }) => ({ ...item }))
-				)
-			);
-			const response = await fetch(action, {
-				method: 'POST',
-				body: formData
-			});
+                // accion secuencial para cuando el post a documentos?/addCotizacion sea exitoso y devuelva el id
+                
+            } else {
+                console.error('Error de Action:', result);
+            }
 
-			if (!response.ok) {
-				const result = await response.text();
-				console.error(result);
-				return;
-			}
-
-			items = [];
-
-			if (inputEl) {
-				inputEl.value = '';
-			}
-
-			await invalidateAll();
-		} catch (error) {
-			console.error(error);
-		} finally {
-			isSubmitting = false;
-		}
-	}
+            items = [];
+            if (inputEl) inputEl.value = '';
+            
+            await invalidateAll();
+        } catch (error) {
+            console.error('Excepción en fetch:', error);
+        } finally {
+            isSubmitting = false;
+        }
+    }
 </script>
 
-<form
-	bind:this={formEl}
-	method="POST"
-	enctype="multipart/form-data"
-	{action}
-	onsubmit={handleSubmit}
->
-	<input type="hidden" name="entity" value={name} />
+<form method="POST" enctype="multipart/form-data" onsubmit={handleSubmit}>
+    <div class="upload-container">
+        {#if items.length > 0}
+            <div class="files">
+                {#each items as item, i}
+                    <div class="item panel">
+                        <button type="button" class="butter milk" onclick={() => removeItem(i)}> ✕ </button>
 
-	{#if id_nodo_p}
-		<input type="hidden" name="id_nodo_p" value={id_nodo_p} />
-	{/if}
+                        <div class="info">
+                            <b class="filename">{item.file.name}</b>
+                            <label for="monto">{amountLabel}</label>
+                            <input
+                                id="monto"
+                                type="number"
+                                bind:value={totalPedidos}
+                                min="0"
+                                step="0.01"
+                                required
+                            />
+                        </div>
 
-	{#if cliente}
-		<input type="hidden" name="id_cliente" value={cliente.id} />
-	{/if}
-
-	{#if agente}
-		<input type="hidden" name="id_agente" value={agente.id} />
-		<input type="hidden" name="agente" value={agente.nombre} />
-	{/if}
-
-	<div class="upload-container">
-		{#if items.length > 0}
-			<div class="files">
-				{#each items as item, i}
-					<div class="item">
-						<button type="button" class="close-btn" onclick={() => removeItem(i)}> ✕ </button>
-
-						<div class="info">
-							<p class="filename">
-								{item.file.name}
-							</p>
-							<input
-								type="number"
-								bind:value={totalPedidos}
-								placeholder={amountLabel}
-								min="0"
-								step="0.01"
-								required
-							/>
-						</div>
-					</div>
-				{/each}
-
-				<button type="submit" class="btn-save-small butter" disabled={isSubmitting}>
-					{#if isSubmitting}
-						Guardando...
-					{:else}
-						{submitLabel}
-					{/if}
-				</button>
-			</div>
-		{:else}
-			<input
-				bind:this={inputEl}
-				type="file"
-				class="file-input"
-				class:dragging={isDragging}
-				{multiple}
-				{disabled}
-				required={required && items.length === 0}
-				onchange={handleChange}
-				ondragover={() => {
-					if (!disabled) isDragging = true;
-				}}
-				ondragleave={() => {
-					isDragging = false;
-				}}
-				ondrop={() => {
-					isDragging = false;
-				}}
-			/>
-		{/if}
-	</div>
+                        <button type="submit" class="butter matcha guardar" disabled={isSubmitting}>
+                            {isSubmitting ? 'Guardando...' : 'Guardar'}
+                        </button>
+                    </div>
+                {/each}
+            </div>
+        {:else}
+            <input
+                bind:this={inputEl}
+                type="file"
+                class="file-input"
+                class:dragging={isDragging}
+                {required}
+                onchange={handleChange}
+                ondragover={(e) => { e.preventDefault(); isDragging = true; }}
+                ondragleave={() => isDragging = false}
+                ondrop={(e) => { e.preventDefault(); isDragging = false; }}
+            />
+        {/if}
+    </div>
 </form>
 
 <style>
-	.upload-container {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-	}
-	.file-input {
-		padding: var(--c);
-		border: 1px dashed #d4d4d8;
-		border-radius: 6px;
-		background-color: #fafafa;
-		cursor: pointer;
-		transition:
-			border-color 0.2s ease,
-			background-color 0.2s ease;
-		outline: none;
-	}
-
-	.file-input:hover:not(:disabled) {
-		border-color: var(--color-secondary);
-		background-color: #f4f4f5;
-	}
-
-	.file-input.dragging {
-		background-color: var(--color-highlight);
-		border-color: var(--color-highlight);
-	}
-
-	.file-input:focus-visible {
-		border-color: #18181b;
-		border-style: solid;
-	}
-
-	.file-input::file-selector-button {
-		display: none;
-	}
-
-	.files {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-	}
-
-	.item {
-		display: flex;
-		gap: var(--a);
-		align-items: flex-start;
-		padding: var(--a);
-		border: 1px solid #e4e4e7;
-		border-radius: 6px;
-	}
-
-	.info {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-	}
-
-	.filename {
-		margin: 0;
-		word-break: break-word;
-	}
-
-	.info input[type='number'] {
-		max-width: 250px;
-	}
-
-	.close-btn {
-		border: none;
-		cursor: pointer;
-		padding: 0.25rem 0.5rem;
-		border-radius: 4px;
-	}
-
-	.close-btn:hover {
-		background-color: var(--color-error);
-	}
+    form {
+        width: 100%;
+    }
+    .upload-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--a);
+    }
+    .file-input {
+        padding: var(--c);
+        border: 1px dashed #d4d4d8;
+        border-radius: 6px;
+        background-color: var(--color-background);
+        cursor: pointer;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+        outline: none;
+    }
+    .file-input:hover {
+        border-color: var(--color-secondary);
+    }
+    .file-input.dragging {
+        background-color: var(--color-highlight);
+        border-color: var(--color-highlight);
+    }
+    .file-input::file-selector-button {
+        display: none;
+    }
+    .item {
+        width: fit-content;
+        display: flex;
+		flex-wrap: wrap;
+        gap: var(--a);
+        align-items: flex-start;
+		justify-content: flex-end;
+        padding: var(--a);
+        background-color: var(--color-background);
+    }
+    .item .guardar {
+        align-self: flex-end;
+    }
+    .info {
+        flex: 1;
+        display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+        gap: var(--a);
+    }
+    .filename {
+        margin: 0;
+        word-break: break-word;
+    }
+    .info input[type='number'] {
+        max-width: 250px;
+    }
 </style>
