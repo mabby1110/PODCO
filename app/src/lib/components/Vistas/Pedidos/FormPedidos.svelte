@@ -47,7 +47,7 @@
 		{#if StorePedido.items.length !== 0}
 			<div class="productos">
 				{#each StorePedido.items as item}
-					<Pedido item={item.pedido} editando cold/>
+					<Pedido item={item.pedido} editando hot/>
 				{/each}
 				<div class="acciones-tabla">
 					<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
@@ -76,7 +76,7 @@
 
 	<form
 		method="POST"
-		action="?/updatePedido"
+		action="/pedidos?/updatePedido"
 		use:enhance={({ formData }) => {
 			let id_agrupacion_base = null;
 
@@ -87,9 +87,11 @@
 					id: item.pedido.id,
 					id_agente,
 					id_producto: item.pedido.inventario.id,
+					id_oportunidad: item.pedido.id_oportunidad,
 					cantidad: item.pedido.cantidad,
 					precio_unitario: item.pedido.precio_unitario,
-					stock: item.pedido.stock
+					stock: item.pedido.stock,
+					estatus: item.pedido.estatus
 				}));
 
 				formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));

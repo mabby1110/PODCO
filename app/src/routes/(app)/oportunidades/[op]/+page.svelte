@@ -191,6 +191,11 @@
 					<h3>Cotizacion(es):</h3>
 				</div>
 				<div class="content">
+					{#if eventData?.cotizaciones.length > 0}
+						{#each eventData?.cotizaciones as documento}
+							<TarjetaListaDocumentos event={documento} />
+						{/each}
+					{/if}
 					<FormOptionalInput title="+Cotización">
 						<SubirCotizacion
 							name={'docs_cotizaciones'}
@@ -203,11 +208,6 @@
 							required
 						/>
 					</FormOptionalInput>
-					{#if eventData?.cotizaciones.length > 0}
-						{#each eventData?.cotizaciones as documento}
-							<TarjetaListaDocumentos event={documento} />
-						{/each}
-					{/if}
 				</div>
 			</section>
 		{/if}

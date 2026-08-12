@@ -66,7 +66,8 @@ export const actions: Actions = {
 		let idOportunidad: string | null = null;
 
 		// PEDIDOS A ACTUALIZAR
-		console.log('pedidos a actualizar: ', pedidosAActualizar);
+		idOportunidad = pedidosAActualizar[0].id_oportunidad;
+		console.log('pedidos a actualizar: ', idOportunidad, pedidosAActualizar);
 		if (pedidosAActualizar.length > 0) {
 			const updatePromises = pedidosAActualizar.map(async (pedido: any) => {
 				const { data, error } = await supabase
@@ -91,7 +92,6 @@ export const actions: Actions = {
 
 			if (resultActualizacion && resultActualizacion.length > 0) {
 				idAgrupacion = resultActualizacion[0].id_agrupacion;
-				idOportunidad = resultActualizacion[0].id_oportunidad;
 
 				const registrosHistorial = resultActualizacion.map((pedido) => ({
 					id: generateId('BMS-H'),
@@ -138,6 +138,7 @@ export const actions: Actions = {
 				pedido.id = generateId('BMS-PD');
 				pedido.id_agente = user?.id;
 				pedido.id_agrupacion = idAgrupacion;
+				pedido.id_oportunidad = idOportunidad;
 				return construirDatosPedido(pedido);
 			});
 
@@ -157,6 +158,7 @@ export const actions: Actions = {
 					id_agente: user?.id,
 					tipo_objeto: 'pedidos',
 					id_objeto: pedido.id,
+					id_oportunidad: pedido.id_oportunidad,
 					accion: 'insert',
 					cambios: {
 						cantidad: pedido.cantidad,
@@ -173,7 +175,6 @@ export const actions: Actions = {
 			}
 		}
 
-		// DOCUMENTOS
 		return {
 			success: true
 		};

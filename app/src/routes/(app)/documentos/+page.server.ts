@@ -1,4 +1,4 @@
-import { procesarDocumentos } from '$lib/server/supabase/util';
+import { construirDatosPedido, procesarDocumentos } from '$lib/server/supabase/util';
 import { fail, type Actions } from '@sveltejs/kit';
 import crypto from 'crypto';
 function generateId(prefix = 'BMS') {
@@ -35,67 +35,50 @@ export const actions: Actions = {
 			// Extraer ID de la última cotización insertada
 			const idUltimaCotizacion = result[result.length - 1].id;
 
-			const pedidosRaw = formData.get('pedidosAActualizar') as string;
-			const pedidosAActualizar = pedidosRaw ? JSON.parse(pedidosRaw) : [];
+			const pedidosRaw = formData.get('pedidosACrear') as string;
+			const pedidosACrear = pedidosRaw ? JSON.parse(pedidosRaw) : [];
+		// PEDIDOS A CREAR
+		console.log('pedidos a crear: ', pedidosACrear);
+		let idAgrupacion = generateId('BMS-GP');
+		if (pedidosACrear.length > 0) {
+			const registrosACrear = pedidosACrear.map((pedido) => {
+				pedido.id = generateId('BMS-PD');
+				pedido.id_agrupacion = idAgrupacion;
+				return construirDatosPedido(pedido);
+			});
 
-			if (pedidosAActualizar.length > 0) {
-				const updatePromises = pedidosAActualizar.map(async (pedido: any) => {
-					const { data, error: updateError } = await supabase
-						.from('pedidos')
-						.update({
-							...pedido,
-							id_cotizacion: idUltimaCotizacion
-						})
-						.eq('id', pedido.id)
-						.select()
-						.single();
+			const { data: resultCreacion, error: errorCreacion } = await supabase
+				.from('pedidos')
+				.insert(registrosACrear)
+				.select();
 
-					if (updateError) throw new Error(updateError.message);
-					return data;
-				});
-
-				let resultActualizacion: any[] = [];
-				try {
-					resultActualizacion = await Promise.all(updatePromises);
-				} catch (err: any) {
-					return fail(500, { error: err.message });
-				}
-
-				if (resultActualizacion.length > 0) {
-					const registrosHistorial = resultActualizacion.map((pedido) => ({
-						id: generateId('BMS-H'),
-						id_agente: user?.id,
-						tipo_objeto: 'pedidos',
-						id_objeto: pedido.id,
-						accion: 'update',
-						cambios: {
-							cantidad: pedido.cantidad,
-							precio_unitario: pedido.precio_unitario
-						}
-					}));
-
-					const { data: historial, error: errorHistorial } = await supabase
-						.from('historial')
-						.insert(registrosHistorial)
-						.select();
-
-					if (errorHistorial) console.error('Fallo al registrar historial:', errorHistorial);
-
-					if (historial && historial.length > 0) {
-						const registrosNotificacion = historial.map((h) => ({
-							id: generateId('BMS-N'),
-							id_agente: user?.id,
-							id_historial: h.id
-						}));
-
-						const { error: errorNotif } = await supabase
-							.from('notificaciones')
-							.insert(registrosNotificacion);
-
-						if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
-					}
-				}
+			if (errorCreacion) {
+				console.log(errorCreacion);
+				return fail(500, { error: errorCreacion.message });
 			}
+
+			// if (resultCreacion && resultCreacion.length > 0) {
+			// 	const registrosHistorialCreacion = resultCreacion.map((pedido) => ({
+			// 		id: generateId('BMS-H'),
+			// 		id_agente: user?.id,
+			// 		tipo_objeto: 'pedidos',
+			// 		id_objeto: pedido.id,
+			// 		id_oportunidad: pedido.id_oportunidad,
+			// 		accion: 'insert',
+			// 		cambios: {
+			// 			cantidad: pedido.cantidad,
+			// 			precio_unitario: pedido.precio_unitario
+			// 		}
+			// 	}));
+
+			// 	const { error: errorHistorialCreacion } = await supabase
+			// 		.from('historial')
+			// 		.insert(registrosHistorialCreacion);
+
+			// 	if (errorHistorialCreacion)
+			// 		console.error('Fallo al registrar historial de creación:', errorHistorialCreacion);
+			// }
+		}
 		}
 
 		if (entity == 'docs_occ') {

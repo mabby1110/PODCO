@@ -6,7 +6,7 @@
 
 	let {
 		pedidos,
-		editando = false,
+		editando = false
 	}: { pedidos: any[]; oportunidad?: any; editando?: boolean; currentFase?: number } = $props();
 	$effect(() => console.log(pedidos));
 	function editarPedidoSeleccionado() {
@@ -21,12 +21,14 @@
 
 <div class="pedido">
 	<div class="panel grupo">
+		{#each pedidos as item}
+			{#if item.estatus === 'aprobado'}
+				<Pedido {item} cold />
+			{/if}
+		{/each}
 		{#if editando}
 			<button class="butter" onclick={editarPedidoSeleccionado}>Editar</button>
 		{/if}
-		{#each pedidos as item}
-			<Pedido {item} {editando} hot />
-		{/each}
 	</div>
 </div>
 
@@ -34,6 +36,9 @@
 	.pedido {
 		display: flex;
 		flex-direction: column;
-		width: 90%;
+		width: 100%;
+	}
+	.butter {
+		justify-self: flex-end;
 	}
 </style>

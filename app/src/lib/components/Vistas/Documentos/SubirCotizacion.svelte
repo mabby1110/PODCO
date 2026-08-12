@@ -41,7 +41,11 @@
 	let isSubmitting = $state(false);
 	let totalPedidos = $derived(
 		pedidos.reduce((acc: number, item: any) => {
-			return acc + item.precio_unitario * item.cantidad;
+			if (item.estatus == 'aprobado') {
+				return acc + item.precio_unitario * item.cantidad;
+			} else {
+				return acc;
+			}
 		}, 0) // 0 es el valor inicial del acumulador
 	);
 
@@ -85,10 +89,13 @@
 				formData.append(name, item.file);
 				formData.append(amountName, String(item.amount ?? 0));
 			});
-
 			formData.append(
-				'pedidosAActualizar',
-				JSON.stringify(pedidos.map((item) => ({ id: item.id })))
+				'pedidosACrear',
+				JSON.stringify(
+					pedidos
+						.filter((item) => item.estatus === 'aprobado')
+						.map(({ agentes, inventario, oportunidades, ...item }) => ({ ...item }))
+				)
 			);
 			const response = await fetch(action, {
 				method: 'POST',

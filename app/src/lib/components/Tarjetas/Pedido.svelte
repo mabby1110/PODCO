@@ -10,7 +10,7 @@
 		hot,
 		cold
 	}: { item: any; editando?: boolean; hot?: boolean; cold?: boolean } = $props();
-	
+
 	let total = $derived(
 		formatCurrency(String((item.precio_unitario || 0) * (item.cantidad || 0)), 'USD')
 	);
@@ -41,10 +41,25 @@
 			StoreEditarPedido.remover(item);
 		}
 	}
-	async function eliminarItem(item: any) {
+	async function eliminar(item: any) {
 		const formData = new FormData();
 		formData.append('id', item.id);
 		const response = await fetch('/pedidos?/deletePedido', {
+			method: 'POST',
+			body: formData
+		});
+
+		if (response.ok) {
+			item.id_oportunidad = null;
+			StoreEditarPedido.eliminar(item);
+			StorePedido.eliminar(item);
+			invalidateAll();
+		}
+	}
+	async function descartar(item: any) {
+		const formData = new FormData();
+		formData.append('pedidosAActualizar', JSON.stringify([{ id: item.id, estatus: 'descartado' }]));
+		const response = await fetch('/pedidos?/updatePedido', {
 			method: 'POST',
 			body: formData
 		});
@@ -61,9 +76,12 @@
 		isSubmitting = true;
 		try {
 			const formData = new FormData();
-			const { agente, inventario, ...pedidoAActualizar } = item;
+			const { agentes, inventario, oportunidades, ...pedidoAActualizar } = item;
 			pedidoAActualizar.cantidad = item.cantidad;
 			pedidoAActualizar.precio_unitario = item.precio_unitario;
+			pedidoAActualizar.estatus = item.estatus;
+			pedidoAActualizar.id_oportunidad = item.id_oportunidad;
+
 			formData.append('pedidosAActualizar', JSON.stringify([pedidoAActualizar]));
 
 			const response = await fetch('/pedidos?/updatePedido', {
@@ -79,17 +97,27 @@
 </script>
 
 <div class="pedido">
+	{#if hot}
+		<div class="acciones-hot">
+			<button type="button" class="butter milk" onclick={() => eliminar(item)}>✕</button>
+			<input
+			class="descartar"
+				type="checkbox"
+				checked={item.estatus === 'aprobado'}
+				onchange={(e) => {
+					item.estatus = e.currentTarget.checked ? 'aprobado' : 'descartado';
+					guardarItem();
+				}}
+			/>
+		</div>
+	{:else if cold}
+		<button type="button" class="butter milk" onclick={() => descartar(item)}>✕</button>
+	<!-- {:else}
+		<button type="button" class="butter milk" onclick={() => StoreEditarPedido.remover(item)}
+			>✕</button
+		> -->
+	{/if}
 	{#if editando}
-		{#if hot}
-			<button type="button" class="butter milk" onclick={() => removerItem(item)}>✕</button>
-		{:else if cold}
-			<button type="button" class="butter milk" onclick={() => eliminarItem(item)}>✕</button>
-		{:else}
-			<button type="button" class="butter milk" onclick={() => StoreEditarPedido.remover(item)}
-				>✕</button
-			>
-		{/if}
-
 		<div class="descripcion">
 			<b>{item.inventario?.descripcion || '-'}</b>
 			<div class="meta">
@@ -118,11 +146,11 @@
 
 	<span>USD</span>
 	<span class="total">{total}</span>
-	{#if hot && editando}
+	<!-- {#if hot && editando}
 		<button type="button" class="butter matcha submit" disabled={isSubmitting} onclick={guardarItem}
 			>Guardar</button
 		>
-	{/if}
+	{/if} -->
 </div>
 
 <style>
@@ -163,9 +191,13 @@
 	.pedido .cantidad {
 		grid-column: span 2;
 	}
-	.pedido .submit {
-		grid-column: span 2;
-		justify-self: flex-end;
+	.acciones-hot {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.descartar {
+		width: var(--b) !important;
 	}
 	.pedido input {
 		width: 100%;
