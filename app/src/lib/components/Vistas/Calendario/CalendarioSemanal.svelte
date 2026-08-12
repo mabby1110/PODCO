@@ -14,10 +14,10 @@
 		getMonth
 	} from '$lib/utils/agenda';
 
-	import CardActividadCalendarPreview from '../Actividad/CardActividadCalendarPreview.svelte';
 	import { page } from '$app/state';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
-	import CardOpCalendarPreview from '../Oportunidad/CardOpCalendarPreview.svelte';
+	import CSTarjetaActividad from './CSTarjetaActividad.svelte';
+	import CSTarjetaOportunidad from './CSTarjetaOportunidad.svelte';
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
@@ -26,8 +26,16 @@
 	let allActivities = $derived(oportunidades.concat(actividades));
 	let currentRoute = $derived(page.url.pathname);
 
-	// Convertido a $state para soportar bind:lista
-	let lista = $state(allActivities);
+	let lista = $derived.by(() => {
+		if ($appState.calendarList == 'actividades') {
+			return actividades;
+		} else if ($appState.calendarList == 'oportunidades') {
+			return oportunidades;
+		} else {
+			return allActivities;
+		}
+	});
+
 	let columnasDinamicas = $derived(
 		Array.from(
 			new Map(
@@ -38,15 +46,18 @@
 			).values()
 		)
 	);
+
 	$effect(() => {
 		lista = allActivities;
 	});
 
 	let lista_ordenada = $derived(sortData(lista, currentRoute));
 	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
-	
+
 	let SLOT_MINUTES = $derived($appState.calendarCards ? 10 : 60);
 	let calendarHeight = $state(0);
+
+	let expandedEventId = $state<string | null>(null);
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
 	const hoursRangePerDay = { start: 8, end: 19 };
@@ -109,7 +120,27 @@
 			);
 		});
 	}
+
+	function handleKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape' && expandedEventId) {
+			expandedEventId = null;
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
+
+{#if expandedEventId}
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		class="backdrop"
+		onclick={(e) => {
+			e.stopPropagation();
+			expandedEventId = null;
+		}}
+	></div>
+{/if}
 
 <Vista>
 	{#snippet acciones()}
@@ -139,22 +170,21 @@
 			<option value="gant">Gant Anual</option>
 			<option value="semanal">Semanal</option>
 		</select>
+		<select
+			value={$appState.calendarList}
+			onchange={(e) => appState.setCalendarList(e.currentTarget.value)}
+		>
+			<option value="" disabled>Todas</option>
+			<option value="actividades">Actividades</option>
+			<option value="oportunidades">Oportunidades</option>
+		</select>
+		<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+			{$appState.calendarCards ? 'Min' : 'Max'}
+		</button>
 		<PanelFiltros>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-				<!-- {#if $profile?.isAdmin}
-					<button
-						onclick={() => appState.toggleDnd()}
-						class="butter toggle"
-						class:active={$appState.dnd}
-					>
-						✏️ Editar
-					</button>
-				{/if} -->
-				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-					{$appState.calendarCards ? 'Min' : 'Max'}
-				</button>
 			{/snippet}
 			{#snippet controles()}
 				<ModList {columnasDinamicas} route={currentRoute} />
@@ -201,22 +231,34 @@
 												{@const slots = calculateSlots(event.inicio, event.fin, SLOT_MINUTES)}
 												{@const totalConcurrentes = eventosSuperpuestos.length}
 
+												<!-- svelte-ignore a11y_click_events_have_key_events -->
+												<!-- svelte-ignore a11y_no_static_element_interactions -->
 												<div
-													class="event-wrapper"
+													class="event-wrapper panel"
+													class:expanded={expandedEventId === event.id}
+													onclick={(e) => {
+														e.stopPropagation();
+														expandedEventId = expandedEventId === event.id ? null : event.id;
+													}}
 													style="
-                                                    width: {100 / totalConcurrentes}%;
-                                                    left: {(100 / totalConcurrentes) * index}%;
-                                                    height: {slots * CELL_HEIGHT}px;
+													width: {expandedEventId === event.id ? 'auto' : 100 / totalConcurrentes + '%'};
+													left: {expandedEventId === event.id ? 'auto' : (100 / totalConcurrentes) * index + '%'};
+													height: {expandedEventId === event.id ? 'auto' : slots * CELL_HEIGHT + 'px'};
 													min-height: var(--d);
-                                                    z-index: {10 + index};
-                                                "
+													z-index: {expandedEventId === event.id ? 999 : 10 + index};
+												"
 												>
 													{#if event.id.toLowerCase().includes('op')}
-														<CardOpCalendarPreview {event} style="height: 100%; width: 100%;" />
-													{:else}
-														<CardActividadCalendarPreview
+														<CSTarjetaOportunidad
 															{event}
 															style="height: 100%; width: 100%;"
+															expanded={expandedEventId === event.id}
+														/>
+													{:else}
+														<CSTarjetaActividad
+															{event}
+															style="height: 100%; width: 100%;"
+															expanded={expandedEventId === event.id}
 														/>
 													{/if}
 												</div>
@@ -234,6 +276,12 @@
 </Vista>
 
 <style>
+	.backdrop {
+		position: fixed;
+		inset: 0;
+		cursor: pointer;
+	}
+
 	.calendar {
 		flex-grow: 1;
 		overflow: auto;
@@ -307,11 +355,9 @@
 		height: var(--dynamic-cell-height);
 		z-index: 1;
 	}
-
-	.event-cell:has(.event-wrapper:hover) {
-		z-index: 100;
+	.event-cell:has(.expanded) {
+		z-index: 9999;
 	}
-
 	.event-stack {
 		position: absolute;
 		top: 0;
@@ -326,34 +372,34 @@
 		top: 0;
 		box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.1);
 		transition:
-			width 0.2s ease,
-			min-height 0.2s ease,
 			box-shadow 0.2s ease,
 			z-index 0s;
-		user-select: none; /* Evita que el texto se sombree/seleccione */
-		-webkit-user-select: none; /* Para Safari y Chrome en móviles */
+		user-select: none;
+		-webkit-user-select: none;
 		-webkit-touch-callout: none;
+		cursor: pointer;
 	}
 
-	.event-wrapper:hover {
-		z-index: 999 !important;
-		width: 40vw !important;
-		max-width: 80vw;
-		min-height: 40vh !important;
-	}
-	.event-wrapper:active {
-		z-index: 999 !important;
-		width: 150% !important;
+	.event-wrapper.expanded {
+		position: fixed !important;
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%) !important;
+		width: 70vw !important;
+		max-width: 800px !important;
 		min-height: var(--g) !important;
-		height: auto !important;
-		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-		transition-delay: 0.15s;
+		max-height: var(--i) !important;
+		height: 80vh !important;
+		z-index: 9999 !important;
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+		margin: 0 !important;
+		cursor: default;
 	}
 
 	.max {
-		min-width: var(--h);
-		max-width: 60vw;
+		min-width: 70vw;
 	}
+
 	.current-week {
 		text-align: center;
 		flex-grow: 1;

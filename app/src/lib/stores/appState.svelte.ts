@@ -7,6 +7,7 @@ interface AppState {
 	panelMinimized: boolean;
 	calendarCards: boolean;
 	calendarView: string;
+	calendarList: string;
 	ModalActivity: boolean;
 	ModalOp: boolean;
 	ModalClient: boolean;
@@ -25,6 +26,7 @@ const defaultState: AppState = {
 	panelMinimized: false,
 	calendarCards: false,
 	calendarView: 'semanal',
+	calendarList: 'actividades',
 	ModalActivity: false,
 	ModalOp: false,
 	ModalClient: false,
@@ -70,6 +72,12 @@ function createAppState() {
 		setCalendarView: (view: string) =>
 			update((state) => {
 				const newState = { ...state, calendarView: view };
+				saveToCookie(newState);
+				return newState;
+			}),
+		setCalendarList: (view: string) =>
+			update((state) => {
+				const newState = { ...state, calendarList: view };
 				saveToCookie(newState);
 				return newState;
 			}),

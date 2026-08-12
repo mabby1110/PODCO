@@ -1,8 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { categoriasOportunidad } from '$lib';
-	import Filtro from '$lib/components/Acciones/Filtro.svelte';
-	import FiltroAgente from '$lib/components/Acciones/FiltroAgente.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
@@ -10,17 +7,16 @@
 	import { calendarStore } from '$lib/stores/calendarStore.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatWeekRange, getWeekDates } from '$lib/utils/agenda';
-	import { obtenerDatosFiltrados } from '$lib/utils/filtro';
 	import { extraerColumnas, filterData, sortData } from '$lib/utils/ModList';
-	import TarjetaCalendarioAnual from './TarjetaCalendarioAnual.svelte';
+	import CGTarjetaOportunidad from './CGTarjetaOportunidad.svelte';
 	import { onMount } from 'svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
 
-	// Convertido a $state para soportar bind:lista
 	let lista = $state(oportunidades);
 	let columnasDinamicas = $derived(extraerColumnas(oportunidades));
+	let expandedEventId = $state<string | null>(null);
 
 	$effect(() => {
 		lista = oportunidades;
@@ -29,7 +25,6 @@
 	let lista_ordenada = $derived(sortData(lista, currentRoute));
 	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
 
-	const PX_POR_DIA = 8;
 	const MESES = [
 		'Ene',
 		'Feb',
@@ -44,14 +39,31 @@
 		'Nov',
 		'Dic'
 	];
-
 	const anioActual = new Date().getFullYear();
 	const getDiasMes = (mes: number, anio: number) => new Date(anio, mes + 1, 0).getDate();
 
 	let mesesOcultos = $state<number[]>([]);
 	let contenedor = $state<HTMLElement>();
+	let contenedorWidth = $state<number>(0);
+	let zoomLevel = $state<number>(1);
+
+	const totalDiasVisibles = $derived(
+		MESES.reduce(
+			(total, _, indice) =>
+				!mesesOcultos.includes(indice) ? total + getDiasMes(indice, anioActual) : total,
+			0
+		)
+	);
+
+	const PX_POR_DIA = $derived(
+		contenedorWidth > 0 && totalDiasVisibles > 0
+			? (contenedorWidth / totalDiasVisibles) * zoomLevel-0.001
+			: 8
+	);
+
 	const weekDates = $derived(getWeekDates(calendarStore.weekOffset));
 	const weekRangeText = $derived(formatWeekRange(weekDates));
+
 	function ocultarMes(indice: number) {
 		if (!mesesOcultos.includes(indice)) {
 			mesesOcultos = [...mesesOcultos, indice];
@@ -137,29 +149,18 @@
 			})
 			.filter((evento) => evento.width > 0)
 	);
+
+	function handleKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape' && expandedEventId) {
+			expandedEventId = null;
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
 
 <Vista>
 	{#snippet acciones()}
-		<!-- <div class="calendar-navigation">
-			<button
-				onclick={() => (calendarStore.weekOffset -= 1)}
-				class="butter nav-btn"
-				title="Semana anterior"
-			>
-				←
-			</button>
-			<button onclick={() => (calendarStore.weekOffset = 0)} class="butter current-week">
-				{weekRangeText}
-			</button>
-			<button
-				onclick={() => (calendarStore.weekOffset += 1)}
-				class="butter nav-btn"
-				title="Semana siguiente"
-			>
-				→
-			</button>
-		</div> -->
 		<select
 			value={$appState.calendarView}
 			onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
@@ -167,6 +168,15 @@
 			<option value="gant">Gant Anual</option>
 			<option value="semanal">Semanal</option>
 		</select>
+		<input
+			type="range"
+			bind:value={zoomLevel}
+			min="1"
+			max="10"
+			step="0.5"
+			title="Nivel de Zoom"
+			class="zoom-slider"
+		/>
 		<PanelFiltros>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
@@ -189,8 +199,14 @@
 			{/snippet}
 		</PanelFiltros>
 	{/snippet}
+
 	{#snippet contenido()}
-		<div class="calendario-contenedor panel" bind:this={contenedor}>
+		<div
+			class="calendario-contenedor panel"
+			bind:this={contenedor}
+			bind:clientWidth={contenedorWidth}
+		>
+			<!-- Contenido omitido (sin cambios) -->
 			<div class="cabecera-meses">
 				{#each columnasMeses as mes (mes.indice)}
 					<button
@@ -203,20 +219,26 @@
 					</button>
 				{/each}
 			</div>
+
 			<div class="contenedor-tarjetas">
-				<!-- Grid de fondo para las líneas de los meses -->
 				<div class="grid-fondo">
 					{#each columnasMeses as mes (mes.indice)}
 						<div class="grid-linea" style="width: {mes.ancho}px;"></div>
 					{/each}
 				</div>
 
-				<!-- Línea indicadora de fecha actual -->
 				<div class="linea-fecha-actual" style="left: {posicionHoy}px;"></div>
 
 				{#each eventosProcesados as evento}
-					<div class="fila-evento">
-						<TarjetaCalendarioAnual {evento} />
+					<div
+						class="fila-evento"
+						class:expanded={expandedEventId === evento.id}
+						onclick={(e) => {
+							e.stopPropagation();
+							expandedEventId = expandedEventId === evento.id ? null : evento.id;
+						}}
+					>
+						<CGTarjetaOportunidad {evento} isExpanded={expandedEventId === evento.id} />
 					</div>
 				{/each}
 			</div>
@@ -229,6 +251,7 @@
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+        height: 100%;
 		overflow: auto;
 		scroll-behavior: smooth;
 	}
@@ -257,6 +280,11 @@
 		flex-direction: column;
 		position: relative;
 		padding-top: var(--b);
+        height: 100%;
+	}
+
+	.contenedor-tarjetas:has(.expanded) {
+		z-index: 9999;
 	}
 
 	.grid-fondo {
@@ -290,13 +318,17 @@
 		height: var(--d);
 		min-width: max-content;
 		z-index: 1;
+		cursor: pointer;
 	}
-	.calendar-navigation {
-		display: flex;
-		gap: var(--a);
+
+	.fila-evento.expanded {
+		min-height: 120px !important; /* Ajustable según el contenido del hijo */
+		z-index: 9999 !important;
+		cursor: default;
 	}
-	.calendar-navigation .current-week {
-		min-width: var(--g);
-		width: 100%;
+	.zoom-slider {
+		width: 100px;
+		margin-right: var(--a);
+		cursor: ew-resize;
 	}
 </style>
