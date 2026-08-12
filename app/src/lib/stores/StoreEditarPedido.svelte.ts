@@ -28,7 +28,12 @@ class EditarPedido {
             this.itemsRemovidos.push(removido);
         }
     }
-
+    eliminar(pedido: Objeto) {
+        const indice = this.items.findIndex((i) => i.pedido?.id === pedido.id);
+        if (indice !== -1) {
+            this.items.splice(indice, 1);
+        }
+    }
     limpiar() {
         this.items = [];
         this.itemsRemovidos = [];

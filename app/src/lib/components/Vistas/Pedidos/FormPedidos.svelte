@@ -5,6 +5,7 @@
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import PreviewListaPedidos from './PreviewListaPedidos.svelte';
 	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
+	import Pedido from '$lib/components/Tarjetas/Pedido.svelte';
 
 	let { id_oportunidad }: { id_oportunidad?: string } = $props();
 	const copiarAExcel = () => {
@@ -44,15 +45,14 @@
 		<p class="vacio">No hay productos seleccionados.</p>
 	{:else}
 		{#if StorePedido.items.length !== 0}
-			<h3>Editar: {StorePedido.items[0].pedido.id_agrupacion}</h3>
 			<div class="productos">
 				{#each StorePedido.items as item}
-					<PreviewListaPedidos {item} isEdicion={true} />
+					<Pedido item={item.pedido} editando cold/>
 				{/each}
 				<div class="acciones-tabla">
 					<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
 					<button class="butter" type="button" onclick={() => StorePedido.limpiar()}>
-						Borrar
+						Limpiar
 					</button>
 				</div>
 			</div>
@@ -67,7 +67,7 @@
 				<div class="acciones-tabla">
 					<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
 					<button class="butter" type="button" onclick={() => StorePedidoNuevo.limpiar()}>
-						Borrar
+						Limpiar
 					</button>
 				</div>
 			</div>

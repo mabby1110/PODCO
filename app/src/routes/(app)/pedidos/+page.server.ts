@@ -63,6 +63,7 @@ export const actions: Actions = {
 		const pedidosACrear = JSON.parse((formData.get('pedidosACrear') as string) || '[]');
 		let resultActualizacion: any[] = [];
 		let idAgrupacion: string | null = null;
+		let idOportunidad: string | null = null;
 
 		// PEDIDOS A ACTUALIZAR
 		console.log('pedidos a actualizar: ', pedidosAActualizar);
@@ -90,6 +91,7 @@ export const actions: Actions = {
 
 			if (resultActualizacion && resultActualizacion.length > 0) {
 				idAgrupacion = resultActualizacion[0].id_agrupacion;
+				idOportunidad = resultActualizacion[0].id_oportunidad;
 
 				const registrosHistorial = resultActualizacion.map((pedido) => ({
 					id: generateId('BMS-H'),

@@ -6,9 +6,9 @@
 	let { event } = $props();
 </script>
 
-<ListPreview href="/oportunidades/{event.id}" ocultarAcciones>
+<ListPreview href="/oportunidades/{event.id}" ocultarAcciones style="{event.pedidos.length==0?'':'background-color:var(--color-highlight);'}">
 	{#snippet header()}
-		<h3>{event?.titulo}</h3>
+		<h3><b>{event.pedidos.length==0?'Descartada':'Actual'}</b>: {event?.titulo}</h3>
 	{/snippet}
 	{#snippet content()}
 		{#if event?.id_oportunidad}

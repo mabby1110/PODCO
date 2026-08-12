@@ -53,22 +53,24 @@
 	{:else}
 		<div class="panel grupo">
 			{#each StoreEditarPedido.items as item}
-				<Pedido {item}/>
+				<Pedido {item} editando />
 			{/each}
 		</div>
 		<form
 			method="POST"
-			action="/inventario?/updatePedido"
+			action="/pedidos?/updatePedido"
 			class="form-acciones"
 			use:enhance={({ formData }) => {
 				if (StoreEditarPedido.items.length > 0) {
-					const pedidosAActualizar = StoreEditarPedido.items.map((item) => ({
-						id: item.id,
-						id_oportunidad: id_oportunidad,
-						id_agente: agente?.id
-					}));
+					const pedidosAActualizar = StoreEditarPedido.items.map(
+						({ agentes, inventario, oportunidades, ...item }) => ({
+							...item,
+							id_oportunidad: id_oportunidad,
+							id_agente: agente?.id
+						})
+					);
 
-					formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
+					formData.append('pedidosACrear', JSON.stringify(pedidosAActualizar));
 				}
 				StoreEditarPedido.limpiar();
 			}}

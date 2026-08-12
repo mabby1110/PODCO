@@ -18,7 +18,7 @@
 		if (isOpen && input && !openByDefault) {
 			input.scrollIntoView({
 				behavior: 'smooth',
-				block: 'start'
+				block: 'center'
 			});
 		}
 	});

@@ -13,7 +13,6 @@
 		isEdicion?: boolean;
 	} = $props();
 
-	// Calculamos el estado del stock dinámicamente si es un producto nuevo
 	let sinStock = $derived(
 		!isEdicion
 			? StorePedidoNuevo.obtenerCantidad(item.id) + StorePedido.obtenerCantidad(item.id) >=

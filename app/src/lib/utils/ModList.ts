@@ -5,7 +5,7 @@ export const extraerColumnas = (datos: any[]): { key: string; label: string; typ
     const item = datos[0]; 
     
     return Object.keys(item)
-        .filter(key => !key.startsWith('id_') || key.startsWith('id_agrupacion'))
+        // .filter(key => !key.startsWith('id_') || key.startsWith('id_agrupacion'))
         .map(key => {
             const val = item[key];
             let type: 'string' | 'number' | 'date' | 'object' = 'string';

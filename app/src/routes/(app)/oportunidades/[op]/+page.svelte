@@ -29,7 +29,9 @@
 		if (!event) return null;
 		return {
 			id: event.id,
-			cotizaciones: event.docs_cotizaciones,
+			cotizaciones: event.docs_cotizaciones.sort(
+				(a, b) => Number(b.pedidos?.length > 0) - Number(a.pedidos?.length > 0)
+			),
 			adjuntos: event.docs_adjuntos,
 			occ: event.docs_occ,
 			ocp: event.docs_ocp,
@@ -56,6 +58,7 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let editando = $state(false);
+	console.log('eventData', eventData);
 </script>
 
 <Card headerStyle={eventData?.style}>
@@ -151,16 +154,20 @@
 				</div>
 				<div class="content">
 					{#if eventData?.pedidos.length > 0}
-						<PedidoRelacionado pedidos={eventData?.pedidos ?? []} {editando} />
-					{:else}
-						<FormOptionalInput title="+Potencial de venta">
-							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
-						</FormOptionalInput>
+						<PedidoRelacionado
+							pedidos={eventData?.pedidos ?? []}
+							oportunidad={eventData}
+							{editando}
+							{currentFase}
+						/>
 					{/if}
+					<FormOptionalInput title="+Potencial de venta">
+						<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
+					</FormOptionalInput>
 				</div>
 			</section>
 		{/if}
-		{#if currentFase >= 2}
+		{#if currentFase >= 2 && currentFase <= 3}
 			<section>
 				<div class="header">
 					<h3>Potencial de venta:</h3>
@@ -173,11 +180,10 @@
 							{editando}
 							{currentFase}
 						/>
-					{:else}
-						<FormOptionalInput title="+Potencial de venta">
-							<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
-						</FormOptionalInput>
 					{/if}
+					<FormOptionalInput title="+Potencial de venta">
+						<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
+					</FormOptionalInput>
 				</div>
 			</section>
 			<section>
@@ -185,41 +191,52 @@
 					<h3>Cotizacion(es):</h3>
 				</div>
 				<div class="content">
-					<div class="content">
-						{#if eventData?.cotizaciones.length > 0}
-							{#each eventData?.cotizaciones as documento}
-								<TarjetaListaDocumentos event={documento} />
-							{/each}
-						{/if}
-					</div>
+					<FormOptionalInput title="+Cotización">
+						<SubirCotizacion
+							name={'docs_cotizaciones'}
+							amountLabel="Total cotizado"
+							amountName="totales"
+							id_nodo_p={eventData?.id}
+							cliente={eventData?.cliente}
+							agente={eventData?.agente}
+							{pedidos}
+							required
+						/>
+					</FormOptionalInput>
+					{#if eventData?.cotizaciones.length > 0}
+						{#each eventData?.cotizaciones as documento}
+							<TarjetaListaDocumentos event={documento} />
+						{/each}
+					{/if}
 				</div>
 			</section>
 		{/if}
-		{#if currentFase >= 3}
+		{#if currentFase == 3}
 			<section class="occ">
 				<div class="header">
-					<h3>Pedidos:</h3>
+					<h3>Orden de compra:</h3>
 				</div>
-				{#if eventData?.occ.length > 0}
-					<div class="content">
+				<div class="content">
+					{#if eventData?.occ.length > 0}
 						{#each eventData?.occ as documento}
 							<TarjetaListaDocumentos event={documento} />
 						{/each}
-					</div>
-				{/if}
-				{#if (!$profile?.isOper || $profile?.isAdmin) && currentFase == 3 && (eventData?.occ.length <= 0 || editando)}
-					<SubirOcc
-						name="docs_occ"
-						amountLabel="Total"
-						amountName="totales"
-						id_nodo_p={eventData?.id}
-						cliente={eventData?.cliente}
-						agente={eventData?.agente}
-						action="/documentos?/add"
-						required
-						multiple
-					/>
-				{/if}
+					{/if}
+
+					<FormOptionalInput title="+Orden de compra">
+						<SubirOcc
+							name="docs_occ"
+							amountLabel="Total"
+							amountName="totales"
+							id_nodo_p={eventData?.id}
+							cliente={eventData?.cliente}
+							agente={eventData?.agente}
+							action="/documentos?/add"
+							required
+							multiple
+						/>
+					</FormOptionalInput>
+				</div>
 			</section>
 		{/if}
 

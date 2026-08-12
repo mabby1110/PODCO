@@ -1,51 +1,32 @@
 <script lang="ts">
-	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
 	import Pedido from '$lib/components/Tarjetas/Pedido.svelte';
-	import SubirCotizacion from '../Documentos/SubirCotizacion.svelte';
+	import { StorePedido } from '$lib/stores/StorePedido.svelte';
+	import { appState } from '$lib/stores/appState.svelte';
+	import { goto } from '$app/navigation';
 
 	let {
 		pedidos,
-		oportunidad,
 		editando = false,
-		currentFase = 0
 	}: { pedidos: any[]; oportunidad?: any; editando?: boolean; currentFase?: number } = $props();
-	let edit = $derived(editando);
 	$effect(() => console.log(pedidos));
+	function editarPedidoSeleccionado() {
+		StorePedido.limpiar();
+		pedidos.forEach((item) => {
+			StorePedido.agregar(item);
+		});
+		appState.setEditarPedido(true);
+		goto('/inventario');
+	}
 </script>
 
 <div class="pedido">
 	<div class="panel grupo">
+		{#if editando}
+			<button class="butter" onclick={editarPedidoSeleccionado}>Editar</button>
+		{/if}
 		{#each pedidos as item}
 			<Pedido {item} {editando} hot />
 		{/each}
-		{#if currentFase <= 4}
-			{#if pedidos[0].docs_cotizaciones}
-				<p>{pedidos[0].docs_cotizaciones.titulo}</p>
-				{#if editando}
-					<SubirCotizacion
-						name={'docs_cotizaciones'}
-						amountLabel="Total cotizado"
-						amountName="totales"
-						id_nodo_p={oportunidad?.id}
-						cliente={oportunidad?.cliente}
-						agente={oportunidad?.agente}
-						{pedidos}
-						required
-					/>
-				{/if}
-			{:else}
-				<SubirCotizacion
-					name={'docs_cotizaciones'}
-					amountLabel="Total cotizado"
-					amountName="totales"
-					id_nodo_p={oportunidad?.id}
-					cliente={oportunidad?.cliente}
-					agente={oportunidad?.agente}
-					{pedidos}
-					required
-				/>
-			{/if}
-		{/if}
 	</div>
 </div>
 

@@ -1,13 +1,19 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { StoreEditarPedido } from '$lib/stores/StoreEditarPedido.svelte';
+	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import { formatCurrency } from '$lib/utils/util';
 
-	let { item, editando, hot }: { item: any; editando?: boolean; hot?: boolean } = $props();
-	let cantidad = $state(item.cantidad || 0);
-	let precio_unitario = $state(item.precio_unitario || 0);
-
-	let total = $derived(formatCurrency(String(precio_unitario * cantidad), 'USD'));
+	let {
+		item,
+		editando,
+		hot,
+		cold
+	}: { item: any; editando?: boolean; hot?: boolean; cold?: boolean } = $props();
+	
+	let total = $derived(
+		formatCurrency(String((item.precio_unitario || 0) * (item.cantidad || 0)), 'USD')
+	);
 	let isSubmitting = $state(false);
 	let datos_relacionados = $derived({
 		cliente:
@@ -35,14 +41,29 @@
 			StoreEditarPedido.remover(item);
 		}
 	}
+	async function eliminarItem(item: any) {
+		const formData = new FormData();
+		formData.append('id', item.id);
+		const response = await fetch('/pedidos?/deletePedido', {
+			method: 'POST',
+			body: formData
+		});
+
+		if (response.ok) {
+			item.id_oportunidad = null;
+			StoreEditarPedido.eliminar(item);
+			StorePedido.eliminar(item);
+			invalidateAll();
+		}
+	}
 
 	async function guardarItem() {
 		isSubmitting = true;
 		try {
 			const formData = new FormData();
 			const { agente, inventario, ...pedidoAActualizar } = item;
-			pedidoAActualizar.cantidad = cantidad;
-			pedidoAActualizar.precio_unitario = precio_unitario;
+			pedidoAActualizar.cantidad = item.cantidad;
+			pedidoAActualizar.precio_unitario = item.precio_unitario;
 			formData.append('pedidosAActualizar', JSON.stringify([pedidoAActualizar]));
 
 			const response = await fetch('/pedidos?/updatePedido', {
@@ -59,7 +80,15 @@
 
 <div class="pedido">
 	{#if editando}
-		<button type="button" class="butter milk" onclick={() => removerItem(item)}>✕</button>
+		{#if hot}
+			<button type="button" class="butter milk" onclick={() => removerItem(item)}>✕</button>
+		{:else if cold}
+			<button type="button" class="butter milk" onclick={() => eliminarItem(item)}>✕</button>
+		{:else}
+			<button type="button" class="butter milk" onclick={() => StoreEditarPedido.remover(item)}
+				>✕</button
+			>
+		{/if}
 
 		<div class="descripcion">
 			<b>{item.inventario?.descripcion || '-'}</b>
@@ -70,21 +99,21 @@
 		</div>
 		<span class="codigo">{item.inventario?.serie || item.inventario?.codigo || 'sin código'}</span>
 
-		<input type="number" bind:value={cantidad} min="1" />
+		<input class="cantidad" type="number" bind:value={item.cantidad} min="1" />
 		<div class="precio">
-			$<input type="number" bind:value={precio_unitario} step="0.01" />
+			$<input type="number" bind:value={item.precio_unitario} step="0.01" />
 		</div>
 	{:else}
 		<div class="descripcion">
 			<b>{item.inventario?.descripcion || '-'}</b>
-            <div class="meta">
-                <p>{datos_relacionados?.agente}</p>
-                <a href="/oportunidades/{item.id_oportunidad}">{datos_relacionados.cliente}</a>
-            </div>
+			<div class="meta">
+				<p>{datos_relacionados?.agente}</p>
+				<a href="/oportunidades/{item.id_oportunidad}">{datos_relacionados.cliente}</a>
+			</div>
 		</div>
 		<span class="codigo">{item.inventario?.serie || item.inventario?.codigo || 'sin código'}</span>
-		<span class="precio">{cantidad}</span>
-		<span class="precio"><p>${precio_unitario || 0}</p></span>
+		<span class="precio">{item.cantidad || 0}</span>
+		<span class="precio"><p>${item.precio_unitario || 0}</p></span>
 	{/if}
 
 	<span>USD</span>
@@ -104,9 +133,10 @@
 		align-items: center;
 		padding: 4px;
 		cursor: pointer;
+		pointer-events: all;
 	}
 	.pedido .descripcion {
-		grid-column: span 8;
+		grid-column: span 6;
 		word-break: break-word;
 		display: flex;
 		flex-direction: column;
@@ -115,19 +145,23 @@
 		text-align: start;
 	}
 	.pedido .descripcion .meta {
-        display: flex;
-        gap: var(--a);
+		display: flex;
+		gap: var(--a);
 	}
 	.pedido .codigo {
 		grid-column: span 3;
 		word-break: break-word;
 		justify-self: flex-start;
 	}
-	.pedido .precio, .pedido .total {
+	.pedido .precio,
+	.pedido .total {
 		grid-column: span 3;
 		display: flex;
 		align-items: baseline;
 		gap: var(--a);
+	}
+	.pedido .cantidad {
+		grid-column: span 2;
 	}
 	.pedido .submit {
 		grid-column: span 2;
