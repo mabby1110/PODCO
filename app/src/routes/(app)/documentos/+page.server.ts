@@ -71,30 +71,33 @@ export const actions: Actions = {
 	addCotizacion: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const id_nodo = formData.get('id_nodo') as string;
-
+		console.log('agregar doc cotizacion\n', formData);
 		if (!id_nodo) return fail(400, { error: 'id_nodo requerido' });
 
 		const docs = await procesarDocumentos(formData, id_nodo, 'docs_cotizaciones');
-		const totales = formData.getAll('totales');
+		console.log('docs', docs);
+		if (!docs || docs.length === 0) return fail(400, { error: 'Documento no procesado' });
 
-		const documentos = docs.map((doc, i) => ({
-			...doc,
-			total: totales[i],
+		const total = formData.get('totales');
+
+		const documento = {
+			...docs[0],
+			total: total,
 			id_oportunidad: id_nodo
-		}));
+		};
 
 		const { data: result, error } = await supabase
 			.from('docs_cotizaciones')
-			.insert(documentos)
-			.select('id');
+			.insert(documento)
+			.select('id')
+			.single();
 
 		if (error) return fail(500, { error: error.message });
-		if (!result || result.length === 0)
-			return fail(500, { error: 'Error en retorno de datos de cotización' });
+		if (!result) return fail(500, { error: 'Error al recuperar ID de cotización' });
 
 		return {
 			success: true,
-			ids: result.map((r) => r.id)
+			id: result.id
 		};
 	},
 	reload: async () => {

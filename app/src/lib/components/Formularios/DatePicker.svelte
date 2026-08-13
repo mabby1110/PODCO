@@ -208,6 +208,7 @@
 
 <style>
 	.datetime-split {
+		width: fit-content;
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a, 16px);

@@ -96,7 +96,9 @@ const CLAVES_PEDIDO: (keyof Pedido)[] = [
 	'cantidad',
 	'stock',
 	'precio_unitario',
-	'id_agrupacion'
+	'id_agrupacion',
+	'id_cotizacion',
+	'estatus'
 ];
 
 const CLAVES_HISTORIAL: (keyof Historial)[] = [
@@ -305,7 +307,7 @@ export function construirDatosOportunidad(
 
 export async function procesarDocumentos(
 	formData: FormData,
-	id_nodo_p: string, // padre
+	id_nodo: string, // padre
 	archivo: string = 'adjuntos'
 ): Promise<Partial<Cotizacion>[]> {
 	// Modificado: Retorna un array
@@ -322,7 +324,7 @@ export async function procesarDocumentos(
 	}
 
 	const datosLimpios = limpiarCamposVacios(baseDatos);
-
+	console.log('datos_limpios', datosLimpios);
 	// 2. Procesar archivos e iterar para subir a drive
 	const quoteFile = formData.get(archivo) as File | null;
 
@@ -330,7 +332,7 @@ export async function procesarDocumentos(
 		try {
 			const docFiles = formData.getAll(archivo) as File[];
 			const agenteNombre = formData.get('agente') as string;
-			const opFolder = `${id_nodo_p}`;
+			const opFolder = `${id_nodo}`;
 
 			const docs: any[] = await processAttachments(docFiles, agenteNombre, opFolder);
 

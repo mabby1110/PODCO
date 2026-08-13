@@ -23,15 +23,15 @@
 	{/if}
 
 	<div class="snippets">
-		{#if actions}
-			<section class="card-actions">
-				{@render actions()}
-			</section>
-		{/if}
 		{#if content}
-			<div class="card-content">
-				{@render content()}
-			</div>
+		<div class="card-content">
+			{@render content()}
+			{#if actions}
+				<section class="card-actions">
+					{@render actions()}
+				</section>
+			{/if}
+		</div>
 		{/if}
 	</div>
 </div>

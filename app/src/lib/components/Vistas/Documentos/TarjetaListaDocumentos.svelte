@@ -2,23 +2,38 @@
 	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { formatCurrency } from '$lib/utils/util';
+	import Pedido from '../Pedidos/Pedido.svelte';
 
 	let { event } = $props();
+	console.log(
+		'pedidos estatus: ',
+		event.pedidos.some((p) => p.estatus == 'cotizado')
+	);
 </script>
 
-<ListPreview href="/oportunidades/{event.id}" ocultarAcciones style="{event.pedidos.length==0?'':'background-color:var(--color-highlight);'}">
+<ListPreview
+	href="/oportunidades/{event.id}"
+	ocultarAcciones
+	style={event.pedidos.some((p) => p.estatus == 'cotizado')
+		? 'background-color:var(--color-highlight);'
+		: ''}
+>
 	{#snippet header()}
-		<h3><b>{event.pedidos.length==0?'Descartada':'Actual'}</b>: {event?.titulo}</h3>
+		<div class="panel">
+			{#each event.pedidos as item}
+				<Pedido {item} />
+			{/each}
+		</div>
+		<div class="header">
+			<h3>
+				<b>{event.pedidos.some((p) => p.estatus == 'cotizado') ? 'Actual' : 'Descartada'}</b>: {event?.titulo}
+				{#if event.total}
+					<p>{formatCurrency(event.total, 'USD')}</p>
+				{/if}
+			</h3>
+		</div>
 	{/snippet}
 	{#snippet content()}
-		{#if event?.id_oportunidad}
-			<div class="brief">
-				<a href="/oportunidades/{event.id_oportunidad}">
-					<b>id_oportunidad:</b>
-					{event.id_oportunidad}
-				</a>
-			</div>
-		{/if}
 		{#if event?.id_actividad}
 			<div class="brief">
 				<a href="/actividades/{event.id_actividad}">
@@ -48,15 +63,20 @@
 			</div>
 		{/if}
 	{/snippet}
-	{#snippet meta()}
-		{#if event.total}
-			<p>{formatCurrency(event.total, 'USD')}</p>
-		{/if}
-		<p>{formatDateFull(parseDateTimeLocal(event.fecha_creacion))}</p>
-	{/snippet}
 </ListPreview>
 
 <style>
+	.panel {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: var(--b);
+	}
+	.header {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+	}
 	.doc-preview {
 		height: 40vh;
 	}

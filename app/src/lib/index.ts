@@ -112,10 +112,12 @@ export type Pedido = {
 	no_orden: string;
 	id_oportunidad: string;
 	id_producto: string;
+	id_cotizacion: string;
 	cantidad: string;
 	stock: boolean;
 	precio_unitario: string;
 	id_agrupacion: string;
+	estatus: string;
 };
 // MAPEO CON SHEETS
 export const historialFieldMap = {

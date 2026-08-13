@@ -173,6 +173,14 @@
 					<h3>Potencial de venta:</h3>
 				</div>
 				<div class="content">
+					{#if eventData?.pedidos.length > 0}
+						<PedidoRelacionado
+							pedidos={eventData?.pedidos ?? []}
+							oportunidad={eventData}
+							{editando}
+							{currentFase}
+						/>
+					{/if}
 					<FormOptionalInput title="+Potencial de venta">
 						<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
 					</FormOptionalInput>
@@ -187,14 +195,6 @@
 						{#each eventData?.cotizaciones as documento}
 							<TarjetaListaDocumentos event={documento} />
 						{/each}
-					{/if}
-					{#if eventData?.pedidos.length > 0}
-						<PedidoRelacionado
-							pedidos={eventData?.pedidos ?? []}
-							oportunidad={eventData}
-							{editando}
-							{currentFase}
-						/>
 					{/if}
 				</div>
 			</section>

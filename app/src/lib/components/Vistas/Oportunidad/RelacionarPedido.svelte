@@ -45,16 +45,16 @@
 		{#each lista_agrupada as grupo}
 			<button class="panel grupo" onclick={() => seleccionarAgrupacion(grupo.elementos)}>
 				{#each grupo.elementos as item}
-				{#if !item.id_oportunidad}
-					<Pedido {item} />
-				{/if}
+					{#if !item.id_oportunidad}
+						<Pedido {item} />
+					{/if}
 				{/each}
 			</button>
 		{/each}
 	{:else}
 		<div class="panel grupo">
 			{#each StoreEditarPedido.items as item}
-					<Pedido {item} editando />
+				<Pedido {item} editando />
 			{/each}
 		</div>
 		<form
@@ -67,6 +67,7 @@
 						({ agentes, inventario, oportunidades, ...item }) => ({
 							...item,
 							id_oportunidad: id_oportunidad,
+							estatus: 'aprobado',
 							id_agente: agente?.id
 						})
 					);
@@ -74,7 +75,6 @@
 					formData.append('pedidosACrear', JSON.stringify(pedidosAActualizar));
 				}
 				StoreEditarPedido.limpiar();
-				
 			}}
 		>
 			<button class="butter" type="button" onclick={() => StoreEditarPedido.limpiar()}

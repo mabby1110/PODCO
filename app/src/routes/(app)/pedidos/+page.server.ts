@@ -66,7 +66,7 @@ export const actions: Actions = {
 		let idOportunidad: string | null = null;
 
 		// PEDIDOS A ACTUALIZAR
-		console.log('pedidos a actualizar: ', idOportunidad, pedidosAActualizar);
+		console.log('pedidos a actualizar: ', pedidosAActualizar);
 		if (pedidosAActualizar.length > 0) {
 			const updatePromises = pedidosAActualizar.map(async (pedido: any) => {
 				const { data, error } = await supabase
@@ -91,6 +91,7 @@ export const actions: Actions = {
 
 			if (resultActualizacion && resultActualizacion.length > 0) {
 				idAgrupacion = resultActualizacion[0].id_agrupacion;
+				idOportunidad = resultActualizacion[0].id_oportunidad || null;
 
 				const registrosHistorial = resultActualizacion.map((pedido) => ({
 					id: generateId('BMS-H'),
@@ -135,6 +136,7 @@ export const actions: Actions = {
 		if (pedidosACrear.length > 0) {
 			const registrosACrear = pedidosACrear.map((pedido) => {
 				pedido.id = generateId('BMS-PD');
+				pedido.id_agrupacion = idAgrupacion;
 				return construirDatosPedido(pedido);
 			});
 
@@ -147,7 +149,6 @@ export const actions: Actions = {
 				console.log(errorCreacion);
 				return fail(500, { error: errorCreacion.message });
 			}
-			console.log(resultCreacion);
 			if (resultCreacion && resultCreacion.length > 0) {
 				const registrosHistorialCreacion = resultCreacion.map((pedido) => ({
 					id: generateId('BMS-H'),

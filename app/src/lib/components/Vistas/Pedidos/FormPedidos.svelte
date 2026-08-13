@@ -47,7 +47,9 @@
 		{#if StorePedido.items.length !== 0}
 			<div class="productos">
 				{#each StorePedido.items as item}
-					<Pedido item={item.pedido} editando hot/>
+					{#if !item.pedido.id_cotizacion}
+						<Pedido item={item.pedido} editando hot />
+					{/if}
 				{/each}
 				<div class="acciones-tabla">
 					<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
@@ -79,9 +81,11 @@
 		action="/pedidos?/updatePedido"
 		use:enhance={({ formData }) => {
 			let id_agrupacion_base = null;
+			let id_oportunidad_base = null;
 
 			if (StorePedido.items.length > 0) {
 				id_agrupacion_base = StorePedido.items[0].pedido.id_agrupacion;
+				id_oportunidad_base = StorePedido.items[0].pedido.id_oportunidad;
 
 				const pedidosAActualizar = StorePedido.items.map((item) => ({
 					id: item.pedido.id,
@@ -101,10 +105,11 @@
 				const nuevoPedido = StorePedidoNuevo.items.map((item) => ({
 					id_producto: item.producto.id,
 					id_agente,
-					id_oportunidad: id_oportunidad || null,
+					id_oportunidad: id_oportunidad_base || id_oportunidad || null,
 					cantidad: item.piezas,
 					precio_unitario: item.producto.precio,
 					stock: item.stock,
+					estatus: id_oportunidad_base ? 'aprobado' : 'borrador',
 					...(id_agrupacion_base && { id_agrupacion: id_agrupacion_base })
 				}));
 

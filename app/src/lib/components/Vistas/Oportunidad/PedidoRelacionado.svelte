@@ -28,14 +28,14 @@
 				<Pedido {item} cold={editando} />
 			{/if}
 		{/each}
-		{#if editando}
+		{#if editando && pedidos.some(p=>p.estatus=='aprobado')}
 			<div class="acciones">
 				<SubirCotizacion
 					name={'docs_cotizaciones'}
 					amountLabel="Total cotizado"
 					amountName="totales"
-					id_nodo_p={oportunidad?.id}
-					cliente={oportunidad?.cliente}
+					id_nodo={oportunidad?.id}
+					id_cliente={oportunidad?.cliente.id}
 					agente={oportunidad?.agente}
 					{pedidos}
 					required
