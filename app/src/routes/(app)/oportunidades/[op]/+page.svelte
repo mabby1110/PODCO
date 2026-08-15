@@ -18,6 +18,7 @@
 	import { fases } from '$lib';
 	import { formatCurrency, getStyleForPhase } from '$lib/utils/util.js';
 	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
+	import Pedidos from '$lib/components/Vistas/Pedidos/Pedidos.svelte';
 
 	let { data } = $props();
 
@@ -193,7 +194,9 @@
 				<div class="content">
 					{#if eventData?.cotizaciones.length > 0}
 						{#each eventData?.cotizaciones as documento}
-							<TarjetaListaDocumentos event={documento} />
+							{#if documento.pedidos.some((p) => p.estatus == 'cotizado') || editando}
+								<Pedidos {documento} />
+							{/if}
 						{/each}
 					{/if}
 				</div>

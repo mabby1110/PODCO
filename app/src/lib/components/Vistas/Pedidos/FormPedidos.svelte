@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import PreviewListaPedidos from './PreviewListaPedidos.svelte';
 	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
-	import Pedido from '$lib/components/Vistas/Pedidos/Pedido.svelte';
+	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedido.svelte';
 
 	let { id_oportunidad }: { id_oportunidad?: string } = $props();
 	const copiarAExcel = () => {
@@ -48,7 +48,11 @@
 			<div class="productos">
 				{#each StorePedido.items as item}
 					{#if !item.pedido.id_cotizacion}
-						<Pedido item={item.pedido} editando hot />
+					<TarjetaPedido
+							bind:item={item.pedido}
+							editando={true}
+							hot={true}
+						/>
 					{/if}
 				{/each}
 				<div class="acciones-tabla">
@@ -109,7 +113,7 @@
 					cantidad: item.piezas,
 					precio_unitario: item.producto.precio,
 					stock: item.stock,
-					estatus: id_oportunidad_base ? 'aprobado' : 'borrador',
+					estatus: id_oportunidad_base ? 'seleccionado' : 'borrador',
 					...(id_agrupacion_base && { id_agrupacion: id_agrupacion_base })
 				}));
 
@@ -120,6 +124,7 @@
 				if (result.type === 'success') {
 					StorePedido.limpiar();
 					StorePedidoNuevo.limpiar();
+					goto('/pedidos');
 					invalidateAll();
 				}
 			};

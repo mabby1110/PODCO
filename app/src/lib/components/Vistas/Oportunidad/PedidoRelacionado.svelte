@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Pedido from '$lib/components/Vistas/Pedidos/Pedido.svelte';
+	import Pedido from '$lib/components/Vistas/Pedidos/TarjetaPedido.svelte';
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { goto } from '$app/navigation';
@@ -21,36 +21,47 @@
 	}
 </script>
 
-<div class="pedido">
-	<div class="panel grupo">
-		{#each pedidos as item}
-			{#if item.estatus === 'aprobado'}
-				<Pedido {item} cold={editando} />
-			{/if}
-		{/each}
-		{#if editando && pedidos.some(p=>p.estatus=='aprobado')}
-			<div class="acciones">
-				<SubirCotizacion
-					name={'docs_cotizaciones'}
-					amountLabel="Total cotizado"
-					amountName="totales"
-					id_nodo={oportunidad?.id}
-					id_cliente={oportunidad?.cliente.id}
-					agente={oportunidad?.agente}
-					{pedidos}
-					required
-				/>
-				<button class="butter editar" onclick={editarPedidoSeleccionado}>Editar</button>
-			</div>
-		{/if}
-	</div>
+<div class="pedidos-relacionados">
+    {#if pedidos.some((p) => p.estatus === 'seleccionado')}
+        <!-- Solo se renderiza la caja si hay elementos seleccionados pendientes de cotizar -->
+        <div class="panel grupo">
+            {#each pedidos.filter((i) => i.estatus === 'seleccionado') as item}
+                <Pedido {item} cold={editando} />
+            {/each}
+            
+            <div class="acciones">
+                <SubirCotizacion
+                    name={'docs_cotizaciones'}
+                    amountLabel="Total cotizado"
+                    amountName="totales"
+                    id_nodo={oportunidad?.id}
+                    id_cliente={oportunidad?.cliente.id}
+                    agente={oportunidad?.agente}
+                    {pedidos}
+                    required
+                />
+                <button class="butter editar" onclick={editarPedidoSeleccionado}>
+                    Editar
+                </button>
+            </div>
+        </div>   
+    {:else}
+        <!-- Opcional: Qué mostrar si no hay seleccionados ni cotizados -->
+        <p class="mensaje-vacio">No hay pedidos seleccionados en este momento.</p>
+    {/if}
 </div>
 
 <style>
-	.pedido {
+	.pedidos-relacionados {
+		width: 100%;
 		display: flex;
 		flex-direction: column;
-		width: 100%;
+	}
+	.grupo {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+		padding: var(--a);
 	}
 	.acciones {
 		width: 100%;

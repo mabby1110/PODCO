@@ -21,28 +21,6 @@
 		agente: item.agentes?.nombre
 	});
 
-	async function removerItem(item: any) {
-		if (item.id_oportunidad) {
-			const formData = new FormData();
-			formData.append(
-				'pedidosAActualizar',
-				JSON.stringify([{ id: item.id, id_oportunidad: null }])
-			);
-			const response = await fetch('/pedidos?/updatePedido', {
-				method: 'POST',
-				body: formData
-			});
-
-			if (response.ok) {
-				item.id_oportunidad = null;
-				StoreEditarPedido.remover(item);
-				invalidateAll();
-			}
-		} else {
-			StoreEditarPedido.remover(item);
-		}
-	}
-
 	async function eliminar(item: any) {
 		const formData = new FormData();
 		formData.append('id', item.id);
@@ -99,143 +77,125 @@
 	}
 </script>
 
-{item.estatus}
 <div class="pedido">
-	<div class="celda acciones">
+	<div class="descripcion">
 		{#if hot}
-			<div class="acciones-hot">
+			<div class="acciones">
 				<button type="button" class="butter milk" onclick={() => eliminar(item)}>✕</button>
 				<input
 					class="descartar"
 					type="checkbox"
-					checked={item.estatus === 'aprobado'}
+					checked={item.estatus === 'seleccionado'}
 					onchange={(e) => {
-						item.estatus = e.currentTarget.checked ? 'aprobado' : 'descartado';
+						item.estatus = e.currentTarget.checked ? 'seleccionado' : 'descartado';
 						guardarItem();
 					}}
 				/>
 			</div>
 		{:else if cold}
-			<button type="button" class="butter milk" onclick={() => descartar(item)}>✕</button>
+			<div class="acciones">
+				<button type="button" class="butter milk" onclick={() => descartar(item)}>✕</button>
+			</div>
 		{/if}
-	</div>
-
-	<div class="celda descripcion">
-		<span class="label">Descripción</span>
-		<b>{item.inventario?.descripcion || '-'}</b>
+		<span
+			class="chip"
+			class:seleccionado={item.estatus === 'seleccionado'}
+			class:cotizado={item.estatus === 'cotizado'}>{item.estatus}</span
+		>
+		<b class="titulo">{item.inventario?.descripcion || '-'}</b>
 		<div class="meta">
+			<span>{item.inventario?.serie || item.inventario?.codigo || 'sin código'}</span>
 			<p>{datos_relacionados?.agente}</p>
 			<a href="/oportunidades/{item.id_oportunidad}">{datos_relacionados.cliente}</a>
 		</div>
 	</div>
 
-	<div class="celda codigo">
-		<span class="label">Código</span>
-		<span>{item.inventario?.serie || item.inventario?.codigo || 'sin código'}</span>
+	<div class="editable">
+		<div class="celda cantidad">
+			<span class="label">Cant.</span>
+			{#if editando}
+				<input class="input-num" type="number" bind:value={item.cantidad} min="1" />
+			{:else}
+				<span>{item.cantidad || 0}</span>
+			{/if}
+		</div>
+
+		<div class="celda precio">
+			<span class="label">Precio (USD)</span>
+			{#if editando}
+				<div class="wrapper-precio">
+					<span>$</span>
+					<input class="input-num" type="number" bind:value={item.precio_unitario} step="0.01" />
+				</div>
+			{:else}
+				<span>${item.precio_unitario || 0}</span>
+			{/if}
+		</div>
 	</div>
 
-	<div class="celda cantidad">
-		<span class="label">Cant.</span>
-		{#if editando}
-			<input class="input-num" type="number" bind:value={item.cantidad} min="1" />
-		{:else}
-			<span>{item.cantidad || 0}</span>
-		{/if}
-	</div>
-
-	<div class="celda precio">
-		<span class="label">Precio (USD)</span>
-		{#if editando}
-			<div class="wrapper-precio">
-				<span>$</span>
-				<input class="input-num" type="number" bind:value={item.precio_unitario} step="0.01" />
-			</div>
-		{:else}
-			<span>${item.precio_unitario || 0}</span>
-		{/if}
-	</div>
-
-	<div class="celda total">
+	<div class="total">
 		<span class="label">Total</span>
-		<span class="valor-total">{total}</span>
+		<h3 class="valor-total">{total}</h3>
 	</div>
 </div>
 
 <style>
 	.pedido {
-		display: grid;
-		grid-template-columns: min-content 3fr 2fr 1fr 1.5fr 1.5fr;
-		gap: var(--a, 12px);
-		padding: 8px;
-		align-items: start;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: var(--a);
+		border-bottom: 1px dashed var(--color-muted);
+		margin-bottom: var(--a);
+		padding-bottom: var(--a);
 	}
-    .pedido input, .butter {
+	.acciones {
+		display: flex;
+		pointer-events: all;
+	}
+	.descripcion {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: var(--a);
+	}
+	.descripcion .titulo {
+		min-width: 70%;
+	}
+	.editable {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		flex-grow: 1;
         pointer-events: all;
-    }
-
-	/* Grid responsivo */
-	@media (max-width: 768px) {
-		.pedido {
-			grid-template-columns: 1fr 1fr;
-		}
-		.acciones {
-			grid-column: span 2;
-			flex-direction: row;
-			justify-content: flex-end;
-		}
-		.descripcion {
-			grid-column: span 2;
-		}
 	}
-
+	.label {
+		display: block;
+		font-size: smaller;
+		font-weight: lighter;
+		color: var(--color-muted);
+	}
 	.celda {
 		display: flex;
 		flex-direction: column;
-		gap: 4px;
-		word-break: break-word;
 	}
-
-	.label {
-		font-size: 0.65rem;
-		text-transform: uppercase;
-		font-weight: 700;
-		letter-spacing: 0.5px;
-		color: var(--color-muted);
+	.cantidad {
+		width: var(--e);
 	}
-
-	.descripcion .meta {
-		display: flex;
-		gap: var(--a, 8px);
-		font-size: 0.8rem;
-		color: #555;
-	}
-
-	.acciones-hot {
+	.total {
+		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		gap: 8px;
+		align-items: flex-end;
 	}
-
-	.descartar {
-		width: var(--b, 16px) !important;
-		cursor: pointer;
-	}
-
-	.wrapper-precio {
+	.meta {
 		display: flex;
-		align-items: center;
-		gap: 4px;
+		gap: var(--a);
 	}
-
-	.input-num {
-		width: 100%;
-		min-width: 60px;
-		padding: 4px;
+	.seleccionado {
+		background-color: var(--color-2);
 	}
-
-	.valor-total {
-		font-weight: bold;
+	.cotizado {
+		background-color: var(--color-3);
 	}
 </style>

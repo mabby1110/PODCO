@@ -5,7 +5,7 @@ Especiales
 
 */
 :root {
-	--color-primary: #e1e5f2aa;
+	--color-primary: #e1e5f2db;
 	--color-secondary: #b8c0d999;
 	--color-foreground: #ffffffbb;
 	--color-background: #ffffffaa;
@@ -405,9 +405,9 @@ section .block {
 }
 
 .chip {
-	background-color: var(--color-highlight);
-	padding: 4px var(--a);
-	border-radius: 16px;
+	background-color: var(--color-secondary);
+	padding: 2px 4px;
+	border-radius: var(--a);
 	display: flex;
 	align-items: center;
 	gap: 0.4rem;

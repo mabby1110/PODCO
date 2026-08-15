@@ -11,7 +11,7 @@
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
-	import Pedido from '$lib/components/Vistas/Pedidos/Pedido.svelte';
+	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedido.svelte';
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
 	import { goto } from '$app/navigation';
@@ -95,7 +95,7 @@
 		{#if !isGrouped}
 			{#each lista_ordenada as item}
 				<div class="panel">
-					<Pedido {item} />
+					<TarjetaPedido {item} />
 				</div>
 			{/each}
 		{:else}
@@ -103,7 +103,7 @@
 				<Grupo {agrupacion} showByDefault={show}>
 					<div class="panel">
 						{#each agrupacion.items as item (item.id)}
-							<Pedido {item} />
+							<TarjetaPedido {item} />
 						{/each}
 						<div class="acciones-tabla">
 							<button class="butter" type="button" onclick={() => copiarAExcel(agrupacion.items)}>

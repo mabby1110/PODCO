@@ -2,7 +2,7 @@
 	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { formatCurrency } from '$lib/utils/util';
-	import Pedido from '../Pedidos/Pedido.svelte';
+	import TarjetaPedido from '../Pedidos/TarjetaPedido.svelte';
 
 	let { event } = $props();
 	console.log(
@@ -15,13 +15,13 @@
 	href="/oportunidades/{event.id}"
 	ocultarAcciones
 	style={event.pedidos.some((p) => p.estatus == 'cotizado')
-		? 'background-color:var(--color-highlight);'
+		? 'background-color:var(--color-3);'
 		: ''}
 >
 	{#snippet header()}
 		<div class="panel">
 			{#each event.pedidos as item}
-				<Pedido {item} />
+				<TarjetaPedido {item} />
 			{/each}
 		</div>
 		<div class="header">
