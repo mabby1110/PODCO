@@ -10,7 +10,7 @@
 		oportunidad,
 		editando = false
 	}: { pedidos: any[]; oportunidad?: any; editando?: boolean; currentFase?: number } = $props();
-	$effect(() => console.log(pedidos));
+
 	function editarPedidoSeleccionado() {
 		StorePedido.limpiar();
 		pedidos.forEach((item) => {

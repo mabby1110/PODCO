@@ -78,10 +78,10 @@
 </script>
 
 <div class="pedido">
-	<div class="descripcion">
+	<div class="encabezado">
 		{#if hot}
-			<div class="acciones">
-				<button type="button" class="butter milk" onclick={() => eliminar(item)}>✕</button>
+			<button type="button" class="butter milk" onclick={() => eliminar(item)}>✕</button>
+			<div class="butter milk">
 				<input
 					class="descartar"
 					type="checkbox"
@@ -110,9 +110,9 @@
 		</div>
 	</div>
 
-	<div class="editable">
+	<div class="descripcion">
 		<div class="celda cantidad">
-			<span class="label">Cant.</span>
+			<span class="label">Cantidad</span>
 			{#if editando}
 				<input class="input-num" type="number" bind:value={item.cantidad} min="1" />
 			{:else}
@@ -124,18 +124,16 @@
 			<span class="label">Precio (USD)</span>
 			{#if editando}
 				<div class="wrapper-precio">
-					<span>$</span>
 					<input class="input-num" type="number" bind:value={item.precio_unitario} step="0.01" />
 				</div>
 			{:else}
 				<span>${item.precio_unitario || 0}</span>
 			{/if}
 		</div>
-	</div>
-
-	<div class="total">
-		<span class="label">Total</span>
-		<h3 class="valor-total">{total}</h3>
+		<div class="total">
+			<span class="label">Total</span>
+			<h3 class="valor-total">{total}</h3>
+		</div>
 	</div>
 </div>
 
@@ -143,54 +141,38 @@
 	.pedido {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: baseline;
-		gap: var(--a);
-		border-bottom: 1px dashed var(--color-muted);
-		margin-bottom: var(--a);
-		padding-bottom: var(--a);
+		justify-content: flex-end;
 	}
-	.acciones {
+	.encabezado {
+		width: 100%;
 		display: flex;
-		pointer-events: all;
+		flex-wrap: wrap;
+		gap: 0 var(--a);
+		align-items: center;
+	}
+	.encabezado .meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 var(--a);
 	}
 	.descripcion {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: baseline;
-		gap: var(--a);
-	}
-	.descripcion .titulo {
-		min-width: 70%;
-	}
-	.editable {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
 		flex-grow: 1;
-        pointer-events: all;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0 var(--a);
+	}
+	.descripcion .celda {
+		min-width: var(--d);
+		display: flex;
+		flex-direction: column;
+	}
+	.descripcion .celda input {
+		width: 100%;
 	}
 	.label {
-		display: block;
-		font-size: smaller;
 		font-weight: lighter;
-		color: var(--color-muted);
-	}
-	.celda {
-		display: flex;
-		flex-direction: column;
-	}
-	.cantidad {
-		width: var(--e);
-	}
-	.total {
-		flex-grow: 1;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-	}
-	.meta {
-		display: flex;
-		gap: var(--a);
+		font-size: smaller;
 	}
 	.seleccionado {
 		background-color: var(--color-2);
