@@ -5,18 +5,15 @@
 	import TarjetaPedido from '../Pedidos/TarjetaPedido.svelte';
 
 	let { event } = $props();
-	console.log(
-		'pedidos estatus: ',
-		event.pedidos.some((p) => p.estatus == 'cotizado')
-	);
+	console.log(event);
 </script>
 
 <ListPreview
 	href="/oportunidades/{event.id}"
 	ocultarAcciones
-	style={event.pedidos.some((p) => p.estatus == 'cotizado')
-		? 'background-color:var(--color-3);'
-		: ''}
+	// style={event.pedidos.some((p) => p.estatus == 3)
+	// 	? 'background-color:var(--color-3);'
+	// 	: ''}
 >
 	{#snippet header()}
 		<div class="panel">
@@ -26,7 +23,7 @@
 		</div>
 		<div class="header">
 			<h3>
-				<b>{event.pedidos.some((p) => p.estatus == 'cotizado') ? 'Actual' : 'Descartada'}</b>: {event?.titulo}
+				<b>{event.pedidos.some((p) => p.estatus == 3) ? 'Actual' : 'Descartada'}</b>: {event?.titulo}
 				{#if event.total}
 					<p>{formatCurrency(event.total, 'USD')}</p>
 				{/if}

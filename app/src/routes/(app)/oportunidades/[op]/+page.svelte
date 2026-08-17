@@ -20,6 +20,7 @@
 	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
 	import Pedidos from '$lib/components/Vistas/Pedidos/Pedidos.svelte';
 	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedido.svelte';
+	import PedidosGanados from '$lib/components/Vistas/Pedidos/PedidosGanados.svelte';
 
 	let { data } = $props();
 
@@ -60,6 +61,7 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let editando = $state(false);
+	console.log(event);
 </script>
 
 <Card headerStyle={eventData?.style}>
@@ -210,38 +212,35 @@
 					{#if eventData?.cotizaciones.length > 0}
 						{#each eventData?.cotizaciones as documento}
 							{#if documento.pedidos.some((p) => p.estatus == 3) || editando}
-								<Pedidos {documento} />
+								<Pedidos
+									{documento}
+									pedidos={eventData?.pedidos ?? []}
+									oportunidad={eventData}
+									{editando}
+								/>
 							{/if}
 						{/each}
 					{/if}
 				</div>
 			</section>
 		{/if}
-		{#if currentFase == 3}
+		{#if currentFase >= 3 && currentFase <= 4}
 			<section class="occ">
 				<div class="header">
 					<h3>Orden de compra:</h3>
 				</div>
 				<div class="content">
+					{eventData?.occ.length}
 					{#if eventData?.occ.length > 0}
 						{#each eventData?.occ as documento}
-							<TarjetaListaDocumentos event={documento} />
+							<PedidosGanados
+								{documento}
+								pedidos={eventData?.pedidos ?? []}
+								oportunidad={eventData}
+								{editando}
+							/>
 						{/each}
 					{/if}
-
-					<FormOptionalInput title="+Orden de compra">
-						<SubirOcc
-							name="docs_occ"
-							amountLabel="Total"
-							amountName="totales"
-							id_nodo_p={eventData?.id}
-							cliente={eventData?.cliente}
-							agente={eventData?.agente}
-							action="/documentos?/add"
-							required
-							multiple
-						/>
-					</FormOptionalInput>
 				</div>
 			</section>
 		{/if}

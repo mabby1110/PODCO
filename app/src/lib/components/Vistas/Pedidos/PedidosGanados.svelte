@@ -1,6 +1,4 @@
 <script lang="ts">
-	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
-	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { formatCurrency } from '$lib/utils/util';
 	import SubirOcc from '../Documentos/SubirOcc.svelte';
 	import TarjetaPedido from '../Pedidos/TarjetaPedido.svelte';
@@ -14,11 +12,11 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	class="panel"
-	style={documento.pedidos.some((p) => p.estatus == 3) ? 'background-color:var(--color-3);' : ''}
+	style={documento.pedidos.some((p) => p.estatus == 4) ? 'background-color:var(--color-4);' : ''}
 >
 	<div class="header" onclick={() => (show = !show)}>
 		<h3>
-			<b>{documento.pedidos.some((p) => p.estatus == 3) ? 'Cotización actual' : 'Descartada'}</b>: {documento?.titulo}
+			<b>Ganada</b>: {documento?.titulo}
 			{#if documento.total}
 				<p>{formatCurrency(documento.total, 'USD')}</p>
 			{/if}

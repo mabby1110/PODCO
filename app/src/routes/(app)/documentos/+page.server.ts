@@ -100,6 +100,38 @@ export const actions: Actions = {
 			id: result.id
 		};
 	},
+	addOcc: async ({ request, locals: { supabase } }) => {
+		const formData = await request.formData();
+		const id_nodo = formData.get('id_nodo') as string;
+		console.log('agregar doc orden de compra cliente (occ)\n', formData);
+		if (!id_nodo) return fail(400, { error: 'id_nodo requerido' });
+
+		const docs = await procesarDocumentos(formData, id_nodo, 'docs_occ');
+		console.log('docs', docs);
+		if (!docs || docs.length === 0) return fail(400, { error: 'Documento no procesado' });
+
+		const total = formData.get('totales');
+
+		const documento = {
+			...docs[0],
+			total: total,
+			id_oportunidad: id_nodo
+		};
+
+		const { data: result, error } = await supabase
+			.from('docs_occ')
+			.insert(documento)
+			.select('id')
+			.single();
+
+		if (error) return fail(500, { error: error.message });
+		if (!result) return fail(500, { error: 'Error al recuperar ID de cotización' });
+
+		return {
+			success: true,
+			id: result.id
+		};
+	},
 	reload: async () => {
 		return { success: true };
 	},

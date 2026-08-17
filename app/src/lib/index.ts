@@ -113,6 +113,7 @@ export type Pedido = {
 	id_oportunidad: string;
 	id_producto: string;
 	id_cotizacion: string;
+	id_occ: string;
 	cantidad: string;
 	stock: boolean;
 	precio_unitario: string;
@@ -318,7 +319,7 @@ export const fases = [
 		id_fase: 2,
 		actual: 'Analisis',
 		accion: 'Negociar',
-		placeholder: 'Validar alcance, condiciones técnicas y viabilidad comercial',
+		placeholder: 'Validar alcance, condiciones técnicas y viabilidad del producto(s) seleccionado',
 		color: '5ca8ff99'
 	},
 	{

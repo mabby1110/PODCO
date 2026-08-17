@@ -98,6 +98,7 @@ const CLAVES_PEDIDO: (keyof Pedido)[] = [
 	'precio_unitario',
 	'id_agrupacion',
 	'id_cotizacion',
+	'id_occ',
 	'estatus'
 ];
 
