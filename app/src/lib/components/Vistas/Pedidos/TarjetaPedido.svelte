@@ -5,7 +5,7 @@
 	import { formatCurrency } from '$lib/utils/util';
 
 	let {
-		item,
+		item = $bindable(),
 		editando,
 		hot,
 		cold
@@ -116,7 +116,7 @@
 			{#if editando}
 				<input class="input-num" type="number" bind:value={item.cantidad} min="1" />
 			{:else}
-				<span>{item.cantidad || 0}</span>
+				<h3>{item.cantidad || 0}</h3>
 			{/if}
 		</div>
 
@@ -127,7 +127,7 @@
 					<input class="input-num" type="number" bind:value={item.precio_unitario} step="0.01" />
 				</div>
 			{:else}
-				<span>${item.precio_unitario || 0}</span>
+				<h3>${item.precio_unitario || 0}</h3>
 			{/if}
 		</div>
 		<div class="total">
@@ -141,9 +141,12 @@
 	.pedido {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: flex-end;
+		pointer-events: all;
+		border-bottom: 1px dashed var(--color-muted);
+		padding: var(--a);
 	}
 	.encabezado {
+		max-width: 70vw;
 		width: 100%;
 		display: flex;
 		flex-wrap: wrap;
@@ -154,13 +157,14 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0 var(--a);
+		width: 100%;
 	}
 	.descripcion {
 		flex-grow: 1;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		gap: 0 var(--a);
+		justify-content: flex-end;
+		gap: 0 var(--b);
 	}
 	.descripcion .celda {
 		min-width: var(--d);

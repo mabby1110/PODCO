@@ -3,9 +3,9 @@
 	import { goto, invalidateAll } from '$app/navigation';
 	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
-	import PreviewListaPedidos from './PreviewListaPedidos.svelte';
 	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
 	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedido.svelte';
+	import TarjetaPedidoNuevo from './TarjetaPedidoNuevo.svelte';
 
 	let { id_oportunidad }: { id_oportunidad?: string } = $props();
 	const copiarAExcel = () => {
@@ -47,12 +47,8 @@
 		{#if StorePedido.items.length !== 0}
 			<div class="productos">
 				{#each StorePedido.items as item}
-					{#if !item.pedido.id_cotizacion}
-					<TarjetaPedido
-							bind:item={item.pedido}
-							editando={true}
-							hot={true}
-						/>
+					{#if !item.pedido?.id_cotizacion}
+						<TarjetaPedido bind:item={item.pedido} editando={true} hot={true} />
 					{/if}
 				{/each}
 				<div class="acciones-tabla">
@@ -67,8 +63,8 @@
 		{#if StorePedidoNuevo.items.length !== 0}
 			<h3>{StorePedido.items.length > 0 ? 'Agregar a' : 'Nuevo'} Pedido</h3>
 			<div class="productos">
-				{#each StorePedidoNuevo.items as item}
-					<PreviewListaPedidos {item} isEdicion={false} />
+				{#each StorePedidoNuevo.items as _, i}
+					<TarjetaPedidoNuevo bind:item={StorePedidoNuevo.items[i]} />
 				{/each}
 				<div class="acciones-tabla">
 					<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
