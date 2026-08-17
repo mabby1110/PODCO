@@ -108,7 +108,7 @@
 					cantidad: item.piezas,
 					precio_unitario: item.producto.precio,
 					stock: item.stock,
-					estatus: id_oportunidad_base ? 'seleccionado' : 'borrador',
+					estatus: id_oportunidad_base ? 2 : 1,
 					...(id_agrupacion_base && { id_agrupacion: id_agrupacion_base })
 				}));
 

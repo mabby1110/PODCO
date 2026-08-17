@@ -20,9 +20,7 @@
 		StoreRelacionarPedido.limpiar();
 
 		// Filtramos los elementos válidos aquí mismo
-		const elementosValidos = elementos.filter(
-			(i) => i.estatus === 1
-		);
+		const elementosValidos = elementos.filter((i) => i.estatus === 1);
 
 		elementosValidos.forEach((item) => {
 			StoreRelacionarPedido.agregar(item);
@@ -43,14 +41,20 @@
 </script>
 
 {#if StoreRelacionarPedido.items.length === 0}
-	<button class="butter" onclick={() => goto('/inventario')}>+Pedido nuevo</button>
+	<button
+		class="butter"
+		onclick={() => {
+			StorePedido.limpiar();
+			goto('/inventario');
+		}}>+Pedido nuevo</button
+	>
 {/if}
 
 <p class="agente">Agente: {agente?.nombre}</p>
 
 <div class="pedidos">
 	{#if StoreRelacionarPedido.items.length === 0}
-		{#each lista_agrupada.filter( (grupo) => grupo.elementos.some((i) => i.estatus === 1) ) as grupo}
+		{#each lista_agrupada.filter((grupo) => grupo.elementos.some((i) => i.estatus === 1)) as grupo}
 			<button class="panel grupo" onclick={() => seleccionarAgrupacion(grupo.elementos)}>
 				{#each grupo.elementos.filter((i) => i.estatus === 1) as item}
 					<TarjetaPedido {item} />
