@@ -67,7 +67,6 @@
 					<TarjetaPedidoNuevo bind:item={StorePedidoNuevo.items[i]} />
 				{/each}
 				<div class="acciones-tabla">
-					<button class="butter" type="button" onclick={copiarAExcel}> Copiar Datos </button>
 					<button class="butter" type="button" onclick={() => StorePedidoNuevo.limpiar()}>
 						Limpiar
 					</button>
@@ -115,12 +114,15 @@
 
 				formData.append('pedidosACrear', JSON.stringify(nuevoPedido));
 			}
-
+			if (id_oportunidad_base) {
+				goto(`/oportunidades/${id_oportunidad_base}`);
+			} else {
+				goto('/pedidos');
+			}
 			return async ({ result }) => {
 				if (result.type === 'success') {
 					StorePedido.limpiar();
 					StorePedidoNuevo.limpiar();
-					goto('/pedidos');
 					invalidateAll();
 				}
 			};
@@ -129,7 +131,7 @@
 		<div class="acciones">
 			<FormSelectAgente bind:selected={id_agente} />
 			<button
-				class="butter submit"
+				class="butter submit matcha"
 				type="submit"
 				disabled={StorePedidoNuevo.items.length === 0 && StorePedido.items.length === 0}
 			>

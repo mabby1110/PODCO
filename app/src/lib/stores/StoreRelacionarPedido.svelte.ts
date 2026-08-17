@@ -40,4 +40,4 @@ class EditarPedido {
     }
 }
 
-export const StoreEditarPedido = new EditarPedido();
+export const StoreRelacionarPedido = new EditarPedido();

@@ -15,12 +15,10 @@ class Productos {
 	agregar(producto: DatosProducto) {
 		const existente = this.items.find((i) => i.producto.id === producto.id);
 		if (existente) {
-			if (producto.cantidad > existente.piezas) {
-				existente.piezas += 1;
-				existente.stock = true;
-			}
+			existente.piezas += 1;
+			existente.stock = true;
 		} else {
-			this.items.push({ producto, piezas: 1, stock: true});
+			this.items.push({ producto, piezas: 1, stock: false });
 		}
 	}
 

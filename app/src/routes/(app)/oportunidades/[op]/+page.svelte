@@ -19,6 +19,7 @@
 	import { formatCurrency, getStyleForPhase } from '$lib/utils/util.js';
 	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
 	import Pedidos from '$lib/components/Vistas/Pedidos/Pedidos.svelte';
+	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedido.svelte';
 
 	let { data } = $props();
 
@@ -59,7 +60,6 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let editando = $state(false);
-	console.log('eventData', eventData);
 </script>
 
 <Card headerStyle={eventData?.style}>
@@ -148,6 +148,24 @@
 			</CustomInput>
 		{/if}
 
+		<section>
+			<div class="header">
+				<h3>Pedidos:</h3>
+			</div>
+			<div class="content">
+				<FormOptionalInput title="+Potencial de venta">
+					<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
+				</FormOptionalInput>
+				<FormOptionalInput title="historial pedidos">
+					<div class="panel">
+						{#each eventData?.pedidos as item}
+							<TarjetaPedido {item} />
+						{/each}
+					</div>
+				</FormOptionalInput>
+			</div>
+		</section>
+
 		{#if currentFase == 1}
 			<section>
 				<div class="header">
@@ -182,9 +200,6 @@
 							{currentFase}
 						/>
 					{/if}
-					<FormOptionalInput title="+Potencial de venta">
-						<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
-					</FormOptionalInput>
 				</div>
 			</section>
 			<section>
@@ -194,7 +209,7 @@
 				<div class="content">
 					{#if eventData?.cotizaciones.length > 0}
 						{#each eventData?.cotizaciones as documento}
-							{#if documento.pedidos.some((p) => p.estatus == 'cotizado') || editando}
+							{#if documento.pedidos.some((p) => p.estatus == 3) || editando}
 								<Pedidos {documento} />
 							{/if}
 						{/each}

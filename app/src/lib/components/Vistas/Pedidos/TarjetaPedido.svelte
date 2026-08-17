@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { StoreEditarPedido } from '$lib/stores/StoreEditarPedido.svelte';
+	import { StoreRelacionarPedido } from '$lib/stores/StoreRelacionarPedido.svelte';
 	import { StorePedido } from '$lib/stores/StorePedido.svelte';
 	import { formatCurrency } from '$lib/utils/util';
 
@@ -20,8 +20,27 @@
 			item.oportunidades?.clientes.razon_social || item.oportunidades?.clientes.nombre_comercial,
 		agente: item.agentes?.nombre
 	});
-
+	let estatus = $derived.by(() => {
+		switch (item.estatus) {
+			case 1:
+				return 'borrador';
+			case 2:
+				return 'seleccionado';
+			case 3:
+				return 'cotizado';
+			case 4:
+				return 'venta';
+			default:
+				return 'descartado';
+		}
+	});
 	async function eliminar(item: any) {
+		const confirmacion = confirm('¿Estás seguro de que deseas eliminar este pedido?');
+
+		if (!confirmacion) {
+			return;
+		}
+
 		const formData = new FormData();
 		formData.append('id', item.id);
 		const response = await fetch('/pedidos?/deletePedido', {
@@ -31,13 +50,14 @@
 
 		if (response.ok) {
 			item.id_oportunidad = null;
-			StoreEditarPedido.eliminar(item);
+			StoreRelacionarPedido.eliminar(item);
 			StorePedido.eliminar(item);
 			invalidateAll();
 		}
 	}
 
 	async function descartar(item: any) {
+		isSubmitting = true;
 		const formData = new FormData();
 		formData.append('pedidosAActualizar', JSON.stringify([{ id: item.id, estatus: 'descartado' }]));
 		const response = await fetch('/pedidos?/updatePedido', {
@@ -46,8 +66,9 @@
 		});
 
 		if (response.ok) {
+			isSubmitting = false;
 			item.id_oportunidad = null;
-			StoreEditarPedido.eliminar(item);
+			StoreRelacionarPedido.eliminar(item);
 			StorePedido.eliminar(item);
 			invalidateAll();
 		}
@@ -79,29 +100,33 @@
 
 <div class="pedido">
 	<div class="encabezado">
-		{#if hot}
-			<button type="button" class="butter milk" onclick={() => eliminar(item)}>✕</button>
-			<div class="butter milk">
-				<input
-					class="descartar"
-					type="checkbox"
-					checked={item.estatus === 'seleccionado'}
-					onchange={(e) => {
-						item.estatus = e.currentTarget.checked ? 'seleccionado' : 'descartado';
-						guardarItem();
-					}}
-				/>
-			</div>
-		{:else if cold}
-			<div class="acciones">
+		<div class="acciones">
+			{#if cold}
 				<button type="button" class="butter milk" onclick={() => descartar(item)}>✕</button>
-			</div>
-		{/if}
-		<span
-			class="chip"
-			class:seleccionado={item.estatus === 'seleccionado'}
-			class:cotizado={item.estatus === 'cotizado'}>{item.estatus}</span
-		>
+			{:else if hot}
+				<button type="button" class="butter milk" onclick={() => eliminar(item)}>✕</button>
+				{#if item.id_oportunidad}
+					<div class="butter milk">
+						<input
+							class="descartar"
+							type="checkbox"
+							checked={item.estatus === 2}
+							disabled={isSubmitting}
+							onchange={(e) => {
+								item.estatus = e.currentTarget.checked ? 2 : 1;
+								guardarItem();
+							}}
+						/>
+					</div>
+				{/if}
+			{/if}
+			<span
+				class="chip"
+				class:seleccionado={item.estatus === 2}
+				class:descartado={item.estatus === 0}
+				class:cotizado={item.estatus === 3}>{estatus}</span
+			>
+		</div>
 		<b class="titulo">{item.inventario?.descripcion || '-'}</b>
 		<div class="meta">
 			<span>{item.inventario?.serie || item.inventario?.codigo || 'sin código'}</span>
@@ -183,5 +208,12 @@
 	}
 	.cotizado {
 		background-color: var(--color-3);
+	}
+	.descartado {
+		background-color: var(--color-0);
+	}
+	.acciones {
+		display: flex;
+		align-items: center;
 	}
 </style>

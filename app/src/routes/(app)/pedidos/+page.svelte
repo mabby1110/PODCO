@@ -102,7 +102,7 @@
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={show}>
 					<div class="panel">
-						{#each agrupacion.items as item (item.id)}
+						{#each agrupacion.items.sort((i)=>i.estatus) as item (item.id)}
 							<TarjetaPedido {item} />
 						{/each}
 						<div class="acciones-tabla">

@@ -10,9 +10,7 @@
 	function agregar(e: Event) {
 		console.log('agregar', cantidad);
 		e.stopPropagation();
-		if (producto.cantidad - cantidad > 0) {
-			StorePedidoNuevo.agregar(producto);
-		}
+		StorePedidoNuevo.agregar(producto);
 	}
 
 	function quitar(e: Event) {

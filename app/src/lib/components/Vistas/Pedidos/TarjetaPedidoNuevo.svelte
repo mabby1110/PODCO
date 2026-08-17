@@ -18,7 +18,7 @@
 
 		<b class="titulo">{item.producto.descripcion || '-'}</b>
 		<div class="meta">
-			<span class="codigo">{item.producto.serie || item.producto.codigo || 'sin código'}</span>`
+			<span class="codigo">{item.producto.serie || item.producto.codigo || 'sin código'}</span>
 		</div>
 	</div>
 
