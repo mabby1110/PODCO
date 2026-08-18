@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ locals: { session } }) => {
   if (session) {
-    throw redirect(303, '/actividades')
+    throw redirect(303, '/calendario')
   }
   
   return {}
@@ -37,7 +37,7 @@ export const actions: Actions = {
     // Las cookies se establecen automáticamente por el cliente de Supabase
     // pero puedes forzar un refresh de la sesión si es necesario
     if (data.session) {
-      throw redirect(303, '/actividades')
+      throw redirect(303, '/calendario')
     }
     
     return fail(500, {

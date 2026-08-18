@@ -8,11 +8,8 @@
 	import Card from '$lib/components/Tarjetas/Card.svelte';
 	import FormEditableContact from '$lib/components/Vistas/Cliente/FormEditableContact.svelte';
 	import SubirAdjunto from '$lib/components/Vistas/Documentos/SubirAdjunto.svelte';
-	import SubirCotizacion from '$lib/components/Vistas/Documentos/SubirCotizacion.svelte';
-	import SubirOcc from '$lib/components/Vistas/Documentos/SubirOcc.svelte';
 	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
 	import AgentActions from '$lib/components/Vistas/Oportunidad/AgentActions.svelte';
-	import OperActions from '$lib/components/Vistas/Oportunidad/OperActions.svelte';
 	import PedidoRelacionado from '$lib/components/Vistas/Oportunidad/PedidoRelacionado.svelte';
 	import RelacionarPedido from '$lib/components/Vistas/Oportunidad/RelacionarPedido.svelte';
 	import { fases } from '$lib';
@@ -169,24 +166,21 @@
 		</section>
 
 		{#if currentFase == 1}
+		{#if eventData?.pedidos.length > 0}
 			<section>
 				<div class="header">
 					<h3>Potencial de venta:</h3>
 				</div>
 				<div class="content">
-					{#if eventData?.pedidos.length > 0}
 						<PedidoRelacionado
 							pedidos={eventData?.pedidos ?? []}
 							oportunidad={eventData}
 							{editando}
 							{currentFase}
 						/>
-					{/if}
-					<FormOptionalInput title="+Potencial de venta">
-						<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
-					</FormOptionalInput>
 				</div>
 			</section>
+			{/if}
 		{/if}
 		{#if currentFase >= 2 && currentFase <= 3}
 			<section>

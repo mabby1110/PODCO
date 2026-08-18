@@ -5,7 +5,7 @@ export const load = async ({ cookies }) => {
 	console.log('token');
 
 	if (token) {
-		throw redirect(302, '/actividades');
+		throw redirect(302, '/calendario');
 	}
 
 	throw redirect(302, '/auth');

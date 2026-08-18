@@ -57,7 +57,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	}
 
 	if (session && event.url.pathname === '/auth') {
-		throw redirect(303, '/oportunidades');
+		throw redirect(303, '/calendario');
 	}
 
 	return resolve(event);
