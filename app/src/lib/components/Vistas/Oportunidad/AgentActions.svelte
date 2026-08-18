@@ -266,7 +266,10 @@
 	{/if}
 
 	{#snippet submitContent(isSubmitting: boolean)}
-	{#if currentPhase <= 3 && currentPhase != 0 && currentPhase != 6}
+		<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
+			Editar
+		</button>
+		{#if currentPhase <= 3 && currentPhase != 0 && currentPhase != 6}
 			{#if submit}
 				<input type="hidden" name="fase" value={nextPhase} />
 				<button type="submit" class="butter" {style} disabled={isSubmitting || !canSubmit}>
@@ -288,12 +291,8 @@
 				bind:submitCancel
 				bind:isOpen
 			/>
-			{:else}
-			<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
-				Editar
-			</button>
-			{/if}
-		{/snippet}
+		{/if}
+	{/snippet}
 </FormActions>
 
 <style>
