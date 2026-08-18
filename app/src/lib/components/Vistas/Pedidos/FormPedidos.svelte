@@ -6,6 +6,7 @@
 	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
 	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedido.svelte';
 	import TarjetaPedidoNuevo from './TarjetaPedidoNuevo.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let { id_oportunidad }: { id_oportunidad?: string } = $props();
 	const copiarAExcel = () => {
@@ -88,7 +89,7 @@
 
 				const pedidosAActualizar = StorePedido.items.map((item) => ({
 					id: item.pedido.id,
-					id_agente,
+					id_agente: id_agente==''?$profile?.id:id_agente,
 					id_producto: item.pedido.inventario.id,
 					id_oportunidad: item.pedido.id_oportunidad,
 					cantidad: item.pedido.cantidad,
@@ -103,7 +104,7 @@
 			if (StorePedidoNuevo.items.length > 0) {
 				const nuevoPedido = StorePedidoNuevo.items.map((item) => ({
 					id_producto: item.producto.id,
-					id_agente,
+					id_agente: id_agente==''?$profile?.id:id_agente,
 					id_oportunidad: id_oportunidad_base || id_oportunidad || null,
 					cantidad: item.piezas,
 					precio_unitario: item.producto.precio,
