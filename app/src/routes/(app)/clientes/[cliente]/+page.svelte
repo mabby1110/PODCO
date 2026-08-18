@@ -169,6 +169,17 @@
 			action="/clientes?/update"
 			placeholder="www.bmscomponentes.com"
 		/>
+		<EditableInput
+			{editando}
+			label="Observaciones"
+			name="observaciones"
+			type='textarea'
+			value={cliente.observaciones}
+			id={cliente.id}
+			id_agente={$profile?.isAdmin ? cliente.id_agente : $profile?.id}
+			action="/clientes?/update"
+			placeholder="Observaciones"
+		/>
 		<div class="op-list">
 			{#if cliente.oportunidades.length > 0}
 				{#each cliente.oportunidades as op}
