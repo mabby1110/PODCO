@@ -30,7 +30,7 @@
 		<main class="chart-grid">
 			<EfectividadCierre {oportunidades} />
 			<DineroXFase {oportunidades} />
-			<EmbudoVentas {oportunidades}/>
+			<EmbudoVentas {oportunidades} />
 		</main>
 	{/if}
 </div>
@@ -39,6 +39,8 @@
 	.dashboard-layout {
 		padding: 24px;
 		max-width: 1600px;
+		height: 100%;
+		overflow: auto;
 		margin: 0 auto;
 		font-family:
 			system-ui,
