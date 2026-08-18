@@ -61,7 +61,7 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let editando = $state(false);
-	console.log(event);
+	console.log(eventData?.adjuntos);
 </script>
 
 <Card headerStyle={eventData?.style}>
@@ -230,7 +230,6 @@
 					<h3>Orden de compra:</h3>
 				</div>
 				<div class="content">
-					{eventData?.occ.length}
 					{#if eventData?.occ.length > 0}
 						{#each eventData?.occ as documento}
 							<PedidosGanados
@@ -264,7 +263,7 @@
 					/>
 				</FormOptionalInput>
 				{#each eventData?.adjuntos as documento}
-					<TarjetaListaDocumentos event={documento} />
+					<TarjetaListaDocumentos {documento} />
 				{/each}
 			</div>
 		</section>
@@ -285,17 +284,7 @@
 	{/snippet}
 
 	{#snippet actions()}
-		{#if $profile?.isAdmin}
-			{#if currentFase < 4}
-				<AgentActions {eventData} bind:editando />
-			{:else}
-				<OperActions {eventData} />
-			{/if}
-		{:else if $profile?.isOper}
-			<OperActions {eventData} />
-		{:else}
-			<AgentActions {eventData} bind:editando />
-		{/if}
+		<AgentActions {eventData} bind:editando />
 	{/snippet}
 </Card>
 

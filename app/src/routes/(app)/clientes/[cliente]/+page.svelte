@@ -1,17 +1,16 @@
 <script lang="ts">
-	import { page } from "$app/state";
-	import EditableInput from "$lib/components/Formularios/EditableInput.svelte";
-	import Card from "$lib/components/Tarjetas/Card.svelte";
-	import EditableSelect from "$lib/components/Vistas/Cliente/EditableSelect.svelte";
-	import FormEditableContact from "$lib/components/Vistas/Cliente/FormEditableContact.svelte";
-	import TarjetaListaOportunidades from "$lib/components/Vistas/Oportunidad/TarjetaListaOportunidades.svelte";
-	import { appState } from "$lib/stores/appState.svelte";
-	import { profile } from "$lib/stores/profileStore.svelte";
-
+	import { page } from '$app/state';
+	import EditableInput from '$lib/components/Formularios/EditableInput.svelte';
+	import Card from '$lib/components/Tarjetas/Card.svelte';
+	import EditableSelect from '$lib/components/Vistas/Cliente/EditableSelect.svelte';
+	import FormEditableContact from '$lib/components/Vistas/Cliente/FormEditableContact.svelte';
+	import TarjetaListaOportunidades from '$lib/components/Vistas/Oportunidad/TarjetaListaOportunidades.svelte';
+	import { appState } from '$lib/stores/appState.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let { cliente, agentes } = $derived(page.data);
 
-	let isEditing = $state(false);
+	let editando = $state(false);
 	const formatDate = (date: string | null) => {
 		if (!date) return 'N/A';
 		return new Date(date).toLocaleDateString('es-MX', {
@@ -40,7 +39,7 @@
 	{#snippet content()}
 		{#if $profile?.isAdmin}
 			<EditableSelect
-				{isEditing}
+				{editando}
 				label="Agente"
 				name="id_agente"
 				id_cliente={cliente.id}
@@ -58,14 +57,14 @@
 			</section>
 		{/if}
 		<FormEditableContact
-			{isEditing}
+			{editando}
 			lista={cliente.contactos}
 			id={cliente.id}
 			id_agente={$profile?.isAdmin ? cliente.id_agente : $profile?.id}
 			action="/clientes?/update"
 		/>
 		<EditableInput
-			{isEditing}
+			{editando}
 			label="Razón Social"
 			name="razon_social"
 			value={cliente.razon_social}
@@ -75,7 +74,7 @@
 			placeholder="Razon social"
 		/>
 		<EditableInput
-			{isEditing}
+			{editando}
 			label="Nombre Comercial"
 			name="nombre_comercial"
 			value={cliente.nombre_comercial}
@@ -85,7 +84,7 @@
 			placeholder="Nombre de la empresa"
 		/>
 		<EditableInput
-			{isEditing}
+			{editando}
 			label="Clasificación"
 			name="clasificacion"
 			value={cliente.clasificacion}
@@ -101,7 +100,7 @@
 			placeholder="Clasificación"
 		/>
 		<EditableInput
-			{isEditing}
+			{editando}
 			label="Sector"
 			name="sector"
 			value={cliente.sector}
@@ -111,7 +110,7 @@
 			placeholder="Sector económico"
 		/>
 		<EditableInput
-			{isEditing}
+			{editando}
 			label="Giro comercial"
 			name="giro_comercial"
 			value={cliente.giro_comercial}
@@ -121,7 +120,7 @@
 			placeholder="El giro describe el tipo de producto o servicio exacto"
 		/>
 		<EditableInput
-			{isEditing}
+			{editando}
 			label="Estado"
 			name="estado"
 			value={cliente.estado}
@@ -131,7 +130,7 @@
 			placeholder="Estado"
 		/>
 		<EditableInput
-			{isEditing}
+			{editando}
 			label="Ciudad"
 			name="ciudad"
 			value={cliente.ciudad}
@@ -141,7 +140,7 @@
 			placeholder="Ciudad"
 		/>
 		<EditableInput
-			{isEditing}
+			{editando}
 			label="Ubicación"
 			name="ubicacion"
 			value={cliente.ubicacion}
@@ -151,7 +150,7 @@
 			placeholder="Ubicacion en mapa"
 		/>
 		<EditableInput
-			{isEditing}
+			{editando}
 			label="Código postal"
 			name="cp"
 			value={cliente.cp}
@@ -161,7 +160,7 @@
 			placeholder="Código postal"
 		/>
 		<EditableInput
-			{isEditing}
+			{editando}
 			label="Página web"
 			name="pagina_web"
 			value={cliente.pagina_web}
@@ -201,7 +200,7 @@
 
 	{#snippet actions()}
 		<div class="submit panel">
-			<button onclick={() => (isEditing = !isEditing)} class="butter {isEditing}">Editar</button>
+			<button onclick={() => (editando = !editando)} class="butter {editando}">Editar</button>
 			<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 		</div>
 	{/snippet}
@@ -241,11 +240,14 @@
 		margin-bottom: var(--e);
 	}
 	.submit {
-		margin-left: var(--f);
 		position: fixed;
 		bottom: 0;
-		width: fit-content;
 		right: var(--a);
-		width: fit-content;
+		display: flex;
+		flex-wrap: wrap-reverse;
+		justify-content: flex-end;
+		gap: var(--a);
+		margin: 0 var(--a) var(--a) var(--e);
+		padding: var(--a);
 	}
 </style>

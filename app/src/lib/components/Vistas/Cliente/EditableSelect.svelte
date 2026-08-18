@@ -16,7 +16,7 @@
 		options = [],
 		action = '?/updateClient',
 		hint = '',
-		isEditing = false
+		editando = false
 	}: {
 		label: string;
 		name: string;
@@ -25,7 +25,7 @@
 		options: Option[];
 		action?: string;
 		hint?: string;
-		isEditing: boolean;
+		editando: boolean;
 	} = $props();
 
 	let editedValue = $state(String(value));
@@ -33,14 +33,14 @@
 
 	function toggleEdit(e: Event) {
 		e.stopPropagation();
-		isEditing = !isEditing;
-		if (!isEditing) editedValue = originalValue;
+		editando = !editando;
+		if (!editando) editedValue = originalValue;
 	}
 
 	function handleSubmit() {
 		return async ({ result }: any) => {
 			if (result.type === 'success') {
-				isEditing = false;
+				editando = false;
 				originalValue = editedValue;
 				value = editedValue;
 				await invalidate('app:data');
@@ -65,10 +65,10 @@
 		</div>
 
 		<div class="detail-body">
-			{#if hint && !isEditing}
+			{#if hint && !editando}
 				<p class="hint">{hint}</p>
 			{/if}
-			{#if isEditing && $profile?.isAdmin}
+			{#if editando && $profile?.isAdmin}
 				<select {name} bind:value={editedValue} class="select">
 					<option value="">— Sin asignar —</option>
 					{#each options as opt}

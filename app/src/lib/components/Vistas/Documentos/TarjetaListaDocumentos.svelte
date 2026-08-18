@@ -1,56 +1,48 @@
 <script lang="ts">
 	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
-	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { formatCurrency } from '$lib/utils/util';
 	import TarjetaPedido from '../Pedidos/TarjetaPedido.svelte';
 
-	let { event } = $props();
-	console.log(event);
+	let { documento } = $props();
+	console.log(documento);
 </script>
 
-<ListPreview
-	href="/oportunidades/{event.id}"
-	ocultarAcciones
-	// style={event.pedidos.some((p) => p.estatus == 3)
-	// 	? 'background-color:var(--color-3);'
-	// 	: ''}
->
+<ListPreview href="/oportunidades/{documento.id}" ocultarAcciones>
 	{#snippet header()}
-		<div class="panel">
-			{#each event.pedidos as item}
-				<TarjetaPedido {item} />
-			{/each}
-		</div>
-		<div class="header">
-			<h3>
-				<b>{event.pedidos.some((p) => p.estatus == 3) ? 'Actual' : 'Descartada'}</b>: {event?.titulo}
-				{#if event.total}
-					<p>{formatCurrency(event.total, 'USD')}</p>
-				{/if}
-			</h3>
-		</div>
+		<b>
+			{documento?.titulo}
+		</b>
 	{/snippet}
 	{#snippet content()}
-		{#if event?.id_actividad}
+		{#if documento?.id_actividad}
 			<div class="brief">
-				<a href="/actividades/{event.id_actividad}">
+				<a href="/actividades/{documento.id_actividad}">
 					<b>id_actividad:</b>
-					{event.id_actividad}
+					{documento.id_actividad}
 				</a>
 			</div>
 		{/if}
-		{#if event?.id_actividad}
+		{#if documento?.id_oportunidad}
 			<div class="brief">
-				<a href="/actividades/{event.id_actividad}">
-					<b>id_actividad:</b>
-					{event.id_actividad}
+				<a href="/actividades/{documento.id_oportunidad}">
+					<b>id_oportunidad:</b>
+					{documento.id_oportunidad}
 				</a>
 			</div>
 		{/if}
-		{#if event?.preview}
+
+		{#if documento?.id_agente}
+			<div class="brief">
+				<a href="/actividades/{documento.id_agente}">
+					<b>id_agente:</b>
+					{documento.id_agente}
+				</a>
+			</div>
+		{/if}
+		{#if documento?.preview}
 			<div class="doc-preview">
 				<iframe
-					src={event.preview}
+					src={documento.preview}
 					class="iframe"
 					title="Descripción del documento"
 					loading="lazy"
@@ -78,6 +70,6 @@
 		height: 40vh;
 	}
 	a {
-		pointer-events: all;
+		pointer-documentos: all;
 	}
 </style>

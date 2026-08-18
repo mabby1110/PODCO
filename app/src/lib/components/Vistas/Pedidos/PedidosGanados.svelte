@@ -26,18 +26,6 @@
 		{#each documento.pedidos as item}
 			<TarjetaPedido {item} />
 		{/each}
-		<div class="acciones">
-			<SubirOcc
-				name={'docs_occ'}
-				amountLabel="Total Orden de Compra Cliente"
-				amountName="totales"
-				id_nodo={oportunidad?.id}
-				id_cliente={oportunidad?.cliente.id}
-				agente={oportunidad?.agente}
-				{pedidos}
-				required
-			/>
-		</div>
 	</div>
 	{#if show}
 		<div>

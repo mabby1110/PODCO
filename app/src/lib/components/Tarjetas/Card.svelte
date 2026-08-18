@@ -24,14 +24,12 @@
 
 	<div class="snippets">
 		{#if content}
-		<div class="card-content">
-			{@render content()}
-			{#if actions}
-				<section class="card-actions">
+			<div class="card-content">
+				{@render content()}
+				{#if actions}
 					{@render actions()}
-				</section>
-			{/if}
-		</div>
+				{/if}
+			</div>
 		{/if}
 	</div>
 </div>

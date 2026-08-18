@@ -21,7 +21,7 @@
 
 	{#if $profile?.isAdmin}
 		<main class="chart-grid">
-			<GraficaEmbudoCotizaciones />
+			<GraficaEmbudoCotizaciones {oportunidades} />
 			<GraficaRendimientoAgentesOportunidades {oportunidades} />
 			<GraficaIngresoPedidos {oportunidades} />
 			<GraficaOportunidadesXSector {oportunidades} />

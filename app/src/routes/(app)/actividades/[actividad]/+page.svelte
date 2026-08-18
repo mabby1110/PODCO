@@ -26,7 +26,7 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase == 6 ? 'w' : '');
 
-	let isEditing = $state(false);
+	let editando = $state(false);
 </script>
 
 {#if eventData}
@@ -45,11 +45,11 @@
 		{/snippet}
 
 		{#snippet content()}
-			<CustomInput action="/actividades?/update" id={eventData.id} {isEditing}>
+			<CustomInput action="/actividades?/update" id={eventData.id} {editando}>
 				<DatePicker />
 			</CustomInput>
 			<EditableInput
-				{isEditing}
+				{editando}
 				id={eventData.id}
 				label="Objetivo"
 				name="objetivo"
@@ -63,7 +63,7 @@
 				{/snippet}
 			</EditableInput>
 			<EditableInput
-				{isEditing}
+				{editando}
 				id={eventData.id}
 				label="Requisitos"
 				name="requisitos"
@@ -77,7 +77,7 @@
 				{/snippet}
 			</EditableInput>
 			<EditableInput
-				{isEditing}
+				{editando}
 				id={eventData.id}
 				label="Observaciones"
 				name="observaciones"
@@ -97,7 +97,7 @@
 				</div>
 				<div class="content">
 					<Entradas
-						{isEditing}
+						{editando}
 						historia={eventData?.historia}
 						objId={eventData?.id}
 						action={'/actividades?/update'}
@@ -107,7 +107,7 @@
 		{/snippet}
 
 		{#snippet actions()}
-			<ActivityActions {eventData} bind:isEditing />
+			<ActivityActions {eventData} bind:editando />
 		{/snippet}
 	</Card>
 {/if}

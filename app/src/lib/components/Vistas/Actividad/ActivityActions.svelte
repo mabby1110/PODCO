@@ -7,10 +7,10 @@
 
 	let {
 		eventData,
-		isEditing = $bindable()
+		editando = $bindable()
 	}: {
 		eventData: any;
-		isEditing?: boolean;
+		editando?: boolean;
 	} = $props();
 	let currentPhase = $derived(Number(eventData.fase.id_fase));
 	let nextPhase = $derived(currentPhase + 5);
@@ -90,7 +90,7 @@
 		{/snippet}
 		{#snippet submitContent()}
 			{#if !submit && !submitCancel}
-				<button type="button" class="butter {isEditing}" onclick={() => (isEditing = !isEditing)}>
+				<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
 					Editar
 				</button>
 			{/if}

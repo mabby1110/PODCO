@@ -94,7 +94,6 @@
 			if (result.type === 'success' || result.status === 200) {
 				const data = typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
 				const idDocumento = data?.[2];
-				alert(idDocumento);
 				const pedidosAprobados = pedidos.filter((p) => p.estatus === 3);
 
 				if (pedidosAprobados.length > 0) {
@@ -104,8 +103,7 @@
 						id_occ: idDocumento
 					}));
 					const pedidosAActualizar = pedidos.map((p) => ({
-						id: p.id,
-						estatus: p.estatus === 3 ? 0 : p.estatus
+						id: p.id
 					}));
 
 					const seqFormData = new FormData();

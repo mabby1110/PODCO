@@ -103,12 +103,12 @@
 					<div class="tarjeta-entrada">
 						<span class="fecha-etiqueta">
 							{formatDateToReadable(item.fecha)}
+							{#if item.id_op}
+								<a class="enlace-oportunidad" href="/oportunidades/{item.id_op}"> Oportunidad </a>
+							{/if}
 						</span>
 						{#if item.nombre_perfil}
 							<span class="autor-etiqueta">{item.nombre_perfil}</span>
-						{/if}
-						{#if item.id_op}
-							<a class="enlace-oportunidad" href="/oportunidades/{item.id_op}"> Oportunidad </a>
 						{/if}
 
 						{#if editando}

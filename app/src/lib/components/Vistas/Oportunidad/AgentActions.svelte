@@ -1,16 +1,15 @@
 <script lang="ts">
-	import DatePicker from "$lib/components/Formularios/DatePicker.svelte";
-	import FormActions from "$lib/components/Formularios/FormActions.svelte";
-	import FormInput from "$lib/components/Formularios/FormInput.svelte";
-	import FormOptionalInput from "$lib/components/Formularios/FormOptionalInput.svelte";
-	import FormOptionalSubmit from "$lib/components/Formularios/FormOptionalSubmit.svelte";
-	import FormSelectMotivo from "$lib/components/Formularios/FormSelectMotivo.svelte";
-	import UploadFile from "$lib/components/Formularios/UploadFile.svelte";
-	import { fases, motivosOportunidad } from "$lib";
-	import { agregarEntrada, concatStrings } from "$lib/utils/cardActions";
-	import { getStyleForPhase } from "$lib/utils/util";
-	import { profile } from "$lib/stores/profileStore.svelte";
-
+	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
+	import FormActions from '$lib/components/Formularios/FormActions.svelte';
+	import FormInput from '$lib/components/Formularios/FormInput.svelte';
+	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
+	import FormOptionalSubmit from '$lib/components/Formularios/FormOptionalSubmit.svelte';
+	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
+	import UploadFile from '$lib/components/Formularios/UploadFile.svelte';
+	import { fases, motivosOportunidad } from '$lib';
+	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
+	import { getStyleForPhase } from '$lib/utils/util';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let { eventData, editando = $bindable(false) }: { eventData: any; editando?: boolean } = $props();
 
@@ -65,8 +64,8 @@
 	}
 </script>
 
-{#if currentPhase <= 3 && currentPhase != 0 && currentPhase != 6}
-	<FormActions action="/oportunidades?/update" bind:isOpen onSuccess={handleSuccess}>
+<FormActions action="/oportunidades?/update" bind:isOpen onSuccess={handleSuccess}>
+	{#if currentPhase <= 3 && currentPhase != 0 && currentPhase != 6}
 		{#snippet inputs()}
 			{#if submit}
 				{#if currentPhase == 1}
@@ -264,8 +263,10 @@
 				<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
 			{/if}
 		{/snippet}
+	{/if}
 
-		{#snippet submitContent(isSubmitting: boolean)}
+	{#snippet submitContent(isSubmitting: boolean)}
+	{#if currentPhase <= 3 && currentPhase != 0 && currentPhase != 6}
 			{#if submit}
 				<input type="hidden" name="fase" value={nextPhase} />
 				<button type="submit" class="butter" {style} disabled={isSubmitting || !canSubmit}>
@@ -278,11 +279,8 @@
 				>
 			{:else if submitCancel}
 				<input type="hidden" name="fase" value={0} />
-				<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}>Descartar</button>
-			{:else}
-				<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
-					Editar
-				</button>
+				<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}>Descartar</button
+				>
 			{/if}
 			<FormOptionalSubmit
 				nextFase={eventData.fase.accion}
@@ -290,9 +288,13 @@
 				bind:submitCancel
 				bind:isOpen
 			/>
+			{:else}
+			<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
+				Editar
+			</button>
+			{/if}
 		{/snippet}
-	</FormActions>
-{/if}
+</FormActions>
 
 <style>
 	.butter:hover:not(:disabled) {

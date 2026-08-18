@@ -1,121 +1,149 @@
 <script lang="ts">
-  import * as echarts from 'echarts';
+	import * as echarts from 'echarts';
 
-  // 1. Definimos las interfaces para TypeScript
-  interface DataItem {
-    value: number;
-    name: string;
-  }
+	interface Oportunidad {
+		fase: number;
+		agentes?: {
+			nombre: string;
+		};
+	}
 
-  interface Props {
-    data?: DataItem[];
-  }
+	interface Props {
+		oportunidades?: Oportunidad[];
+	}
 
-  // 2. Usamos la runa $props() para recibir los datos, con un valor por defecto
-  let { 
-    data = [
-      { value: 60, name: 'Fase 1: Análisis' },
-      { value: 35, name: 'Fase 2: Negociación' },
-      { value: 20, name: 'Fase 3: Cotización' }
-    ] 
-  }: Props = $props();
+	// Se asume que este arreglo ya viene filtrado por RLS para el agente actual.
+	let { oportunidades = [] }: Props = $props();
 
-  // 3. Usamos la runa $state() para las referencias cambiantes
-  let chartContainer = $state<HTMLDivElement>();
-  let chart = $state<echarts.ECharts>();
+	let chartContainer = $state<HTMLDivElement>();
+	let chart = $state<echarts.ECharts>();
 
-  // 4. Primer $effect: Inicialización y limpieza del ciclo de vida
-  $effect(() => {
-    // Si el div contenedor aún no está en el DOM, no hacemos nada
-    if (!chartContainer) return;
+	// Procesamos únicamente las fases que le conciernen al vendedor
+	let chartData = $derived.by(() => {
+		const conteoFases = new Map<number, number>([
+			[1, 0], // Fase 1: Borrador / Prospección
+			[2, 0], // Fase 2: Negociación / Potencial
+			[3, 0], // Fase 3: Cotización (Inmutable)
+			[4, 0] // Fase 4: OCC / Ganado
+		]);
 
-    // Inicializamos la instancia
-    chart = echarts.init(chartContainer);
+		oportunidades.forEach((op) => {
+			// Omitir datos de prueba por seguridad
+			if (op.agentes?.nombre?.toLowerCase() === 'pruebas') return;
 
-    // Manejo de responsive
-    const handleResize = () => chart?.resize();
-    window.addEventListener('resize', handleResize);
+			// Ignorar datos corruptos o fases operativas (5 al 8)
+			if (op.fase >= 1 && op.fase <= 4) {
+				const actual = conteoFases.get(op.fase)!;
+				conteoFases.set(op.fase, actual + 1);
+			}
+		});
 
-    // Función de limpieza al destruir el componente
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      chart?.dispose();
-    };
-  });
+		return [
+			{ value: conteoFases.get(1)!, name: '1. Borrador' },
+			{ value: conteoFases.get(2)!, name: '2. Negociación' },
+			{ value: conteoFases.get(3)!, name: '3. Cotización' },
+			{ value: conteoFases.get(4)!, name: '4. OCC (Ganada)' }
+		];
+	});
 
-  // 5. Segundo $effect: Reactividad ante cambios en `data`
-  $effect(() => {
-    // Solo actualizamos si la gráfica ya está inicializada
-    if (!chart) return;
+	$effect(() => {
+		if (!chartContainer) return;
+		chart = echarts.init(chartContainer);
 
-    // Calculamos el valor máximo dinámicamente para el tope del embudo
-    const maxValue = data.length > 0 ? Math.max(...data.map(d => d.value)) : 100;
+		const handleResize = () => chart?.resize();
+		window.addEventListener('resize', handleResize);
+		return () => {
+			window.removeEventListener('resize', handleResize);
+			chart?.dispose();
+		};
+	});
 
-    const option: echarts.EChartsCoreOption = {
-      title: {
-        text: 'Embudo de Oportunidades',
-        subtext: 'Distribución por fases',
-        left: 'center'
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
-      },
-      toolbox: {
-        feature: { saveAsImage: { title: 'Guardar' } }
-      },
-      legend: {
-        bottom: 0,
-        data: data.map(item => item.name) // Reactivo a la data
-      },
-      series: [
-        {
-          name: 'Oportunidades',
-          type: 'funnel',
-          left: '10%',
-          top: 60,
-          bottom: 60,
-          width: '80%',
-          min: 0,
-          max: maxValue, 
-          minSize: '0%',
-          maxSize: '100%',
-          sort: 'descending',
-          gap: 2,
-          label: {
-            show: true,
-            position: 'inside'
-          },
-          labelLine: {
-            length: 10,
-            lineStyle: { width: 1, type: 'solid' }
-          },
-          itemStyle: {
-            borderColor: '#fff',
-            borderWidth: 1
-          },
-          emphasis: { label: { fontSize: 20 } },
-          data: data // Le pasamos el arreglo reactivo
-        }
-      ]
-    };
+	$effect(() => {
+		if (!chart) return;
 
-    // Actualiza la gráfica eficientemente sin reinicializar el lienzo
-    chart.setOption(option);
-  });
+		// Calcular un máximo dinámico para proporcionar visualmente el embudo.
+		// Si todas las fases están en 0, usamos 10 por defecto.
+		const maxValue = Math.max(...chartData.map((d) => d.value)) || 10;
+
+		const option: echarts.EChartsCoreOption = {
+			title: {
+				text: 'Mi Embudo de Ventas',
+				subtext: 'Volumen de oportunidades activas (Fases 1 a 4)',
+				left: 'center'
+			},
+			tooltip: {
+				trigger: 'item',
+				formatter: '{a} <br/>{b} : {c} ({d}%)'
+			},
+			legend: {
+				bottom: 0,
+				data: chartData.map((d) => d.name)
+			},
+			series: [
+				{
+					name: 'Oportunidades',
+					type: 'funnel',
+					left: '10%',
+					top: 60,
+					bottom: 60,
+					width: '80%',
+					min: 0,
+					max: maxValue,
+					minSize: '5%', // Evita que la base desaparezca si el valor es 0
+					maxSize: '100%',
+					sort: 'none', // Crucial: Mantiene el orden cronológico estricto (1 -> 4)
+					gap: 2,
+					label: {
+						show: true,
+						position: 'inside',
+						formatter: '{c}', // Muestra solo el número entero de oportunidades
+						fontSize: 16,
+						fontWeight: 'bold'
+					},
+					labelLine: {
+						length: 10,
+						lineStyle: {
+							width: 1,
+							type: 'solid'
+						}
+					},
+					itemStyle: {
+						borderColor: '#fff',
+						borderWidth: 2,
+						// Progresión de colores: Gris -> Amarillo -> Azul -> Verde (Cierre)
+						color: function (params: any) {
+							const colores = ['#94a3b8', '#0ea5e9', '#fbbf24', '#10b981'];
+							return colores[params.dataIndex];
+						}
+					},
+					emphasis: {
+						label: {
+							fontSize: 20
+						}
+					},
+					data: chartData
+				}
+			]
+		};
+
+		chart.setOption(option);
+	});
 </script>
 
-<div class="card">
-  <!-- Svelte 5 sigue usando bind:this de la misma forma -->
-  <div bind:this={chartContainer} style="width: 100%; height: 400px;"></div>
+<div class="card agente-border">
+	<div bind:this={chartContainer} style="width: 100%; height: 400px;"></div>
 </div>
 
 <style>
-  .card {
-    background: var(--color-background);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    margin-bottom: 20px;
-  }
+	.card {
+		background: #fff;
+		border-radius: 12px;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.agente-border {
+		border-top: 4px solid #10b981;
+	}
 </style>
