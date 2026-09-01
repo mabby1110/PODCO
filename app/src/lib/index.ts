@@ -18,6 +18,7 @@ export type Actividad = {
 	requisitos: string;
 	observaciones: string;
 };
+
 export type Oportunidad = {
 	// del sistema
 	id: string;

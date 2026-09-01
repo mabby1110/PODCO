@@ -12,6 +12,7 @@ interface AppState {
 	ModalOp: boolean;
 	ModalClient: boolean;
 	ModalInventario: boolean;
+	ModalProducto: boolean;
 	pageActions: boolean;
 	min: boolean;
 	BI: boolean;
@@ -31,6 +32,7 @@ const defaultState: AppState = {
 	ModalOp: false,
 	ModalClient: false,
 	ModalInventario: false,
+	ModalProducto: false,
 	pageActions: false,
 	min: false,
 	BI: false,
@@ -102,6 +104,12 @@ function createAppState() {
 		toggleModalInventario: () =>
 			update((state) => {
 				const newState = { ...state, ModalInventario: !state.ModalInventario };
+				saveToCookie(newState);
+				return newState;
+			}),
+		toggleModalProducto: () =>
+			update((state) => {
+				const newState = { ...state, ModalProducto: !state.ModalProducto };
 				saveToCookie(newState);
 				return newState;
 			}),

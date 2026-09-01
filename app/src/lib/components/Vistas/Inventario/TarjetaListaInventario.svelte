@@ -7,7 +7,7 @@
 
 <ListPreview href="/oportunidades/{producto.id}" style={producto?.style} ocultarAcciones>
 	{#snippet header()}
-		<p>{producto?.descripcion}</p>
+		<b>{producto?.descripcion}</b>
 		<p>{producto?.serie || producto?.codigo}</p>
 	{/snippet}
 	{#snippet meta()}

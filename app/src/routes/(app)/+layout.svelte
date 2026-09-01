@@ -6,6 +6,7 @@
 	import ModalOportunidad from '$lib/components/Vistas/Oportunidad/ModalOportunidad.svelte';
 	import ModalCliente from '$lib/components/Vistas/Cliente/ModalCliente.svelte';
 	import ModalInventario from '$lib/components/Vistas/Inventario/ModalInventario.svelte';
+	import ModalProducto from '$lib/components/Vistas/Catalogo/ModalProducto.svelte';
 
 	let { children, data } = $props();
 
@@ -48,6 +49,7 @@
 <ModalOportunidad />
 <ModalCliente />
 <ModalInventario />
+<ModalProducto />
 
 <style>
 	/* .page-container {
