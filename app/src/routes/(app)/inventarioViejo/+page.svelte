@@ -18,7 +18,7 @@
 	let currentRoute = $derived(page.url.pathname);
 	let lista = $state(inventario);
 	let columnasDinamicas = $derived(extraerColumnas(inventario));
-
+	
 	$effect(() => {
 		lista = inventario;
 	});
@@ -37,35 +37,42 @@
 			keyColumns={['serie', 'codigo', 'descripcion', 'categorias']}
 			bind:lista
 		/>
-		<button onclick={() => appState.toggleModalProducto()} class="butter">+Restock</button>
+		
+		<Panel tituloBoton="Pedido" show={$appState.editarPedido}>
+			{#snippet header()}
+				<a href="/pedidos" class="butter">Lista pedidos</a>
+			{/snippet}
+			{#snippet contenido()}
+				<FormPedidos />
+			{/snippet}
+		</Panel>
 		<PanelFiltros>
 			{#snippet header()}
+				<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
-				<ModList {columnasDinamicas} route={currentRoute} agrupar ordenar />
+				<ModList {columnasDinamicas} route={currentRoute} agrupar ordenar/>
 			{/snippet}
 		</PanelFiltros>
 	{/snippet}
 	{#snippet contenido()}
-		{#if lista.lenght > 0}
-			{#if !isGrouped}
-				{#each lista_ordenada as elemento}
-					{elemento}
-				{/each}
-			{:else}
-				{#each lista_agrupada as agrupacion (agrupacion.columna)}
-					<Grupo {agrupacion} showByDefault={show}>
-						{#each agrupacion.items as elemento (elemento.id)}
-							{elemento}
-						{/each}
-					</Grupo>
-				{/each}
-			{/if}
+		{#if !isGrouped}
+			{#each lista_ordenada as elemento}
+				<TarjetaListaInventario producto={elemento} />
+			{/each}
 		{:else}
-			<div class="no-results">
-				<p>No se encontraron datos.</p>
-			</div>
+			{#each lista_agrupada as agrupacion (agrupacion.columna)}
+				<Grupo {agrupacion} showByDefault={show}>
+					{#each agrupacion.items as elemento (elemento.id)}
+						<TarjetaListaInventario producto={elemento} />
+					{/each}
+				</Grupo>
+			{:else}
+				<div class="no-results">
+					<p>No se encontraron datos.</p>
+				</div>
+			{/each}
 		{/if}
 	{/snippet}
 </Vista>

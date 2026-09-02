@@ -54,15 +54,15 @@
 	}
 
 	const copiarAExcel = (elementos: any[]) => {
-		const cabeceras = 'Cantidad\tDescripción\tMoneda\tPrecio';
-		const filas = elementos
-			.map(
-				(item) =>
-					`${item.inventario.cantidad || 0}\t${item.inventario.descripcion || ''}\tUSD\t${item.inventario.precio || 0}`
-			)
-			.join('\n');
+		// const cabeceras = 'Cantidad\tDescripción\tMoneda\tPrecio';
+		// const filas = elementos
+		// 	.map(
+		// 		(item) =>
+		// 			`${item.inventario.cantidad || 0}\t${item.inventario.descripcion || ''}\tUSD\t${item.inventario.precio || 0}`
+		// 	)
+		// 	.join('\n');
 
-		navigator.clipboard.writeText(`${cabeceras}\n${filas}`);
+		// navigator.clipboard.writeText(`${cabeceras}\n${filas}`);
 	};
 </script>
 
@@ -95,7 +95,7 @@
 		{#if !isGrouped}
 			{#each lista_ordenada as item}
 				<div class="panel">
-					<TarjetaPedido {item} />
+					<!-- <TarjetaPedido {item} /> -->
 				</div>
 			{/each}
 		{:else}
@@ -103,7 +103,7 @@
 				<Grupo {agrupacion} showByDefault={show}>
 					<div class="panel">
 						{#each agrupacion.items.sort((i)=>i.estatus) as item (item.id)}
-							<TarjetaPedido {item} />
+							<!-- <TarjetaPedido {item} /> -->
 						{/each}
 						<div class="acciones-tabla">
 							<button class="butter" type="button" onclick={() => copiarAExcel(agrupacion.items)}>
