@@ -177,6 +177,8 @@
 	.contenido {
 		flex-grow: 1;
 		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
 	}
 	/* Reglas para la ventana maximizada */
 	.maximized {

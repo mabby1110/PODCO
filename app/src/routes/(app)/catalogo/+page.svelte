@@ -9,6 +9,10 @@
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
+	import TarjetaProducto from '$lib/components/Vistas/Catalogo/TarjetaProducto.svelte';
+	import { StoreEntradaInventario } from '$lib/stores/StoreEntradaInventario.svelte';
+	import Panel from '$lib/components/Tarjetas/Panel.svelte';
+	import ModalEntradaInventario from '$lib/components/Vistas/Catalogo/ModalEntradaInventario.svelte';
 
 	let { catalogo } = $derived(page.data);
 	let show = $derived($appState.min);
@@ -29,15 +33,15 @@
 
 <Vista>
 	{#snippet acciones()}
-		<Searchbar
-			data={catalogo}
-			keyColumns={['codigo']}
-			bind:lista
-		/>
-
+		<Searchbar data={catalogo} keyColumns={['codigo']} bind:lista />
+		<Panel tituloBoton="Restock+">
+			{#snippet contenido()}
+				<ModalEntradaInventario />
+			{/snippet}
+		</Panel>
+		<button onclick={() => appState.toggleModalProducto()} class="butter">+Agregar</button>
 		<PanelFiltros>
 			{#snippet header()}
-				<button onclick={() => appState.toggleModalProducto()} class="butter">+Producto</button>
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet controles()}
@@ -48,7 +52,7 @@
 	{#snippet contenido()}
 		{#if !isGrouped}
 			{#each lista_ordenada as elemento}
-				<p>{elemento.codigo}</p>
+				<TarjetaProducto {elemento} />
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
