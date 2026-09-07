@@ -33,7 +33,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	let queryPedidos = supabase
 		.from('pedidos')
 		.select(
-			'*, agentes(*), oportunidades(*, clientes(nombre_comercial, razon_social))'
+			'*, catalogo(*), agentes(*), oportunidades(*, clientes(nombre_comercial, razon_social))'
 		);
 	let queryCotizaciones = supabase
 		.from('docs_cotizaciones')

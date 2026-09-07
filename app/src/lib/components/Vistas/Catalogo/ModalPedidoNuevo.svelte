@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
-	import { StoreEntradaInventario } from '$lib/stores/StoreEntradaInventario.svelte';
+	import { goto, invalidateAll } from '$app/navigation';
+	import { page } from '$app/state';
+	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
+	let canSubmit = $derived(StorePedidoNuevo.carrito.length > 0);
 
-	let canSubmit = $derived(StoreEntradaInventario.carrito.length > 0);
+	let carrito = $derived(
+		StorePedidoNuevo.carrito.map((item) => ({
+			...item,
+			producto: page.data.catalogo.find((p) => p.id === item.id)
+		}))
+	);
 </script>
 
 <form
@@ -14,21 +21,21 @@
 			if (result.type === 'success') {
 				await invalidateAll();
 				await update({ reset: true });
-
-				StoreEntradaInventario.toggleModal();
+				StorePedidoNuevo.reset();
+				goto('/pedidos');
 			}
 		};
 	}}
 >
-	<input type="hidden" name="carrito" value={JSON.stringify(StoreEntradaInventario.carrito)} />
+	<input type="hidden" name="carrito" value={JSON.stringify(StorePedidoNuevo.carrito)} />
 	<div class="carrito">
-		{#each StoreEntradaInventario.carrito as elemento}
+		{#each carrito as elemento}
 			<div class="item">
-				<p>{elemento.id}</p>
+				<p>{elemento.producto.codigo}</p>
 				<button
 					type="button"
 					class="butter"
-					onclick={() => StoreEntradaInventario.pop(elemento.id)}
+					onclick={() => StorePedidoNuevo.pop(elemento.id)}
 				>
 					-
 				</button>
@@ -38,7 +45,7 @@
 				<button
 					type="button"
 					class="butter"
-					onclick={() => StoreEntradaInventario.push(elemento.id)}
+					onclick={() => StorePedidoNuevo.push(elemento.id)}
 				>
 					+
 				</button>

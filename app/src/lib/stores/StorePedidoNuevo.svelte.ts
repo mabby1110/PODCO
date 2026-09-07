@@ -1,44 +1,102 @@
-export interface DatosProducto {
+import { browser } from '$app/environment';
+import { getCookieJSON, setCookieJSON } from '$lib/utils/cookies';
+
+interface ElementoCarrito {
 	id: string;
-	[key: string]: any;
+	cantidad: number;
 }
 
-export interface ProductoKardex {
-	producto?: DatosProducto | null;
-	piezas: number;
-	stock: boolean;
+interface PedidoNuevo {
+	modal: boolean;
+	carrito: ElementoCarrito[];
+	id_agrupacion?: string;
 }
 
-class Productos {
-	items = $state<ProductoKardex[]>([]);
+const COOKIE_NAME = 'PedidoNuevo';
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
-	agregar(producto: DatosProducto) {
-		const existente = this.items.find((i) => i.producto.id === producto.id);
-		if (existente) {
-			existente.piezas += 1;
-			existente.stock = true;
+const defaultState: PedidoNuevo = {
+	modal: false,
+	carrito: []
+};
+
+function getInitialState(): PedidoNuevo {
+	if (!browser) return structuredClone(defaultState);
+
+	return getCookieJSON<PedidoNuevo>(COOKIE_NAME) ?? structuredClone(defaultState);
+}
+
+function crearPedido() {
+	let state = $state<PedidoNuevo>(getInitialState());
+
+	function saveToCookie() {
+		if (!browser) return;
+
+		setCookieJSON(COOKIE_NAME, state, {
+			maxAge: COOKIE_MAX_AGE
+		});
+	}
+
+	function push(id: string) {
+		const elemento = state.carrito.find((item) => item.id === id);
+
+		if (elemento) {
+			elemento.cantidad += 1;
 		} else {
-			this.items.push({ producto, piezas: 1, stock: false });
+			state.carrito.push({
+				id,
+				cantidad: 1
+			});
 		}
+
+		saveToCookie();
 	}
 
-	quitar(producto: DatosProducto) {
-		const indice = this.items.findIndex((i) => i.producto.id === producto.id);
-		if (indice !== -1) {
-			this.items[indice].piezas -= 1;
-			if (this.items[indice].piezas <= 0) {
-				this.items.splice(indice, 1);
-			}
+	function pop(id: string) {
+		const index = state.carrito.findIndex((item) => item.id === id);
+
+		if (index === -1) return;
+
+		const elemento = state.carrito[index];
+
+		if (elemento.cantidad > 1) {
+			elemento.cantidad -= 1;
+		} else {
+			state.carrito.splice(index, 1);
 		}
+
+		saveToCookie();
+	}
+	function limpiar() {
+		state.carrito = [];
+	}
+	function toggleModal() {
+		state.modal = !state.modal;
+		saveToCookie();
 	}
 
-	obtenerCantidad(id_producto: string): number {
-		return this.items.find((i) => i.producto.id === id_producto)?.piezas || 0;
+	function reset() {
+		state.modal = false;
+		state.carrito = [];
+
+		saveToCookie();
 	}
 
-	limpiar() {
-		this.items = [];
-	}
+	return {
+		get modal() {
+			return state.modal;
+		},
+
+		get carrito() {
+			return state.carrito;
+		},
+
+		push,
+		pop,
+		limpiar,
+		toggleModal,
+		reset
+	};
 }
 
-export const StorePedidoNuevo = new Productos();
+export const StorePedidoNuevo = crearPedido();

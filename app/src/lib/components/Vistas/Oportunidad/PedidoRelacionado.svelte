@@ -1,6 +1,5 @@
 <script lang="ts">
-	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedido.svelte';
-	import { StorePedido } from '$lib/stores/StorePedido.svelte';
+	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { goto } from '$app/navigation';
 	import SubirCotizacion from '../Documentos/SubirCotizacion.svelte';

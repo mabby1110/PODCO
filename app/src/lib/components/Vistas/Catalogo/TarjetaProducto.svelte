@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { StoreEntradaInventario } from "$lib/stores/StoreEntradaInventario.svelte";
+	import { StorePedidoNuevo } from "$lib/stores/StorePedidoNuevo.svelte";
+
 
 	let { elemento } = $props();
 </script>
-<button onclick={() => StoreEntradaInventario.push(elemento.id)}>
+<button onclick={() => StorePedidoNuevo.push(elemento.id)}>
 	{elemento.codigo}
 </button>

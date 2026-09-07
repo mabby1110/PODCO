@@ -177,7 +177,75 @@ export const actions: Actions = {
 			success: true
 		};
 	},
+	editarBorrador: async ({ request, locals: { supabase, user } }) => {
+		const formData = await request.formData();
+		const pedidosAActualizar = JSON.parse((formData.get('pedidosAActualizar') as string) || '[]');
+		const pedidosACrear = JSON.parse((formData.get('pedidosACrear') as string) || '[]');
+		let resultActualizacion: any[] = [];
 
+		
+		// PEDIDOS A ACTUALIZAR
+		if (pedidosAActualizar.length > 0) {
+			console.log('pedidos a actualizar: ', pedidosAActualizar);
+			
+			const pedidosParaActualizar = pedidosAActualizar.map((pedido: any) => ({
+				id: pedido.id,
+				cantidad: pedido.cantidad,
+				moneda: pedido.moneda,
+				precio_unitario: pedido.precio_unitario
+			}));
+			
+			const updatePromises = pedidosParaActualizar.map(async (pedido) => {
+				const { data, error } = await supabase
+					.from('pedidos')
+					.update({
+						cantidad: pedido.cantidad,
+						moneda: pedido.moneda,
+						precio_unitario: pedido.precio_unitario
+					})
+					.eq('id', pedido.id)
+					.select()
+					.single();
+
+				if (error) throw new Error(error.message);
+
+				return data;
+			});
+
+			try {
+				resultActualizacion = await Promise.all(updatePromises);
+			} catch (error: any) {
+				return fail(500, { error: error.message });
+			}
+		}
+
+		// PEDIDOS A CREAR
+		if (pedidosACrear.length > 0) {
+			console.log('pedidos a crear: ', pedidosACrear);
+
+			const pedidosParaCrear = pedidosACrear.map((pedido: any) => ({
+				id_producto: pedido.producto.id,
+				cantidad: pedido.cantidad,
+				moneda: pedido.moneda ?? 'USD',
+				precio_unitario: pedido.precio_unitario ?? 0,
+				id_agrupacion: pedidosAActualizar[0].id_agrupacion
+			}));
+
+			const { data: resultCreacion, error: errorCreacion } = await supabase
+				.from('pedidos')
+				.insert(pedidosParaCrear)
+				.select();
+
+			if (errorCreacion) {
+				console.log(errorCreacion);
+				return fail(500, { error: errorCreacion.message });
+			}
+		}
+
+		return {
+			success: true
+		};
+	},
 	deletePedido: async ({ request, locals: { supabase } }) => {
 		console.log('\nBorrar Pedido\n');
 		const formData = await request.formData();

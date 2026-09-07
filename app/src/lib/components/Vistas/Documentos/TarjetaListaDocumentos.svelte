@@ -1,7 +1,5 @@
 <script lang="ts">
 	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
-	import { formatCurrency } from '$lib/utils/util';
-	import TarjetaPedido from '../Pedidos/TarjetaPedido.svelte';
 
 	let { documento } = $props();
 	console.log(documento);

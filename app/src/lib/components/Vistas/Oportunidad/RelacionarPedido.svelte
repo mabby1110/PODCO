@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { enhance } from '$app/forms';
-	import { StoreRelacionarPedido } from '$lib/stores/StoreRelacionarPedido.svelte';
 	import { agruparDatos } from '$lib/utils/filtro';
 	import { goto } from '$app/navigation';
-	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedido.svelte';
-	import { StorePedido } from '$lib/stores/StorePedido.svelte';
+	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
 	import { onMount } from 'svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 

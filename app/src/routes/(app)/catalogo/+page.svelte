@@ -10,10 +10,9 @@
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import TarjetaProducto from '$lib/components/Vistas/Catalogo/TarjetaProducto.svelte';
-	import { StoreEntradaInventario } from '$lib/stores/StoreEntradaInventario.svelte';
 	import Panel from '$lib/components/Tarjetas/Panel.svelte';
-	import ModalEntradaInventario from '$lib/components/Vistas/Catalogo/ModalEntradaInventario.svelte';
-
+	import ModalPedidoNuevo from '$lib/components/Vistas/Catalogo/ModalPedidoNuevo.svelte';
+	
 	let { catalogo } = $derived(page.data);
 	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
@@ -36,7 +35,7 @@
 		<Searchbar data={catalogo} keyColumns={['codigo']} bind:lista />
 		<Panel tituloBoton="Restock+">
 			{#snippet contenido()}
-				<ModalEntradaInventario />
+				<ModalPedidoNuevo />
 			{/snippet}
 		</Panel>
 		<button onclick={() => appState.toggleModalProducto()} class="butter">+Agregar</button>

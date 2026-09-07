@@ -15,9 +15,7 @@
 	import { fases } from '$lib';
 	import { formatCurrency, getStyleForPhase } from '$lib/utils/util.js';
 	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
-	import Pedidos from '$lib/components/Vistas/Pedidos/Pedidos.svelte';
-	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedido.svelte';
-	import PedidosGanados from '$lib/components/Vistas/Pedidos/PedidosGanados.svelte';
+	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
 
 	let { data } = $props();
 
@@ -158,7 +156,7 @@
 				<FormOptionalInput title="historial pedidos">
 					<div class="panel">
 						{#each eventData?.pedidos as item}
-							<TarjetaPedido {item} />
+							<TarjetaPedidoLista {item} />
 						{/each}
 					</div>
 				</FormOptionalInput>
@@ -206,12 +204,7 @@
 					{#if eventData?.cotizaciones.length > 0}
 						{#each eventData?.cotizaciones as documento}
 							{#if documento.pedidos.some((p) => p.estatus == 3) || editando}
-								<Pedidos
-									{documento}
-									pedidos={eventData?.pedidos ?? []}
-									oportunidad={eventData}
-									{editando}
-								/>
+
 							{/if}
 						{/each}
 					{/if}
@@ -226,12 +219,7 @@
 				<div class="content">
 					{#if eventData?.occ.length > 0}
 						{#each eventData?.occ as documento}
-							<PedidosGanados
-								{documento}
-								pedidos={eventData?.pedidos ?? []}
-								oportunidad={eventData}
-								{editando}
-							/>
+
 						{/each}
 					{/if}
 				</div>
