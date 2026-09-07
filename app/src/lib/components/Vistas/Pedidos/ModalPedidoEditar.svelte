@@ -1,12 +1,10 @@
 <script lang="ts">
-	import { StorePedidoEditar } from '$lib/stores/StorePedidoEditar.svelte';
+	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { onMount } from 'svelte';
-	import TarjetaEditarPedido from './TarjetaPedidoEditar.svelte';
-	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
 	import TarjetaPedidoEditar from './TarjetaPedidoEditar.svelte';
-	import TarjetaPedidoNuevo from './TarjetaPedidoNuevo.svelte';
+	import TarjetaContextoOportunidad from './TarjetaContextoOportunidad.svelte';
 
-	let isMaximized = $state(false); // Estado para controlar la maximización
+	let isMaximized = $state(false);
 
 	let x = $state(0);
 	let y = $state(0);
@@ -40,7 +38,7 @@
 	}
 
 	function onMouseDown(event: MouseEvent) {
-		if (isMaximized) return; // Desactiva arrastre si está maximizado
+		if (isMaximized) return;
 		isDragging = true;
 		startX = event.clientX;
 		startY = event.clientY;
@@ -110,6 +108,7 @@
 		</div>
 
 		<div class="contenido">
+			<TarjetaContextoOportunidad />
 			<TarjetaPedidoEditar />
 		</div>
 	</div>
@@ -128,6 +127,7 @@
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;
+		z-index: 9;
 	}
 	.header-actions:active {
 		cursor: grabbing;

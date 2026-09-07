@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
-	import { StorePedidoEditar } from '$lib/stores/StorePedidoEditar.svelte';
-	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
+	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
+	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
+	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 
 	let pedidos = $derived(
 		page.data.pedidos.filter((p) => StorePedidoEditar.carrito.some((item) => item.id === p.id))
@@ -45,10 +46,17 @@
 			const formData = new FormData();
 
 			formData.append('pedidosAActualizar', JSON.stringify(pedidos));
+
+			// se van a agregar productos al pedido
 			if (idAgrupaciones.length == 1) {
 				formData.append('pedidosACrear', JSON.stringify(productos));
 			}
 
+			// se ha seleccionado oportunidad a relacionar
+			if (StoreContextoRelacion.id_oportunidad) {
+				formData.append('idOportunidad', StoreContextoRelacion.id_oportunidad);
+			}
+			
 			const response = await fetch('/pedidos?/editarBorrador', {
 				method: 'POST',
 				body: formData

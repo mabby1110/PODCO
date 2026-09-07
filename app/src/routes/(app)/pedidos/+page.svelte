@@ -10,7 +10,7 @@
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
-	import { StorePedidoEditar } from '$lib/stores/StorePedidoEditar.svelte';
+	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 
 	let { pedidos } = $derived(page.data);
 

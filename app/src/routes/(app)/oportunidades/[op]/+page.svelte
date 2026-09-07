@@ -11,11 +11,15 @@
 	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
 	import AgentActions from '$lib/components/Vistas/Oportunidad/AgentActions.svelte';
 	import PedidoRelacionado from '$lib/components/Vistas/Oportunidad/PedidoRelacionado.svelte';
-	import RelacionarPedido from '$lib/components/Vistas/Oportunidad/RelacionarPedido.svelte';
 	import { fases } from '$lib';
 	import { formatCurrency, getStyleForPhase } from '$lib/utils/util.js';
 	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
-	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
+	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte.js';
+	import { goto } from '$app/navigation';
+	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte.js';
+	import { onMount } from 'svelte';
+	import ModalPedidoEditar from '$lib/components/Vistas/Pedidos/ModalPedidoEditar.svelte';
+	import TarjetaPedidoEditar from '$lib/components/Vistas/Pedidos/TarjetaPedidoEditar.svelte';
 
 	let { data } = $props();
 
@@ -56,6 +60,13 @@
 	});
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let editando = $state(false);
+
+	function relacionarPedido() {
+		StoreContextoRelacion.setOportunidad(event.id);
+		StorePedidoEditar.toggleModal(true);
+		goto('/pedidos');
+	}
+	onMount(() => StorePedidoEditar.toggleModal(false));
 	console.log(eventData?.adjuntos);
 </script>
 
@@ -150,34 +161,28 @@
 				<h3>Pedidos:</h3>
 			</div>
 			<div class="content">
-				<FormOptionalInput title="+Potencial de venta">
-					<RelacionarPedido id_oportunidad={eventData?.id} agente={eventData?.agente} />
-				</FormOptionalInput>
-				<FormOptionalInput title="historial pedidos">
-					<div class="panel">
-						{#each eventData?.pedidos as item}
-							<TarjetaPedidoLista {item} />
-						{/each}
-					</div>
-				</FormOptionalInput>
+				<button onclick={relacionarPedido}>+Potencial de venta</button>
+				{#if StoreContextoRelacion.id_oportunidad}
+					<TarjetaPedidoEditar />
+				{/if}
 			</div>
 		</section>
 
 		{#if currentFase == 1}
-		{#if eventData?.pedidos.length > 0}
-			<section>
-				<div class="header">
-					<h3>Potencial de venta:</h3>
-				</div>
-				<div class="content">
+			{#if eventData?.pedidos.length > 0}
+				<section>
+					<div class="header">
+						<h3>Potencial de venta:</h3>
+					</div>
+					<div class="content">
 						<PedidoRelacionado
 							pedidos={eventData?.pedidos ?? []}
 							oportunidad={eventData}
 							{editando}
 							{currentFase}
 						/>
-				</div>
-			</section>
+					</div>
+				</section>
 			{/if}
 		{/if}
 		{#if currentFase >= 2 && currentFase <= 3}
@@ -203,9 +208,7 @@
 				<div class="content">
 					{#if eventData?.cotizaciones.length > 0}
 						{#each eventData?.cotizaciones as documento}
-							{#if documento.pedidos.some((p) => p.estatus == 3) || editando}
-
-							{/if}
+							{#if documento.pedidos.some((p) => p.estatus == 3) || editando}{/if}
 						{/each}
 					{/if}
 				</div>
@@ -218,9 +221,7 @@
 				</div>
 				<div class="content">
 					{#if eventData?.occ.length > 0}
-						{#each eventData?.occ as documento}
-
-						{/each}
+						{#each eventData?.occ as documento}{/each}
 					{/if}
 				</div>
 			</section>

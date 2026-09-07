@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { StorePedidoEditar } from '$lib/stores/StorePedidoEditar.svelte';
+	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 
 	let { pedidos } = $props();
 	
@@ -49,6 +49,6 @@
 		</div>
 	{/each}
 	<div class="acciones">
-		<button onclick={editarPedidoCompleto}>Editar</button>
+		<button class="butter" onclick={editarPedidoCompleto}>seleccionar</button>
 	</div>
 </div>

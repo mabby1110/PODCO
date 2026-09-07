@@ -181,27 +181,32 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const pedidosAActualizar = JSON.parse((formData.get('pedidosAActualizar') as string) || '[]');
 		const pedidosACrear = JSON.parse((formData.get('pedidosACrear') as string) || '[]');
+
+		// RELACIONES
+		const idOportunidad = (formData.get('idOportunidad') as string) || null;
+		console.log(idOportunidad);
+		
 		let resultActualizacion: any[] = [];
 
-		
 		// PEDIDOS A ACTUALIZAR
 		if (pedidosAActualizar.length > 0) {
 			console.log('pedidos a actualizar: ', pedidosAActualizar);
-			
+
 			const pedidosParaActualizar = pedidosAActualizar.map((pedido: any) => ({
 				id: pedido.id,
 				cantidad: pedido.cantidad,
 				moneda: pedido.moneda,
 				precio_unitario: pedido.precio_unitario
 			}));
-			
+
 			const updatePromises = pedidosParaActualizar.map(async (pedido) => {
 				const { data, error } = await supabase
 					.from('pedidos')
 					.update({
 						cantidad: pedido.cantidad,
 						moneda: pedido.moneda,
-						precio_unitario: pedido.precio_unitario
+						precio_unitario: pedido.precio_unitario,
+						id_oportunidad: idOportunidad
 					})
 					.eq('id', pedido.id)
 					.select()
@@ -228,7 +233,8 @@ export const actions: Actions = {
 				cantidad: pedido.cantidad,
 				moneda: pedido.moneda ?? 'USD',
 				precio_unitario: pedido.precio_unitario ?? 0,
-				id_agrupacion: pedidosAActualizar[0].id_agrupacion
+				id_agrupacion: pedidosAActualizar[0].id_agrupacion,
+				id_oportunidad: idOportunidad
 			}));
 
 			const { data: resultCreacion, error: errorCreacion } = await supabase
