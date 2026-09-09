@@ -15,9 +15,12 @@
 		}))
 	);
 
+	// ESTADOS DEL COMPONENTE
 	let actualizando = $state(false);
 	let mensaje = $state('');
+	let existeRelacionOportunidad = $derived(pedidos.some((p) => p.id_oportunidad != null));
 
+	// CRUD DEL CARRITO
 	let idAgrupaciones = $derived([
 		...new Set(pedidos.map((pedido) => pedido.id_agrupacion).filter(Boolean))
 	]);
@@ -37,7 +40,6 @@
 			pedido[campo] = valor;
 		}
 	}
-
 	async function editarBorrador() {
 		actualizando = true;
 		mensaje = '';
@@ -56,8 +58,35 @@
 			if (StoreContextoRelacion.id_oportunidad) {
 				formData.append('idOportunidad', StoreContextoRelacion.id_oportunidad);
 			}
-			
+
 			const response = await fetch('/pedidos?/editarBorrador', {
+				method: 'POST',
+				body: formData
+			});
+
+			const result = await response.json();
+
+			if (!response.ok || result?.type === 'failure') {
+				throw new Error(result?.data?.error || result?.error || 'Error al actualizar el pedido');
+			}
+
+			mensaje = 'Pedido actualizado correctamente';
+		} catch (error) {
+			console.error('Error al actualizar pedido:', error);
+			mensaje = error instanceof Error ? error.message : 'Error al actualizar el pedido';
+		} finally {
+			actualizando = false;
+			StorePedidoNuevo.limpiar();
+			invalidateAll();
+		}
+	}
+	async function eliminarRelacion() {
+		try {
+			const formData = new FormData();
+
+			formData.append('pedidosAActualizar', JSON.stringify(pedidos));
+
+			const response = await fetch('/pedidos?/eliminarRelacion', {
 				method: 'POST',
 				body: formData
 			});
@@ -189,6 +218,9 @@
 	{#if StorePedidoEditar.carrito.length > 0}
 		<div class="acciones">
 			<button class="butter" onclick={StorePedidoEditar.limpiar}>Limpiar</button>
+			{#if existeRelacionOportunidad}
+				<button class="butter" onclick={() => eliminarRelacion()}> Eliminar Relacion </button>
+			{/if}
 			<button class="butter" onclick={editarBorrador} disabled={actualizando}>
 				{actualizando ? 'Actualizando...' : 'Actualizar pedido'}
 			</button>

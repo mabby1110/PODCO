@@ -20,6 +20,7 @@
 	import { onMount } from 'svelte';
 	import ModalPedidoEditar from '$lib/components/Vistas/Pedidos/ModalPedidoEditar.svelte';
 	import TarjetaPedidoEditar from '$lib/components/Vistas/Pedidos/TarjetaPedidoEditar.svelte';
+	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
 
 	let { data } = $props();
 
@@ -67,7 +68,7 @@
 		goto('/pedidos');
 	}
 	onMount(() => StorePedidoEditar.toggleModal(false));
-	console.log(eventData?.adjuntos);
+	console.log(eventData);
 </script>
 
 <Card headerStyle={eventData?.style}>
@@ -167,6 +168,10 @@
 				{/if}
 			</div>
 		</section>
+
+		{#if event.pedidos}
+			<TarjetaPedidoLista pedidos={event.pedidos} disable/>
+		{/if}
 
 		{#if currentFase == 1}
 			{#if eventData?.pedidos.length > 0}

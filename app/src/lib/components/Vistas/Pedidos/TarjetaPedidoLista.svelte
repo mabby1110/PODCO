@@ -2,16 +2,18 @@
 	import { goto } from '$app/navigation';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 
-	let { pedidos } = $props();
-	
+	let { pedidos, disable = false } = $props();
+
 	function navegar(id_agrupacion: string) {
 		goto(`/pedidos/${id_agrupacion}`);
 	}
 	function editarPedido(id: string) {
+		if (disable) return false;
 		StorePedidoEditar.push(id);
 		StorePedidoEditar.toggleModal(true);
 	}
 	function editarPedidoCompleto() {
+		goto('/pedidos');
 		StorePedidoEditar.pushLista(pedidos);
 		StorePedidoEditar.toggleModal(true);
 	}
@@ -21,7 +23,7 @@
 	{#each pedidos as pedido}
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<div onclick={()=>editarPedido(pedido.id)}>
+		<div onclick={() => editarPedido(pedido.id)}>
 			{#each Object.entries(pedido) as [clave, valor]}
 				{#if clave === 'catalogo' && valor !== null}
 					<div>
