@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { StorePedidoNuevo } from "$lib/stores/StorePedidoNuevo.svelte";
-
+	import { StorePedidoNuevo } from "$lib/stores/pedidos/StorePedidoNuevo.svelte";
 
 	let { elemento } = $props();
 </script>

@@ -4,9 +4,6 @@
 
 	let { pedidos, disable = false } = $props();
 
-	function navegar(id_agrupacion: string) {
-		goto(`/pedidos/${id_agrupacion}`);
-	}
 	function editarPedido(id: string) {
 		if (disable) return false;
 		StorePedidoEditar.push(id);
@@ -50,7 +47,10 @@
 			<hr />
 		</div>
 	{/each}
-	<div class="acciones">
-		<button class="butter" onclick={editarPedidoCompleto}>seleccionar</button>
-	</div>
+
+	{#if !disable}
+		<div class="acciones">
+			<button class="butter" onclick={editarPedidoCompleto}>seleccionar</button>
+		</div>
+	{/if}
 </div>

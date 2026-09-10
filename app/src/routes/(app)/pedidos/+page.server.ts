@@ -123,7 +123,7 @@ export const actions: Actions = {
 	eliminar: async ({ request, locals: { supabase } }) => {
 		console.log('\nBorrar Pedido\n');
 		const formData = await request.formData();
-		const id = formData.get('id') as string;
+		const id = formData.get('id_pedido') as string;
 		console.log('\n', id);
 
 		if (!id) {

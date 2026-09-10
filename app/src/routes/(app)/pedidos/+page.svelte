@@ -36,7 +36,7 @@
 	{#snippet acciones()}
 		<Searchbar
 			data={pedidos}
-			keyColumns={['serie', 'codigo', 'descripcion', 'categorias']}
+			keyColumns={['serie', 'codigo', 'descripcion', 'categorias', 'id_agrupacion']}
 			bind:lista
 		/>
 		<button onclick={() => StorePedidoEditar.toggleModal()} class="butter">~Pedido</button>

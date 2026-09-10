@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import TarjetaListaOportunidades from '../Oportunidad/TarjetaListaOportunidades.svelte';
@@ -10,8 +9,6 @@
 
 	console.log('oportunidad en tarjeta contexto', oportunidad);
 
-	function editarPedido(id: string) {}
-	function editarPedidoCompleto() {}
 </script>
 
 {#if StoreContextoRelacion.id_oportunidad}

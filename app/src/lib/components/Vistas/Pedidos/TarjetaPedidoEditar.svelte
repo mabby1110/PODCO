@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
@@ -20,11 +20,6 @@
 	let mensaje = $state('');
 	let existeRelacionOportunidad = $derived(pedidos.some((p) => p.id_oportunidad != null));
 
-	// CRUD DEL CARRITO
-	let idAgrupaciones = $derived([
-		...new Set(pedidos.map((pedido) => pedido.id_agrupacion).filter(Boolean))
-	]);
-
 	function actualizarCampo(
 		pedidoId: string,
 		campo: 'cantidad' | 'moneda' | 'precio_unitario',
@@ -40,11 +35,35 @@
 			pedido[campo] = valor;
 		}
 	}
+
+	async function limpiarCarrito() {
+		StorePedidoEditar.limpiar();
+		StorePedidoNuevo.limpiar();
+		StoreContextoRelacion.limpiar();
+	}
+
+	// CRUD DEL CARRITO
+	let idAgrupaciones = $derived([
+		...new Set(pedidos.map((pedido) => pedido.id_agrupacion).filter(Boolean))
+	]);
 	async function editarBorrador() {
 		actualizando = true;
 		mensaje = '';
 
 		try {
+			const tieneOportunidadRelacionada = pedidos.some((pedido) => pedido.id_oportunidad !== null);
+
+			if (tieneOportunidadRelacionada) {
+				const confirmar = window.confirm(
+					'Uno o más pedidos tienen una oportunidad relacionada. ¿Estás seguro de que deseas continuar? Esto podría eliminar las relaciones con oportunidades.'
+				);
+
+				if (!confirmar) {
+					actualizando = false;
+					return;
+				}
+			}
+
 			const formData = new FormData();
 
 			formData.append('pedidosAActualizar', JSON.stringify(pedidos));
@@ -71,15 +90,28 @@
 			}
 
 			mensaje = 'Pedido actualizado correctamente';
+
+			const idOportunidad = StoreContextoRelacion.id_oportunidad;
+
+			console.log('finally:', idOportunidad);
+
+			if (idOportunidad) {
+				const ruta = `/oportunidades/${idOportunidad}`;
+				console.log('navegando a:', ruta);
+
+				await goto(ruta);
+			}
+
+			limpiarCarrito();
+			invalidateAll();
 		} catch (error) {
 			console.error('Error al actualizar pedido:', error);
 			mensaje = error instanceof Error ? error.message : 'Error al actualizar el pedido';
 		} finally {
 			actualizando = false;
-			StorePedidoNuevo.limpiar();
-			invalidateAll();
 		}
 	}
+
 	async function eliminarRelacion() {
 		try {
 			const formData = new FormData();
@@ -98,14 +130,43 @@
 			}
 
 			mensaje = 'Pedido actualizado correctamente';
+			limpiarCarrito();
+			invalidateAll();
 		} catch (error) {
 			console.error('Error al actualizar pedido:', error);
 			mensaje = error instanceof Error ? error.message : 'Error al actualizar el pedido';
 		} finally {
 			actualizando = false;
-			StorePedidoNuevo.limpiar();
-			invalidateAll();
 		}
+	}
+
+	async function eliminarPedido(id_pedido: string) {
+		try {
+			const formData = new FormData();
+
+			formData.append('id_pedido', id_pedido);
+
+			const response = await fetch('/pedidos?/eliminar', {
+				method: 'POST',
+				body: formData
+			});
+
+			const result = await response.json();
+
+			if (!response.ok || result?.type === 'failure') {
+				throw new Error(result?.data?.error || result?.error || 'Error al eliminar el pedido');
+			}
+
+			StorePedidoEditar.pop(id_pedido);
+			invalidateAll();
+			mensaje = 'Pedido eliminado correctamente';
+		} catch (error) {
+			console.error('Error al eliminar pedido:', error);
+			mensaje = error instanceof Error ? error.message : 'Error al eliminar el pedido';
+		} finally {
+			actualizando = false;
+		}
+
 	}
 </script>
 
@@ -193,6 +254,7 @@
 			<hr />
 
 			<button class="butter" onclick={() => StorePedidoEditar.pop(pedido.id)}> Quitar </button>
+			<button class="butter" onclick={() => eliminarPedido(pedido.id)}> Eliminar </button>
 		</div>
 	{/each}
 
@@ -217,7 +279,7 @@
 	<!-- acciones -->
 	{#if StorePedidoEditar.carrito.length > 0}
 		<div class="acciones">
-			<button class="butter" onclick={StorePedidoEditar.limpiar}>Limpiar</button>
+			<button class="butter" onclick={limpiarCarrito}>Limpiar</button>
 			{#if existeRelacionOportunidad}
 				<button class="butter" onclick={() => eliminarRelacion()}> Eliminar Relacion </button>
 			{/if}

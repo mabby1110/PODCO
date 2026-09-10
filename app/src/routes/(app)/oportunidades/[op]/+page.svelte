@@ -62,10 +62,10 @@
 	let currentFase = $derived(eventData?.fase?.id_fase || 1);
 	let editando = $state(false);
 
-	function relacionarPedido() {
+	async function relacionarPedido() {
 		StoreContextoRelacion.setOportunidad(event.id);
+		await goto('/pedidos');
 		StorePedidoEditar.toggleModal(true);
-		goto('/pedidos');
 	}
 	onMount(() => StorePedidoEditar.toggleModal(false));
 	console.log(eventData);
@@ -168,7 +168,7 @@
 				{/if}
 			</div>
 		</section>
-
+		
 		{#if event.pedidos}
 			<TarjetaPedidoLista pedidos={event.pedidos} disable/>
 		{/if}
