@@ -34,9 +34,9 @@
 	function handleSubmit() {
 		isSubmitting = true;
 		return async ({ result, update }: any) => {
-			isSubmitting = false;
 
 			if (result.type === 'success') {
+				isSubmitting = false;
 				isOpen = false;
 				if (onSuccess) onSuccess();
 				await update({ reset: true });
@@ -46,18 +46,12 @@
 		};
 	}
 </script>
-{#if isOpen}
-<div class="header">
-	<h3>Acciones</h3>
-</div>
-{/if}
+
 <div class="form-actions">
 	<form method="POST" {action} enctype="multipart/form-data" use:enhance={handleSubmit}>
-		{#if isOpen}
+		{#if isOpen && inputs}
 			<div class="inputs" bind:this={actionsElement}>
-				{#if inputs}
-					{@render inputs()}
-				{/if}
+				{@render inputs()}
 			</div>
 		{/if}
 

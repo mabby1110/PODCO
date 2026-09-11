@@ -28,7 +28,6 @@
 	let lista_ordenada = $derived(sortData(lista, currentRoute));
 	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
 	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
-
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 </script>
 
@@ -52,8 +51,8 @@
 
 	{#snippet contenido()}
 		{#if !isGrouped}
-			{#each lista_filtrada as event (event.id)}
-				<TarjetaListaOportunidades {event} />
+			{#each lista_filtrada as oportunidad (oportunidad.id)}
+				<TarjetaListaOportunidades {oportunidad} />
 			{:else}
 				<div class="no-results">
 					<p>No se encontraron datos.</p>
@@ -62,8 +61,8 @@
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={show}>
-					{#each agrupacion.items as event (event.id)}
-						<TarjetaListaOportunidades {event} />
+					{#each agrupacion.items as oportunidad (oportunidad.id)}
+						<TarjetaListaOportunidades {oportunidad} />
 					{/each}
 				</Grupo>
 			{:else}

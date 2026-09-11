@@ -83,7 +83,7 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
 		console.log(formData);
-		
+
 		/* PROCESAR OPORTUNIDAD */
 		const id = (data['id_op'] as string) || (data['id'] as string);
 		if (!id) {
@@ -141,6 +141,28 @@ export const actions: Actions = {
 		console.log('\nNotificación creada:\n', notificacion);
 
 		return { success: true };
+	},
+	actualizarOportunidad: async ({ request, locals: { supabase, user } }) => {
+		const formData = await request.formData();
+		const oportunidad = Object.fromEntries(formData.entries());
+		let resultActualizacion: any[] = [];
+
+		console.log(oportunidad);
+
+		const { data, error } = await supabase
+			.from('oportunidades')
+			.update(oportunidad)
+			.eq('id', oportunidad.id)
+			.select()
+			.single();
+		console.log(data, error);
+		if (error) {
+			throw new Error(error.message);
+		}
+
+		return {
+			success: true
+		};
 	},
 	delete: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();

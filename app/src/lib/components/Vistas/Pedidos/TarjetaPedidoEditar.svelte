@@ -101,9 +101,9 @@
 
 				await goto(ruta);
 			}
-
 			limpiarCarrito();
 			invalidateAll();
+
 		} catch (error) {
 			console.error('Error al actualizar pedido:', error);
 			mensaje = error instanceof Error ? error.message : 'Error al actualizar el pedido';
@@ -111,7 +111,6 @@
 			actualizando = false;
 		}
 	}
-
 	async function eliminarRelacion() {
 		try {
 			const formData = new FormData();
@@ -139,7 +138,6 @@
 			actualizando = false;
 		}
 	}
-
 	async function eliminarPedido(id_pedido: string) {
 		try {
 			const formData = new FormData();

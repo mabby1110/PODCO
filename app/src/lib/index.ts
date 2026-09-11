@@ -307,94 +307,6 @@ export const agrupacionesDocumentos = [
 	{ value: 'tipo', label: 'tipo' }
 ];
 
-// FASES
-export const fases = [
-	{
-		id_fase: 1,
-		actual: 'Oportunidad',
-		accion: 'Analizar',
-		placeholder: 'Actividad con un cliente especifico.',
-		color: 'b8c0d999'
-	},
-	{
-		id_fase: 2,
-		actual: 'Analisis',
-		accion: 'Negociar',
-		placeholder: 'Validar alcance, condiciones técnicas y viabilidad del producto(s) seleccionado',
-		color: '5ca8ff99'
-	},
-	{
-		id_fase: 3,
-		actual: 'Negociacion',
-		accion: 'Ganar',
-		placeholder: 'Motivos de conversión',
-		color: 'ffd70099'
-	},
-	{
-		id_fase: 4,
-		actual: 'Ganada',
-		accion: 'Proceso de envío',
-		placeholder: 'O.C BMS a proveedor (reconocimiento si hay) y documentos logistica',
-		color: '34d76a99'
-	},
-	{
-		id_fase: 5,
-		actual: 'En proceso de entrega',
-		accion: 'En transito',
-		placeholder:
-			'Proceso de logística, reunir el material vendido, esperar material pedido al proveedor y corroborar condiciones',
-		color: '5ca8ffcc'
-	},
-	{
-		id_fase: 6,
-		actual: 'En transito',
-		accion: 'Pedido entregado',
-		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes',
-		color: 'ffd700cc'
-	},
-	{
-		id_fase: 7,
-		actual: 'Pedido entregado',
-		accion: 'Pendiente por cobrar',
-		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes',
-		color: '34d76acc'
-	},
-	{
-		id_fase: 8,
-		actual: 'Oportunidad finalizada',
-		accion: '',
-		placeholder: 'Cerrar ciclo y documentar resultados y aprendizajes',
-		color: '000000ee'
-	},
-	{
-		id_fase: 0,
-		actual: 'Perdida',
-		accion: 'Analizar',
-		placeholder: 'Registrar motivo de pérdida y lecciones para futuras oportunidades',
-		color: 'ff444499'
-	}
-];
-export const fases_actividad = [
-	{
-		id_fase: 1,
-		actual: 'Programada',
-		accion: 'Finalizar',
-		placeholder: 'Actividad agendada'
-	},
-	{
-		id_fase: 6,
-		actual: 'Finalizada',
-		accion: '',
-		placeholder: 'Actividad finalizada y registrada en el historial'
-	},
-	{
-		id_fase: 0,
-		actual: 'Cancelada',
-		accion: 'Activar',
-		placeholder: 'Actividad cancelada, se puede reactivar'
-	}
-];
-
 // MOTIVOS
 export let motivosActividades = [
 	'Trabajo Administrativo',
@@ -437,13 +349,100 @@ export let motivosProspeccion = [
 	'Evento / Feria / Exposición',
 	'Reactivación de cliente'
 ];
-// COLORES
-export const colorMap = {
-	'0': 'var(--color-perdida);',
-	'1': 'var(--color-prospecto);',
-	'2': 'var(--color-analizar);',
-	'3': 'var(--color-cotizar);',
-	'4': 'var(--color-ganada);',
-	'5': 'var(--color-enviar);',
-	'6': 'var(--color-finalizar); color: var(--color-text-ob);'
-};
+
+// FASES
+export const fasesOportunidad = [
+	{
+		id_fase: 0,
+		actual: 'Perdida',
+		accion: 'Analizar',
+		placeholder_accion: '',
+		placeholder_actual: 'Registrar motivo de pérdida y lecciones para futuras oportunidades',
+		estilo: 'background-color: var(--color-0);'
+	},
+	{
+		id_fase: 1,
+		actual: 'Oportunidad',
+		accion: 'Analizar',
+		placeholder_accion: 'Especificar acciones concretas a realizar',
+		placeholder_actual: 'Actividad con un cliente especifico.',
+		estilo: 'background-color: var(--color-1);'
+	},
+	{
+		id_fase: 2,
+		actual: 'Analisis',
+		accion: 'Negociar',
+		placeholder_accion: '',
+		placeholder_actual: 'Validar alcance, condiciones técnicas y viabilidad del producto(s) seleccionado',
+		estilo: 'background-color: var(--color-2);'
+	},
+	{
+		id_fase: 3,
+		actual: 'Negociacion',
+		accion: 'Ganar',
+		placeholder_accion: '',
+		placeholder_actual: 'Motivos de conversión',
+		estilo: 'background-color: var(--color-3);'
+	},
+	{
+		id_fase: 4,
+		actual: 'Ganada',
+		accion: 'Proceso de envío',
+		placeholder_accion: '',
+		placeholder_actual: 'O.C BMS a proveedor (reconocimiento si hay) y documentos logistica',
+		estilo: 'background-color: var(--color-4);'
+	},
+	{
+		id_fase: 5,
+		actual: 'En proceso de entrega',
+		accion: 'En transito',
+		placeholder_accion: '',
+		placeholder_actual:
+			'Proceso de logística, reunir el material vendido, esperar material pedido al proveedor y corroborar condiciones',
+		estilo: 'background-color: var(--color-5);'
+	},
+	{
+		id_fase: 6,
+		actual: 'En transito',
+		accion: 'Pedido entregado',
+		placeholder_accion: '',
+		placeholder_actual: 'Cerrar ciclo y documentar resultados y aprendizajes',
+		estilo: 'background-color: var(--color-6);'
+	},
+	{
+		id_fase: 7,
+		actual: 'Pedido entregado',
+		accion: 'Pendiente por cobrar',
+		placeholder_accion: '',
+		placeholder_actual: 'Cerrar ciclo y documentar resultados y aprendizajes',
+		estilo: 'background-color: var(--color-7);'
+	},
+	{
+		id_fase: 8,
+		actual: 'Oportunidad finalizada',
+		accion: '',
+		placeholder_accion: '',
+		placeholder_actual: 'Cerrar ciclo y documentar resultados y aprendizajes',
+		estilo: 'background-color: var(--color-8); color: var(--color-text-ob);'
+	}
+];
+export const fases_actividad = [
+	{
+		id_fase: 1,
+		actual: 'Programada',
+		accion: 'Finalizar',
+		placeholder: 'Actividad agendada'
+	},
+	{
+		id_fase: 6,
+		actual: 'Finalizada',
+		accion: '',
+		placeholder: 'Actividad finalizada y registrada en el historial'
+	},
+	{
+		id_fase: 0,
+		actual: 'Cancelada',
+		accion: 'Activar',
+		placeholder: 'Actividad cancelada, se puede reactivar'
+	}
+];

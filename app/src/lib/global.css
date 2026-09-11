@@ -315,10 +315,6 @@ section .block {
 	background-color: var(--color-secondary);
 }
 
-.butter:hover {
-	opacity: 60%;
-}
-
 .butter {
 	display: flex;
 	justify-content: center;

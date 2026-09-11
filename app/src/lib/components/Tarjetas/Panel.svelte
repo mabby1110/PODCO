@@ -137,7 +137,7 @@
 		position: fixed;
 		top: 0;
 		right: 0;
-		max-width: 800px;
+		max-width: 600px;
 		width: 100%;
 		height: fit-content;
 		max-height: 60%;

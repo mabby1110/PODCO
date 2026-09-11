@@ -14,7 +14,7 @@
 {#if StoreContextoRelacion.id_oportunidad}
 	<div class="tarjeta-contexto">
 		<button class="butter chile" onclick={StoreContextoRelacion.limpiar}>✕</button>
-		<TarjetaListaOportunidades event={oportunidad} />
+		<TarjetaListaOportunidades {oportunidad} />
 	</div>
 {/if}
 

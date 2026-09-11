@@ -6,205 +6,90 @@
 	import FormOptionalSubmit from '$lib/components/Formularios/FormOptionalSubmit.svelte';
 	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
 	import UploadFile from '$lib/components/Formularios/UploadFile.svelte';
-	import { fases, motivosOportunidad } from '$lib';
-	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
-	import { getStyleForPhase } from '$lib/utils/util';
-	import { profile } from '$lib/stores/profileStore.svelte';
+	import { fasesOportunidad, motivosOportunidad } from '$lib';
 
-	let { eventData, editando = $bindable(false) }: { eventData: any; editando?: boolean } = $props();
+	let { oportunidad, editando = $bindable(false) }: { oportunidad: any; editando?: boolean } =
+		$props();
 
-	let currentPhase = $derived(Number(eventData.fase.id_fase));
-	let nextPhase = $derived(Number(currentPhase) + 1);
+	// ESTADO
+	let fase = $derived(fasesOportunidad[oportunidad.fase]);
+	let siguienteFase = $derived(fasesOportunidad[oportunidad.fase + 1]);
+	let canSubmit = $state(true);
 
-	let nuevoRequisito = $state('');
-	let nuevaHistoria = $state('');
-	let nuevaCotizacion = $state('');
-	let nuevaObeservacion = $state('');
-	let necesidades = $state('');
-	let potencial_venta = $state(eventData.potencial_venta || '');
-	let objetivo = $state('');
 	let isOpen = $state(false);
 	let submit = $state(false);
 
-	let canSubmit = $derived.by(() => {
-		const cotizacionesCount = eventData.cotizaciones?.length || 0;
-		// Si occ y ocp son arreglos, use .length directamente.
-		// Si son objetos {}, use Object.keys().length:
-		const occCount = Object.keys(eventData.occ || {}).length;
-		const ocpCount = Object.keys(eventData.ocp || {}).length;
-
-		console.log('cotizaciones', cotizacionesCount);
-		console.log('occ', occCount);
-
-		if (currentPhase == 2) {
-			return cotizacionesCount > 0;
-		} else if (currentPhase == 3) {
-			return cotizacionesCount > 0 && occCount > 0;
-		} else if (currentPhase == 4) {
-			return cotizacionesCount > 0 && occCount > 0 && ocpCount > 0;
-		} else {
-			return true;
-		}
-	});
-
 	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
-	let style = $derived(getStyleForPhase(currentPhase + 1));
-
-	let fasePlaceholder = $derived(
-		fases.find((f) => f.id_fase == currentPhase)?.placeholder ?? 'Ingresa la acción realizada'
-	);
 
 	// Callback para resetear el estado local tras un envío exitoso
 	function handleSuccess() {
-		nuevoRequisito = '';
-		nuevaHistoria = '';
-		nuevaCotizacion = '';
-		nuevaObeservacion = '';
+		alert('actualizado con exito');
 	}
 </script>
 
-<FormActions action="/oportunidades?/update" bind:isOpen onSuccess={handleSuccess}>
-	{#if currentPhase <= 3 && currentPhase != 0 && currentPhase != 6}
-		{#snippet inputs()}
-			{#if submit}
-				{#if currentPhase == 1}
-					<FormSelectMotivo
-						title="Especificar Motivo"
-						list={motivosOportunidad}
-						disableCustom={false}
-					/>
-					<FormInput
-						label="Objetivo"
-						name="objetivo"
-						bind:value={objetivo}
-						placeholder="Especificar Objetivo"
-						type="text"
-						required
-					/>
-					<FormInput
-						label="Necesidad"
-						name="necesidades"
-						bind:value={necesidades}
-						placeholder="Requerimiento técnico u operacional detectados"
-						type="textarea"
-						required
-					/>
-				{:else if currentPhase == 2}
-					<input type="hidden" name="fecha_negociacion" value={new Date().toISOString()} />
-					<FormSelectMotivo
-						title="Especificar Motivo"
-						list={motivosOportunidad}
-						disableCustom={false}
-					/>
-					<FormInput
-						label="Análisis"
-						name="nuevaHistoria"
-						bind:value={nuevaHistoria}
-						placeholder={fasePlaceholder}
-						type="textarea"
-						required
-					/>
-					<div class="opcional">
-						<h3>Cotizacion(es)</h3>
-						<div class="opciones">
-							{#if eventData.cotizaciones.length > 0}
-								{#each eventData.cotizaciones as documento}
-									<p>{documento.titulo}</p>
-								{/each}
-							{:else}
-								<p>Subir cotizacion para avanzar fase</p>
-							{/if}
-						</div>
+<FormActions action="/oportunidades?/actualizarOportunidad" bind:isOpen onSuccess={handleSuccess}>
+	{#snippet hiddenContent()}
+		<input type="hidden" name="id" value={oportunidad.id} />
+	{/snippet}
+
+	{#snippet inputs()}
+		<hr />
+		{#if submit}
+			{#if fase.id_fase == 1}
+				<section>
+					<div class="header">
+						<h3>Análisis:</h3>
 					</div>
-					<div class="opcional">
-						<h3>Informacion adicional</h3>
-						<div class="opciones">
-							<FormOptionalInput title="+Observaciones">
-								<FormInput
-									label="Observaciones"
-									name="observaciones"
-									bind:value={nuevaObeservacion}
-									placeholder="Detalles importantes y pautas a seguir"
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+Agregar requisitos">
-								<FormInput
-									label="Requisitos"
-									name="nuevosRequisitos"
-									bind:value={nuevoRequisito}
-									placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+adjuntos">
-								<UploadFile label="Subir documentos" name="adjuntos" multiple />
-							</FormOptionalInput>
-						</div>
+
+					<div class="content">
+						<FormSelectMotivo
+							title="Especificar Motivo"
+							list={motivosOportunidad}
+							disableCustom={false}
+						/>
+						<FormInput
+							label="Objetivo"
+							name="objetivo"
+							placeholder={fase.placeholder_accion}
+							type="text"
+							required
+						/>
+						<FormInput
+							label="Necesidad"
+							name="necesidades"
+							placeholder="Requerimiento detectados"
+							type="textarea"
+							required
+						/>
 					</div>
-					<DatePicker title="Fecha seguimiento o Expiración" />
-				{:else if currentPhase == 3}
-					<FormInput
-						label={eventData.fase.actual}
-						name="nuevaHistoria"
-						bind:value={nuevaHistoria}
-						placeholder={fasePlaceholder}
-						type="textarea"
-						required
-					/>
-					<div class="opcional">
-						<h3>Orden de compra</h3>
-						<div class="opciones">
-							{#if eventData.occ.length > 0}
-								{#each eventData.occ as documento}
-									<p>{documento.titulo}</p>
-								{/each}
-							{:else}
-								<p>Subir Orden(es) de compra para avanzar fase</p>
-							{/if}
-						</div>
-					</div>
-					<div class="opcional">
-						<h3>Informacion adicional</h3>
-						<div class="opciones">
-							<FormOptionalInput title="+Observaciones">
-								<FormInput
-									label="Observaciones"
-									name="observaciones"
-									bind:value={nuevaObeservacion}
-									placeholder="Detalles importantes y pautas a seguir"
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-							<FormOptionalInput title="+Agregar requisitos">
-								<FormInput
-									label="Requisitos"
-									name="nuevosRequisitos"
-									bind:value={nuevoRequisito}
-									placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-									type="textarea"
-									required
-								/>
-							</FormOptionalInput>
-						</div>
-					</div>
-					<DatePicker title="Seguimiento / Envío" />
-					<input type="hidden" name="fecha_pedido" value={new Date().toISOString()} />
-				{/if}
-			{:else if submitCancel}
-				<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
+				</section>
+			{:else if fase.id_fase == 2}
+				<input type="hidden" name="fecha_negociacion" value={new Date().toISOString()} />
+				<FormSelectMotivo
+					title="Especificar Motivo"
+					list={motivosOportunidad}
+					disableCustom={false}
+				/>
 				<FormInput
-					label="Pérdida"
+					label="Análisis"
 					name="nuevaHistoria"
-					bind:value={nuevaHistoria}
-					placeholder="Motivo de la pérdida"
+					placeholder={fase.accion}
 					type="textarea"
 					required
 				/>
+				<div class="opcional">
+					<h3>Cotizacion(es)</h3>
+					<div class="opciones">
+						{#if oportunidad.cotizaciones.length > 0}
+							{#each oportunidad.cotizaciones as documento}
+								<p>{documento.titulo}</p>
+							{/each}
+						{:else}
+							<p>Subir cotizacion para avanzar fase</p>
+						{/if}
+					</div>
+				</div>
 				<div class="opcional">
 					<h3>Informacion adicional</h3>
 					<div class="opciones">
@@ -212,85 +97,122 @@
 							<FormInput
 								label="Observaciones"
 								name="observaciones"
-								bind:value={nuevaObeservacion}
 								placeholder="Detalles importantes y pautas a seguir"
 								type="textarea"
 								required
 							/>
 						</FormOptionalInput>
+						<FormOptionalInput title="+Agregar requisitos">
+							<FormInput
+								label="Requisitos"
+								name="nuevosRequisitos"
+								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
 						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="docFile" multiple />
+							<UploadFile label="Subir documentos" name="adjuntos" multiple />
 						</FormOptionalInput>
 					</div>
 				</div>
-			{/if}
-		{/snippet}
-
-		{#snippet hiddenContent()}
-			<input type="hidden" name="id" value={eventData.id} />
-			{#if nuevaHistoria}
-				<input
-					type="hidden"
-					name="historia"
-					value={agregarEntrada(eventData.historia, nuevaHistoria, $profile)}
+				<DatePicker title="Fecha seguimiento o Expiración" />
+			{:else if fase.id_fase == 3}
+				<FormInput
+					label={oportunidad.fase.actual}
+					name="nuevaHistoria"
+					type="textarea"
+					required
 				/>
+				<div class="opcional">
+					<h3>Orden de compra</h3>
+					<div class="opciones">
+						{#if oportunidad.occ.length > 0}
+							{#each oportunidad.occ as documento}
+								<p>{documento.titulo}</p>
+							{/each}
+						{:else}
+							<p>Subir Orden(es) de compra para avanzar fase</p>
+						{/if}
+					</div>
+				</div>
+				<div class="opcional">
+					<h3>Informacion adicional</h3>
+					<div class="opciones">
+						<FormOptionalInput title="+Observaciones">
+							<FormInput
+								label="Observaciones"
+								name="observaciones"
+								placeholder="Detalles importantes y pautas a seguir"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+Agregar requisitos">
+							<FormInput
+								label="Requisitos"
+								name="nuevosRequisitos"
+								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+					</div>
+				</div>
+				<DatePicker title="Seguimiento / Envío" />
+				<input type="hidden" name="fecha_pedido" value={new Date().toISOString()} />
 			{/if}
-			{#if nuevoRequisito}
-				<input
-					type="hidden"
-					name="requisitos"
-					value={concatStrings(eventData.requisitos, nuevoRequisito)}
-				/>
-			{/if}
-			{#if nuevaCotizacion}
-				<input
-					type="hidden"
-					name="cotizaciones_presentadas"
-					bind:value={eventData.cotizaciones_presentadas}
-				/>
-			{/if}
-			{#if nuevaObeservacion}
-				<input
-					type="hidden"
-					name="observaciones"
-					value={concatStrings(eventData.observaciones, nuevaObeservacion)}
-				/>
-			{/if}
-			{#if eventData.agente}
-				<input type="hidden" name="agente" value={eventData.agente.nombre} />
-			{/if}
-			{#if nextPhase == 6}
-				<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
-			{/if}
-		{/snippet}
-	{/if}
+		{:else if submitCancel}
+			<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
+			<FormInput
+				label="Pérdida"
+				name="nuevaHistoria"
+				placeholder="Motivo de la pérdida"
+				type="textarea"
+				required
+			/>
+			<div class="opcional">
+				<h3>Informacion adicional</h3>
+				<div class="opciones">
+					<FormOptionalInput title="+Observaciones">
+						<FormInput
+							label="Observaciones"
+							name="observaciones"
+							placeholder="Detalles importantes y pautas a seguir"
+							type="textarea"
+							required
+						/>
+					</FormOptionalInput>
+					<FormOptionalInput title="+adjuntos">
+						<UploadFile label="Subir documentos" name="docFile" multiple />
+					</FormOptionalInput>
+				</div>
+			</div>
+		{/if}
+	{/snippet}
 
 	{#snippet submitContent(isSubmitting: boolean)}
-		<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
-			Editar
-		</button>
-		{#if currentPhase <= 3 && currentPhase != 0 && currentPhase != 6}
+		{#if fase.id_fase <= 3 && fase.id_fase != 0}
 			{#if submit}
-				<input type="hidden" name="fase" value={nextPhase} />
-				<button type="submit" class="butter" {style} disabled={isSubmitting || !canSubmit}>
-					{isSubmitting ? 'Procesando...' : eventData.fase.accion}
-				</button>
-			{:else if submitUpdate}
-				<input type="hidden" name="fase" value={currentPhase} />
-				<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}
-					>Actualizar</button
+				<input type="hidden" name="fase" value={siguienteFase.id_fase} />
+				<button
+					type="submit"
+					class="butter"
+					style={siguienteFase.estilo}
+					disabled={isSubmitting || !canSubmit}
 				>
+					{isSubmitting ? 'Procesando...' : fase.accion}
+				</button>
 			{:else if submitCancel}
 				<input type="hidden" name="fase" value={0} />
 				<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}>Descartar</button
 				>
+			{:else}
+				<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
+					Editar
+				</button>
 			{/if}
-			<FormOptionalSubmit
-				nextFase={eventData.fase.accion}
-				bind:submit
-				bind:submitCancel
-				bind:isOpen
-			/>
+			<FormOptionalSubmit {siguienteFase} bind:submit bind:submitCancel bind:isOpen />
 		{/if}
 	{/snippet}
 </FormActions>

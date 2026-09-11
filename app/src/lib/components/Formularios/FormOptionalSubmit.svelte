@@ -1,11 +1,13 @@
 <script lang="ts">
+	import { fasesOportunidad } from "$lib";
+
 	let {
-		nextFase = $bindable(),
+		siguienteFase = $bindable(),
 		isOpen = $bindable(),
 		submit = $bindable(),
 		submitCancel = $bindable()
 	}: {
-		nextFase: string;
+		siguienteFase: any;
 		isOpen: boolean;
 		submit: boolean;
 		submitCancel?: boolean;
@@ -39,7 +41,7 @@
 	{#if submitCancel}
 		<button class="butter" type="button" onclick={toggleCancel}> Descartar </button>
 	{/if}
-	<button class="butter matcha" type="button" onclick={toggleSubmit}> {nextFase} </button>
+	<button class="butter" style={siguienteFase.estilo} type="button" onclick={toggleSubmit}> {siguienteFase.actual} </button>
 {:else}
 	<button class="butter chile" type="button" onclick={close}>✕</button>
 {/if}

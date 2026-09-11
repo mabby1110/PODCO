@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { addMinutes } from '$lib/utils/agenda';
 	import { procesarDatosReactivos } from '$lib/utils/filtro';
-	import { page } from '$app/stores';
 	import DatePickerCard from './DatePickerCard.svelte';
 
 	let { title = '' } = $props<{
@@ -10,11 +10,11 @@
 
 	let inicio = $state('');
 	let fin = $state('');
-	let oportunidades = $derived($page.data.oportunidades || []);
-	let actividades = $derived($page.data.actividades || []);
+	let oportunidades = $derived(page.data.oportunidades || []);
+	let actividades = $derived(page.data.actividades || []);
 
 	let allActivities = $derived([...oportunidades, ...actividades]);
-	let currentRoute = $derived($page.url.pathname);
+	let currentRoute = $derived(page.url.pathname);
 
 	const listaAgrupada = $derived.by(() => procesarDatosReactivos(allActivities, currentRoute));
 
@@ -146,6 +146,7 @@
 <input type="hidden" name="inicio" value={inicio} />
 <input type="hidden" name="fin" value={fin} />
 
+<p>{title}</p>
 <div class="datetime-split">
 	<div class="datetime-item">
 		<span>Fecha</span>

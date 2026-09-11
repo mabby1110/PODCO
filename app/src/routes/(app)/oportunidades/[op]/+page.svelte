@@ -1,207 +1,151 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { profile } from '$lib/stores/profileStore.svelte.js';
-	import Entradas from '$lib/components/Acciones/Entradas.svelte';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte.js';
+	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte.js';
+	import Card from '$lib/components/Tarjetas/Card.svelte';
+	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
+	import TarjetaPedidoEditar from '$lib/components/Vistas/Pedidos/TarjetaPedidoEditar.svelte';
 	import CustomInput from '$lib/components/Formularios/CustomInput.svelte';
 	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
 	import EditableInput from '$lib/components/Formularios/EditableInput.svelte';
-	import Card from '$lib/components/Tarjetas/Card.svelte';
 	import FormEditableContact from '$lib/components/Vistas/Cliente/FormEditableContact.svelte';
-	import SubirAdjunto from '$lib/components/Vistas/Documentos/SubirAdjunto.svelte';
-	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 	import AgentActions from '$lib/components/Vistas/Oportunidad/AgentActions.svelte';
-	import PedidoRelacionado from '$lib/components/Vistas/Oportunidad/PedidoRelacionado.svelte';
-	import { fases } from '$lib';
-	import { formatCurrency, getStyleForPhase } from '$lib/utils/util.js';
-	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
-	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte.js';
-	import { goto } from '$app/navigation';
-	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte.js';
-	import { onMount } from 'svelte';
-	import ModalPedidoEditar from '$lib/components/Vistas/Pedidos/ModalPedidoEditar.svelte';
-	import TarjetaPedidoEditar from '$lib/components/Vistas/Pedidos/TarjetaPedidoEditar.svelte';
-	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
-
-	let { data } = $props();
-
-	const clientes = $derived(page.data.clientes || []);
-	const agentes = $derived(page.data.agentes || []);
-	const pedidos = $derived(page.data.pedidos || []);
-	const event = $derived(data.oportunidad);
-	const eventData = $derived.by(() => {
-		if (!event) return null;
-		return {
-			id: event.id,
-			cotizaciones: event.docs_cotizaciones.sort(
-				(a, b) => Number(b.pedidos?.length > 0) - Number(a.pedidos?.length > 0)
-			),
-			adjuntos: event.docs_adjuntos,
-			occ: event.docs_occ,
-			ocp: event.docs_ocp,
-			cliente: clientes?.find((c: { id: any }) => c.id == event.id_cliente),
-			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
-			fase: fases.find((f) => f.id_fase == event.fase),
-			motivo: event?.motivo,
-			inicio: event?.inicio,
-			fin: event?.fin,
-			historia: event.historia,
-			necesidades: event.necesidades,
-			potencial_venta: event.potencial_venta,
-			requisitos: event.requisitos,
-			observaciones: event.observaciones,
-			cotizaciones_ganadas: event.cotizaciones_ganadas,
-			cotizaciones_presentadas: event.cotizaciones_presentadas,
-			oc_cliente: event.oc_cliente,
-			objetivo: event.objetivo,
-			monto_oc: formatCurrency(event.monto_oc, 'USD'),
-			etiquetas: event.etiquetas,
-			pedidos: event.pedidos || [],
-			style: getStyleForPhase(event.fase)
-		};
-	});
-	let currentFase = $derived(eventData?.fase?.id_fase || 1);
+	import { fasesOportunidad } from '$lib';
+	
+	onMount(() => StorePedidoEditar.toggleModal(false));
+	const oportunidad = $derived(page.data.oportunidad);
+	
+	// ESTADO
 	let editando = $state(false);
-
+	let fase = $derived(fasesOportunidad[oportunidad.fase]);
+	
+	// CRUD
 	async function relacionarPedido() {
-		StoreContextoRelacion.setOportunidad(event.id);
+		StoreContextoRelacion.setOportunidad(oportunidad.id);
+		StorePedidoEditar.pushLista(oportunidad.pedidos.map(p=>p.id));
 		await goto('/pedidos');
 		StorePedidoEditar.toggleModal(true);
 	}
-	onMount(() => StorePedidoEditar.toggleModal(false));
-	console.log(eventData);
+	
+	console.log(oportunidad);
 </script>
 
-<Card headerStyle={eventData?.style}>
+
+<Card headerStyle={fase.estilo}>
 	{#snippet header()}
-		<button
-			onclick={() => history.back()}
-			class="close {currentFase == 6 ? 'w' : ''}"
-			aria-label="Cerrar"
-		>
-			✕
-		</button>
 		<div class="title">
-			<h1>{eventData?.motivo}</h1>
-			<a href="/clientes/{eventData?.cliente.id}"
-				><h3>{eventData?.cliente.razon_social || eventData?.cliente.nombre_comercial}</h3></a
+			<h1>{oportunidad?.motivo}</h1>
+			<a href="/clientes/{oportunidad?.clientes.id}"
+				><h3>{oportunidad?.clientes.razon_social || oportunidad?.clientes.nombre_comercial}</h3></a
 			>
 		</div>
 		<div class="meta">
-			<p class="date">{eventData?.inicio}</p>
+			<p class="date">{oportunidad?.inicio}</p>
 			<p class="date">|</p>
-			<p>{eventData?.agente?.nombre}</p>
-			<p>Fase: <strong>{eventData?.fase?.actual}</strong></p>
+			<p>{oportunidad?.agente?.nombre}</p>
+			<p>Fase: <strong>{oportunidad?.fase?.actual}</strong></p>
 		</div>
 	{/snippet}
 
 	{#snippet content()}
 		<EditableInput
 			{editando}
-			id={eventData?.id}
+			id={oportunidad?.id}
 			label="Objetivo"
 			name="objetivo"
 			type="textarea"
-			value={eventData?.objetivo}
+			value={oportunidad?.objetivo}
 			action="/oportunidades?/update"
 			placeholder="Objetivo"
 		>
 			{#snippet header()}
-				<input type="hidden" name="id" value={eventData?.id} />
+				<input type="hidden" name="id" value={oportunidad?.id} />
 			{/snippet}
 		</EditableInput>
 
 		<FormEditableContact
-			lista={eventData?.cliente.contactos}
-			id={eventData?.cliente.id}
-			id_agente={$profile?.isAdmin ? eventData?.cliente.id_agente : $profile?.id}
+			lista={oportunidad?.clientes.contactos}
+			id={oportunidad?.clientes.id}
+			id_agente={$profile?.isAdmin ? oportunidad?.clientes.id_agente : $profile?.id}
 			action="/clientes?/update"
 			{editando}
 		/>
 
 		<EditableInput
 			{editando}
-			id={eventData?.id}
+			id={oportunidad?.id}
 			label="Necesidades"
 			name="necesidades"
 			type="text"
-			value={eventData?.necesidades}
+			value={oportunidad?.necesidades}
 			action="/oportunidades?/update"
 			placeholder="Necesidades"
 		/>
 
 		<EditableInput
 			{editando}
-			id={eventData?.id}
+			id={oportunidad?.id}
 			label="Requisitos"
 			name="requisitos"
 			type="text"
-			value={eventData?.requisitos}
+			value={oportunidad?.requisitos}
 			action="/oportunidades?/update"
 			placeholder="Requisitos"
 		/>
 
 		<EditableInput
 			{editando}
-			id={eventData?.id}
+			id={oportunidad?.id}
 			label="Observaciones"
 			name="observaciones"
 			type="text"
-			value={eventData?.observaciones}
+			value={oportunidad?.observaciones}
 			action="/oportunidades?/update"
 			placeholder="Observaciones"
 		/>
 
 		{#if editando}
-			<CustomInput label="Postergar" action="/oportunidades?/update" id={eventData?.id} {editando}>
+			<CustomInput label="Postergar" action="/oportunidades?/update" id={oportunidad?.id} {editando}>
 				<DatePicker />
 			</CustomInput>
 		{/if}
 
+		<!-- PEDIDOS -->
 		<section>
 			<div class="header">
 				<h3>Pedidos:</h3>
 			</div>
+
 			<div class="content">
-				<button onclick={relacionarPedido}>+Potencial de venta</button>
-				{#if StoreContextoRelacion.id_oportunidad}
-					<TarjetaPedidoEditar />
+				{#if oportunidad.pedidos.length > 0}
+					{#if editando}
+						<button onclick={relacionarPedido}>~Editar</button>
+					{/if}
+					<TarjetaPedidoLista pedidos={oportunidad.pedidos} disable />
+				{:else}
+					<button onclick={relacionarPedido}>+Potencial de venta</button>
+					{#if StoreContextoRelacion.id_oportunidad}
+						<TarjetaPedidoEditar />
+					{/if}
 				{/if}
 			</div>
 		</section>
-		
-		{#if event.pedidos}
-			<TarjetaPedidoLista pedidos={event.pedidos} disable/>
-		{/if}
 
-		{#if currentFase == 1}
-			{#if eventData?.pedidos.length > 0}
-				<section>
-					<div class="header">
-						<h3>Potencial de venta:</h3>
-					</div>
-					<div class="content">
-						<PedidoRelacionado
-							pedidos={eventData?.pedidos ?? []}
-							oportunidad={eventData}
-							{editando}
-							{currentFase}
-						/>
-					</div>
-				</section>
-			{/if}
-		{/if}
-		{#if currentFase >= 2 && currentFase <= 3}
+		<!-- {#if faseActual >= 2 && faseActual <= 3}
 			<section>
 				<div class="header">
 					<h3>Potencial de venta:</h3>
 				</div>
 				<div class="content">
-					{#if eventData?.pedidos.length > 0}
+					{#if oportunidad?.pedidos.length > 0}
 						<PedidoRelacionado
-							pedidos={eventData?.pedidos ?? []}
-							oportunidad={eventData}
+							pedidos={oportunidad?.pedidos ?? []}
+							oportunidad={oportunidad}
 							{editando}
-							{currentFase}
+							currentFase={faseActual}
 						/>
 					{/if}
 				</div>
@@ -211,22 +155,22 @@
 					<h3>Cotizacion(es):</h3>
 				</div>
 				<div class="content">
-					{#if eventData?.cotizaciones.length > 0}
-						{#each eventData?.cotizaciones as documento}
+					{#if oportunidad?.cotizaciones.length > 0}
+						{#each oportunidad?.cotizaciones as documento}
 							{#if documento.pedidos.some((p) => p.estatus == 3) || editando}{/if}
 						{/each}
 					{/if}
 				</div>
 			</section>
 		{/if}
-		{#if currentFase >= 3 && currentFase <= 4}
+		{#if faseActual >= 3 && faseActual <= 4}
 			<section class="occ">
 				<div class="header">
 					<h3>Orden de compra:</h3>
 				</div>
 				<div class="content">
-					{#if eventData?.occ.length > 0}
-						{#each eventData?.occ as documento}{/each}
+					{#if oportunidad?.occ.length > 0}
+						{#each oportunidad?.occ as documento}{/each}
 					{/if}
 				</div>
 			</section>
@@ -242,15 +186,15 @@
 						label="Adjuntos"
 						name="docs_adjuntos"
 						amountName="totales"
-						id_nodo_p={eventData?.id}
-						cliente={eventData?.cliente}
-						agente={eventData?.agente}
+						id_nodo_p={oportunidad?.id}
+						cliente={oportunidad?.cliente}
+						agente={oportunidad?.agente}
 						action="/documentos?/add"
 						required
 						multiple
 					/>
 				</FormOptionalInput>
-				{#each eventData?.adjuntos as documento}
+				{#each oportunidad?.adjuntos as documento}
 					<TarjetaListaDocumentos {documento} />
 				{/each}
 			</div>
@@ -263,16 +207,14 @@
 			<div class="content">
 				<Entradas
 					{editando}
-					historia={eventData?.historia}
-					objId={eventData?.id}
+					historia={oportunidad?.historia}
+					objId={oportunidad?.id}
 					action={'/oportunidades?/update'}
 				/>
 			</div>
-		</section>
-	{/snippet}
-
-	{#snippet actions()}
-		<AgentActions {eventData} bind:editando />
+		</section> -->
+		
+		<AgentActions {oportunidad} bind:editando />
 	{/snippet}
 </Card>
 

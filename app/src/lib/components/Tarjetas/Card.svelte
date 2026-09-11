@@ -5,12 +5,10 @@
 	let {
 		header,
 		content,
-		actions,
 		headerStyle
 	}: {
 		header?: Snippet;
 		content?: Snippet;
-		actions?: Snippet;
 		headerStyle?: string;
 	} = $props();
 </script>
@@ -23,14 +21,11 @@
 	{/if}
 
 	<div class="snippets">
-		{#if content}
-			<div class="card-content">
+		<div class="card-content">
+			{#if content}
 				{@render content()}
-				{#if actions}
-					{@render actions()}
-				{/if}
-			</div>
-		{/if}
+			{/if}
+		</div>
 	</div>
 </div>
 

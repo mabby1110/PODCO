@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { fases } from '$lib';
+	import { fasesOportunidad } from '$lib';
 	import { draggable } from '$lib/actions/dnd';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
@@ -17,20 +17,20 @@
 		if (!event) return null;
 
 		return {
+			...event,
 			id: event.id,
 			razon_social:
 				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
 			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
 			motivo: event?.motivo,
 			inicio: event?.inicio,
-			fase: fases.find((f) => f.id_fase == event.fase),
 			historia: event.historia || 'Sin historial registrado',
 			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
-			documentos: event.documentos || 'Sin documentos',
-			style: getStyleForPhase(event.fase)
+			documentos: event.documentos || 'Sin documentos'
 		};
 	});
 
+	let fase = $derived(fasesOportunidad[eventData.fase]);
 	// Manejador del clic en el enlace
 	function handleClick(e: MouseEvent) {
 		if (!isExpanded) {
@@ -55,7 +55,7 @@
 <a
 	href="#"
 	class="card-calendar-preview {isExpanded ? 'expanded' : ''}"
-	style={eventData?.style}
+	style={fase.estilo}
 	use:draggable={{ data: event.id, enabled: isDndEnabled }}
 	onclick={handleClick}
 	onfocusout={handleFocusOut}

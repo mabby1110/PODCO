@@ -36,8 +36,6 @@ function crearPedido() {
 	}
 
 	function toggleModal(estado?: boolean) {
-		console.log(estado);
-
 		if (estado !== undefined) {
 			state.modal = estado;
 		} else {
