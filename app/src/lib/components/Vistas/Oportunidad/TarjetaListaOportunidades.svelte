@@ -4,14 +4,13 @@
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 
 	let { oportunidad } = $props();
-
-
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
+	console.log('oportunidad', oportunidad);
 </script>
 
 <ListPreview href="/oportunidades/{oportunidad.id}" style={fase.estilo}>
 	{#snippet header()}
-		<h3>{oportunidad?.razon_social || oportunidad?.nombre_comercial}</h3>
+		<h3>{oportunidad?.clientes.razon_social || oportunidad?.clientes.nombre_comercial}</h3>
 		<p>{oportunidad?.motivo}</p>
 	{/snippet}
 

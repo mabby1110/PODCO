@@ -182,8 +182,8 @@
 		/>
 		<div class="op-list">
 			{#if cliente.oportunidades.length > 0}
-				{#each cliente.oportunidades as op}
-					<TarjetaListaOportunidades event={op} />
+				{#each cliente.oportunidades as oportunidad}
+					<TarjetaListaOportunidades {oportunidad} />
 				{/each}
 			{/if}
 		</div>
