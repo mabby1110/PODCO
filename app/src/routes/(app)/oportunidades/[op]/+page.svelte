@@ -4,22 +4,22 @@
 	import { onMount } from 'svelte';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte.js';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte.js';
+	import { profile } from '$lib/stores/profileStore.svelte';
+	import { fasesOportunidad } from '$lib';
+	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 	import Card from '$lib/components/Tarjetas/Card.svelte';
 	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
 	import CustomInput from '$lib/components/Formularios/CustomInput.svelte';
 	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
 	import EditableInput from '$lib/components/Formularios/EditableInput.svelte';
 	import FormEditableContact from '$lib/components/Vistas/Cliente/FormEditableContact.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
 	import AgentActions from '$lib/components/Vistas/Oportunidad/AgentActions.svelte';
-	import { fasesOportunidad } from '$lib';
 	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
 	import SubirAdjunto from '$lib/components/Vistas/Documentos/SubirAdjunto.svelte';
 	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
 	import Entradas from '$lib/components/Acciones/Entradas.svelte';
 	import TarjetaPedidoOportunidad from '$lib/components/Vistas/Pedidos/TarjetaPedidoOportunidad.svelte';
 	import TarjetaPedidoCotizado from '$lib/components/Vistas/Pedidos/TarjetaPedidoCotizado.svelte';
-	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 	const oportunidad = $derived(page.data.oportunidad);
@@ -267,8 +267,5 @@
 	.meta {
 		display: flex;
 		gap: var(--a);
-	}
-	.w {
-		color: white;
 	}
 </style>

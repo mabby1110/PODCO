@@ -4,10 +4,7 @@
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
-	import Panel from '$lib/components/Tarjetas/Panel.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
-	import TarjetaListaInventario from '$lib/components/Vistas/Inventario/TarjetaListaInventario.svelte';
-	import FormPedidos from '$lib/components/Vistas/Pedidos/FormPedidos.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
