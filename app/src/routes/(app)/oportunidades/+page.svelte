@@ -38,6 +38,7 @@
 			keyColumns={categoriasOportunidad.map((c) => c.key).concat(['clientes'])}
 			bind:lista
 		/>
+		
 		<PanelFiltros>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>

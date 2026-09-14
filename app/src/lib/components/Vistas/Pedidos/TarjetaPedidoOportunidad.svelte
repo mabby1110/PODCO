@@ -1,18 +1,23 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
+	import { StorePedidoOportunidad } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
+	import { onMount } from 'svelte';
+	import SubirAdjunto from '../Documentos/SubirAdjunto.svelte';
+	import SubirCotizacion from '../Documentos/SubirCotizacion.svelte';
 
-	let { pedidos, disable = false } = $props();
-
-	function editarPedido(id: string) {
-		if (disable) return false;
-		StorePedidoEditar.push(id);
-		StorePedidoEditar.toggleModal(true);
+	onMount(StorePedidoOportunidad.limpiar);
+	let { oportunidad } = $props();
+	let pedidos = $derived(oportunidad.pedidos);
+	function seleccionarPedido(id: string) {
+		if (StorePedidoOportunidad.carrito.some((item) => item.id === id)) {
+			StorePedidoOportunidad.pop(id);
+		} else {
+			StorePedidoOportunidad.push(id);
+		}
 	}
-	function editarPedidoCompleto() {
-		goto('/pedidos');
-		StorePedidoEditar.pushLista(pedidos);
-		StorePedidoEditar.toggleModal(true);
+
+	function seleccionarPedidoCompleto() {
+		StorePedidoOportunidad.pushLista(pedidos);
 	}
 </script>
 
@@ -20,7 +25,16 @@
 	{#each pedidos as pedido}
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<div onclick={() => editarPedido(pedido.id)}>
+
+		<!-- Aplicamos un estilo en línea dinámico o una clase si el ID está en el store -->
+		<div
+			onclick={() => seleccionarPedido(pedido.id)}
+			style:border={StorePedidoOportunidad.carrito.some((item) => item.id === pedido.id)
+				? '2px solid var(--color-highlight)'
+				: '2px solid transparent'}
+			style:padding="1rem"
+			style:margin-bottom="1rem"
+		>
 			{#each Object.entries(pedido) as [clave, valor]}
 				{#if clave === 'catalogo' && valor !== null}
 					<div>
@@ -47,10 +61,20 @@
 			<hr />
 		</div>
 	{/each}
-
-	{#if !disable}
+	
+	{#if StorePedidoOportunidad.carrito.length > 0}
+		<SubirCotizacion
+			tipo="docs_cotizaciones"
+			oportunidad={{
+				id: oportunidad?.id,
+				cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
+			}}
+			required
+		/>
+	{:else}
 		<div class="acciones">
-			<button class="butter" onclick={editarPedidoCompleto}>seleccionar</button>
+			<!-- Corregido: editarPedidoCompleto -> seleccionarPedidoCompleto -->
+			<button class="butter" onclick={seleccionarPedidoCompleto}>Cotizar todo</button>
 		</div>
 	{/if}
 </div>

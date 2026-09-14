@@ -6,7 +6,6 @@
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte.js';
 	import Card from '$lib/components/Tarjetas/Card.svelte';
 	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
-	import TarjetaPedidoEditar from '$lib/components/Vistas/Pedidos/TarjetaPedidoEditar.svelte';
 	import CustomInput from '$lib/components/Formularios/CustomInput.svelte';
 	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
 	import EditableInput from '$lib/components/Formularios/EditableInput.svelte';
@@ -18,6 +17,7 @@
 	import SubirAdjunto from '$lib/components/Vistas/Documentos/SubirAdjunto.svelte';
 	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
 	import Entradas from '$lib/components/Acciones/Entradas.svelte';
+	import TarjetaPedidoOportunidad from '$lib/components/Vistas/Pedidos/TarjetaPedidoOportunidad.svelte';
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 	const oportunidad = $derived(page.data.oportunidad);
@@ -29,12 +29,16 @@
 	// CRUD
 	async function relacionarPedido() {
 		StoreContextoRelacion.setOportunidad(oportunidad.id);
-		StorePedidoEditar.pushLista(oportunidad.pedidos.map((p) => p.id));
+		StorePedidoEditar.pushLista(oportunidad.pedidos);
 		await goto('/pedidos');
 		StorePedidoEditar.toggleModal(true);
 	}
-
-	console.log(oportunidad);
+	async function editarPedido() {
+		StoreContextoRelacion.setOportunidad(oportunidad.id);
+		StorePedidoEditar.pushLista(oportunidad.pedidos);
+		await goto('/pedidos');
+		StorePedidoEditar.toggleModal(true);
+	}
 </script>
 
 <Card headerStyle={fase.estilo}>
@@ -129,26 +133,16 @@
 
 			<div class="content">
 				{#if oportunidad.pedidos.length > 0}
-					{#if editando}
-						<button onclick={relacionarPedido}>~Editar</button>
+					{#if fase.id_fase == 1}
+						<TarjetaPedidoLista pedidos={oportunidad.pedidos} disable />
+					{:else if fase.id_fase == 2}
+						<TarjetaPedidoOportunidad {oportunidad} />
 					{/if}
-					<TarjetaPedidoLista pedidos={oportunidad.pedidos} disable />
-					{#if fase.id_fase == 2}
-						<SubirAdjunto
-							tipo="docs_cotizaciones"
-							oportunidad={{
-								id: oportunidad?.id,
-								cliente:
-									oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
-							}}
-							required
-						/>
+					{#if editando}
+						<button onclick={editarPedido}>~Editar</button>
 					{/if}
 				{:else}
 					<button onclick={relacionarPedido}>+Potencial de venta</button>
-					{#if StoreContextoRelacion.id_oportunidad}
-						<TarjetaPedidoEditar />
-					{/if}
 				{/if}
 			</div>
 		</section>

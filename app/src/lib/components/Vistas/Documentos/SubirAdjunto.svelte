@@ -28,11 +28,7 @@
 	let formEl: HTMLFormElement;
 	let isDragging = $state(false);
 	let isSubmitting = $state(false);
-	let prefijoTipoDocumento: Record<string, string> = {
-		docs_cotizaciones: 'Q',
-		docs_adjuntos: 'A'
-	};
-
+	
 	function handleChange(e: Event) {
 		const input = e.target as HTMLInputElement;
 

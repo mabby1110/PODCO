@@ -1,48 +1,47 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	type Item = {
 		file: File;
+		titulo: string;
 	};
 
 	let {
-		name = 'docs_cotizaciones',
-		amountLabel = 'Total cotizado',
-		amountName = 'totales',
-		id_nodo,
-		id_cliente,
-		agente,
-		pedidos = [],
-		required = false
+		tipo = 'files',
+		oportunidad,
+		action = '/documentos?/subirAdjunto',
+		required = false,
+		disabled = false,
+		submitLabel = 'Guardar'
 	}: {
-		name?: string;
-		amountLabel?: string;
-		amountName?: string;
-		id_nodo?: string;
-		id_cliente?: string;
-		agente?: string;
-		pedidos?: any[];
+		tipo: string;
+		oportunidad: { id: string; cliente: string };
+		action?: string;
 		required?: boolean;
+		disabled?: boolean;
+		submitLabel?: string;
 	} = $props();
 
 	let items = $state<Item[]>([]);
 	let inputEl: HTMLInputElement;
+	let formEl: HTMLFormElement;
 	let isDragging = $state(false);
 	let isSubmitting = $state(false);
-
-	let totalPedidos = $derived(
-		pedidos.reduce((acc: number, item: any) => {
-			return item.estatus === 2 ? acc + item.precio_unitario * item.cantidad : acc;
-		}, 0)
-	);
-
+	
 	function handleChange(e: Event) {
 		const input = e.target as HTMLInputElement;
+
 		if (!input.files) return;
 
-		items = Array.from(input.files)
-			.map((file) => ({ file }))
-			.slice(0, 1);
+		const selected = Array.from(input.files);
+		const newItems = selected.map((file) => ({
+			file,
+			titulo: file.name.split('.')[0]
+		}));
+
+		items = [...items, ...newItems];
+
 		input.value = '';
 	}
 
@@ -54,196 +53,185 @@
 	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
 
-		// Nueva validación: no continuar si el total es 0
-		if (isSubmitting || items.length === 0 || totalPedidos === 0) return;
+		if (isSubmitting) return;
 
 		isSubmitting = true;
 
 		try {
-			const formData = new FormData();
-
-			formData.append('entity', name);
-
-			if (id_nodo) {
-				formData.append('id_nodo', id_nodo);
-			}
-
-			if (id_cliente) formData.append('id_cliente', id_cliente);
-			if (agente) {
-				formData.append('id_agente', agente.id);
-				formData.append('agente', agente.nombre);
-			}
+			const formData = new FormData(formEl);
 
 			items.forEach((item) => {
-				formData.append(name, item.file);
-				formData.append(amountName, String(totalPedidos));
+				const file = new File([item.file], item.titulo, {
+					type: item.file.type
+				});
+
+				formData.append(tipo, file);
 			});
 
-			const response = await fetch('/documentos?/addCotizacion', {
+			const response = await fetch(action, {
 				method: 'POST',
 				body: formData
 			});
 
 			if (!response.ok) {
-				console.error('Error HTTP:', response.status);
-				isSubmitting = false;
+				const result = await response.text();
+				console.error(result);
 				return;
 			}
 
-			const result = await response.json();
-			if (result.type === 'success' || result.status === 200) {
-				const data = typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
-				const idDocumento = data?.[2];
-
-				const pedidosAprobados = pedidos.filter((p) => p.estatus === 2);
-
-				if (pedidosAprobados.length > 0) {
-					const pedidosACrear = pedidosAprobados.map(({ id, ...p }) => ({
-						...p,
-						estatus: 3,
-						id_cotizacion: idDocumento
-					}));
-					const pedidosAActualizar = pedidos.map((p) => ({
-						id: p.id,
-						estatus: p.estatus === 3 ? 0 : p.estatus
-					}));
-
-					const seqFormData = new FormData();
-					seqFormData.append('pedidosACrear', JSON.stringify(pedidosACrear));
-					seqFormData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
-
-					const seqResponse = await fetch('/pedidos?/updatePedido', {
-						method: 'POST',
-						body: seqFormData
-					});
-
-					if (!seqResponse.ok) {
-						console.error('Error en updatePedido:', await seqResponse.text());
-					}
-				}
-			} else {
-				console.error('Error de Action:', result);
-			}
-
 			items = [];
-			if (inputEl) inputEl.value = '';
+
+			if (inputEl) {
+				inputEl.value = '';
+			}
 
 			await invalidateAll();
 		} catch (error) {
-			console.error('Excepción en fetch:', error);
+			console.error(error);
 		} finally {
 			isSubmitting = false;
 		}
 	}
 </script>
 
-<form method="POST" enctype="multipart/form-data" onsubmit={handleSubmit}>
+<form
+	bind:this={formEl}
+	method="POST"
+	enctype="multipart/form-data"
+	{action}
+	onsubmit={handleSubmit}
+>
+	<input type="hidden" name="tipo" value={tipo} />
+	<input type="hidden" name="id_oportunidad" value={oportunidad.id} />
+	<input type="hidden" name="nombre_agente" value={$profile?.nombre} />
+	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
+	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
+
 	<div class="upload-container">
+		<input
+			bind:this={inputEl}
+			type="file"
+			class="file-input"
+			class:dragging={isDragging}
+			multiple
+			{disabled}
+			required={required && items.length === 0}
+			onchange={handleChange}
+			ondragover={() => {
+				if (!disabled) isDragging = true;
+			}}
+			ondragleave={() => {
+				isDragging = false;
+			}}
+			ondrop={() => {
+				isDragging = false;
+			}}
+		/>
+
 		{#if items.length > 0}
 			<div class="files">
 				{#each items as item, i}
-					<div class="item panel">
-						<button type="button" class="butter milk" onclick={() => removeItem(i)}> ✕ </button>
+					<div class="item">
+						<button type="button" class="close-btn" onclick={() => removeItem(i)}> × </button>
 
 						<div class="info">
-							<b class="filename">{item.file.name}</b>
-							<label for="monto">{amountLabel}</label>
-							<input id="monto" type="number" value={totalPedidos} readonly />
+							<input type="text" bind:value={item.titulo} />
 						</div>
-
-						{#if totalPedidos === 0}
-							<span style="color: red; font-size: 0.85em;">El total no puede ser 0</span>
-						{/if}
-
-						<button
-							type="submit"
-							class="butter matcha guardar"
-							disabled={isSubmitting || totalPedidos === 0}
-						>
-							{isSubmitting ? 'Guardando...' : 'Guardar'}
-						</button>
 					</div>
 				{/each}
+
+				<button type="submit" class="btn-save-small butter" disabled={isSubmitting}>
+					{#if isSubmitting}
+						Guardando...
+					{:else}
+						{submitLabel}
+					{/if}
+				</button>
 			</div>
-		{:else}
-			<input
-				bind:this={inputEl}
-				type="file"
-				class="file-input"
-				class:dragging={isDragging}
-				{required}
-				onchange={handleChange}
-				ondragover={(e) => {
-					e.preventDefault();
-					isDragging = true;
-				}}
-				ondragleave={() => (isDragging = false)}
-				ondrop={(e) => {
-					e.preventDefault();
-					isDragging = false;
-				}}
-			/>
 		{/if}
 	</div>
 </form>
 
 <style>
 	form {
-		flex-grow: 1;
+		width: 100%;
 	}
+
 	.upload-container {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
+		width: 100%;
 	}
+
 	.file-input {
+		width: 100%;
+		max-width: 800px;
 		padding: var(--c);
 		border: 1px dashed #d4d4d8;
 		border-radius: 6px;
-		background-color: var(--color-background);
+		background-color: #fafafa;
 		cursor: pointer;
 		transition:
 			border-color 0.2s ease,
 			background-color 0.2s ease;
 		outline: none;
 	}
-	.file-input:hover {
+
+	.file-input:hover:not(:disabled) {
 		border-color: var(--color-secondary);
+		background-color: #f4f4f5;
 	}
+
 	.file-input.dragging {
 		background-color: var(--color-highlight);
 		border-color: var(--color-highlight);
 	}
+
+	.file-input:focus-visible {
+		border-color: #18181b;
+		border-style: solid;
+	}
+
 	.file-input::file-selector-button {
 		display: none;
 	}
-	.item {
-		width: fit-content;
+
+	.files {
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
+		gap: var(--a);
+	}
+
+	.item {
+		display: flex;
 		gap: var(--a);
 		align-items: flex-start;
-		justify-content: flex-end;
 		padding: var(--a);
-		background-color: var(--color-background);
+		border: 1px solid #e4e4e7;
+		border-radius: 6px;
 	}
-	.item .guardar {
-		align-self: flex-end;
-	}
+
 	.info {
 		flex: 1;
 		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
+		flex-direction: column;
 		gap: var(--a);
 	}
+
 	.filename {
 		margin: 0;
 		word-break: break-word;
 	}
-	.info input[type='number'] {
-		max-width: 250px;
-		background-color: var(--color-background-muted, #f3f4f6); /* Feedback visual opcional */
-		cursor: not-allowed;
+
+	.close-btn {
+		border: none;
+		cursor: pointer;
+		padding: 0.25rem 0.5rem;
+		border-radius: 4px;
+	}
+
+	.close-btn:hover {
+		background-color: var(--color-error);
 	}
 </style>

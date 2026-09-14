@@ -39,7 +39,6 @@
 	async function limpiarCarrito() {
 		StorePedidoEditar.limpiar();
 		StorePedidoNuevo.limpiar();
-		StoreContextoRelacion.limpiar();
 	}
 
 	// CRUD DEL CARRITO
