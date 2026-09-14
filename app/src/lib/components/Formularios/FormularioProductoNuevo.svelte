@@ -7,10 +7,10 @@
 		tipoId = $bindable(0)
 	} = $props();
 
-	let tipos_producto = $derived(page.data.tipos_producto);
-	let tipoSeleccionado = $derived(tipos_producto?.find((t: any) => t.id == tipoId));
+	let tipo_producto = $derived(page.data.tipo_producto);
+	let tipoSeleccionado = $derived(tipo_producto?.find((t: any) => t.id == tipoId));
 	let schema = $derived(tipoSeleccionado?.caracteristicas?.formulario_registro || []);
-
+	console.log(tipo_producto);
 	$effect(() => {
 		if (schema.length === 0) {
 			canSubmit = false;
@@ -37,7 +37,7 @@
 
 <select bind:value={tipoId}>
 	<option value={0}>Selecciona un tipo...</option>
-	{#each tipos_producto || [] as t}
+	{#each tipo_producto || [] as t}
 		<option value={t.id}>{t.nombre}</option>
 	{/each}
 </select>

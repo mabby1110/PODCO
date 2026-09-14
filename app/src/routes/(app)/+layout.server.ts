@@ -29,7 +29,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
 	let queryInventario = supabase.from('inventario').select('*');
 	let queryCatalogo = supabase.from('catalogo').select('*, tipo_producto(*)');
-	let queryTiposProducto = supabase.from('tipos_producto').select('*');
+	let queryTipoProducto = supabase.from('tipo_producto').select('*');
 	let queryPedidos = supabase
 		.from('pedidos')
 		.select(
@@ -66,7 +66,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		{ data: documentos },
 		{ data: inventario },
 		{ data: catalogo },
-		{ data: tipos_producto },
+		{ data: tipo_producto },
 		{ data: pedidos },
 		{ data: cotizaciones },
 		{ data: notificaciones }
@@ -77,7 +77,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		queryDocumentos,
 		queryInventario,
 		queryCatalogo,
-		queryTiposProducto,
+		queryTipoProducto,
 		queryPedidos,
 		queryCotizaciones,
 		queryNotificaciones
@@ -89,7 +89,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	console.log('documentos: ', documentos?.length);
 	console.log('inventario: ', inventario?.length);
 	console.log('catalogo: ', catalogo?.length);
-	console.log('tipos_producto: ', tipos_producto?.length);
+	console.log('tipo_producto: ', tipo_producto?.length);
 	console.log('pedidos: ', pedidos?.length);
 	console.log('cotizaciones: ', cotizaciones?.length);
 	console.log('notificaciones: ', notificaciones?.length);
@@ -108,7 +108,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		documentos: documentos || [],
 		inventario: inventario || [],
 		catalogo: catalogo || [],
-		tipos_producto: tipos_producto || [],
+		tipo_producto: tipo_producto || [],
 		pedidos: pedidos || [],
 		cotizaciones: cotizaciones || [],
 		notificaciones: notificaciones || []
