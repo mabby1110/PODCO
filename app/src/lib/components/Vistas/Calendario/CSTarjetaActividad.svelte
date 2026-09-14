@@ -1,56 +1,41 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import { fases } from '$lib';
+	import { fasesActividad } from '$lib';
 	import { draggable } from '$lib/actions/dnd';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
-	import { getStyleForPhase } from '$lib/utils/util';
 
-	let { event, expanded, style } = $props();
-	const { agentes } = $derived(page.data);
+	let { actividad, expanded, style } = $props();
+
+	// Estado
+	let fase = $derived(fasesActividad[actividad.fase == 6 ? actividad.fase - 4 : actividad.fase]);
 	const isDndEnabled = $derived($appState.dnd);
-
-	const eventData = $derived.by(() => {
-		if (!event) return null;
-
-		return {
-			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
-			motivo: event?.motivo,
-			objetivo: event?.objetivo,
-			inicio: event?.inicio,
-			fase: fases.find((f) => f.id_fase == event.fase),
-			historia: event.historia || 'Sin historial registrado',
-			style: getStyleForPhase(event.fase) + style
-		};
-	});
 </script>
 
 <div
 	class="tarjeta-actividad"
-	style={eventData?.style}
-	use:draggable={{ data: event.id, enabled: isDndEnabled }}
+	style="{style} {fase?.estilo}"
+	use:draggable={{ data: actividad.id, enabled: isDndEnabled }}
 >
 	{#if $appState.calendarCards}
 		<div class="header">
-			<p class="date">{eventData?.inicio.split(' ')[1]}</p>
-			<b class="title">{eventData?.motivo}</b>
+			<p class="date">{actividad?.inicio.split(' ')[1]}</p>
+			<b class="title">{actividad?.motivo}</b>
 			<div class="meta">
-				<b>{eventData?.agente?.nombre}</b>
+				<b>{actividad?.agentes?.nombre}</b>
 			</div>
-			<p class="motivo">{event?.objetivo}</p>
+			<p class="motivo">{actividad?.objetivo}</p>
 		</div>
 	{:else}
 		<div class="header">
-			<b class="title">{eventData?.motivo}</b>
+			<b class="title">{actividad?.motivo}</b>
 			<div class="meta">
-				<b>{eventData?.agente?.nombre}</b>
+				<b>{actividad?.agentes?.nombre}</b>
 			</div>
-			<p class="motivo">{event?.objetivo}</p>
+			<p class="motivo">{actividad?.objetivo}</p>
 		</div>
 	{/if}
 	{#if expanded}
-		<button class="butter" onclick={() => goto(`/actividades/${event.id}`)}> Ver </button>
+		<button class="butter" onclick={() => goto(`/actividades/${actividad.id}`)}> Ver </button>
 	{/if}
 </div>
 

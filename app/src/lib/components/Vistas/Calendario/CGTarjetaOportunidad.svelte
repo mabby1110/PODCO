@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getStyleForPhase } from '$lib/utils/util';
+	import { fasesOportunidad } from '$lib';
 
 	let { evento, isExpanded = false } = $props<{
 		evento: {
@@ -17,7 +17,7 @@
 		isExpanded?: boolean;
 	}>();
 
-	let style = $derived(getStyleForPhase(evento.fase));
+	let fase = $derived(fasesOportunidad[evento.fase]);
 </script>
 
 <div
@@ -26,7 +26,7 @@
 	style="
         left: {evento.left}px; 
         width: {evento.width}px; 
-        {style}
+        {fase.estilo}
     "
 >
 	{#if isExpanded}

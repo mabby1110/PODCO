@@ -5,7 +5,6 @@
 
 	let { oportunidad } = $props();
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
-	console.log('oportunidad', oportunidad);
 </script>
 
 <ListPreview href="/oportunidades/{oportunidad.id}" style={fase.estilo}>
@@ -40,7 +39,7 @@
 		{/if}
 	{/snippet}
 	{#snippet meta()}
-		<p>{oportunidad?.agente?.nombre}</p>
+		<p>{oportunidad?.agentes?.nombre}</p>
 		<p>{oportunidad?.inicio}</p>
 	{/snippet}
 </ListPreview>

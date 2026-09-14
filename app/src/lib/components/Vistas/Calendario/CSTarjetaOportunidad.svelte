@@ -1,64 +1,41 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
-	import { fases } from '$lib';
+	import { fasesOportunidad } from '$lib';
 	import { draggable } from '$lib/actions/dnd';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
-	import { getStyleForPhase } from '$lib/utils/util';
 
-	let { event, expanded, style } = $props();
-	const { clientes, agentes } = $derived(page.data);
+	let { oportunidad, expanded, style } = $props();
+	
+	let fase = $derived(fasesOportunidad[oportunidad.fase]);
 	const isDndEnabled = $derived($appState.dnd);
-
-	const eventData = $derived.by(() => {
-		if (!event) return null;
-
-		return {
-			...event,
-			id: event.id,
-			razon_social:
-				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.razon_social ?? '',
-			nombre_comercial:
-				clientes?.find((c: { id: any }) => c.id == event.id_cliente)?.nombre_comercial ?? '',
-			agente: agentes?.find((e: { id: any }) => e.id == event.id_agente) ?? $profile,
-			motivo: event?.motivo,
-			inicio: event?.inicio,
-			fase: fases.find((f) => f.id_fase == event.fase),
-			historia: event.historia || 'Sin historial registrado',
-			cotizaciones: event.cotizaciones || 'No hay cotizaciones',
-			documentos: event.documentos || 'Sin documentos',
-			style: getStyleForPhase(event.fase) + style
-		};
-	});
 </script>
 
 <div
 	class="tarjeta-actividad"
-	style={eventData?.style}
-	use:draggable={{ data: event.id, enabled: isDndEnabled }}
+	style="{style} {fase?.estilo}"
+	use:draggable={{ data: oportunidad.id, enabled: isDndEnabled }}
 >
 	{#if expanded}
 		<div class="header">
-			<b class="title">{eventData?.razon_social || eventData?.nombre_comercial}</b>
+			<b class="title">{oportunidad?.razon_social || oportunidad?.nombre_comercial}</b>
 			<div class="meta-min">
-				<b>{eventData?.agente?.nombre}</b>
-				<p>{eventData?.motivo}</p>
-				<p class="motivo">{eventData?.objetivo}</p>
-				<b class="motivo">{eventData?.necesidades}</b>
+				<b>{oportunidad?.agentes?.nombre}</b>
+				<p>{oportunidad?.motivo}</p>
+				<p class="motivo">{oportunidad?.objetivo}</p>
+				<b class="motivo">{oportunidad?.necesidades}</b>
 			</div>
 		</div>
 	{:else}
 		<div class="header">
-			<p>{event?.motivo}</p>
-			<b class="title">{eventData?.razon_social || eventData?.nombre_comercial}</b>
+			<p>{oportunidad?.motivo}</p>
+			<b class="title">{oportunidad?.razon_social || oportunidad?.nombre_comercial}</b>
 			<div class="meta">
-				<b>{eventData?.agente?.nombre}</b>
+				<b>{oportunidad?.agentes?.nombre}</b>
 			</div>
 		</div>
 	{/if}
 	{#if expanded}
-		<button class="butter" onclick={() => goto(`/oportunidades/${event.id}`)}> Ver </button>
+		<button class="butter" onclick={() => goto(`/oportunidades/${oportunidad.id}`)}> Ver </button>
 	{/if}
 </div>
 

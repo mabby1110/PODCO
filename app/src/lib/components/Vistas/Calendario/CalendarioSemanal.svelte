@@ -250,13 +250,13 @@
 												>
 													{#if event.id.toLowerCase().includes('op')}
 														<CSTarjetaOportunidad
-															{event}
+															oportunidad={event}
 															style="height: 100%; width: 100%;"
 															expanded={expandedEventId === event.id}
 														/>
 													{:else}
 														<CSTarjetaActividad
-															{event}
+															actividad={event}
 															style="height: 100%; width: 100%;"
 															expanded={expandedEventId === event.id}
 														/>
