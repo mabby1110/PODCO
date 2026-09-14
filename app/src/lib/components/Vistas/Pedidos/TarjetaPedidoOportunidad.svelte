@@ -21,8 +21,6 @@
         )
     );
 
-    $effect(() => console.log('¿Selección inválida?:', oportunidad.pedidos));
-
     // ESTADOS
     let expandidos = $state<Record<string, boolean>>({});
 

@@ -13,7 +13,7 @@
 			StorePedidoOportunidad.carrito.some((item) => item.id === p.id && p.precio_unitario === null)
 		)
 	);
-	$effect(()=>console.log(pedidoACotizarInvalido));
+	
 	function seleccionarPedido(id: string) {
 		if (StorePedidoOportunidad.carrito.some((item) => item.id === id)) {
 			StorePedidoOportunidad.pop(id);

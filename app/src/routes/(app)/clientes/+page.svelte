@@ -19,7 +19,7 @@
 	// Convertido a $state para soportar bind:lista
 	let lista = $state(clientes);
 	let columnasDinamicas = $derived(extraerColumnas(clientes));
-	console.log(lista);
+	
 	$effect(() => {
 		lista = clientes;
 	});

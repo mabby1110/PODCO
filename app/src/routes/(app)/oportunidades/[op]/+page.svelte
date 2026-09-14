@@ -23,7 +23,6 @@
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 	const oportunidad = $derived(page.data.oportunidad);
-	console.log(oportunidad);
 	
 	// ESTADO
 	let editando = $state(false);

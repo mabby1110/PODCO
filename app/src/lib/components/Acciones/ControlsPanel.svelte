@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
 	import { goto } from '$app/navigation';
-	import { profile } from '$lib/stores/profileStore.svelte';
 
 	const navigate = (path: string) => {
 		appState.togglePageActions();
@@ -20,7 +19,7 @@
 		<!-- <button onclick={() => navigate('/pedidos')} class="butter">
             🛒 Pedidos
         </button> -->
-		<button onclick={() => navigate('/estadisticas')} class="butter"> 📊 Estadisticas </button>
+		<!-- <button onclick={() => navigate('/estadisticas')} class="butter"> 📊 Estadisticas </button> -->
 	</div>
 </div>
 

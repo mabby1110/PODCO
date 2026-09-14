@@ -31,15 +31,15 @@
 	{#if expanded}
 		<div class="app-actions" in:slide>
 			<Logout />
-			<button class="butter honey  {show ? 'active' : ''}" onclick={() => (show = !show)}>
+			<!-- <button class="butter honey  {show ? 'active' : ''}" onclick={() => (show = !show)}>
 				<img src="/notifications.svg" alt="options" />
-			</button>
+			</button> -->
 			<div class="content">
-				{#if show}
+				<!-- {#if show}
 					<PanelNotificaciones />
 				{:else}
-					<ControlsPanel />
-				{/if}
+				{/if} -->
+				<ControlsPanel />
 			</div>
 		</div>
 	{/if}
