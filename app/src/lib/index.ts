@@ -446,3 +446,78 @@ export const fases_actividad = [
 		placeholder: 'Actividad cancelada, se puede reactivar'
 	}
 ];
+export const fasesPedido = [
+	{
+		id_fase: 0,
+		actual: 'Descartado',
+		accion: '',
+		placeholder_accion: '',
+		placeholder_actual: 'Registrar motivo de pérdida y lecciones para futuras oportunidades',
+		estilo: 'background-color: var(--color-0);'
+	},
+	{
+		id_fase: 1,
+		actual: 'Borrador',
+		accion: 'Potencial',
+		placeholder_accion: 'Especificar acciones concretas a realizar',
+		placeholder_actual: 'Actividad con un cliente especifico.',
+		estilo: 'background-color: var(--color-1);'
+	},
+	{
+		id_fase: 2,
+		actual: 'Potencial',
+		accion: 'Cotización',
+		placeholder_accion: '',
+		placeholder_actual: 'Validar alcance, condiciones técnicas y viabilidad del producto(s) seleccionado',
+		estilo: 'background-color: var(--color-2);'
+	},
+	{
+		id_fase: 3,
+		actual: 'Cotización',
+		accion: 'Venta',
+		placeholder_accion: '',
+		placeholder_actual: 'Motivos de conversión',
+		estilo: 'background-color: var(--color-3);'
+	},
+	{
+		id_fase: 4,
+		actual: 'Venta',
+		accion: 'Proceso',
+		placeholder_accion: '',
+		placeholder_actual: 'O.C BMS a proveedor (reconocimiento si hay) y documentos logistica',
+		estilo: 'background-color: var(--color-4);'
+	},
+	{
+		id_fase: 5,
+		actual: 'Proceso',
+		accion: 'Transito',
+		placeholder_accion: '',
+		placeholder_actual:
+			'Proceso de logística, reunir el material vendido, esperar material pedido al proveedor y corroborar condiciones',
+		estilo: 'background-color: var(--color-5);'
+	},
+	{
+		id_fase: 6,
+		actual: 'Transito',
+		accion: 'Entregado',
+		placeholder_accion: '',
+		placeholder_actual: 'Cerrar ciclo y documentar resultados y aprendizajes',
+		estilo: 'background-color: var(--color-6);'
+	},
+	{
+		id_fase: 7,
+		actual: 'Entregado',
+		accion: 'Finalizado',
+		placeholder_accion: '',
+		placeholder_actual: 'Cerrar ciclo y documentar resultados y aprendizajes',
+		estilo: 'background-color: var(--color-7);'
+	},
+	{
+		id_fase: 8,
+		actual: 'Finalizado',
+		accion: '',
+		placeholder_accion: '',
+		placeholder_actual: 'Cerrar ciclo y documentar resultados y aprendizajes',
+		estilo: 'background-color: var(--color-8); color: var(--color-text-ob);'
+	}
+];

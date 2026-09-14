@@ -16,7 +16,7 @@
 		<button onclick={() => navigate('/actividades')} class="butter"> ⚡ Actividades </button>
 		<button onclick={() => navigate('/calendario')} class="butter"> 📆 Calendario </button>
 		<button onclick={() => navigate('/pedidos')} class="butter"> 📄 Pedidos </button>
-		<button onclick={() => navigate('/inventario')} class="butter"> 📦 Inventario </button>
+		<button onclick={() => navigate('/catalogo')} class="butter"> 📦 Inventario </button>
 		<!-- <button onclick={() => navigate('/pedidos')} class="butter">
             🛒 Pedidos
         </button> -->

@@ -33,12 +33,12 @@
 <Vista>
 	{#snippet acciones()}
 		<Searchbar data={catalogo} keyColumns={['codigo']} bind:lista />
-		<Panel tituloBoton="Restock+">
+		<Panel tituloBoton="+Pedido">
 			{#snippet contenido()}
 				<ModalPedidoNuevo />
 			{/snippet}
 		</Panel>
-		<button onclick={() => appState.toggleModalProducto()} class="butter">+Agregar</button>
+		<button onclick={() => appState.toggleModalProducto()} class="butter">+Producto Nuevo</button>
 		<PanelFiltros>
 			{#snippet header()}
 				<ExportarCSV {lista_ordenada} />

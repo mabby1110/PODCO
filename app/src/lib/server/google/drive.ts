@@ -53,15 +53,18 @@ async function getOrCreateFolder(name: string, parentId: string) {
  *        └── AGENTE
  *              └── OPXXX
  */
-async function resolveUploadFolder(agentName: string, opFolder: string) {
-	// nivel 1
+async function resolveUploadFolder(agentName: string, opFolder: string, clientFolder: string) {
+	// nivel 1 periodo
 	const yearFolderId = await getOrCreateFolder('BMS_2026', GOOGLE_FOLDER_ID);
 
-	// nivel 2
+	// nivel 2 agente
 	const agentFolderId = await getOrCreateFolder(agentName, yearFolderId);
 
-	// nivel 3
-	const opFolderId = await getOrCreateFolder(opFolder, agentFolderId);
+	// nivel 3 cliente
+	const clientFolderId = await getOrCreateFolder(clientFolder, agentFolderId);
+
+	// nivel 4 oportunidad
+	const opFolderId = await getOrCreateFolder(opFolder, clientFolderId);
 
 	return opFolderId;
 }
@@ -74,9 +77,10 @@ export async function uploadToFolder(
 	mimeType: string,
 	body: NodeJS.ReadableStream,
 	agentName: string,
-	opFolder: string
+	opFolder: string,
+	clientFolder: string
 ) {
-	const folderId = await resolveUploadFolder(agentName, opFolder);
+	const folderId = await resolveUploadFolder(agentName, opFolder, clientFolder);
 
 	const response = await drive.files.create({
 		requestBody: {
@@ -106,7 +110,7 @@ export async function uploadToFolder(
 	return response.data;
 }
 
-export async function subirAGoogleDrive(files: File[], agenteNombre: string, opFolder: string) {
+export async function subirAGoogleDrive(files: File[], agenteNombre: string, opFolder: string, clientFolder: string) {
 	const docs: any[] = [];
 
 	for (const file of files) {
@@ -115,7 +119,7 @@ export async function subirAGoogleDrive(files: File[], agenteNombre: string, opF
 		const buffer = Buffer.from(await file.arrayBuffer());
 		const stream = Readable.from(buffer);
 
-		const uploaded = await uploadToFolder(file.name, file.type, stream, agenteNombre, opFolder);
+		const uploaded = await uploadToFolder(file.name, file.type, stream, agenteNombre, opFolder, clientFolder);
 
 		if (uploaded?.webViewLink) {
 			docs.push({

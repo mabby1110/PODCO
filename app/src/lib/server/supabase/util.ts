@@ -327,10 +327,11 @@ export async function procesarDocumentos(formData: FormData) {
 		return [];
 	}
 
-	const opFolder = `(${nombre_cliente}) ${id_oportunidad}`;
+	const opFolder = `${id_oportunidad}`;
+	const clientFolder = `${nombre_cliente}`;
 
 	try {
-		const docs = await subirAGoogleDrive(docFiles, nombre_agente, opFolder);
+		const docs = await subirAGoogleDrive(docFiles, nombre_agente, opFolder, clientFolder);
 
 		return docs.map((doc) => ({
 			id: generateId('BMS-Q'),

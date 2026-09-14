@@ -23,7 +23,8 @@ export const actions: Actions = {
 				cantidad: pedido.cantidad,
 				moneda: pedido.moneda,
 				precio_unitario: pedido.precio_unitario,
-				id_oportunidad: idOportunidad
+				id_oportunidad: idOportunidad,
+				estatus: idOportunidad?2:0
 			}));
 
 			const updatePromises = pedidosParaActualizar.map(async (pedido) => {
@@ -60,7 +61,8 @@ export const actions: Actions = {
 				moneda: pedido.moneda ?? 'USD',
 				precio_unitario: pedido.precio_unitario ?? 0,
 				id_agrupacion: pedidosAActualizar[0].id_agrupacion,
-				id_oportunidad: idOportunidad
+				id_oportunidad: idOportunidad,
+				estatus: idOportunidad?2:0
 			}));
 
 			const { data: resultCreacion, error: errorCreacion } = await supabase

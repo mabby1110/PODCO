@@ -18,6 +18,8 @@
 	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
 	import Entradas from '$lib/components/Acciones/Entradas.svelte';
 	import TarjetaPedidoOportunidad from '$lib/components/Vistas/Pedidos/TarjetaPedidoOportunidad.svelte';
+	import TarjetaPedidoCotizado from '$lib/components/Vistas/Pedidos/TarjetaPedidoCotizado.svelte';
+	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 	const oportunidad = $derived(page.data.oportunidad);
@@ -29,12 +31,15 @@
 	// CRUD
 	async function relacionarPedido() {
 		StorePedidoEditar.limpiar();
+		StorePedidoNuevo.limpiar();
+		StoreContextoRelacion.setOportunidad(oportunidad.id);
 		StorePedidoEditar.pushLista(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
 		await goto('/pedidos');
 		StorePedidoEditar.toggleModal(true);
 	}
 	async function editarPedido() {
 		StorePedidoEditar.limpiar();
+		StorePedidoNuevo.limpiar();
 		StorePedidoEditar.pushLista(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
 		StoreContextoRelacion.setOportunidad(oportunidad.id);
 		await goto('/pedidos');
@@ -126,27 +131,56 @@
 			</CustomInput>
 		{/if}
 
-		<!-- PEDIDOS -->
-		<section>
-			<div class="header">
-				<h3>Pedidos:</h3>
-			</div>
+		<!-- Borrador -->
+		{#if fase.id_fase == 1}
+			<section>
+				<div class="header">
+					<h3>Borrador:</h3>
+				</div>
 
-			<div class="content">
-				{#if oportunidad.pedidos.length > 0}
-					{#if fase.id_fase == 1}
+				<div class="content">
+					{#if oportunidad.pedidos.length > 0}
 						<TarjetaPedidoLista pedidos={oportunidad.pedidos} disable />
-					{:else if fase.id_fase == 2}
+						{#if editando}
+							<button onclick={editarPedido}>~Editar</button>
+						{/if}
+					{:else}
+						<button onclick={relacionarPedido}>+Potencial de venta</button>
+					{/if}
+				</div>
+			</section>
+		{/if}
+
+		<!-- Potencia de venta -->
+		{#if fase.id_fase >= 2 && fase.id_fase <= 3}
+			<section>
+				<div class="header">
+					<h3>Potencial de Venta:</h3>
+				</div>
+
+				<div class="content">
+					{#if oportunidad.pedidos.length > 0}
 						<TarjetaPedidoOportunidad {oportunidad} />
+						{#if editando}
+							<button class="butter" onclick={editarPedido}>~Editar</button>
+						{/if}
+					{:else}
+						<button class="butter" onclick={relacionarPedido}>+Potencial de venta</button>
 					{/if}
-					{#if editando}
-						<button onclick={editarPedido}>~Editar</button>
+				</div>
+			</section>
+			<section>
+				<div class="header">
+					<h3>Cotizado:</h3>
+				</div>
+
+				<div class="content">
+					{#if oportunidad.pedidos.length > 0}
+						<TarjetaPedidoCotizado {oportunidad} />
 					{/if}
-				{:else}
-					<button onclick={relacionarPedido}>+Potencial de venta</button>
-				{/if}
-			</div>
-		</section>
+				</div>
+			</section>
+		{/if}
 
 		<!-- {#if faseActual >= 2 && faseActual <= 3}
 			<section>

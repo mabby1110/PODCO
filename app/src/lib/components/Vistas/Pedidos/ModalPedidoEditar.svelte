@@ -152,6 +152,7 @@
 		overflow-y: auto;
 		display: flex;
 		flex-direction: column;
+		gap: var(--b);
 	}
 
 	/* Reglas para la ventana maximizada */
