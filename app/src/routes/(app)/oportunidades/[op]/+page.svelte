@@ -14,25 +14,28 @@
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import AgentActions from '$lib/components/Vistas/Oportunidad/AgentActions.svelte';
 	import { fasesOportunidad } from '$lib';
-	
+	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
+	import SubirAdjunto from '$lib/components/Vistas/Documentos/SubirAdjunto.svelte';
+	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
+	import Entradas from '$lib/components/Acciones/Entradas.svelte';
+
 	onMount(() => StorePedidoEditar.toggleModal(false));
 	const oportunidad = $derived(page.data.oportunidad);
-	
+
 	// ESTADO
 	let editando = $state(false);
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
-	
+
 	// CRUD
 	async function relacionarPedido() {
 		StoreContextoRelacion.setOportunidad(oportunidad.id);
-		StorePedidoEditar.pushLista(oportunidad.pedidos.map(p=>p.id));
+		StorePedidoEditar.pushLista(oportunidad.pedidos.map((p) => p.id));
 		await goto('/pedidos');
 		StorePedidoEditar.toggleModal(true);
 	}
-	
+
 	console.log(oportunidad);
 </script>
-
 
 <Card headerStyle={fase.estilo}>
 	{#snippet header()}
@@ -108,7 +111,12 @@
 		/>
 
 		{#if editando}
-			<CustomInput label="Postergar" action="/oportunidades?/update" id={oportunidad?.id} {editando}>
+			<CustomInput
+				label="Postergar"
+				action="/oportunidades?/update"
+				id={oportunidad?.id}
+				{editando}
+			>
 				<DatePicker />
 			</CustomInput>
 		{/if}
@@ -125,6 +133,17 @@
 						<button onclick={relacionarPedido}>~Editar</button>
 					{/if}
 					<TarjetaPedidoLista pedidos={oportunidad.pedidos} disable />
+					{#if fase.id_fase == 2}
+						<SubirAdjunto
+							tipo="docs_cotizaciones"
+							oportunidad={{
+								id: oportunidad?.id,
+								cliente:
+									oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
+							}}
+							required
+						/>
+					{/if}
 				{:else}
 					<button onclick={relacionarPedido}>+Potencial de venta</button>
 					{#if StoreContextoRelacion.id_oportunidad}
@@ -174,7 +193,7 @@
 					{/if}
 				</div>
 			</section>
-		{/if}
+		{/if} -->
 
 		<section class="adjunto">
 			<div class="header">
@@ -183,15 +202,12 @@
 			<div class="content">
 				<FormOptionalInput title="+Adjuntos">
 					<SubirAdjunto
-						label="Adjuntos"
-						name="docs_adjuntos"
-						amountName="totales"
-						id_nodo_p={oportunidad?.id}
-						cliente={oportunidad?.cliente}
-						agente={oportunidad?.agente}
-						action="/documentos?/add"
+						tipo="docs_adjuntos"
+						oportunidad={{
+							id: oportunidad?.id,
+							cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
+						}}
 						required
-						multiple
 					/>
 				</FormOptionalInput>
 				{#each oportunidad?.adjuntos as documento}
@@ -209,11 +225,11 @@
 					{editando}
 					historia={oportunidad?.historia}
 					objId={oportunidad?.id}
-					action={'/oportunidades?/update'}
+					action={'/oportunidades?/actualizarOportunidad'}
 				/>
 			</div>
-		</section> -->
-		
+		</section>
+
 		<AgentActions {oportunidad} bind:editando />
 	{/snippet}
 </Card>

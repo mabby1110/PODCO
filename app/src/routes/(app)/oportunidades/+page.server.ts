@@ -145,9 +145,7 @@ export const actions: Actions = {
 	actualizarOportunidad: async ({ request, locals: { supabase, user } }) => {
 		const formData = await request.formData();
 		const oportunidad = Object.fromEntries(formData.entries());
-		let resultActualizacion: any[] = [];
-
-		console.log(oportunidad);
+		console.log('actualizar oportunidad\n', oportunidad);
 
 		const { data, error } = await supabase
 			.from('oportunidades')
@@ -155,7 +153,7 @@ export const actions: Actions = {
 			.eq('id', oportunidad.id)
 			.select()
 			.single();
-		console.log(data, error);
+
 		if (error) {
 			throw new Error(error.message);
 		}

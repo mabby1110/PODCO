@@ -1,5 +1,13 @@
-import type { Actividad, Cliente, Cotizacion, Historial, Notificacion, Oportunidad, Pedido } from '$lib';
-import { processAttachments } from '../google/drive';
+import type {
+	Actividad,
+	Cliente,
+	Cotizacion,
+	Historial,
+	Notificacion,
+	Oportunidad,
+	Pedido
+} from '$lib';
+import { subirAGoogleDrive } from '../google/drive';
 import { generateId } from '../google/sheets';
 
 const CLAVES_CLIENTE: (keyof Cliente)[] = [
@@ -118,7 +126,7 @@ const CLAVES_NOTIFICACIONES: (keyof Notificacion)[] = [
 	'id_agente',
 	'id_historial',
 	'visto',
-	'fecha_lectura',
+	'fecha_lectura'
 ];
 
 export function limpiarCamposVacios(obj: Record<string, any>): Record<string, any> {
@@ -306,56 +314,71 @@ export function construirDatosOportunidad(
 	return limpiarCamposVacios(datosBrutos) as Partial<Oportunidad>;
 }
 
-export async function procesarDocumentos(
-	formData: FormData,
-	id_nodo: string, // padre
-	archivo: string = 'adjuntos'
-): Promise<Partial<Cotizacion>[]> {
-	// Modificado: Retorna un array
-	const baseDatos: Partial<Cotizacion> = {};
+export async function procesarDocumentos(formData: FormData) {
+	const nombre_agente = formData.get('nombre_agente')?.toString() || '';
+	const nombre_cliente = formData.get('nombre_cliente')?.toString() || '';
+	const id_oportunidad = formData.get('id_oportunidad')?.toString() || '';
+	const tipo = formData.get('tipo')?.toString() || '';
+	const docFiles = formData.getAll(tipo) as File[];
 
-	// 1. Construir datos compartidos
-	for (const clave of CLAVES_DOCUMENTO) {
-		if (clave === 'id') continue; // Se asignará individualmente
+	console.log(docFiles, id_oportunidad, nombre_agente, nombre_cliente, tipo);
 
-		if (formData.has(clave)) {
-			const valor = formData.get(clave);
-			(baseDatos as any)[clave] = valor !== '' ? valor : null;
-		}
+	if (!id_oportunidad || docFiles.length === 0) {
+		return [];
 	}
 
-	const datosLimpios = limpiarCamposVacios(baseDatos);
-	console.log('datos_limpios', datosLimpios);
-	// 2. Procesar archivos e iterar para subir a drive
-	const quoteFile = formData.get(archivo) as File | null;
+	const opFolder = `(${nombre_cliente}) ${id_oportunidad}`;
 
-	if (quoteFile && quoteFile.size > 0) {
-		try {
-			const docFiles = formData.getAll(archivo) as File[];
-			const agenteNombre = formData.get('agente') as string;
-			const opFolder = `${id_nodo}`;
+	try {
+		const docs = await subirAGoogleDrive(docFiles, nombre_agente, opFolder);
 
-			const docs: any[] = await processAttachments(docFiles, agenteNombre, opFolder);
+		return docs.map((doc) => ({
+			id: generateId('BMS-Q'),
+			id_oportunidad: id_oportunidad,
+			titulo: doc.name || 'sin_titulo',
+			url: doc.url,
+			preview: doc.preview
+		}));
+	} catch (err) {
+		console.error('Error procesando documentos:', err);
+		throw new Error('Fallo crítico al procesar y subir adjuntos');
+	}
+}
 
-			// Generar un documento completo por cada archivo procesado
-			return docs.map((doc) => ({
-				...datosLimpios,
-				id: generateId('BMS-DOC'),
-				titulo: doc.name ?? 'sin titulo',
-				url: doc.url,
-				preview: doc.preview
-			}));
-		} catch (err) {
-			console.error('Error procesando documentos', err);
-			throw new Error('Fallo al procesar adjuntos');
-		}
+export async function procesarCotizacion(formData: FormData) {
+	const docFiles = formData.getAll('docs_adjuntos') as File[];
+	const nombre_agente = formData.get('nombre_agente')?.toString() || '';
+	const nombre_cliente = formData.get('nombre_cliente')?.toString() || '';
+	const id_oportunidad = formData.get('id_oportunidad')?.toString() || '';
+
+	if (!id_oportunidad || docFiles.length === 0) {
+		return [];
 	}
 
-	// 3. Fallback: Retornar array con un solo documento si no se subieron archivos
-	return [
-		{
-			...datosLimpios,
-			id: generateId('BMS-DOC')
-		}
-	];
+	const iniciales = nombre_agente
+		.trim()
+		.split(/\s+/)
+		.map((palabra) => palabra[0])
+		.join('')
+		.toUpperCase();
+
+	const sufijoId = id_oportunidad.split('-').pop() || id_oportunidad;
+	const nombreClienteLimpio = nombre_cliente.trim().replace(/\s+/g, '_');
+
+	const opFolder = `${iniciales}_${sufijoId}_${nombreClienteLimpio}`;
+
+	try {
+		const docs = await subirAGoogleDrive(docFiles, nombre_agente, opFolder);
+
+		return docs.map((doc) => ({
+			id: generateId('BMS-DOC'),
+			id_oportunidad: id_oportunidad,
+			titulo: doc.name || 'sin_titulo',
+			url: doc.url,
+			preview: doc.preview
+		}));
+	} catch (err) {
+		console.error('Error procesando documentos:', err);
+		throw new Error('Fallo crítico al procesar y subir adjuntos');
+	}
 }

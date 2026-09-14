@@ -53,27 +53,15 @@ async function getOrCreateFolder(name: string, parentId: string) {
  *        └── AGENTE
  *              └── OPXXX
  */
-async function resolveUploadFolder(
-	agentName: string,
-	opFolder: string
-) {
+async function resolveUploadFolder(agentName: string, opFolder: string) {
 	// nivel 1
-	const yearFolderId = await getOrCreateFolder(
-		'BMS_2026',
-		GOOGLE_FOLDER_ID
-	);
+	const yearFolderId = await getOrCreateFolder('BMS_2026', GOOGLE_FOLDER_ID);
 
 	// nivel 2
-	const agentFolderId = await getOrCreateFolder(
-		agentName,
-		yearFolderId
-	);
+	const agentFolderId = await getOrCreateFolder(agentName, yearFolderId);
 
 	// nivel 3
-	const opFolderId = await getOrCreateFolder(
-		opFolder,
-		agentFolderId
-	);
+	const opFolderId = await getOrCreateFolder(opFolder, agentFolderId);
 
 	return opFolderId;
 }
@@ -118,23 +106,8 @@ export async function uploadToFolder(
 	return response.data;
 }
 
-export async function processAttachments(
-	files: File[],
-	agenteNombre: string,
-	opFolder: string,
-	existingJson?: FormDataEntryValue | null
-) {
-	let docs: any[] = [];
-
-	// parse existing
-	if (existingJson && String(existingJson).trim() !== '') {
-		try {
-			docs = JSON.parse(existingJson as string);
-			if (!Array.isArray(docs)) docs = [];
-		} catch {
-			docs = [];
-		}
-	}
+export async function subirAGoogleDrive(files: File[], agenteNombre: string, opFolder: string) {
+	const docs: any[] = [];
 
 	for (const file of files) {
 		if (!file || file.size === 0) continue;
@@ -142,13 +115,7 @@ export async function processAttachments(
 		const buffer = Buffer.from(await file.arrayBuffer());
 		const stream = Readable.from(buffer);
 
-		const uploaded = await uploadToFolder(
-			file.name,
-			file.type,
-			stream,
-			agenteNombre,
-			opFolder
-		);
+		const uploaded = await uploadToFolder(file.name, file.type, stream, agenteNombre, opFolder);
 
 		if (uploaded?.webViewLink) {
 			docs.push({
@@ -158,6 +125,6 @@ export async function processAttachments(
 			});
 		}
 	}
-
+	console.log('docs subidos: ', docs);
 	return docs;
 }

@@ -30,6 +30,7 @@
 	let list_stringified = $derived(JSON.stringify(lista));
 	let formEl = $state<HTMLFormElement | null>(null);
 	let formInput = $state<HTMLFormElement | null>(null);
+	let isSubmitting = $state(false);
 
 	function initNewData() {
 		newData = {
@@ -61,12 +62,14 @@
 
 	function syncAndSubmit() {
 		historia = list_stringified;
+		isSubmitting = true;
 		queueMicrotask(() => formEl?.requestSubmit());
 	}
 
 	function handleSubmit() {
 		return async ({ update }: any) => {
 			await update({ reset: false });
+			isSubmitting = false;
 		};
 	}
 
@@ -125,7 +128,12 @@
 									<button type="button" class="butter" onclick={() => eliminarEntrada(i)}>
 										Eliminar
 									</button>
-									<button type="button" class="butter matcha" onclick={syncAndSubmit}>
+									<button
+										type="button"
+										class="butter matcha"
+										onclick={syncAndSubmit}
+										disabled={isSubmitting}
+									>
 										Guardar
 									</button>
 								</div>

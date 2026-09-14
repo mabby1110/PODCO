@@ -19,7 +19,6 @@
 	let isOpen = $state(false);
 	let submit = $state(false);
 
-	let submitUpdate = $state(false);
 	let submitCancel = $state(false);
 
 	// Callback para resetear el estado local tras un envío exitoso
@@ -66,19 +65,21 @@
 				</section>
 			{:else if fase.id_fase == 2}
 				<input type="hidden" name="fecha_negociacion" value={new Date().toISOString()} />
-				<FormSelectMotivo
-					title="Especificar Motivo"
-					list={motivosOportunidad}
-					disableCustom={false}
+				<FormInput
+					label="Motivo"
+					name="motivo"
+					placeholder="Especificar concepto de la oportunidad"
+					type="text"
+					required
 				/>
 				<FormInput
 					label="Análisis"
 					name="nuevaHistoria"
-					placeholder={fase.accion}
+					placeholder="Resumen del analisis realizado, justifica la seleccion de producto realizada"
 					type="textarea"
 					required
 				/>
-				<div class="opcional">
+				<!-- <div class="opcional">
 					<h3>Cotizacion(es)</h3>
 					<div class="opciones">
 						{#if oportunidad.cotizaciones.length > 0}
@@ -89,7 +90,7 @@
 							<p>Subir cotizacion para avanzar fase</p>
 						{/if}
 					</div>
-				</div>
+				</div> -->
 				<div class="opcional">
 					<h3>Informacion adicional</h3>
 					<div class="opciones">
@@ -110,9 +111,6 @@
 								type="textarea"
 								required
 							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+adjuntos">
-							<UploadFile label="Subir documentos" name="adjuntos" multiple />
 						</FormOptionalInput>
 					</div>
 				</div>

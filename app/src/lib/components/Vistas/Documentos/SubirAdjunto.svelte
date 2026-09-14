@@ -1,36 +1,25 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	type Item = {
 		file: File;
-		amount: number | null;
+		titulo: string;
 	};
 
 	let {
-		label = 'Archivos',
-		name = 'files',
-		amountName = 'amounts',
-		id_nodo_p,
-		agente,
-		action = '',
+		tipo = 'files',
+		oportunidad,
+		action = '/documentos?/subirAdjunto',
 		required = false,
 		disabled = false,
-		hint = '',
-		multiple = true,
 		submitLabel = 'Guardar'
 	}: {
-		label?: string;
-		name?: string;
-		amountLabel?: string;
-		amountName?: string;
-		id_nodo_p?: string;
-		cliente?: any;
-		agente?: any;
+		tipo: string;
+		oportunidad: { id: string; cliente: string };
 		action?: string;
 		required?: boolean;
 		disabled?: boolean;
-		hint?: string;
-		multiple?: boolean;
 		submitLabel?: string;
 	} = $props();
 
@@ -39,6 +28,10 @@
 	let formEl: HTMLFormElement;
 	let isDragging = $state(false);
 	let isSubmitting = $state(false);
+	let prefijoTipoDocumento: Record<string, string> = {
+		docs_cotizaciones: 'Q',
+		docs_adjuntos: 'A'
+	};
 
 	function handleChange(e: Event) {
 		const input = e.target as HTMLInputElement;
@@ -46,17 +39,12 @@
 		if (!input.files) return;
 
 		const selected = Array.from(input.files);
-
 		const newItems = selected.map((file) => ({
 			file,
-			amount: null
+			titulo: file.name.split('.')[0]
 		}));
 
-		if (multiple) {
-			items = [...items, ...newItems];
-		} else {
-			items = newItems.slice(0, 1);
-		}
+		items = [...items, ...newItems];
 
 		input.value = '';
 	}
@@ -77,8 +65,11 @@
 			const formData = new FormData(formEl);
 
 			items.forEach((item) => {
-				formData.append(name, item.file);
-				formData.append(amountName, String(item.amount ?? 0));
+				const file = new File([item.file], item.titulo, {
+					type: item.file.type
+				});
+
+				formData.append(tipo, file);
 			});
 
 			const response = await fetch(action, {
@@ -114,16 +105,10 @@
 	{action}
 	onsubmit={handleSubmit}
 >
-	<input type="hidden" name="entity" value={name} />
-
-	{#if id_nodo_p}
-		<input type="hidden" name="id_nodo_p" value={id_nodo_p} />
-	{/if}
-
-	{#if agente}
-		<input type="hidden" name="id_agente" value={agente.id} />
-		<input type="hidden" name="agente" value={agente.nombre} />
-	{/if}
+	<input type="hidden" name="tipo" value={tipo} />
+	<input type="hidden" name="id_oportunidad" value={oportunidad.id} />
+	<input type="hidden" name="nombre_agente" value={$profile?.nombre} />
+	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
 
 	<div class="upload-container">
 		<input
@@ -131,7 +116,7 @@
 			type="file"
 			class="file-input"
 			class:dragging={isDragging}
-			{multiple}
+			multiple
 			{disabled}
 			required={required && items.length === 0}
 			onchange={handleChange}
@@ -153,9 +138,7 @@
 						<button type="button" class="close-btn" onclick={() => removeItem(i)}> × </button>
 
 						<div class="info">
-							<p class="filename">
-								{item.file.name}
-							</p>
+							<input type="text" bind:value={item.titulo} />
 						</div>
 					</div>
 				{/each}
@@ -243,7 +226,7 @@
 		margin: 0;
 		word-break: break-word;
 	}
-	
+
 	.close-btn {
 		border: none;
 		cursor: pointer;
