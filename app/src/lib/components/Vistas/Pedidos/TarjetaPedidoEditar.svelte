@@ -50,7 +50,11 @@
 		mensaje = '';
 
 		try {
-			const tieneOportunidadRelacionada = pedidos.some((pedido) => pedido.id_oportunidad !== null);
+			const tieneOportunidadRelacionada = pedidos.some(
+				(pedido) =>
+					pedido.id_oportunidad !== null &&
+					pedido.id_oportunidad !== StoreContextoRelacion.id_oportunidad
+			);
 
 			if (tieneOportunidadRelacionada) {
 				const confirmar = window.confirm(
@@ -102,7 +106,6 @@
 			}
 			limpiarCarrito();
 			invalidateAll();
-
 		} catch (error) {
 			console.error('Error al actualizar pedido:', error);
 			mensaje = error instanceof Error ? error.message : 'Error al actualizar el pedido';
@@ -111,6 +114,14 @@
 		}
 	}
 	async function eliminarRelacion() {
+		const confirmar = window.confirm(
+			'¿Estás seguro de que deseas continuar? Esto podría eliminar las relaciones con oportunidades.'
+		);
+
+		if (!confirmar) {
+			actualizando = false;
+			return;
+		}
 		try {
 			const formData = new FormData();
 
@@ -163,7 +174,6 @@
 		} finally {
 			actualizando = false;
 		}
-
 	}
 </script>
 

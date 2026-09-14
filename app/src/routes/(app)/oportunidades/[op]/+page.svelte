@@ -21,21 +21,22 @@
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 	const oportunidad = $derived(page.data.oportunidad);
-
+	console.log(oportunidad);
 	// ESTADO
 	let editando = $state(false);
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
 
 	// CRUD
 	async function relacionarPedido() {
-		StoreContextoRelacion.setOportunidad(oportunidad.id);
-		StorePedidoEditar.pushLista(oportunidad.pedidos);
+		StorePedidoEditar.limpiar();
+		StorePedidoEditar.pushLista(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
 		await goto('/pedidos');
 		StorePedidoEditar.toggleModal(true);
 	}
 	async function editarPedido() {
+		StorePedidoEditar.limpiar();
+		StorePedidoEditar.pushLista(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
 		StoreContextoRelacion.setOportunidad(oportunidad.id);
-		StorePedidoEditar.pushLista(oportunidad.pedidos);
 		await goto('/pedidos');
 		StorePedidoEditar.toggleModal(true);
 	}

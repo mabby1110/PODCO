@@ -1,13 +1,17 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { StorePedidoOportunidad } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
 	import { onMount } from 'svelte';
-	import SubirAdjunto from '../Documentos/SubirAdjunto.svelte';
 	import SubirCotizacion from '../Documentos/SubirCotizacion.svelte';
 
 	onMount(StorePedidoOportunidad.limpiar);
 	let { oportunidad } = $props();
-	let pedidos = $derived(oportunidad.pedidos);
+	let potencial_venta = $derived(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
+	let pedidoACotizarInvalido = $derived(
+		oportunidad.pedidos.some((p) =>
+			StorePedidoOportunidad.carrito.some((item) => item.id === p.id && p.precio_unitario === null)
+		)
+	);
+	$effect(()=>console.log(pedidoACotizarInvalido));
 	function seleccionarPedido(id: string) {
 		if (StorePedidoOportunidad.carrito.some((item) => item.id === id)) {
 			StorePedidoOportunidad.pop(id);
@@ -17,12 +21,12 @@
 	}
 
 	function seleccionarPedidoCompleto() {
-		StorePedidoOportunidad.pushLista(pedidos);
+		StorePedidoOportunidad.pushLista(potencial_venta);
 	}
 </script>
 
 <div>
-	{#each pedidos as pedido}
+	{#each potencial_venta as pedido}
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 
@@ -61,10 +65,11 @@
 			<hr />
 		</div>
 	{/each}
-	
-	{#if StorePedidoOportunidad.carrito.length > 0}
+
+	{#if StorePedidoOportunidad.carrito.length > 0 && !pedidoACotizarInvalido}
 		<SubirCotizacion
 			tipo="docs_cotizaciones"
+			action="/documentos?/subirCotizacion"
 			oportunidad={{
 				id: oportunidad?.id,
 				cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social

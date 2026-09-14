@@ -33,62 +33,54 @@ export const actions: Actions = {
 	subirCotizacion: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const tipo = formData.get('tipo') as string;
-		const pedidosAActualizar = JSON.parse((formData.get('pedidosAActualizar') as string) || '[]');
-
+		const pedidosACrear = JSON.parse((formData.get('pedidosACrear') as string) || '[]');
 		try {
 			const documentos = await procesarDocumentos(formData);
 
-			if (!documentos || documentos.length === 0 || pedidosAActualizar.length === 0) {
+			if (!documentos || documentos.length === 0 || pedidosACrear.length === 0) {
 				return { success: true, message: 'Sin documentos procesados' };
 			}
 
-			const { data: result, error } = await supabase.from(tipo).insert(documentos);
+			const { data: doc_cotizacion, error } = await supabase
+				.from(tipo)
+				.insert(documentos)
+				.select()
+				.single();
 
 			if (error) {
 				return fail(500, { error: error.message });
 			}
-			console.log(result, error);
-	
-			// RELACIONES
-			const idOportunidad = (formData.get('idOportunidad') as string) || null;
-			console.log(idOportunidad);
-	
+			console.log('resultado: ', doc_cotizacion, error);
+
 			let resultActualizacion: any[] = [];
-	
-			// PEDIDOS A ACTUALIZAR
-				console.log('pedidos a actualizar: ', pedidosAActualizar);
-	
-				const pedidosParaActualizar = pedidosAActualizar.map((pedido: any) => ({
-					id: pedido.id,
+
+			// PEDIDOS A CREAR
+			if (pedidosACrear.length > 0) {
+				console.log('pedidos a crear: ', pedidosACrear);
+				const id_agrupacion = generateId('BMS-P');
+
+				const pedidosParaCrear = pedidosACrear.map((pedido: any) => ({
+					id_producto: pedido.id_producto,
 					cantidad: pedido.cantidad,
-					moneda: pedido.moneda,
-					precio_unitario: pedido.precio_unitario,
-					id_oportunidad: idOportunidad
+					moneda: pedido.moneda ?? 'USD',
+					precio_unitario: pedido.precio_unitario ?? 0,
+					id_oportunidad: pedido.id_oportunidad,
+					estatus: 3,
+					id_agrupacion,
+					id_cotizacion: doc_cotizacion.id
 				}));
-	
-				const updatePromises = pedidosParaActualizar.map(async (pedido) => {
-					const { id, ...camposActualizar } = pedido;
-	
-					const { data, error } = await supabase
-						.from('pedidos')
-						.update(camposActualizar)
-						.eq('id', id)
-						.select()
-						.single();
-	
-					if (error) {
-						throw new Error(error.message);
-					}
-	
-					return data;
-				});
-	
-				try {
-					resultActualizacion = await Promise.all(updatePromises);
-				} catch (error: any) {
-					return fail(500, { error: error.message });
+
+				const { data: resultCreacion, error: errorCreacion } = await supabase
+					.from('pedidos')
+					.insert(pedidosParaCrear)
+					.select();
+
+				if (errorCreacion) {
+					console.log(errorCreacion);
+					return fail(500, { error: errorCreacion.message });
 				}
 			}
+
 			return { success: true };
 		} catch (error) {
 			console.error('Error en acción subirAdjunto:', error);

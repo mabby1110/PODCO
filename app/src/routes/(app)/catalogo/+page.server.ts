@@ -45,7 +45,7 @@ export const actions: Actions = {
 		}
 
 		// Transformación al formato de la tabla
-		const id_agrupacion = generateId('PEDIDO_BMS')
+		const id_agrupacion = generateId('BMS-P');
 		const payload = carrito.map((item) => ({
 			id_producto: item.id,
 			cantidad: item.cantidad,
@@ -54,9 +54,9 @@ export const actions: Actions = {
 		}));
 
 		console.log('\ndata a insertar: ', payload);
-		
+
 		const { data: result, error } = await supabase.from('pedidos').insert(payload).select();
-		
+
 		console.log('\nresult: ', result);
 		console.log('\nerror: ', error);
 

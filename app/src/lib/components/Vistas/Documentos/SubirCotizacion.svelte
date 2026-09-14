@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import { page } from '$app/state';
+	import { StorePedidoOportunidad } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
 	type Item = {
@@ -23,31 +25,33 @@
 		submitLabel?: string;
 	} = $props();
 
-	let items = $state<Item[]>([]);
+	let item = $state<Item | null>(null);
 	let inputEl: HTMLInputElement;
 	let formEl: HTMLFormElement;
 	let isDragging = $state(false);
 	let isSubmitting = $state(false);
-	
+	let pedidosACrear = $derived(
+		page.data.pedidos.filter((p) => StorePedidoOportunidad.carrito.some((item) => item.id === p.id))
+	);
 	function handleChange(e: Event) {
 		const input = e.target as HTMLInputElement;
 
-		if (!input.files) return;
+		if (!input.files || input.files.length === 0) return;
 
-		const selected = Array.from(input.files);
-		const newItems = selected.map((file) => ({
+		// Tomar solo el primer archivo
+		const file = input.files[0];
+
+		item = {
 			file,
 			titulo: file.name.split('.')[0]
-		}));
-
-		items = [...items, ...newItems];
+		};
 
 		input.value = '';
 	}
 
-	function removeItem(index: number) {
-		items.splice(index, 1);
-		items = [...items];
+	// Ya no necesitas un índice, simplemente limpias el archivo actual
+	function removeItem() {
+		item = null;
 	}
 
 	async function handleSubmit(event: SubmitEvent) {
@@ -59,14 +63,16 @@
 
 		try {
 			const formData = new FormData(formEl);
+			formData.append('pedidosACrear', JSON.stringify(pedidosACrear));
 
-			items.forEach((item) => {
+			// Si hay un archivo seleccionado, lo agregas al formData
+			if (item) {
 				const file = new File([item.file], item.titulo, {
 					type: item.file.type
 				});
 
 				formData.append(tipo, file);
-			});
+			}
 
 			const response = await fetch(action, {
 				method: 'POST',
@@ -79,7 +85,8 @@
 				return;
 			}
 
-			items = [];
+			// Limpias el estado después de enviar
+			item = null;
 
 			if (inputEl) {
 				inputEl.value = '';
@@ -105,7 +112,6 @@
 	<input type="hidden" name="id_oportunidad" value={oportunidad.id} />
 	<input type="hidden" name="nombre_agente" value={$profile?.nombre} />
 	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
-	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
 
 	<div class="upload-container">
 		<input
@@ -113,9 +119,7 @@
 			type="file"
 			class="file-input"
 			class:dragging={isDragging}
-			multiple
-			{disabled}
-			required={required && items.length === 0}
+			required={required && item===null}
 			onchange={handleChange}
 			ondragover={() => {
 				if (!disabled) isDragging = true;
@@ -128,17 +132,17 @@
 			}}
 		/>
 
-		{#if items.length > 0}
+		{#if item}
 			<div class="files">
-				{#each items as item, i}
-					<div class="item">
-						<button type="button" class="close-btn" onclick={() => removeItem(i)}> × </button>
+				<div class="item">
+					<!-- Ya no pasamos el índice (i), solo llamamos a removeItem -->
+					<button type="button" class="close-btn" onclick={removeItem}> × </button>
 
-						<div class="info">
-							<input type="text" bind:value={item.titulo} />
-						</div>
+					<div class="info">
+						<!-- El binding se hace directamente sobre item.titulo -->
+						<input type="text" bind:value={item.titulo} />
 					</div>
-				{/each}
+				</div>
 
 				<button type="submit" class="btn-save-small butter" disabled={isSubmitting}>
 					{#if isSubmitting}

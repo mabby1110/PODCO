@@ -83,7 +83,6 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		queryNotificaciones
 	]);
 
-	console.log('Error Oportunidades:', errorOp);
 	console.log('\nactividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
 	console.log('clientes: ', clientes?.length);
