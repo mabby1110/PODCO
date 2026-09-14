@@ -12,7 +12,7 @@
 	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 
-	let pedidos = $derived(page.data.pedidos);
+	let pedidos = $derived(page.data.pedidos.filter((p)=>p.estatus<=2));
 
 	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
