@@ -45,14 +45,14 @@
 	{/snippet}
 	{#snippet contenido()}
 		{#if !isGrouped}
-			{#each lista_ordenada as elemento}
-				<TarjetaListaActividades event={elemento} />
+			{#each lista_ordenada as actividad}
+				<TarjetaListaActividades {actividad} />
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={show}>
-					{#each agrupacion.items as event (event.id)}
-						<TarjetaListaActividades {event} />
+					{#each agrupacion.items as actividad (actividad.id)}
+						<TarjetaListaActividades {actividad} />
 					{/each}
 				</Grupo>
 			{:else}

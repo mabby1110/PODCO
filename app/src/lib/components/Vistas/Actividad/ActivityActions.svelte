@@ -4,16 +4,17 @@
 	import { agregarEntrada, concatStrings } from '$lib/utils/cardActions';
 	import FormActions from '$lib/components/Formularios/FormActions.svelte';
 	import FormInput from '$lib/components/Formularios/FormInput.svelte';
+	import { fasesActividad } from '$lib';
 
 	let {
-		eventData,
+		actividad,
 		editando = $bindable()
 	}: {
-		eventData: any;
+		actividad: any;
 		editando?: boolean;
 	} = $props();
-	let currentPhase = $derived(Number(eventData.fase.id_fase));
-	let nextPhase = $derived(currentPhase + 5);
+
+	let fase = $derived(fasesActividad[actividad.fase == 6 ? actividad.fase - 4 : actividad.fase]);
 
 	let nuevoRequisito = $state('');
 	let nuevaHistoria = $state('');
@@ -25,25 +26,55 @@
 	let submitCancel = $state(false);
 	let newOp = $state(false);
 
-	let style = $derived(getStyleForPhase(currentPhase + 5));
 	function handleSuccess() {
 		nuevoRequisito = '';
 		nuevaHistoria = '';
 	}
 </script>
 
-{#if currentPhase != 0 && currentPhase != 6}
+{#if fase.id_fase != 0 && fase.id_fase != 6}
 	<FormActions action="/actividades?/update" bind:isOpen onSuccess={handleSuccess}>
-		{#snippet fieldsContent()}
+		{#snippet hiddenContent()}
+			<input type="hidden" name="id" value={actividad.id} />
+			{#if nuevaHistoria}
+				{actividad?.agente.nombre}
+				<input
+					type="hidden"
+					name="historia"
+					value={agregarEntrada(actividad.historia, nuevaHistoria, actividad?.agente)}
+				/>
+			{/if}
+			{#if nuevoRequisito}
+				<input
+					type="hidden"
+					name="requisitos"
+					value={concatStrings(actividad.requisitos, nuevoRequisito)}
+				/>
+			{/if}
+			{#if nuevaObservacion}
+				<input
+					type="hidden"
+					name="observaciones"
+					value={concatStrings(actividad.observaciones, nuevaObservacion)}
+				/>
+			{/if}
+			{#if fase.id_fase == 6 && submit}
+				<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
+			{/if}
+			{#if !newOp}
+				<input type="hidden" name="id_agente" value={actividad?.agente?.id} />
+			{/if}
+		{/snippet}
+
+		{#snippet inputs()}
 			{#if submit}
-				{#if currentPhase == 1}
+				{#if fase.id_fase == 1}
 					<FormInput
-						label="Conclusión"
+						label="Conclusión (opcional)"
 						name="nuevaHistoria"
 						bind:value={nuevaHistoria}
 						placeholder="Resultados técnicos, potencial detectado y acuerdos de seguimiento."
 						type="textarea"
-						required
 					/>
 				{/if}
 			{:else if submitCancel}
@@ -57,37 +88,7 @@
 				/>
 			{/if}
 		{/snippet}
-		{#snippet hiddenContent()}
-			<input type="hidden" name="id" value={eventData.id} />
-			{#if nuevaHistoria}
-				{eventData?.agente.nombre}
-				<input
-					type="hidden"
-					name="historia"
-					value={agregarEntrada(eventData.historia, nuevaHistoria, eventData?.agente)}
-				/>
-			{/if}
-			{#if nuevoRequisito}
-				<input
-					type="hidden"
-					name="requisitos"
-					value={concatStrings(eventData.requisitos, nuevoRequisito)}
-				/>
-			{/if}
-			{#if nuevaObservacion}
-				<input
-					type="hidden"
-					name="observaciones"
-					value={concatStrings(eventData.observaciones, nuevaObservacion)}
-				/>
-			{/if}
-			{#if nextPhase == 6 && submit}
-				<input type="hidden" name="fecha_cierre" value={new Date().toISOString()} />
-			{/if}
-			{#if !newOp}
-				<input type="hidden" name="id_agente" value={eventData?.agente?.id} />
-			{/if}
-		{/snippet}
+
 		{#snippet submitContent()}
 			{#if !submit && !submitCancel}
 				<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
@@ -95,12 +96,12 @@
 				</button>
 			{/if}
 			{#if submit}
-				<input type="hidden" name="fase" value={nextPhase} />
-				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+				<input type="hidden" name="fase" value={fase.id_fase} />
+				<button type="submit" class="butter" disabled={isSubmitting}>
 					{isSubmitting ? 'Procesando...' : 'Finzalizar'}
 				</button>
 			{:else if newOp}
-				<button type="submit" class="butter" {style} disabled={isSubmitting}>
+				<button type="submit" class="butter" disabled={isSubmitting}>
 					{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
 				</button>
 			{:else if submitCancel}
@@ -108,7 +109,7 @@
 				<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
 			{/if}
 			<ActivityOptionalSubmit
-				nextFase={eventData.fase.accion}
+				nextFase={fase.accion}
 				bind:isOpen
 				bind:submit
 				bind:submitCancel

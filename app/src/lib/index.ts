@@ -373,7 +373,8 @@ export const fasesOportunidad = [
 		actual: 'Analisis',
 		accion: 'Negociar',
 		placeholder_accion: '',
-		placeholder_actual: 'Validar alcance, condiciones técnicas y viabilidad del producto(s) seleccionado',
+		placeholder_actual:
+			'Validar alcance, condiciones técnicas y viabilidad del producto(s) seleccionado',
 		estilo: 'background-color: var(--color-2);'
 	},
 	{
@@ -426,24 +427,27 @@ export const fasesOportunidad = [
 		estilo: 'background-color: var(--color-8); color: var(--color-text-ob);'
 	}
 ];
-export const fases_actividad = [
+export const fasesActividad = [
+	{
+		id_fase: 0,
+		actual: 'Cancelada',
+		accion: 'Activar',
+		placeholder: 'Actividad cancelada, se puede reactivar',
+		estilo: 'background-color: var(--color-0);'
+	},
 	{
 		id_fase: 1,
 		actual: 'Programada',
 		accion: 'Finalizar',
-		placeholder: 'Actividad agendada'
+		placeholder: 'Actividad agendada',
+		estilo: 'background-color: var(--color-1);'
 	},
 	{
 		id_fase: 6,
 		actual: 'Finalizada',
 		accion: '',
-		placeholder: 'Actividad finalizada y registrada en el historial'
-	},
-	{
-		id_fase: 0,
-		actual: 'Cancelada',
-		accion: 'Activar',
-		placeholder: 'Actividad cancelada, se puede reactivar'
+		placeholder: 'Actividad finalizada y registrada en el historial',
+		estilo: 'background-color: var(--color-8); color: var(--color-text-ob);'
 	}
 ];
 export const fasesPedido = [
@@ -468,7 +472,8 @@ export const fasesPedido = [
 		actual: 'Potencial',
 		accion: 'Cotización',
 		placeholder_accion: '',
-		placeholder_actual: 'Validar alcance, condiciones técnicas y viabilidad del producto(s) seleccionado',
+		placeholder_actual:
+			'Validar alcance, condiciones técnicas y viabilidad del producto(s) seleccionado',
 		estilo: 'background-color: var(--color-2);'
 	},
 	{
