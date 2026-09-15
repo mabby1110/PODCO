@@ -18,7 +18,7 @@
 	import SubirAdjunto from '$lib/components/Vistas/Documentos/SubirAdjunto.svelte';
 	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
 	import Entradas from '$lib/components/Acciones/Entradas.svelte';
-	import TarjetaPedidoOportunidad from '$lib/components/Vistas/Pedidos/TarjetaPedidoOportunidad.svelte';
+	import TarjetaPedidoPotencial from '$lib/components/Vistas/Pedidos/TarjetaPedidoPotencial.svelte';
 	import TarjetaPedidoCotizado from '$lib/components/Vistas/Pedidos/TarjetaPedidoCotizado.svelte';
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
@@ -160,7 +160,7 @@
 
 				<div class="content">
 					{#if oportunidad.pedidos.length > 0}
-						<TarjetaPedidoOportunidad {oportunidad} />
+						<TarjetaPedidoPotencial {oportunidad} />
 						{#if editando}
 							<button class="butter" onclick={editarPedido}>~Editar</button>
 						{/if}

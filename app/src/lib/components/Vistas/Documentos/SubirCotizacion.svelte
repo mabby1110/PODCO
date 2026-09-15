@@ -114,23 +114,25 @@
 	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
 
 	<div class="upload-container">
-		<input
-			bind:this={inputEl}
-			type="file"
-			class="file-input"
-			class:dragging={isDragging}
-			required={required && item===null}
-			onchange={handleChange}
-			ondragover={() => {
-				if (!disabled) isDragging = true;
-			}}
-			ondragleave={() => {
-				isDragging = false;
-			}}
-			ondrop={() => {
-				isDragging = false;
-			}}
-		/>
+		<div class="drop-zone" class:dragging={isDragging}>
+			<span class="drop-text">subir cotizacion</span>
+			<input
+				bind:this={inputEl}
+				type="file"
+				class="file-input"
+				required={required && item === null}
+				onchange={handleChange}
+				ondragover={() => {
+					if (!disabled) isDragging = true;
+				}}
+				ondragleave={() => {
+					isDragging = false;
+				}}
+				ondrop={() => {
+					isDragging = false;
+				}}
+			/>
+		</div>
 
 		{#if item}
 			<div class="files">
@@ -171,9 +173,10 @@
 	.file-input {
 		width: 100%;
 		max-width: 800px;
+		min-height: var(--f);
 		padding: var(--c);
 		border: 1px dashed #d4d4d8;
-		border-radius: 6px;
+		border-radius: 16px;
 		background-color: #fafafa;
 		cursor: pointer;
 		transition:
@@ -187,13 +190,59 @@
 		background-color: #f4f4f5;
 	}
 
-	.file-input.dragging {
+	.drop-zone {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		max-width: 800px;
+		min-height: var(--f);
+		padding: var(--c);
+		border: 1px dashed var(--color-muted);
+		border-radius: 16px;
+		background-color: #fafafa;
+		transition:
+			border-color 0.2s ease,
+			background-color 0.2s ease;
+		overflow: hidden;
+	}
+
+	.drop-zone:hover {
+		border-color: var(--color-secondary);
+		background-color: #f4f4f5;
+	}
+
+	.drop-zone.dragging {
 		background-color: var(--color-highlight);
 		border-color: var(--color-highlight);
 	}
 
-	.file-input:focus-visible {
+	/* Mantiene el borde negro al navegar con teclado */
+	.drop-zone:has(.file-input:focus-visible) {
 		border-color: #18181b;
+		border-style: solid;
+	}
+
+	.drop-text {
+		color: var(--color-secondary);
+		pointer-events: none; /* Asegura que el clic lo reciba el input debajo */
+		z-index: 1;
+	}
+
+	.file-input {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0; /* Oculta el diseño por defecto del navegador */
+		cursor: pointer;
+		z-index: 2;
+		outline: none;
+	}
+
+	.file-input:focus-visible {
+		border-color: var(--color-text);
 		border-style: solid;
 	}
 
@@ -210,10 +259,8 @@
 	.item {
 		display: flex;
 		gap: var(--a);
-		align-items: flex-start;
+		align-items: baseline;
 		padding: var(--a);
-		border: 1px solid #e4e4e7;
-		border-radius: 6px;
 	}
 
 	.info {
@@ -222,12 +269,6 @@
 		flex-direction: column;
 		gap: var(--a);
 	}
-
-	.filename {
-		margin: 0;
-		word-break: break-word;
-	}
-
 	.close-btn {
 		border: none;
 		cursor: pointer;
