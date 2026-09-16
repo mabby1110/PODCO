@@ -23,7 +23,7 @@
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 	const oportunidad = $derived(page.data.oportunidad);
-	
+
 	// ESTADO
 	let editando = $state(false);
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
@@ -169,6 +169,10 @@
 					{/if}
 				</div>
 			</section>
+		{/if}
+
+		<!-- Cotizado -->
+		{#if fase.id_fase >= 3}
 			<section>
 				<div class="header">
 					<h3>Cotizado:</h3>
@@ -181,7 +185,7 @@
 				</div>
 			</section>
 		{/if}
-
+		
 		<!-- {#if faseActual >= 2 && faseActual <= 3}
 			<section>
 				<div class="header">

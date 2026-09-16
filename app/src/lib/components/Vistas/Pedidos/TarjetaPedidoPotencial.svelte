@@ -4,18 +4,33 @@
 	import { onMount } from 'svelte';
 	import SubirCotizacion from '../Documentos/SubirCotizacion.svelte';
 	import { fasesPedido } from '$lib';
+	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
+	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
+	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
+	import { goto } from '$app/navigation';
 
 	let { oportunidad } = $props();
 
 	// DATOS DERIVADOS
 	let potencial_venta = $derived(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
-    
+	let total = $derived(
+		oportunidad.pedidos.reduce(
+			(acc, pedido) => acc + (pedido.id_cotizacion ? 0 : pedido.precio_unitario * pedido.cantidad),
+			0
+		)
+	);
+
 	let pedidoACotizarInvalido = $derived(
 		oportunidad.pedidos.some(
 			(p) =>
 				StorePedidoOportunidad.carrito.some((item) => item.id === p.id) &&
 				(p.precio_unitario === null || p.precio_unitario === undefined || p.precio_unitario === 0)
 		)
+	);
+
+	let pedidoACotizarInvalidoPorMoneda = $derived(
+		oportunidad.pedidos.some((p) => p.moneda == 'USD') &&
+			oportunidad.pedidos.some((p) => p.moneda == 'MX')
 	);
 
 	// ESTADOS
@@ -35,24 +50,33 @@
 	}
 
 	// HELPERS
-	const formatMoneda = (val: number | null | undefined, moneda: string = 'MXN') => {
+	const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
 		if (val == null) return 'Sin precio';
-		return new Intl.NumberFormat('es-MX', { style: 'currency', currency: moneda }).format(val);
+		return new Intl.NumberFormat('es-MX', {
+			style: 'currency',
+			currency: moneda,
+			currencyDisplay: 'narrowSymbol'
+		}).format(val);
 	};
 
-	const formatFecha = (iso: string) =>
-		new Intl.DateTimeFormat('es-MX', { dateStyle: 'short' }).format(new Date(iso));
-
+	async function editarPedido() {
+		StorePedidoEditar.limpiar();
+		StorePedidoNuevo.limpiar();
+		StorePedidoEditar.pushLista(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
+		StoreContextoRelacion.setOportunidad(oportunidad.id);
+		await goto('/pedidos');
+		StorePedidoEditar.toggleModal(true);
+	}
 	onMount(() => {
-		console.log(potencial_venta[0].id_agrupacion);
+		console.log(oportunidad.pedidos.filter((p) => p.id_cotizacion));
 		StorePedidoOportunidad.limpiar();
 	});
 </script>
 
 <div class="cotizacion-container">
-<div class="badge" style={fasesPedido[2]?.estilo}>
-    <span>Potencial de Venta</span>
-</div>
+	<div class="badge" style={fasesPedido[2]?.estilo}>
+		<span>Potencial de Venta</span>
+	</div>
 	<div class="lista-tarjetas">
 		{#each potencial_venta as pedido (pedido.id)}
 			{@const seleccionado = StorePedidoOportunidad.carrito.some((item) => item.id === pedido.id)}
@@ -76,7 +100,7 @@
 				</div>
 
 				<div class="resumen">
-					<b class="total">${pedido.precio_unitario * pedido.cantidad}</b>
+					<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
 				</div>
 
 				<!-- Sección Colapsable: Leer Más -->
@@ -124,7 +148,12 @@
 				{/if}
 			</div>
 		{/each}
-
+		{#if pedidoACotizarInvalidoPorMoneda}
+		<p>no se pueden mezclar USD con MX</p>
+		{:else}
+		<h1 class="total"><b>{formatMoneda(total)}</b></h1>
+			
+		{/if}
 		{#if potencial_venta.length === 0}
 			<p class="estado-vacio">No hay pedidos pendientes por cotizar en esta oportunidad.</p>
 		{/if}
@@ -134,10 +163,10 @@
 	<div class="acciones-panel">
 		{#if StorePedidoOportunidad.carrito.length > 0}
 			{#if pedidoACotizarInvalido}
-				<div class="alerta-error">
-					<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Edítalos
-					antes de cotizar.
-				</div>
+				<button class="alerta-error" onclick={editarPedido}>
+					<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Presiona
+					para editar.
+				</button>
 			{:else}
 				<SubirCotizacion
 					tipo="docs_cotizaciones"
@@ -191,14 +220,20 @@
 		gap: var(--a);
 	}
 	.tarjeta .meta .precio {
-        grid-column: span 2;
+		grid-column: span 2;
 		display: flex;
-        padding-left: 24px;
+		padding-left: 24px;
 	}
-	.tarjeta .resumen {grid-column: -2 / -1;
+	.tarjeta .resumen {
+		grid-column: -2 / -1;
 		display: flex;
 		align-items: flex-end;
 		justify-content: flex-end;
+	}
+	.total {
+		width: fit-content;
+		align-self: flex-end;
+		background-color: #b91c1c;
 	}
 	.checkbox {
 		width: 16px;
@@ -231,7 +266,9 @@
 		background: #f1f5f9;
 		height: fit-content;
 		padding: 4px 8px;
-        text-align: center;
+		text-align: center;
+		width: fit-content;
+		font-size: small;
 	}
 	.text-danger {
 		color: #ef4444;

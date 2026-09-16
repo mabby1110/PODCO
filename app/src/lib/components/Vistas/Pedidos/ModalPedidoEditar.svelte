@@ -6,18 +6,34 @@
 
 	let isMaximized = $state(false);
 
+	// Posición
 	let x = $state(0);
 	let y = $state(0);
-	let isDragging = false;
+	let isDragging = $state(false);
+
+	// Tamaño (Redimensionamiento)
+	let w: number | undefined = $state();
+	let h: number | undefined = $state();
+	let isResizing = $state(false);
 
 	let startX = 0;
 	let startY = 0;
 	let initialX = 0;
 	let initialY = 0;
+	let startW = 0;
+	let startH = 0;
 
 	let panel: HTMLDivElement | undefined = $state();
 	let quadrantY = $state('top');
 	let quadrantX = $state('left');
+
+	let panelStyle = $derived(
+		isMaximized
+			? ''
+			: `transform: translate(${x}px, ${y}px);` +
+					(w ? ` width: ${w}px; max-width: none;` : '') +
+					(h ? ` height: ${h}px; max-height: none;` : '')
+	);
 
 	function calculateQuadrant() {
 		if (!panel) return;
@@ -46,30 +62,50 @@
 		initialY = y;
 	}
 
-	function onMouseMove(event: MouseEvent) {
-		if (!isDragging) return;
-		x = initialX + (event.clientX - startX);
-		y = initialY + (event.clientY - startY);
-		calculateQuadrant();
-	}
-
-	function onMouseUp() {
-		if (isDragging) {
-			isDragging = false;
-			calculateQuadrant();
+	// Nueva función para iniciar el redimensionamiento
+	function onResizeMouseDown(event: MouseEvent) {
+		if (isMaximized) return;
+		event.stopPropagation();
+		isResizing = true;
+		startX = event.clientX;
+		startY = event.clientY;
+		if (panel) {
+			const rect = panel.getBoundingClientRect();
+			startW = rect.width;
+			startH = rect.height;
 		}
 	}
 
-	function resetPosition(event: MouseEvent) {
-		event.stopPropagation();
-		x = 0;
-		y = 0;
-		isMaximized = false;
-		setTimeout(calculateQuadrant, 0);
+	function onMouseMove(event: MouseEvent) {
+		if (isDragging) {
+			x = initialX + (event.clientX - startX);
+			y = initialY + (event.clientY - startY);
+			calculateQuadrant();
+		} else if (isResizing) {
+			// El panel está anclado a la derecha, por lo que mover a la izquierda aumenta el ancho.
+			w = Math.max(300, startW + (startX - event.clientX));
+			h = Math.max(200, startH + (event.clientY - startY));
+		}
 	}
 
+	function onMouseUp() {
+		if (isDragging || isResizing) {
+			isDragging = false;
+			isResizing = false;
+			calculateQuadrant();
+		}
+	}
 	$effect(() => {
 		if (StorePedidoEditar.modal) {
+			// Resetea las medidas originales al abrir
+			w = undefined;
+			h = undefined;
+
+			// Opcional: si también quieres que la posición vuelva al origen
+			x = 0;
+			y = 0;
+
+			isMaximized = false;
 			setTimeout(calculateQuadrant, 0);
 		}
 	});
@@ -81,13 +117,14 @@
 </script>
 
 <svelte:window onkeydown={handleKeyDown} onmousemove={onMouseMove} onmouseup={onMouseUp} />
+<svelte:body class:resizing={isResizing} class:dragging={isDragging} />
 
 {#if StorePedidoEditar.modal}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={panel}
 		class="panel panel-controls {isMaximized ? 'maximized' : ''}"
-		style={isMaximized ? '' : `transform: translate(${x}px, ${y}px);`}
+		style={panelStyle}
 	>
 		<div class="header-actions" onmousedown={onMouseDown}>
 			<p class="panel-title">Editar Pedido</p>
@@ -101,20 +138,45 @@
 			>
 				<img src="/max-win.svg" alt="max-win" />
 			</button>
-			<button class="butter honey" type="button" onclick={resetPosition}>◥</button>
-			<button class="butter chile" type="button" onclick={() => StorePedidoEditar.toggleModal()}
-				>✕</button
-			>
+			<button class="butter chile" type="button" onclick={() => StorePedidoEditar.toggleModal()}>
+				✕
+			</button>
 		</div>
 
 		<div class="contenido">
 			<TarjetaContextoOportunidad />
 			<TarjetaPedidoEditar />
 		</div>
+
+		{#if !isMaximized}
+			<!-- Esquina invisible para reajustar -->
+			<div class="resize-handle" onmousedown={onResizeMouseDown}></div>
+		{/if}
 	</div>
 {/if}
 
 <style>
+	/* Agregados para redimensionar */
+	.resize-handle {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 40px;
+		height: 40px;
+		z-index: 100;
+		/* Sustituye el cursor por el ícono convertido a data URI usando CSS puro */
+		cursor:
+			sw-resize;
+		user-select: none;
+	}
+
+	/* Mantiene el cursor modificado solo al redimensionar */
+	:global(body.resizing) {
+		cursor:
+			sw-resize !important;
+	}
+
+	/* === TUS ESTILOS ORIGINALES INTACTOS === */
 	.panel-controls {
 		position: fixed;
 		top: 0;
@@ -127,7 +189,7 @@
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;
-		z-index: 9;
+		z-index: 99;
 	}
 	.header-actions:active {
 		cursor: grabbing;
@@ -148,11 +210,13 @@
 		flex-grow: 1;
 	}
 	.contenido {
+		position: relative;
 		flex-grow: 1;
 		overflow-y: auto;
 		display: flex;
 		flex-direction: column;
 		gap: var(--b);
+		padding: var(--b);
 	}
 
 	/* Reglas para la ventana maximizada */

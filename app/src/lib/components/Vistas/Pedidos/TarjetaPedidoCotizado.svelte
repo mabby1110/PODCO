@@ -12,7 +12,7 @@
     });
 
     // DATOS DERIVADOS
-    let potencial_venta = $derived(oportunidad.pedidos.filter((p) => p.id_cotizacion));
+    let cotizado = $derived(oportunidad.pedidos.filter((p) => p.id_cotizacion));
     
     let pedidoACotizarInvalido = $derived(
         oportunidad.pedidos.some((p) =>
@@ -34,7 +34,7 @@
     }
 
     function seleccionarPedidoCompleto() {
-        StorePedidoOportunidad.pushLista(potencial_venta);
+        StorePedidoOportunidad.pushLista(cotizado);
     }
 
     // HELPERS
@@ -49,7 +49,7 @@
 
 <div class="cotizacion-container">
     <div class="lista-tarjetas">
-        {#each potencial_venta as pedido (pedido.id)}
+        {#each cotizado as pedido (pedido.id)}
             {@const seleccionado = StorePedidoOportunidad.carrito.some((item) => item.id === pedido.id)}
             
             <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -112,14 +112,14 @@
             </div>
         {/each}
 
-        {#if potencial_venta.length === 0}
+        {#if cotizado.length === 0}
             <p class="estado-vacio">No hay pedidos pendientes por cotizar en esta oportunidad.</p>
         {/if}
     </div>
 
     <!-- Área de Acciones / Subida -->
     <div class="acciones-panel">
-        {#if StorePedidoOportunidad.carrito.length > 0}
+        {#if cotizado.length > 0}
             {#if pedidoACotizarInvalido}
                 <div class="alerta-error">
                     <strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Edítalos antes de cotizar.
@@ -137,7 +137,7 @@
                     />
                 </div>
             {/if}
-        {:else if potencial_venta.length > 0}
+        {:else if cotizado.length > 0}
             <div class="acciones-fijas">
                 <button class="butter variant-primary" onclick={seleccionarPedidoCompleto}>
                     Seleccionar todo para cotizar
