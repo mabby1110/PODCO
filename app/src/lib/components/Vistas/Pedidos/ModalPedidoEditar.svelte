@@ -184,7 +184,7 @@
 		max-width: 600px;
 		width: 100%;
 		height: fit-content;
-		max-height: 60%;
+		max-height: 80%;
 		min-height: var(--g);
 		display: flex;
 		gap: var(--a);

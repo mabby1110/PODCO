@@ -8,8 +8,9 @@
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 
 	// DATOS DERIVADOS
+	let pedidosAEditar = $state(page.data.pedidos);
 	let pedidos = $derived(
-		page.data.pedidos.filter((p) => StorePedidoEditar.carrito.some((item) => item.id === p.id))
+		pedidosAEditar.filter((p) => StorePedidoEditar.carrito.some((item) => item.id === p.id))
 	);
 	let productos = $derived(
 		StorePedidoNuevo.carrito.map((item) => ({
@@ -182,14 +183,9 @@
 		</div>
 		<div class="lista-tarjetas">
 			{#each pedidos as pedido (pedido.id)}
-				{@const seleccionado = StorePedidoEditar.carrito.some((item) => item.id === pedido.id)}
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
-				<div
-					class="tarjeta"
-					class:selected={seleccionado}
-					class:invalid={seleccionado && pedido.precio_unitario == null}
-				>
+				<div class="tarjeta">
 					<div class="meta">
 						<div class="titulo">
 							<button class="butter tiny" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button
@@ -212,39 +208,32 @@
 
 						<span class="inputs" class:text-danger={pedido.precio_unitario == null}>
 							<label class="input-group">
+								<span class="label-text">Cantidad</span>
 								<input
 									type="number"
 									min="0"
 									step="1"
 									class="input-sm"
-									value={pedido.cantidad ?? 0}
-									oninput={(e) => actualizarCampo(pedido.id, 'cantidad', e.currentTarget.value)}
+									bind:value={pedido.cantidad}
 								/>
-								<span class="label-text">Cantidad</span>
 							</label>
-							
+
 							<label class="input-group">
+								<span class="label-text">Precio unitario</span>
 								<input
 									type="number"
 									min="0"
 									step="0.01"
 									class="input-sm"
-									value={pedido.precio_unitario ?? 0}
-									oninput={(e) =>
-										actualizarCampo(pedido.id, 'precio_unitario', e.currentTarget.value)}
+									bind:value={pedido.precio_unitario}
 								/>
-								<span class="label-text">Precio unitario</span>
 							</label>
 							<label class="input-group">
-								<select
-									class="select-sm"
-									value={pedido.moneda ?? 'MXN'}
-									onchange={(e) => actualizarCampo(pedido.id, 'moneda', e.currentTarget.value)}
-								>
+								<span class="label-text">Moneda</span>
+								<select class="select-sm" bind:value={pedido.moneda}>
 									<option value="MXN">MXN</option>
 									<option value="USD">USD</option>
 								</select>
-								<span class="label-text">Moneda</span>
 							</label>
 						</span>
 
@@ -378,7 +367,7 @@
 	.tarjeta .meta .titulo {
 		grid-column: span 3;
 		display: flex;
-		gap: var(--y);
+		gap: var(--a);
 		align-items: baseline;
 	}
 	.tarjeta .meta .inputs {

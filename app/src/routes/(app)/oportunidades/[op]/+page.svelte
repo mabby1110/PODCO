@@ -22,11 +22,12 @@
 	import TarjetaPedidoCotizado from '$lib/components/Vistas/Pedidos/TarjetaPedidoCotizado.svelte';
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
-	const oportunidad = $derived(page.data.oportunidad);
 
 	// ESTADO
-	let editando = $state(false);
+	const oportunidad = $derived(page.data.oportunidad);
+	const potencial_venta = $derived(oportunidad.pedidos.some((p) => p.estatus == 2));
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
+	let editando = $state(false);
 
 	// CRUD
 	async function relacionarPedido() {
@@ -159,7 +160,7 @@
 				</div>
 
 				<div class="content">
-					{#if oportunidad.pedidos.length > 0}
+					{#if potencial_venta}
 						<TarjetaPedidoPotencial {oportunidad} />
 						{#if editando}
 							<button class="butter" onclick={editarPedido}>~Editar</button>
@@ -169,10 +170,8 @@
 					{/if}
 				</div>
 			</section>
-		{/if}
 
-		<!-- Cotizado -->
-		{#if fase.id_fase >= 3}
+			<!-- Cotizado -->
 			<section>
 				<div class="header">
 					<h3>Cotizado:</h3>
@@ -185,7 +184,7 @@
 				</div>
 			</section>
 		{/if}
-		
+
 		<!-- {#if faseActual >= 2 && faseActual <= 3}
 			<section>
 				<div class="header">

@@ -151,6 +151,7 @@
 		{#if pedidoACotizarInvalidoPorMoneda}
 		<p>no se pueden mezclar USD con MX</p>
 		{:else}
+		<hr/>
 		<h1 class="total"><b>{formatMoneda(total)}</b></h1>
 			
 		{/if}
@@ -233,7 +234,6 @@
 	.total {
 		width: fit-content;
 		align-self: flex-end;
-		background-color: #b91c1c;
 	}
 	.checkbox {
 		width: 16px;
