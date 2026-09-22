@@ -83,7 +83,7 @@
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
-				class="tarjeta"
+				class="tarjeta honey"
 				class:selected={seleccionado}
 				class:invalid={seleccionado && pedido.precio_unitario == null}
 				onclick={() => seleccionarPedido(pedido.id)}
@@ -208,6 +208,7 @@
 	.tarjeta {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+		border: none;
 	}
 	.tarjeta .meta {
 		grid-column: span 2;

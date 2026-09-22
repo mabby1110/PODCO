@@ -25,45 +25,5 @@ export const actions: Actions = {
 
 		if (error) return fail(500, { error: error.message });
 		return { success: true };
-	},
-
-	restock: async ({ request, locals: { supabase, user } }) => {
-		console.log('\nRestock\n');
-		const formData = await request.formData();
-		const carritoRaw = formData.get('carrito') as string;
-
-		if (!carritoRaw) {
-			return fail(400, { error: 'El carrito está vacío' });
-		}
-
-		let carrito: Array<{ id: number; cantidad: number }>;
-
-		try {
-			carrito = JSON.parse(carritoRaw);
-		} catch (e) {
-			return fail(400, { error: 'Formato de JSON inválido' });
-		}
-
-		// Transformación al formato de la tabla
-		const id_agrupacion = generateId('BMS-P');
-		const payload = carrito.map((item) => ({
-			id_producto: item.id,
-			cantidad: item.cantidad,
-			estatus: 1,
-			id_agrupacion
-		}));
-
-		console.log('\ndata a insertar: ', payload);
-
-		const { data: result, error } = await supabase.from('pedidos').insert(payload).select();
-
-		console.log('\nresult: ', result);
-		console.log('\nerror: ', error);
-
-		if (error) {
-			return fail(500, { error: error.message });
-		}
-
-		return { success: true, result };
 	}
 };

@@ -78,12 +78,11 @@
 </div>
 
 <style>
-	/* ...Tus estilos se mantienen intactos... */
 	.item {
 		display: flex;
 		flex-direction: column;
 		cursor: pointer;
-		padding: var(--a) var(--a) 0;
+		padding: var(--a) var(--a) var(--y);
 	}
 	.principal {
 		width: 100%;

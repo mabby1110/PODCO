@@ -62,55 +62,91 @@
 	async function editarBorrador() {
 		actualizando = true;
 		mensaje = '';
+		if (StorePedidoEditar.carrito.length == 0) {
+			try {
+				const formData = new FormData();
 
-		try {
-			const tieneOportunidadRelacionada = pedidos.some(
-				(pedido) =>
-					pedido.id_oportunidad !== null &&
-					pedido.id_oportunidad !== StoreContextoRelacion.id_oportunidad
-			);
-
-			if (tieneOportunidadRelacionada) {
-				const confirmar = window.confirm(
-					'Uno o más pedidos tienen una oportunidad relacionada. ¿Estás seguro de que deseas continuar? Esto podría eliminar las relaciones con oportunidades.'
-				);
-				if (!confirmar) {
-					actualizando = false;
-					return;
+				if (StorePedidoNuevo.carrito) {
+					formData.append('carrito', JSON.stringify(StorePedidoNuevo.carrito));
 				}
+
+				const response = await fetch('/pedidos?/nuevo', {
+					method: 'POST',
+					body: formData
+				});
+				const result = await response.json();
+
+				if (!response.ok || result?.type === 'failure') {
+					throw new Error(result?.data?.error || result?.error || 'Error al crear pedido');
+				}
+
+				mensaje = 'Pedido actualizado correctamente';
+				const idOportunidad = StoreContextoRelacion.id_oportunidad;
+
+				if (idOportunidad) {
+					await goto(`/oportunidades/${idOportunidad}`);
+				}
+				limpiarCarrito();
+				invalidateAll();
+			} catch (error) {
+				console.error('Error al crear pedido:', error);
+				mensaje = error instanceof Error ? error.message : 'Error al crear pedido';
+			} finally {
+				actualizando = false;
 			}
+		} else {
+			try {
+				const tieneOportunidadRelacionada = pedidos.some(
+					(pedido) =>
+						pedido.id_oportunidad !== null &&
+						pedido.id_oportunidad !== StoreContextoRelacion.id_oportunidad
+				);
 
-			const formData = new FormData();
-			formData.append('pedidosAActualizar', JSON.stringify(pedidos));
+				if (tieneOportunidadRelacionada) {
+					const confirmar = window.confirm(
+						'Uno o más pedidos tienen una oportunidad relacionada. ¿Estás seguro de que deseas continuar? Esto podría eliminar las relaciones con oportunidades.'
+					);
+					if (!confirmar) {
+						actualizando = false;
+						return;
+					}
+				}
 
-			if (idAgrupaciones.length == 1) {
-				formData.append('pedidosACrear', JSON.stringify(productos));
+				const formData = new FormData();
+				formData.append('pedidosAActualizar', JSON.stringify(pedidos));
+
+				if (idAgrupaciones.length == 1) {
+					formData.append('pedidosACrear', JSON.stringify(productos));
+				}
+
+				if (StoreContextoRelacion.id_oportunidad) {
+					formData.append('idOportunidad', StoreContextoRelacion.id_oportunidad);
+				}
+
+				const response = await fetch('/pedidos?/editarBorrador', {
+					method: 'POST',
+					body: formData
+				});
+				const result = await response.json();
+
+				if (!response.ok || result?.type === 'failure') {
+					throw new Error(result?.data?.error || result?.error || 'Error al actualizar el pedido');
+				}
+
+				mensaje = 'Pedido actualizado correctamente';
+				const idOportunidad = StoreContextoRelacion.id_oportunidad;
+
+				if (idOportunidad) {
+					await goto(`/oportunidades/${idOportunidad}`);
+				}
+				limpiarCarrito();
+				invalidateAll();
+			} catch (error) {
+				console.error('Error al actualizar pedido:', error);
+				mensaje = error instanceof Error ? error.message : 'Error al actualizar el pedido';
+			} finally {
+				actualizando = false;
 			}
-
-			if (StoreContextoRelacion.id_oportunidad) {
-				formData.append('idOportunidad', StoreContextoRelacion.id_oportunidad);
-			}
-
-			const response = await fetch('/pedidos?/editarBorrador', { method: 'POST', body: formData });
-			const result = await response.json();
-
-			if (!response.ok || result?.type === 'failure') {
-				throw new Error(result?.data?.error || result?.error || 'Error al actualizar el pedido');
-			}
-
-			mensaje = 'Pedido actualizado correctamente';
-			const idOportunidad = StoreContextoRelacion.id_oportunidad;
-
-			if (idOportunidad) {
-				await goto(`/oportunidades/${idOportunidad}`);
-			}
-			limpiarCarrito();
-			invalidateAll();
-		} catch (error) {
-			console.error('Error al actualizar pedido:', error);
-			mensaje = error instanceof Error ? error.message : 'Error al actualizar el pedido';
-		} finally {
-			actualizando = false;
 		}
 	}
 
@@ -177,7 +213,7 @@
 
 <!-- pedidos a editar -->
 {#if StorePedidoEditar.carrito.length > 0}
-	<div class="cotizacion-container">
+	<div class="tarjeta-editar-pedido">
 		<div class="badge" style={fasesPedido[2]?.estilo}>
 			<span>Potencial de Venta</span>
 		</div>
@@ -185,10 +221,11 @@
 			{#each pedidos as pedido (pedido.id)}
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
-				<div class="tarjeta">
+				<div class="tarjeta honey">
 					<div class="meta">
 						<div class="titulo">
-							<button class="butter tiny" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button
+							<button class="butter honey" onclick={() => StorePedidoEditar.pop(pedido.id)}
+								>✕</button
 							>
 							<div>
 								<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
@@ -295,37 +332,35 @@
 			{/if}
 		</div>
 	</div>
-{:else}
-	<p class="estado-vacio">No hay pedidos seleccionados</p>
-	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}>+Agregar Pedido</button>
 {/if}
 
 <!-- pedidos nuevos -->
-{StorePedidoNuevo.carrito.length}
 {#if StorePedidoNuevo.carrito.length > 0}
-	<div class="cotizacion-container">
-		<div class="editor-container">
-			<!-- PEDIDOS A CREAR (NUEVOS) -->
-			<div class="nuevos-container">
-				<h4 class="title-nuevos">Nuevos a agregar:</h4>
-				{#each productos as producto}
-					<div class="card mini-card row justify-between">
-						<span class="codigo">{producto.producto.codigo}</span>
-						<div class="stepper">
-							<button class="btn-step" onclick={() => StorePedidoNuevo.pop(producto.id)}>-</button>
-							<span class="valor-step">{producto.cantidad}</span>
-							<button class="btn-step" onclick={() => StorePedidoNuevo.push(producto.id)}>+</button>
-						</div>
-					</div>
-				{/each}
+	<div class="tarjeta-editar-pedido">
+		<h4 class="title-nuevos">Nuevos a agregar:</h4>
+		{#each productos as producto}
+			<div class="producto">
+				<span class="codigo">{producto.producto.codigo}</span>
+				<div class="contador">
+					<button class="butter" onclick={() => StorePedidoNuevo.pop(producto.id)}>-</button>
+					<span class="valor-step">{producto.cantidad}</span>
+					<button class="butter" onclick={() => StorePedidoNuevo.push(producto.id)}>+</button>
+				</div>
 			</div>
-		</div>
+		{/each}
 	</div>
-{:else}
-	<p class="estado-vacio">No hay productos seleccionados</p>
 {/if}
 
-<button class="butter agregar-producto" onclick={() => goto('/catalogo')}>+Agregar producto</button>
+{#if StorePedidoNuevo.carrito.length == 0}
+	<p class="estado-vacio">No hay productos seleccionados</p>
+	<button class="butter agregar-producto" onclick={() => goto('/catalogo')}
+		>+Agregar producto</button
+	>
+{/if}
+{#if StorePedidoEditar.carrito.length == 0}
+	<p class="estado-vacio">No hay pedidos seleccionados</p>
+	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}>+Agregar Pedido</button>
+{/if}
 
 <!-- ACCIONES GLOBALES -->
 <div class="acciones-fijas">
@@ -340,11 +375,11 @@
 </div>
 
 <style>
-	.cotizacion-container {
+	.tarjeta-editar-pedido {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
-		padding: 16px 16px;
+		padding: 18px 24px;
 		border: 2px solid;
 		border-radius: 32px;
 		border-color: var(--color-muted);
@@ -359,6 +394,7 @@
 	.tarjeta {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+		border: none;
 	}
 	.tarjeta .meta {
 		grid-column: span 2;
@@ -395,6 +431,15 @@
 	.total {
 		width: fit-content;
 		align-self: flex-end;
+	}
+	.producto {
+		display: flex;
+		justify-content: space-between;
+	}
+	.contador {
+		display: flex;
+		gap: var(--a);
+		align-items: baseline;
 	}
 	.badge {
 		border-radius: 99px;
@@ -448,9 +493,12 @@
 
 	/* Acciones inferiores */
 	.acciones-fijas {
+		position: sticky;
+		bottom: 0;
+		width: fit-content;
 		display: flex;
-		justify-content: flex-end;
-		padding-top: var(--e);
+		align-self: flex-end;
+		padding: var(--a);
 		gap: var(--y);
 	}
 

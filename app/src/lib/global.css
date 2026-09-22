@@ -7,7 +7,7 @@ Especiales
 :root {
 	--color-primary: #f1f4ff;
 	--color-secondary: #c6cce3;
-	--color-foreground: #ffffffbb;
+	--color-foreground: #f1f4ffbb;
 	--color-background: #ffffffaa;
 	--color-highlight: #ffff0099;
 	--color-contrast: rgba(0, 0, 105, 0.8);
@@ -109,18 +109,21 @@ button {
 .panel {
 	border: none;
 	border-radius: var(--b);
-	background-color: var(--color-primary);
+	background-color: var(--color-foreground);
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(2px);
 }
+
 .tarjeta {
 	border-radius: var(--a);
 	background-color: var(--color-primary);
 	border: 1px solid var(--color-secondary);
 	backdrop-filter: blur(2px);
-
 }
-
+.tarjeta .honey {
+	border: none;
+	background-color: none;
+}
 .card-calendar-preview {
 	text-decoration: none;
 	color: inherit;
