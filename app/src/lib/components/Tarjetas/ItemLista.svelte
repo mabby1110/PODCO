@@ -1,141 +1,111 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
-    import type { Snippet } from 'svelte';
-    import { slide } from 'svelte/transition';
+	import { goto } from '$app/navigation';
+	import type { Snippet } from 'svelte';
+	import { slide } from 'svelte/transition';
 
-    let {
-        header,
-        resume,
-        content,
-        meta,
-        acciones,
-        href = '/',
-        style = '',
-        ocultarAcciones,
-        onclick // <-- Nuevo prop añadido
-    }: {
-        header?: Snippet;
-        resume?: Snippet;
-        content?: Snippet;
-        meta?: Snippet;
-        acciones?: Snippet;
-        href?: string;
-        style?: string;
-        ocultarAcciones?: boolean;
-        onclick?: (e: MouseEvent | KeyboardEvent) => void; // <-- Tipado del callback
-    } = $props();
+	let {
+		titulo,
+		contenido,
+		meta,
+		acciones,
+		href = '/',
+		style = '',
+		ocultarAcciones,
+		onclick // <-- Nuevo prop añadido
+	}: {
+		titulo?: Snippet;
+		contenido?: Snippet;
+		meta?: Snippet;
+		acciones?: Snippet;
+		href?: string;
+		style?: string;
+		ocultarAcciones?: boolean;
+		onclick?: (e: MouseEvent | KeyboardEvent) => void;
+	} = $props();
 
-    let show = $state(false);
+	let show = $state(false);
 
-    function handleNavigationClick(e: MouseEvent) {
-        e.stopPropagation();
-        goto(href);
-    }
+	function handleNavigationClick(e: MouseEvent) {
+		e.stopPropagation();
+		goto(href);
+	}
 
-    // Actualizamos la función para recibir el evento
-    function handleClick(e: MouseEvent | KeyboardEvent) {
-        if (onclick) {
-            onclick(e); // Si el padre pasó una función, usamos esa
-        } else {
-            show = !show; // Comportamiento por defecto
-        }
-    }
+	// Actualizamos la función para recibir el evento
+	function handleClick(e: MouseEvent | KeyboardEvent) {
+		if (onclick) {
+			onclick(e);
+		} else {
+			show = !show;
+		}
+	}
 
-    function handleKeydown(e: KeyboardEvent) {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleClick(e);
-        }
-    }
+	function handleKeydown(e: KeyboardEvent) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			handleClick(e);
+		}
+	}
 </script>
 
 <div
-    role="button"
-    tabindex="0"
-    onclick={handleClick}
-    onkeydown={handleKeydown}
-    {style}
-    class="list-card-preview panel"
+	role="button"
+	tabindex="0"
+	onclick={handleClick}
+	onkeydown={handleKeydown}
+	{style}
+	class="item tarjeta"
 >
-    <div class="list-card-header">
-        {#if header}
-            {@render header()}
-        {/if}
-        {#if resume}
-            <div class="resume">
-                {@render resume()}
-            </div>
-        {/if}
-    </div>
-
-    {#if content && show}
-        <div class="list-card-content" transition:slide>
-            {@render content()}
-        </div>
-    {/if}
-
-    <div class="list-card-meta">
-        {#if meta}
-            <div class="data">
-                {@render meta()}
-            </div>
-        {/if}
-        <div class="actions">
-            {#if !ocultarAcciones}
-                <button class="butter" onclick={handleNavigationClick}>Ver</button>
-            {/if}
-            {#if acciones}
-                {@render acciones()}
-            {/if}
-        </div>
-    </div>
+	<div class="principal">
+		{#if titulo}
+			{@render titulo()}
+		{/if}
+		{#if acciones}
+			<div class="acciones">
+				{@render acciones()}
+			</div>
+		{/if}
+	</div>
+	{#if contenido && show}
+		<div class="contenido" transition:slide>
+			{@render contenido()}
+		</div>
+	{/if}
+	{#if meta}
+		<div class="meta">
+			{@render meta()}
+		</div>
+	{/if}
 </div>
 
 <style>
-    /* ...Tus estilos se mantienen intactos... */
-    .list-card-preview {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 4px;
-        cursor: pointer;
-        width: 100%;
-    }
-    .list-card-header {
-        flex-grow: 3;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
-        gap: 0 var(--a);
-    }
-    :global(.list-card-header > *:nth-child(1)) {
-        grid-column: span 5;
-    }
-    :global(.list-card-header > *:nth-child(2)) {
-        grid-column: span 2;
-    }
-    .list-card-content {
-        width: 100%;
-        padding: var(--b) 0;
-    }
-    .list-card-meta {
-        width: 100%;
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 0 var(--a);
-    }
-    .list-card-meta .data {
-        font-size: smaller;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0 var(--a);
-    }
-    .list-card-meta .actions {
-        font-size: smaller;
-        display: flex;
-        gap: var(--a);
-        flex-direction: row-reverse;
-        flex-wrap: wrap-reverse;
-        align-items: baseline;
-        z-index: 1;
-    }
+	/* ...Tus estilos se mantienen intactos... */
+	.item {
+		display: flex;
+		flex-direction: column;
+		cursor: pointer;
+		padding: var(--a) var(--a) 0;
+	}
+	.principal {
+		width: 100%;
+		display: grid;
+		grid-template-columns: 3fr auto;
+		align-items: baseline;
+	}
+	.titulo {
+		flex-grow: 1;
+	}
+	.acciones {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		flex-wrap: wrap;
+	}
+	.contenido {
+		width: 100%;
+	}
+	.meta {
+		font-size: small;
+		font-weight: lighter;
+		width: 100%;
+	}
 </style>

@@ -12,7 +12,7 @@
 	import TarjetaProducto from '$lib/components/Vistas/Catalogo/TarjetaProducto.svelte';
 	import Panel from '$lib/components/Tarjetas/Panel.svelte';
 	import ModalPedidoNuevo from '$lib/components/Vistas/Catalogo/ModalPedidoNuevo.svelte';
-	
+
 	let { catalogo } = $derived(page.data);
 	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
@@ -33,11 +33,6 @@
 <Vista>
 	{#snippet acciones()}
 		<Searchbar data={catalogo} keyColumns={['codigo']} bind:lista />
-		<Panel tituloBoton="+Pedido">
-			{#snippet contenido()}
-				<ModalPedidoNuevo />
-			{/snippet}
-		</Panel>
 		<button onclick={() => appState.toggleModalProducto()} class="butter">+Producto Nuevo</button>
 		<PanelFiltros>
 			{#snippet header()}
@@ -57,7 +52,7 @@
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={show}>
 					{#each agrupacion.items as elemento (elemento.id)}
-						{elemento.codigo}
+						<TarjetaProducto {elemento} />
 					{/each}
 				</Grupo>
 			{:else}

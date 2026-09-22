@@ -177,7 +177,7 @@
 					<h3>Cotizado:</h3>
 				</div>
 
-				<div class="content">
+				<div class="block">
 					{#if oportunidad.pedidos.length > 0}
 						<TarjetaPedidoCotizado {oportunidad} />
 					{/if}

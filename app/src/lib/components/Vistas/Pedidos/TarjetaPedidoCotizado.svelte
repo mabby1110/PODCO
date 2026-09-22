@@ -13,10 +13,7 @@
 
 	// DATOS DERIVADOS
 	let pedidosAgrupados = $derived.by(() => {
-		// 1. Filtramos los pedidos
 		const pedidosFiltrados = oportunidad.pedidos.filter((p) => p.id_cotizacion != null);
-
-		// 2. Agrupamos y calculamos el total por grupo
 		const grupos = pedidosFiltrados.reduce(
 			(acc, pedido) => {
 				const clave = pedido.id_agrupacion || 'sin_agrupar';
@@ -25,7 +22,7 @@
 					acc[clave] = {
 						id_agrupacion: clave,
 						pedidos: [],
-						totalGrupo: 0 // Agregamos el cálculo del total por grupo aquí
+						totalGrupo: 0
 					};
 				}
 
@@ -53,7 +50,7 @@
 
 	let pedidoACotizarInvalidoPorMoneda = $derived(
 		oportunidad.pedidos.some((p) => p.moneda == 'USD') &&
-			oportunidad.pedidos.some((p) => p.moneda == 'MXN') // Ajustado de MX a MXN según el select anterior
+			oportunidad.pedidos.some((p) => p.moneda == 'MXN')
 	);
 
 	// ESTADOS
@@ -68,10 +65,17 @@
 		}
 	}
 
-	function seleccionarPedidoCompleto() {
-		// Extraemos todos los pedidos de los grupos para pasarlos a la lista
-		const todosLosPedidos = pedidosAgrupados.flatMap((grupo) => grupo.pedidos);
-		StorePedidoOportunidad.pushLista(todosLosPedidos);
+	function seleccionarPedidoCompleto(id_grupo: string) {
+		// Buscamos el elemento dentro del arreglo
+		const grupo = pedidosAgrupados.find((g) => g.id_agrupacion === id_grupo);
+
+		if (!grupo) {
+			console.warn(`No se encontró el grupo con ID: ${id_grupo}`);
+			return;
+		}
+
+		console.log(grupo.pedidos);
+		StorePedidoOportunidad.pushLista(grupo.pedidos);
 	}
 
 	// HELPERS
@@ -101,16 +105,17 @@
 <!-- Iteramos sobre los grupos -->
 {#each pedidosAgrupados as grupo}
 	<div class="cotizacion-container">
-		<div class="badge" style={fasesPedido[3]?.estilo}>
-			<span>Cotizado</span>
+		<div class="titulo-meta">
+			<div class="badge" style={fasesPedido[3]?.estilo}>
+				<span>Cotizado</span>
+			</div>
+			<!-- Etiqueta opcional para mostrar a qué agrupación pertenece -->
+			{#if grupo.id_agrupacion !== 'sin_agrupar'}
+				<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
+			{/if}
 		</div>
 
 		<div class="lista-tarjetas">
-			<!-- Etiqueta opcional para mostrar a qué agrupación pertenece -->
-			{#if grupo.id_agrupacion !== 'sin_agrupar'}
-				<h4 class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</h4>
-			{/if}
-
 			<!-- Iteramos sobre los pedidos de este grupo -->
 			{#each grupo.pedidos as pedido (pedido.id)}
 				{@const seleccionado = StorePedidoOportunidad.carrito.some((item) => item.id === pedido.id)}
@@ -187,8 +192,10 @@
 			{#if pedidoACotizarInvalidoPorMoneda}
 				<p class="text-danger">No se pueden mezclar USD con MXN</p>
 			{:else}
-				<hr />
-				<h1 class="total"><b>{formatMoneda(grupo.totalGrupo)}</b></h1>
+				<div class="total">
+					<hr />
+					<h1><b>{formatMoneda(grupo.totalGrupo)}</b></h1>
+				</div>
 			{/if}
 
 			{#if grupo.pedidos.length === 0}
@@ -218,7 +225,7 @@
 				<!-- Verificamos si existe al menos un grupo con pedidos para mostrar el botón general -->
 			{:else if pedidosAgrupados.length > 0}
 				<div class="acciones-fijas">
-					<button class="butter" onclick={seleccionarPedidoCompleto}>
+					<button class="butter" onclick={() => seleccionarPedidoCompleto(grupo.id_agrupacion)}>
 						Descartar
 					</button>
 				</div>
@@ -253,6 +260,13 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 	}
+	.titulo-meta {
+		display: flex;
+		gap: var(--a);
+		flex-wrap: wrap;
+		align-items: baseline;
+		font-size: small;
+	}
 	.tarjeta .meta .titulo {
 		grid-column: span 3;
 		display: flex;
@@ -270,8 +284,13 @@
 		justify-content: flex-end;
 	}
 	.total {
-		width: fit-content;
-		align-self: flex-end;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+	}
+	.total hr {
+		width: 100%;
 	}
 	.checkbox {
 		width: 16px;
@@ -306,7 +325,6 @@
 		padding: 4px 8px;
 		text-align: center;
 		width: fit-content;
-		font-size: small;
 	}
 	.text-danger {
 		color: #ef4444;

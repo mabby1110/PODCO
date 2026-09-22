@@ -159,34 +159,33 @@
 			<p class="estado-vacio">No hay pedidos pendientes por cotizar en esta oportunidad.</p>
 		{/if}
 	</div>
-
-	<!-- Área de Acciones / Subida -->
-	<div class="acciones-panel">
-		{#if StorePedidoOportunidad.carrito.length > 0}
-			{#if pedidoACotizarInvalido}
-				<button class="alerta-error" onclick={editarPedido}>
-					<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Presiona
-					para editar.
-				</button>
-			{:else}
-				<SubirCotizacion
-					tipo="docs_cotizaciones"
-					action="/documentos?/subirCotizacion"
-					oportunidad={{
-						id: oportunidad?.id,
-						cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
-					}}
-					required
-				/>
-			{/if}
-		{:else if potencial_venta.length > 0}
-			<div class="acciones-fijas">
-				<button class="butter" onclick={seleccionarPedidoCompleto}>
-					Seleccionar todo para cotizar
-				</button>
-			</div>
+</div>
+<!-- Área de Acciones / Subida -->
+<div class="acciones-panel">
+	{#if StorePedidoOportunidad.carrito.length > 0}
+		{#if pedidoACotizarInvalido}
+			<button class="alerta-error" onclick={editarPedido}>
+				<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Presiona
+				para editar.
+			</button>
+		{:else}
+			<SubirCotizacion
+				tipo="docs_cotizaciones"
+				action="/documentos?/subirCotizacion"
+				oportunidad={{
+					id: oportunidad?.id,
+					cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
+				}}
+				required
+			/>
 		{/if}
-	</div>
+	{:else if potencial_venta.length > 0}
+		<div class="acciones-fijas">
+			<button class="butter" onclick={seleccionarPedidoCompleto}>
+				Seleccionar todo para cotizar
+			</button>
+		</div>
+	{/if}
 </div>
 
 <style>

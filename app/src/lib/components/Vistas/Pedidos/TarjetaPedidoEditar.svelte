@@ -301,7 +301,8 @@
 {/if}
 
 <!-- pedidos nuevos -->
-{#if StorePedidoNuevo.carrito.length > 0 && idAgrupaciones.length == 1}
+{StorePedidoNuevo.carrito.length}
+{#if StorePedidoNuevo.carrito.length > 0}
 	<div class="cotizacion-container">
 		<div class="editor-container">
 			<!-- PEDIDOS A CREAR (NUEVOS) -->
