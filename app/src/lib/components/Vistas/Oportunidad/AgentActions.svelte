@@ -64,7 +64,8 @@
 					</div>
 				</section>
 			{:else if fase.id_fase == 2}
-				<input type="hidden" name="fecha_negociacion" value={new Date().toISOString()} />
+				<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
+				<input type="hidden" name="fecha_venta" value={new Date().toISOString()} />
 				<input type="number" disabled bind:value={cotizaciones.length} required>
 				<FormInput
 					label="Motivo"
@@ -75,7 +76,7 @@
 				/>
 				<FormInput
 					label="Análisis"
-					name="nuevaHistoria"
+					name="analisis"
 					placeholder="Resumen del analisis realizado, justifica la seleccion de producto realizada"
 					type="textarea"
 					required

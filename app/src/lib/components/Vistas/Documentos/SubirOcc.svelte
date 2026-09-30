@@ -30,7 +30,7 @@
 	let formEl: HTMLFormElement;
 	let isDragging = $state(false);
 	let isSubmitting = $state(false);
-	let pedidosACrear = $derived(
+	let pedidosAActualizar = $derived(
 		StoreVenta.carrito
 			.map((item) => {
 				const pedidoData = page.data.pedidos.find((p) => p.id === item.id);
@@ -73,7 +73,7 @@
 
 		try {
 			const formData = new FormData(formEl);
-			formData.append('pedidosACrear', JSON.stringify(pedidosACrear));
+			formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
 
 			// Si hay un archivo seleccionado, lo agregas al formData
 			if (item) {
@@ -102,6 +102,7 @@
 				inputEl.value = '';
 			}
 
+			StoreVenta.limpiar();
 			await invalidateAll();
 		} catch (error) {
 			console.error(error);

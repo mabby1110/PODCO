@@ -91,12 +91,12 @@ export const actions: Actions = {
 	subirOcc: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const tipo = formData.get('tipo') as string;
-		const pedidosACrear = JSON.parse((formData.get('pedidosACrear') as string) || '[]');
-		console.log('Subir cotizacion: \n', pedidosACrear);
+		const pedidosAActualizar = JSON.parse((formData.get('pedidosAActualizar') as string) || '[]');
+		console.log('Subir occ: \n', pedidosAActualizar);
 		try {
 			const documentos = await procesarDocumentos(formData);
 
-			if (!documentos || documentos.length === 0 || pedidosACrear.length === 0) {
+			if (!documentos || documentos.length === 0 || pedidosAActualizar.length === 0) {
 				return { success: true, message: 'Sin documentos procesados' };
 			}
 
@@ -109,34 +109,45 @@ export const actions: Actions = {
 			if (error) {
 				return fail(500, { error: error.message });
 			}
-			console.log('resultado: ', doc_cotizacion, error);
+			// console.log('resultado: ', doc_cotizacion, error);
 
 			let resultActualizacion: any[] = [];
 
-			// PEDIDOS A CREAR
-			if (pedidosACrear.length > 0) {
-				console.log('pedidos a crear: ', pedidosACrear);
-				const id_agrupacion = generateId('BMS-P');
+			// PEDIDOS A ACTUALIZAR
+			if (pedidosAActualizar.length > 0) {
+				console.log('pedidos a actualizar: ', pedidosAActualizar);
 
-				const pedidosParaCrear = pedidosACrear.map((pedido: any) => ({
-					id_producto: pedido.id_producto,
+				const pedidosParaActualizar = pedidosAActualizar.map((pedido: any) => ({
+					id: pedido.id,
 					cantidad: pedido.cantidad,
-					moneda: pedido.moneda ?? 'USD',
-					precio_unitario: pedido.precio_unitario ?? 0,
-					id_oportunidad: pedido.id_oportunidad,
-					fase: 3,
-					id_agrupacion,
-					id_cotizacion: doc_cotizacion.id
+					moneda: pedido.moneda,
+					precio_unitario: pedido.precio_unitario,
+					fase: 4,
+					stock: pedido.stock
 				}));
 
-				const { data: resultCreacion, error: errorCreacion } = await supabase
-					.from('pedidos')
-					.insert(pedidosParaCrear)
-					.select();
+				const updatePromises = pedidosParaActualizar.map(async (pedido) => {
+					const { id, ...camposActualizar } = pedido;
 
-				if (errorCreacion) {
-					console.log(errorCreacion);
-					return fail(500, { error: errorCreacion.message });
+					const { data, error } = await supabase
+						.from('pedidos')
+						.update(camposActualizar)
+						.eq('id', id)
+						.select()
+						.single();
+
+					if (error) {
+						throw new Error(error.message);
+					}
+
+					return data;
+				});
+
+				try {
+					resultActualizacion = await Promise.all(updatePromises);
+					console.log('resultado: ', resultActualizacion);
+				} catch (error: any) {
+					return fail(500, { error: error.message });
 				}
 			}
 

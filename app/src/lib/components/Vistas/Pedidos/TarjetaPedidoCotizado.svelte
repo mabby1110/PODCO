@@ -316,9 +316,7 @@
 	.resumen {
 		grid-column: -1 / -2;
 		display: flex;
-		align-items: flex-end;
 		justify-content: flex-end;
-		height: var(--d);
 	}
 	.total {
 		width: 100%;

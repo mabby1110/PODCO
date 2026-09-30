@@ -20,12 +20,14 @@
 	import Entradas from '$lib/components/Acciones/Entradas.svelte';
 	import TarjetaPedidoPotencial from '$lib/components/Vistas/Pedidos/TarjetaPedidoPotencial.svelte';
 	import TarjetaPedidoCotizado from '$lib/components/Vistas/Pedidos/TarjetaPedidoCotizado.svelte';
+	import TarjetaPedidoVenta from '$lib/components/Vistas/Pedidos/TarjetaPedidoVenta.svelte';
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 
 	// ESTADO
 	const oportunidad = $derived(page.data.oportunidad);
 	const potencial_venta = $derived(oportunidad.pedidos.some((p) => p.fase == 2));
+	const ventas = $derived(oportunidad.pedidos.filter((p) => p.fase == 4) || []);
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
 	let editando = $state(false);
 
@@ -152,7 +154,7 @@
 			</section>
 		{/if}
 
-		<!-- Potencia de venta -->
+		<!-- Potencia de venta & cotizado -->
 		{#if fase.id_fase >= 2 && fase.id_fase <= 3}
 			<section>
 				<div class="header">
@@ -171,7 +173,6 @@
 				</div>
 			</section>
 
-			<!-- Cotizado -->
 			<section>
 				<div class="header">
 					<h3>Cotizado:</h3>
@@ -185,6 +186,19 @@
 			</section>
 		{/if}
 
+		<!-- Cotizado y vendido -->
+		{#if fase.id_fase >= 3}
+			<section class="occ">
+				<div class="header">
+					<h3>Orden de compra:</h3>
+				</div>
+				<div class="content">
+					{#if ventas.length > 0}
+						<TarjetaPedidoVenta  {oportunidad} />
+					{/if}
+				</div>
+			</section>
+		{/if}
 		<!-- {#if faseActual >= 2 && faseActual <= 3}
 			<section>
 				<div class="header">
@@ -213,19 +227,7 @@
 					{/if}
 				</div>
 			</section>
-		{/if}
-		{#if faseActual >= 3 && faseActual <= 4}
-			<section class="occ">
-				<div class="header">
-					<h3>Orden de compra:</h3>
-				</div>
-				<div class="content">
-					{#if oportunidad?.occ.length > 0}
-						{#each oportunidad?.occ as documento}{/each}
-					{/if}
-				</div>
-			</section>
-		{/if} -->
+		{/if}-->
 
 		<section class="adjunto">
 			<div class="header">

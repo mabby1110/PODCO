@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
-	import { StoreVenta } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
+	import { StoreCotizado } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
 	type Item = {
@@ -31,17 +31,7 @@
 	let isDragging = $state(false);
 	let isSubmitting = $state(false);
 	let pedidosACrear = $derived(
-		StoreVenta.carrito
-			.map((item) => {
-				const pedidoData = page.data.pedidos.find((p) => p.id === item.id);
-				if (!pedidoData) return null;
-
-				return {
-					...pedidoData,
-					stock: item.stock
-				};
-			})
-			.filter((p) => p !== null)
+		page.data.pedidos.filter((p) => StoreCotizado.carrito.some((item) => item.id === p.id))
 	);
 	function handleChange(e: Event) {
 		const input = e.target as HTMLInputElement;
