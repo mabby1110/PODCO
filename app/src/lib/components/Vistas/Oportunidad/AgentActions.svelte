@@ -11,7 +11,10 @@
 	let { oportunidad, editando = $bindable(false) }: { oportunidad: any; editando?: boolean } =
 		$props();
 
-	// ESTADO
+	// DATOS DERIVADOS
+	let cotizaciones = $derived(oportunidad.pedidos.filter((p) => p.fase === 3)||[]);
+
+	// ESTADO COMPONENTE
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
 	let siguienteFase = $derived(fasesOportunidad[oportunidad.fase + 1]);
 	let canSubmit = $state(true);
@@ -20,14 +23,10 @@
 	let submit = $state(false);
 
 	let submitCancel = $state(false);
-
-	// Callback para resetear el estado local tras un envío exitoso
-	function handleSuccess() {
-		alert('actualizado con exito');
-	}
+	console.log(cotizaciones);
 </script>
 
-<FormActions action="/oportunidades?/actualizarOportunidad" bind:isOpen onSuccess={handleSuccess}>
+<FormActions action="/oportunidades?/actualizarOportunidad" bind:isOpen>
 	{#snippet hiddenContent()}
 		<input type="hidden" name="id" value={oportunidad.id} />
 	{/snippet}
@@ -61,10 +60,12 @@
 							type="textarea"
 							required
 						/>
+						<DatePicker title="Salida de paquete" />
 					</div>
 				</section>
 			{:else if fase.id_fase == 2}
 				<input type="hidden" name="fecha_negociacion" value={new Date().toISOString()} />
+				<input type="number" disabled bind:value={cotizaciones.length} required>
 				<FormInput
 					label="Motivo"
 					name="motivo"
@@ -79,6 +80,7 @@
 					type="textarea"
 					required
 				/>
+				cotizaciones: {cotizaciones.length}
 				<!-- <div class="opcional">
 					<h3>Cotizacion(es)</h3>
 					<div class="opciones">
@@ -116,12 +118,7 @@
 				</div>
 				<DatePicker title="Fecha seguimiento o Expiración" />
 			{:else if fase.id_fase == 3}
-				<FormInput
-					label={oportunidad.fase.actual}
-					name="nuevaHistoria"
-					type="textarea"
-					required
-				/>
+				<FormInput label={oportunidad.fase.actual} name="nuevaHistoria" type="textarea" required />
 				<div class="opcional">
 					<h3>Orden de compra</h3>
 					<div class="opciones">

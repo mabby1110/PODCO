@@ -85,6 +85,7 @@ function crearPedido() {
 
 	function limpiar() {
 		state.carrito = [];
+		saveToCookie();
 	}
 
 	function reset() {

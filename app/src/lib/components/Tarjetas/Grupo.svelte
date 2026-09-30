@@ -1,18 +1,13 @@
 <!-- Grupo.svelte -->
 <script>
-    import { page } from '$app/state';
     import { appState } from '$lib/stores/appState.svelte';
-    import { StoreModList } from '$lib/stores/StoreModList.svelte';
     import { tick } from 'svelte';
 
     let { agrupacion, showByDefault = false, children } = $props();
-    
-    let { clientes, agentes, oportunidades } = $derived(page.data);
-    let categoria = $derived(StoreModList.get(page.url.pathname).groupBy);
-    
     let show = $derived(showByDefault);
     
     let groupTitle = $derived.by(() => {
+        console.log(typeof agrupacion.columna, agrupacion.columna.cantidad);
         return agrupacion.columna;
     });
 

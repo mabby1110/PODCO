@@ -27,8 +27,8 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		.order('inicio', { ascending: false });
 	let queryClientes = supabase.from('clientes').select('*, agentes(*), oportunidades(*, clientes(nombre_comercial, razon_social))');
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
-	let queryInventario = supabase.from('inventario').select('*');
-	let queryCatalogo = supabase.from('catalogo').select('*, tipo_producto(*)');
+	let queryInventario = supabase.from('inventario').select('*, catalogo(*)');
+	let queryCatalogo = supabase.from('catalogo').select('*, tipo_producto(*), inventario(*)');
 	let queryTipoProducto = supabase.from('tipo_producto').select('*');
 	let queryPedidos = supabase
 		.from('pedidos')

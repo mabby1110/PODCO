@@ -1,247 +1,292 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import { page } from '$app/state';
+	import { StoreVenta } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	type Item = {
 		file: File;
+		titulo: string;
 	};
 
 	let {
-		name = 'docs_adjuntos',
-		amountLabel = 'Total cotizado',
-		amountName = 'totales',
-		id_nodo,
-		id_cliente,
-		agente,
-		pedidos = [],
-		required = false
+		tipo = 'files',
+		oportunidad,
+		action = '/documentos?/subirAdjunto',
+		required = false,
+		disabled = false,
+		submitLabel = 'Guardar'
 	}: {
-		name?: string;
-		amountLabel?: string;
-		amountName?: string;
-		id_nodo?: string;
-		id_cliente?: string;
-		agente?: string;
-		pedidos?: any[];
+		tipo: string;
+		oportunidad: { id: string; cliente: string };
+		action?: string;
 		required?: boolean;
+		disabled?: boolean;
+		submitLabel?: string;
 	} = $props();
 
-	let items = $state<Item[]>([]);
+	let item = $state<Item | null>(null);
 	let inputEl: HTMLInputElement;
+	let formEl: HTMLFormElement;
 	let isDragging = $state(false);
 	let isSubmitting = $state(false);
+	let pedidosACrear = $derived(
+		StoreVenta.carrito
+			.map((item) => {
+				const pedidoData = page.data.pedidos.find((p) => p.id === item.id);
+				if (!pedidoData) return null;
 
-	let totalPedidos = $derived(
-		pedidos.reduce((acc: number, item: any) => {
-			return item.estatus === 2 ? acc + item.precio_unitario * item.cantidad : acc;
-		}, 0)
+				return {
+					...pedidoData,
+					stock: item.stock
+				};
+			})
+			.filter((p) => p !== null)
 	);
-
 	function handleChange(e: Event) {
 		const input = e.target as HTMLInputElement;
-		if (!input.files) return;
 
-		items = Array.from(input.files)
-			.map((file) => ({ file }))
-			.slice(0, 1);
+		if (!input.files || input.files.length === 0) return;
+
+		// Tomar solo el primer archivo
+		const file = input.files[0];
+
+		item = {
+			file,
+			titulo: file.name.split('.')[0]
+		};
+
 		input.value = '';
 	}
 
-	function removeItem(index: number) {
-		items.splice(index, 1);
-		items = [...items];
+	// Ya no necesitas un índice, simplemente limpias el archivo actual
+	function removeItem() {
+		item = null;
 	}
 
 	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
 
-		// Nueva validación: no continuar si el total es 0
-		if (isSubmitting || items.length === 0 || totalPedidos === 0) return;
+		if (isSubmitting) return;
 
 		isSubmitting = true;
 
 		try {
-			const formData = new FormData();
+			const formData = new FormData(formEl);
+			formData.append('pedidosACrear', JSON.stringify(pedidosACrear));
 
-			formData.append('entity', name);
+			// Si hay un archivo seleccionado, lo agregas al formData
+			if (item) {
+				const file = new File([item.file], item.titulo, {
+					type: item.file.type
+				});
 
-			if (id_nodo) {
-				formData.append('id_nodo', id_nodo);
+				formData.append(tipo, file);
 			}
 
-			if (id_cliente) formData.append('id_cliente', id_cliente);
-			if (agente) {
-				formData.append('id_agente', agente.id);
-				formData.append('agente', agente.nombre);
-			}
-
-			items.forEach((item) => {
-				formData.append(name, item.file);
-				formData.append(amountName, String(totalPedidos));
-			});
-
-			const response = await fetch('/documentos?/addOcc', {
+			const response = await fetch(action, {
 				method: 'POST',
 				body: formData
 			});
 
 			if (!response.ok) {
-				console.error('Error HTTP:', response.status);
-				isSubmitting = false;
+				const result = await response.text();
+				console.error(result);
 				return;
 			}
 
-			const result = await response.json();
-			if (result.type === 'success' || result.status === 200) {
-				const data = typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
-				const idDocumento = data?.[2];
-				const pedidosAprobados = pedidos.filter((p) => p.estatus === 3);
+			// Limpias el estado después de enviar
+			item = null;
 
-				if (pedidosAprobados.length > 0) {
-					const pedidosACrear = pedidosAprobados.map(({ id, ...p }) => ({
-						...p,
-						estatus: 4,
-						id_occ: idDocumento
-					}));
-					const pedidosAActualizar = pedidos.map((p) => ({
-						id: p.id
-					}));
-
-					const seqFormData = new FormData();
-					seqFormData.append('pedidosACrear', JSON.stringify(pedidosACrear));
-					seqFormData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
-
-					const seqResponse = await fetch('/pedidos?/updatePedido', {
-						method: 'POST',
-						body: seqFormData
-					});
-
-					if (!seqResponse.ok) {
-						console.error('Error en updatePedido:', await seqResponse.text());
-					}
-				}
-			} else {
-				console.error('Error de Action:', result);
+			if (inputEl) {
+				inputEl.value = '';
 			}
-
-			items = [];
-			if (inputEl) inputEl.value = '';
 
 			await invalidateAll();
 		} catch (error) {
-			console.error('Excepción en fetch:', error);
+			console.error(error);
 		} finally {
 			isSubmitting = false;
 		}
 	}
 </script>
 
-<form method="POST" enctype="multipart/form-data" onsubmit={handleSubmit}>
+<form
+	bind:this={formEl}
+	method="POST"
+	enctype="multipart/form-data"
+	{action}
+	onsubmit={handleSubmit}
+>
+	<input type="hidden" name="tipo" value={tipo} />
+	<input type="hidden" name="id_oportunidad" value={oportunidad.id} />
+	<input type="hidden" name="nombre_agente" value={$profile?.nombre} />
+	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
+
 	<div class="upload-container">
-		{#if items.length > 0}
-			<div class="files">
-				{#each items as item, i}
-					<div class="item panel">
-						<button type="button" class="butter milk" onclick={() => removeItem(i)}> ✕ </button>
-
-						<div class="info">
-							<b class="filename">{item.file.name}</b>
-							<label for="monto">{amountLabel}</label>
-							<input id="monto" type="number" value={totalPedidos} readonly />
-						</div>
-
-						{#if totalPedidos === 0}
-							<span style="color: red; font-size: 0.85em;">El total no puede ser 0</span>
-						{/if}
-
-						<button
-							type="submit"
-							class="butter matcha guardar"
-							disabled={isSubmitting || totalPedidos === 0}
-						>
-							{isSubmitting ? 'Guardando...' : 'Guardar'}
-						</button>
-					</div>
-				{/each}
-			</div>
-		{:else}
+		<div class="drop-zone" class:dragging={isDragging}>
+			<span class="drop-text">subir cotizacion</span>
 			<input
 				bind:this={inputEl}
 				type="file"
 				class="file-input"
-				class:dragging={isDragging}
-				{required}
+				required={required && item === null}
 				onchange={handleChange}
-				ondragover={(e) => {
-					e.preventDefault();
-					isDragging = true;
+				ondragover={() => {
+					if (!disabled) isDragging = true;
 				}}
-				ondragleave={() => (isDragging = false)}
-				ondrop={(e) => {
-					e.preventDefault();
+				ondragleave={() => {
+					isDragging = false;
+				}}
+				ondrop={() => {
 					isDragging = false;
 				}}
 			/>
+		</div>
+
+		{#if item}
+			<div class="files">
+				<div class="item">
+					<!-- Ya no pasamos el índice (i), solo llamamos a removeItem -->
+					<button type="button" class="close-btn" onclick={removeItem}> × </button>
+
+					<div class="info">
+						<!-- El binding se hace directamente sobre item.titulo -->
+						<input type="text" bind:value={item.titulo} />
+					</div>
+				</div>
+
+				<button type="submit" class="btn-save-small butter" disabled={isSubmitting}>
+					{#if isSubmitting}
+						Guardando...
+					{:else}
+						{submitLabel}
+					{/if}
+				</button>
+			</div>
 		{/if}
 	</div>
 </form>
 
 <style>
 	form {
-		flex-grow: 1;
+		width: 100%;
 	}
+
 	.upload-container {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
+		width: 100%;
 	}
+
 	.file-input {
+		width: 100%;
+		max-width: 800px;
+		min-height: var(--f);
 		padding: var(--c);
 		border: 1px dashed #d4d4d8;
-		border-radius: 6px;
-		background-color: var(--color-background);
+		border-radius: 16px;
+		background-color: #fafafa;
 		cursor: pointer;
 		transition:
 			border-color 0.2s ease,
 			background-color 0.2s ease;
 		outline: none;
 	}
-	.file-input:hover {
+
+	.file-input:hover:not(:disabled) {
 		border-color: var(--color-secondary);
+		background-color: #f4f4f5;
 	}
-	.file-input.dragging {
+
+	.drop-zone {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		max-width: 800px;
+		min-height: var(--f);
+		padding: var(--c);
+		border: 1px dashed var(--color-muted);
+		border-radius: 16px;
+		background-color: #fafafa;
+		transition:
+			border-color 0.2s ease,
+			background-color 0.2s ease;
+		overflow: hidden;
+	}
+
+	.drop-zone:hover {
+		border-color: var(--color-secondary);
+		background-color: #f4f4f5;
+	}
+
+	.drop-zone.dragging {
 		background-color: var(--color-highlight);
 		border-color: var(--color-highlight);
 	}
+
+	/* Mantiene el borde negro al navegar con teclado */
+	.drop-zone:has(.file-input:focus-visible) {
+		border-color: #18181b;
+		border-style: solid;
+	}
+
+	.drop-text {
+		color: var(--color-secondary);
+		pointer-events: none; /* Asegura que el clic lo reciba el input debajo */
+		z-index: 1;
+	}
+
+	.file-input {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0; /* Oculta el diseño por defecto del navegador */
+		cursor: pointer;
+		z-index: 2;
+		outline: none;
+	}
+
+	.file-input:focus-visible {
+		border-color: var(--color-text);
+		border-style: solid;
+	}
+
 	.file-input::file-selector-button {
 		display: none;
 	}
-	.item {
-		width: fit-content;
+
+	.files {
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		gap: var(--a);
-		align-items: flex-start;
-		justify-content: flex-end;
+	}
+
+	.item {
+		display: flex;
+		gap: var(--a);
+		align-items: baseline;
 		padding: var(--a);
-		background-color: var(--color-background);
 	}
-	.item .guardar {
-		align-self: flex-end;
-	}
+
 	.info {
 		flex: 1;
 		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
+		flex-direction: column;
 		gap: var(--a);
 	}
-	.filename {
-		margin: 0;
-		word-break: break-word;
+	.close-btn {
+		border: none;
+		cursor: pointer;
+		padding: 0.25rem 0.5rem;
+		border-radius: 4px;
 	}
-	.info input[type='number'] {
-		max-width: 250px;
-		background-color: var(--color-background-muted, #f3f4f6);
-		cursor: not-allowed;
+
+	.close-btn:hover {
+		background-color: var(--color-error);
 	}
 </style>

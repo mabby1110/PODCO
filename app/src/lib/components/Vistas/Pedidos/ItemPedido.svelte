@@ -25,11 +25,11 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="card" onclick={editarPedido} class:disabled={disable}>
-	<!-- Fila 1: Catálogo y Estatus -->
+	<!-- Fila 1: Catálogo y fase -->
 	<header class="row justify-between">
 		<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
-		<span class="badge" style={fasesPedido[pedido.estatus].estilo}
-			>{fasesPedido[pedido.estatus].actual}</span
+		<span class="badge" style={fasesPedido[pedido.fase].estilo}
+			>{fasesPedido[pedido.fase].actual}</span
 		>
 	</header>
 

@@ -106,5 +106,7 @@
 		font-size: small;
 		font-weight: lighter;
 		width: 100%;
+		display: flex;
+		gap: var(--y);
 	}
 </style>

@@ -34,6 +34,7 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const tipo = formData.get('tipo') as string;
 		const pedidosACrear = JSON.parse((formData.get('pedidosACrear') as string) || '[]');
+		console.log('Subir cotizacion: \n', pedidosACrear);
 		try {
 			const documentos = await procesarDocumentos(formData);
 
@@ -65,7 +66,65 @@ export const actions: Actions = {
 					moneda: pedido.moneda ?? 'USD',
 					precio_unitario: pedido.precio_unitario ?? 0,
 					id_oportunidad: pedido.id_oportunidad,
-					estatus: 3,
+					fase: 3,
+					id_agrupacion,
+					id_cotizacion: doc_cotizacion.id
+				}));
+
+				const { data: resultCreacion, error: errorCreacion } = await supabase
+					.from('pedidos')
+					.insert(pedidosParaCrear)
+					.select();
+
+				if (errorCreacion) {
+					console.log(errorCreacion);
+					return fail(500, { error: errorCreacion.message });
+				}
+			}
+
+			return { success: true };
+		} catch (error) {
+			console.error('Error en acción subirAdjunto:', error);
+			return fail(500, { error: 'Fallo al procesar la subida de documentos' });
+		}
+	},
+	subirOcc: async ({ request, locals: { supabase } }) => {
+		const formData = await request.formData();
+		const tipo = formData.get('tipo') as string;
+		const pedidosACrear = JSON.parse((formData.get('pedidosACrear') as string) || '[]');
+		console.log('Subir cotizacion: \n', pedidosACrear);
+		try {
+			const documentos = await procesarDocumentos(formData);
+
+			if (!documentos || documentos.length === 0 || pedidosACrear.length === 0) {
+				return { success: true, message: 'Sin documentos procesados' };
+			}
+
+			const { data: doc_cotizacion, error } = await supabase
+				.from(tipo)
+				.insert(documentos)
+				.select()
+				.single();
+
+			if (error) {
+				return fail(500, { error: error.message });
+			}
+			console.log('resultado: ', doc_cotizacion, error);
+
+			let resultActualizacion: any[] = [];
+
+			// PEDIDOS A CREAR
+			if (pedidosACrear.length > 0) {
+				console.log('pedidos a crear: ', pedidosACrear);
+				const id_agrupacion = generateId('BMS-P');
+
+				const pedidosParaCrear = pedidosACrear.map((pedido: any) => ({
+					id_producto: pedido.id_producto,
+					cantidad: pedido.cantidad,
+					moneda: pedido.moneda ?? 'USD',
+					precio_unitario: pedido.precio_unitario ?? 0,
+					id_oportunidad: pedido.id_oportunidad,
+					fase: 3,
 					id_agrupacion,
 					id_cotizacion: doc_cotizacion.id
 				}));

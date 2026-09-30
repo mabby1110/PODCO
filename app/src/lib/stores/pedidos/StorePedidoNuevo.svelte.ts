@@ -69,6 +69,7 @@ function crearPedido() {
 	}
 	function limpiar() {
 		state.carrito = [];
+		saveToCookie();
 	}
 	function toggleModal() {
 		state.modal = !state.modal;

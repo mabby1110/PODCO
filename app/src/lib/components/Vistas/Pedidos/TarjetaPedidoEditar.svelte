@@ -53,7 +53,7 @@
 	}
 
 	// ACCIONES
-	async function limpiarCarrito() {
+	async function limpiarCarritoCompleto() {
 		StorePedidoEditar.limpiar();
 		StorePedidoNuevo.limpiar();
 		StoreContextoRelacion.limpiar();
@@ -66,6 +66,9 @@
 			try {
 				const formData = new FormData();
 
+				if (StoreContextoRelacion.id_oportunidad) {
+					formData.append('idOportunidad', StoreContextoRelacion.id_oportunidad);
+				}
 				if (StorePedidoNuevo.carrito) {
 					formData.append('carrito', JSON.stringify(StorePedidoNuevo.carrito));
 				}
@@ -86,13 +89,14 @@
 				if (idOportunidad) {
 					await goto(`/oportunidades/${idOportunidad}`);
 				}
-				limpiarCarrito();
+				limpiarCarritoCompleto();
 				invalidateAll();
 			} catch (error) {
 				console.error('Error al crear pedido:', error);
 				mensaje = error instanceof Error ? error.message : 'Error al crear pedido';
 			} finally {
 				actualizando = false;
+				await goto(`/pedidos`);
 			}
 		} else {
 			try {
@@ -139,13 +143,14 @@
 				if (idOportunidad) {
 					await goto(`/oportunidades/${idOportunidad}`);
 				}
-				limpiarCarrito();
+				limpiarCarritoCompleto();
 				invalidateAll();
 			} catch (error) {
 				console.error('Error al actualizar pedido:', error);
 				mensaje = error instanceof Error ? error.message : 'Error al actualizar el pedido';
 			} finally {
 				actualizando = false;
+				await goto(`/pedidos`);
 			}
 		}
 	}
@@ -171,7 +176,7 @@
 			}
 
 			mensaje = 'Relación eliminada correctamente';
-			limpiarCarrito();
+			StoreContextoRelacion.limpiar();
 			invalidateAll();
 		} catch (error) {
 			console.error('Error al eliminar relación:', error);
@@ -211,11 +216,45 @@
 	};
 </script>
 
+{#if StorePedidoNuevo.carrito.length == 0}
+	<button class="butter agregar-producto" onclick={() => goto('/catalogo')}
+		>+Agregar producto</button
+	>
+	<p class="estado-vacio">No hay productos seleccionados</p>
+{/if}
+{#if StorePedidoEditar.carrito.length == 0}
+	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}>+Agregar Pedido</button>
+	<p class="estado-vacio">No hay pedidos seleccionados</p>
+{/if}
+
 <!-- pedidos a editar -->
 {#if StorePedidoEditar.carrito.length > 0}
 	<div class="tarjeta-editar-pedido">
-		<div class="badge" style={fasesPedido[2]?.estilo}>
-			<span>Potencial de Venta</span>
+		<div class="encabezado">
+			<button
+				class="butter honey"
+				type="button"
+				aria-label="Limpiar"
+				title="Limpiar"
+				onclick={StorePedidoEditar.limpiar}
+			>
+				✕
+			</button>
+			<div class="badge" style={fasesPedido[2]?.estilo}>
+				<span>Potencial de Venta</span>
+			</div>
+			<div class="acciones">
+				{#if existeRelacionOportunidad}
+					<button
+						class="butter honey"
+						onclick={eliminarRelacion}
+						aria-label="Eliminar relación"
+						title="Eliminar relación"
+					>
+						<img src="/remove.svg" alt="Elimininar relacion" />
+					</button>
+				{/if}
+			</div>
 		</div>
 		<div class="lista-tarjetas">
 			{#each pedidos as pedido (pedido.id)}
@@ -256,7 +295,7 @@
 							</label>
 
 							<label class="input-group">
-								<span class="label-text">Precio unitario</span>
+								<span class="label-text">P/U</span>
 								<input
 									type="number"
 									min="0"
@@ -337,7 +376,19 @@
 <!-- pedidos nuevos -->
 {#if StorePedidoNuevo.carrito.length > 0}
 	<div class="tarjeta-editar-pedido">
-		<h4 class="title-nuevos">Nuevos a agregar:</h4>
+		<div class="encabezado">
+			<button
+				class="butter honey"
+				type="button"
+				aria-label="Limpiar"
+				title="Limpiar"
+				onclick={StorePedidoNuevo.limpiar}
+			>
+				✕
+			</button>
+			<h4 class="titulo">Nuevos a agregar:</h4>
+			<div class="acciones"></div>
+		</div>
 		{#each productos as producto}
 			<div class="producto">
 				<span class="codigo">{producto.producto.codigo}</span>
@@ -351,37 +402,38 @@
 	</div>
 {/if}
 
-{#if StorePedidoNuevo.carrito.length == 0}
-	<p class="estado-vacio">No hay productos seleccionados</p>
-	<button class="butter agregar-producto" onclick={() => goto('/catalogo')}
-		>+Agregar producto</button
-	>
-{/if}
-{#if StorePedidoEditar.carrito.length == 0}
-	<p class="estado-vacio">No hay pedidos seleccionados</p>
-	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}>+Agregar Pedido</button>
-{/if}
-
 <!-- ACCIONES GLOBALES -->
 <div class="acciones-fijas">
-	<button class="butter variant-outline" onclick={limpiarCarrito}>Limpiar</button>
-	{#if existeRelacionOportunidad}
-		<button class="butter variant-danger" onclick={eliminarRelacion}>Desvincular Oportunidad</button
-		>
-	{/if}
-	<button class="butter variant-primary" onclick={editarBorrador} disabled={actualizando}>
+	<button class="butter" onclick={editarBorrador} disabled={actualizando}>
 		{actualizando ? 'Actualizando...' : 'Guardar Cambios'}
 	</button>
 </div>
 
 <style>
+	.encabezado {
+		display: flex;
+		align-items: center;
+		gap: var(--y);
+		margin-bottom: var(--b);
+	}
+	.encabezado .acciones {
+		flex-grow: 1;
+		display: flex;
+		justify-content: flex-end;
+		gap: var(--y);
+	}
+	.encabezado .titulo {
+		flex-grow: 1;
+	}
 	.tarjeta-editar-pedido {
+		flex-grow: 1;
+		max-height: fit-content;
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
-		padding: 18px 24px;
+		padding: 8px 8px;
+		gap: var(--y);
 		border: 2px solid;
-		border-radius: 32px;
+		border-radius: 16px;
 		border-color: var(--color-muted);
 		background-color: var(--color-background);
 	}
@@ -389,23 +441,28 @@
 	.lista-tarjetas {
 		display: flex;
 		flex-direction: column;
-		gap: var(--c);
+		gap: var(--a);
 	}
 	.tarjeta {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 		border: none;
+		background-color: transparent;
+		backdrop-filter: none;
 	}
 	.tarjeta .meta {
 		grid-column: span 2;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+		gap: var(--a) 0;
 	}
 	.tarjeta .meta .titulo {
 		grid-column: span 3;
 		display: flex;
-		gap: var(--a);
 		align-items: baseline;
+	}
+	.tarjeta .meta .titulo div {
+		flex-grow: 1;
 	}
 	.tarjeta .meta .inputs {
 		grid-column: span 3;
@@ -427,6 +484,9 @@
 		border: none;
 		justify-self: flex-end;
 		align-self: last baseline;
+
+		background-color: transparent;
+		backdrop-filter: none;
 	}
 	.total {
 		width: fit-content;
@@ -494,18 +554,24 @@
 	/* Acciones inferiores */
 	.acciones-fijas {
 		position: sticky;
-		bottom: 0;
+		bottom: var(--a);
+		right: 0;
 		width: fit-content;
+		flex-grow: 1;
 		display: flex;
 		align-self: flex-end;
-		padding: var(--a);
+		align-items: flex-end;
 		gap: var(--y);
+		margin-top: var(--a);
+	}
+	.acciones-fijas button:hover {
+		background-color: var(--color-highlight);
 	}
 
 	.estado-vacio {
 		text-align: center;
 		color: #94a3b8;
 		font-style: italic;
-		margin-top: 1rem;
+		margin-bottom: 1rem;
 	}
 </style>

@@ -201,7 +201,7 @@
 		flex-wrap: wrap;
 		align-items: center;
 		flex-flow: row;
-		gap: var(--a);
+		gap: var(--y);
 		cursor: grab;
 		user-select: none;
 		padding: var(--a) var(--a) 4px;
@@ -215,8 +215,8 @@
 		overflow-y: auto;
 		display: flex;
 		flex-direction: column;
-		gap: var(--b);
-		padding: var(--b);
+		gap: var(--a);
+		padding: 0 var(--a);
 	}
 
 	/* Reglas para la ventana maximizada */
@@ -225,7 +225,7 @@
 		top: 0 !important;
 		width: 100% !important;
 		height: 100% !important;
-		max-height: 88dvh !important;
+		max-height: 100dvh !important;
 		max-width: 100dvw !important;
 		z-index: 9999;
 		min-height: var(--g);

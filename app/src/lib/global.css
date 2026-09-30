@@ -8,7 +8,7 @@ Especiales
 	--color-primary: #f1f4ff;
 	--color-secondary: #c6cce3;
 	--color-foreground: #f1f4ffbb;
-	--color-background: #ffffffaa;
+	--color-background: #ffffff;
 	--color-highlight: #ffff0099;
 	--color-contrast: rgba(0, 0, 105, 0.8);
 	--color-title: #000000;
@@ -16,7 +16,7 @@ Especiales
 	--color-text-ob: #eeeeee;
 	--color-error: #ff0000bb;
 	--color-success: #05a941bb;
-	--color-muted: #D4D9E8;
+	--color-muted: #d4d9e8;
 	--y2k: rgba(0, 0, 105, 0.1);
 
 	--color-1: var(--color-secondary);
@@ -64,6 +64,7 @@ body {
 	left: 0;
 	right: 0;
 	background-color: var(--color-background);
+	/* background-image: url('bombas.svg'); */
 }
 
 h1 {
@@ -122,7 +123,7 @@ button {
 }
 .tarjeta .honey {
 	border: none;
-	background-color: none;
+	background-color: transparent;
 }
 .card-calendar-preview {
 	text-decoration: none;
@@ -347,8 +348,12 @@ section .block {
 }
 
 .honey {
-	background-color: var(--color-background);
+	background-color: transparent;
 	padding: 0;
+	border: none;
+}
+.honey:hover {
+	cursor: pointer;
 }
 
 .chile {

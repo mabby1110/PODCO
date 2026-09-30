@@ -1,6 +1,6 @@
 <!-- SelecciónCotizacion.svelte -->
 <script lang="ts">
-	import { StorePedidoOportunidad } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
+	import { StoreCotizado } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
 	import { onMount } from 'svelte';
 	import SubirCotizacion from '../Documentos/SubirCotizacion.svelte';
 	import { fasesPedido } from '$lib';
@@ -23,7 +23,7 @@
 	let pedidoACotizarInvalido = $derived(
 		oportunidad.pedidos.some(
 			(p) =>
-				StorePedidoOportunidad.carrito.some((item) => item.id === p.id) &&
+				StoreCotizado.carrito.some((item) => item.id === p.id) &&
 				(p.precio_unitario === null || p.precio_unitario === undefined || p.precio_unitario === 0)
 		)
 	);
@@ -33,21 +33,21 @@
 			oportunidad.pedidos.some((p) => p.moneda == 'MX')
 	);
 
-	// ESTADOS
+	// ESTADOS DEL COMPONENTE
 	let expandidos = $state<Record<string, boolean>>({});
 
 	// ACCIONES
 	function seleccionarPedido(id: string) {
-		if (StorePedidoOportunidad.carrito.some((item) => item.id === id)) {
-			StorePedidoOportunidad.pop(id);
+		if (StoreCotizado.carrito.some((item) => item.id === id)) {
+			StoreCotizado.pop(id);
 		} else {
-			StorePedidoOportunidad.push(id);
+			StoreCotizado.push(id);
 		}
-	}
+	};
 
 	function seleccionarPedidoCompleto() {
-		StorePedidoOportunidad.pushLista(potencial_venta);
-	}
+		StoreCotizado.pushLista(potencial_venta);
+	};
 
 	// HELPERS
 	const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
@@ -66,10 +66,11 @@
 		StoreContextoRelacion.setOportunidad(oportunidad.id);
 		await goto('/pedidos');
 		StorePedidoEditar.toggleModal(true);
-	}
+	};
+
 	onMount(() => {
 		console.log(oportunidad.pedidos.filter((p) => p.id_cotizacion));
-		StorePedidoOportunidad.limpiar();
+		StoreCotizado.limpiar();
 	});
 </script>
 
@@ -79,7 +80,7 @@
 	</div>
 	<div class="lista-tarjetas">
 		{#each potencial_venta as pedido (pedido.id)}
-			{@const seleccionado = StorePedidoOportunidad.carrito.some((item) => item.id === pedido.id)}
+			{@const seleccionado = StoreCotizado.carrito.some((item) => item.id === pedido.id)}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
@@ -149,43 +150,41 @@
 			</div>
 		{/each}
 		{#if pedidoACotizarInvalidoPorMoneda}
-		<p>no se pueden mezclar USD con MX</p>
+			<p>no se pueden mezclar USD con MX</p>
 		{:else}
-		<hr/>
-		<h1 class="total"><b>{formatMoneda(total)}</b></h1>
-			
+			<hr />
+			<h1 class="total"><b>{formatMoneda(total)}</b></h1>
 		{/if}
 		{#if potencial_venta.length === 0}
 			<p class="estado-vacio">No hay pedidos pendientes por cotizar en esta oportunidad.</p>
 		{/if}
 	</div>
-</div>
-<!-- Área de Acciones / Subida -->
-<div class="acciones-panel">
-	{#if StorePedidoOportunidad.carrito.length > 0}
-		{#if pedidoACotizarInvalido}
-			<button class="alerta-error" onclick={editarPedido}>
-				<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Presiona
-				para editar.
-			</button>
-		{:else}
-			<SubirCotizacion
-				tipo="docs_cotizaciones"
-				action="/documentos?/subirCotizacion"
-				oportunidad={{
-					id: oportunidad?.id,
-					cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
-				}}
-				required
-			/>
+	<div class="acciones-panel">
+		{#if StoreCotizado.carrito.length > 0}
+			{#if pedidoACotizarInvalido}
+				<button class="alerta-error" onclick={editarPedido}>
+					<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Presiona
+					para editar.
+				</button>
+			{:else}
+				<SubirCotizacion
+					tipo="docs_cotizaciones"
+					action="/documentos?/subirCotizacion"
+					oportunidad={{
+						id: oportunidad?.id,
+						cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
+					}}
+					required
+				/>
+			{/if}
+		{:else if potencial_venta.length > 0}
+			<div class="acciones-fijas">
+				<button class="butter" onclick={seleccionarPedidoCompleto}>
+					Seleccionar todo para cotizar
+				</button>
+			</div>
 		{/if}
-	{:else if potencial_venta.length > 0}
-		<div class="acciones-fijas">
-			<button class="butter" onclick={seleccionarPedidoCompleto}>
-				Seleccionar todo para cotizar
-			</button>
-		</div>
-	{/if}
+	</div>
 </div>
 
 <style>

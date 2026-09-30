@@ -24,7 +24,7 @@ export const actions: Actions = {
 				moneda: pedido.moneda,
 				precio_unitario: pedido.precio_unitario,
 				id_oportunidad: idOportunidad,
-				estatus: idOportunidad?2:0
+				fase: idOportunidad ? 2 : 0
 			}));
 
 			const updatePromises = pedidosParaActualizar.map(async (pedido) => {
@@ -62,7 +62,7 @@ export const actions: Actions = {
 				precio_unitario: pedido.precio_unitario ?? 0,
 				id_agrupacion: pedidosAActualizar[0].id_agrupacion,
 				id_oportunidad: idOportunidad,
-				estatus: idOportunidad?2:0
+				fase: idOportunidad ? 2 : 0
 			}));
 
 			const { data: resultCreacion, error: errorCreacion } = await supabase
@@ -97,13 +97,17 @@ export const actions: Actions = {
 			return fail(400, { error: 'Formato de JSON inválido' });
 		}
 
+		// RELACIONES
+		const idOportunidad = (formData.get('idOportunidad') as string) || null;
+
 		// Transformación al formato de la tabla
 		const id_agrupacion = generateId('BMS-P');
 		const payload = carrito.map((item) => ({
 			id_producto: item.id,
 			cantidad: item.cantidad,
-			estatus: 1,
-			id_agrupacion
+			fase: idOportunidad?2:1,
+			id_agrupacion,
+			id_oportunidad: idOportunidad
 		}));
 
 		console.log('\ndata a insertar: ', payload);

@@ -22,5 +22,6 @@
 	.tarjeta-contexto {
 		display: flex;
 		gap: var(--a);
+		margin-bottom: var(--c);
 	}
 </style>

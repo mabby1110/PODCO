@@ -18,7 +18,7 @@
     {/each}
 
     {#if !disable}
-        <div class="acciones" style="margin-top: 1rem;">
+        <div class="acciones">
             <button class="butter" onclick={editarPedidoCompleto}>Seleccionar todos</button>
         </div>
     {/if}

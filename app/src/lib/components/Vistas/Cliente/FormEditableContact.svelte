@@ -141,7 +141,7 @@
 		<div class="header">
 			<h3 class="label">Contactos:</h3>
 		</div>
-		<div class="content">
+		<div class="block">
 			<div class="contact-list">
 				{#if (lista || []).length > 0}
 					{#each lista || [] as persona, i}

@@ -1,13 +1,14 @@
 <!-- SelecciónCotizacion.svelte -->
 <script lang="ts">
-	import { StorePedidoOportunidad } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
 	import { onMount } from 'svelte';
 	import SubirCotizacion from '../Documentos/SubirCotizacion.svelte';
 	import { fasesPedido } from '$lib';
+	import { StoreVenta } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { goto } from '$app/navigation';
+	import SubirOcc from '../Documentos/SubirOcc.svelte';
 
 	let { oportunidad } = $props();
 
@@ -27,7 +28,9 @@
 				}
 
 				acc[clave].pedidos.push(pedido);
-				acc[clave].totalGrupo += (pedido.precio_unitario || 0) * (pedido.cantidad || 0);
+				if (StoreVenta.carrito.some((p) => p.id === pedido.id)) {
+					acc[clave].totalGrupo += (pedido.precio_unitario || 0) * (pedido.cantidad || 0);
+				}
 
 				return acc;
 			},
@@ -43,7 +46,7 @@
 	let pedidoACotizarInvalido = $derived(
 		oportunidad.pedidos.some(
 			(p) =>
-				StorePedidoOportunidad.carrito.some((item) => item.id === p.id) &&
+				StoreVenta.carrito.some((item) => item.id === p.id) &&
 				(p.precio_unitario === null || p.precio_unitario === undefined || p.precio_unitario === 0)
 		)
 	);
@@ -57,14 +60,6 @@
 	let expandidos = $state<Record<string, boolean>>({});
 
 	// ACCIONES
-	function seleccionarPedido(id: string) {
-		if (StorePedidoOportunidad.carrito.some((item) => item.id === id)) {
-			StorePedidoOportunidad.pop(id);
-		} else {
-			StorePedidoOportunidad.push(id);
-		}
-	}
-
 	function seleccionarPedidoCompleto(id_grupo: string) {
 		// Buscamos el elemento dentro del arreglo
 		const grupo = pedidosAgrupados.find((g) => g.id_agrupacion === id_grupo);
@@ -75,7 +70,7 @@
 		}
 
 		console.log(grupo.pedidos);
-		StorePedidoOportunidad.pushLista(grupo.pedidos);
+		StoreVenta.pushLista(grupo.pedidos);
 	}
 
 	// HELPERS
@@ -97,19 +92,46 @@
 		StorePedidoEditar.toggleModal(true);
 	}
 
+	function cambiarEstadoPedido(id: string, nuevoEstado: string) {
+		const index = StoreVenta.carrito.findIndex((item) => item.id === id);
+
+		if (nuevoEstado === 'ninguno') {
+			// Eliminar del carrito
+			if (index !== -1) StoreVenta.carrito.splice(index, 1);
+		} else if (nuevoEstado === 'pedido') {
+			// Agregar o actualizar a "Sobre Pedido"
+			if (index !== -1) {
+				StoreVenta.carrito[index].stock = false;
+			} else {
+				StoreVenta.carrito.push({ id, stock: false });
+			}
+		} else if (nuevoEstado === 'stock') {
+			// Agregar o actualizar a "Stock"
+			if (index !== -1) {
+				StoreVenta.carrito[index].stock = true;
+			} else {
+				StoreVenta.carrito.push({ id, stock: true });
+			}
+		}
+
+		// NOTA: Si necesitas guardar en cookies al cambiar el estado,
+		// asegúrate de tener una función expuesta en tu store como StoreVenta.guardar()
+	}
+
 	onMount(() => {
-		StorePedidoOportunidad.limpiar();
+		StoreVenta.limpiar();
 	});
 </script>
 
-<!-- Iteramos sobre los grupos -->
 {#each pedidosAgrupados as grupo}
+	{@const existeSeleccion = StoreVenta.carrito.some((itemCarrito) =>
+		grupo.pedidos.some((pedido) => pedido.id === itemCarrito.id)
+	)}
 	<div class="cotizacion-container">
 		<div class="titulo-meta">
 			<div class="badge" style={fasesPedido[3]?.estilo}>
 				<span>Cotizado</span>
 			</div>
-			<!-- Etiqueta opcional para mostrar a qué agrupación pertenece -->
 			{#if grupo.id_agrupacion !== 'sin_agrupar'}
 				<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
 			{/if}
@@ -118,74 +140,89 @@
 		<div class="lista-tarjetas">
 			<!-- Iteramos sobre los pedidos de este grupo -->
 			{#each grupo.pedidos as pedido (pedido.id)}
-				{@const seleccionado = StorePedidoOportunidad.carrito.some((item) => item.id === pedido.id)}
+				{@const itemStore = StoreVenta.carrito.find((item) => item.id === pedido.id)}
+				{@const estadoPedido = !itemStore ? 'ninguno' : itemStore.stock ? 'stock' : 'pedido'}
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
 				<div
 					class="tarjeta honey"
-					class:selected={seleccionado}
-					class:invalid={seleccionado && pedido.precio_unitario == null}
-					onclick={() => seleccionarPedido(pedido.id)}
+					class:selected={itemStore}
+					class:invalid={itemStore && pedido.precio_unitario == null}
 				>
-					<div class="meta">
-						<div class="titulo">
-							<div class="checkbox" class:checked={seleccionado}></div>
-							<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
-						</div>
-
+					<strong class="titulo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
+					<div class="contenido">
 						<span class="precio" class:text-danger={pedido.precio_unitario == null}>
 							{pedido.cantidad} x {formatMoneda(pedido.precio_unitario, pedido.moneda)}
 						</span>
+						<select
+							class="select-estado {estadoPedido}"
+							value={estadoPedido}
+							onchange={(e) => {
+								e.stopPropagation();
+								cambiarEstadoPedido(pedido.id, e.currentTarget.value);
+							}}
+							onclick={(e) => {
+								e.stopPropagation();
+							}}
+						>
+							<option value="ninguno">Sin seleccionar</option>
+							<option value="pedido">Sobre pedido</option>
+							<option value="stock">En stock</option>
+						</select>
+						{#if estadoPedido == 'stock'}
+							apartar
+						{/if}
 					</div>
-
 					<div class="resumen">
 						<b class="subtotal">${(pedido.precio_unitario || 0) * (pedido.cantidad || 0)}</b>
 					</div>
-
-					<!-- Sección Colapsable -->
-					{#if pedido.catalogo?.descripcion || pedido.catalogo?.caracteristicas || pedido.observaciones}
-						<div class="detalles">
-							{#if expandidos[pedido.id]}
-								<div class="contenido-expandido" onclick={(e) => e.stopPropagation()}>
-									{#if pedido.catalogo.descripcion}
-										<p class="desc"><strong>Desc:</strong> {pedido.catalogo.descripcion}</p>
-									{/if}
-									{#if pedido.catalogo.caracteristicas}
-										<div class="jsonb">
-											<strong>Características:</strong>
-											<pre>{JSON.stringify(pedido.catalogo.caracteristicas, null, 2)}</pre>
-										</div>
-									{/if}
-									{#if pedido.oportunidades?.necesidades}
-										<p class="desc">
-											<strong>Necesidades:</strong>
-											{pedido.oportunidades.necesidades}
-										</p>
-									{/if}
-								</div>
-								<button
-									class="link-btn"
-									onclick={(e) => {
-										e.stopPropagation();
-										expandidos[pedido.id] = false;
-									}}
-								>
-									Ocultar detalles
-								</button>
-							{:else}
-								<button
-									class="link-btn"
-									onclick={(e) => {
-										e.stopPropagation();
-										expandidos[pedido.id] = true;
-									}}
-								>
-									Leer más detalles...
-								</button>
-							{/if}
-						</div>
-					{/if}
 				</div>
+				<!-- Sección Colapsable -->
+				{#if pedido.catalogo?.descripcion || pedido.catalogo?.caracteristicas || pedido.observaciones}
+					<div class="detalles">
+						{#if expandidos[pedido.id]}
+							<!-- svelte-ignore a11y_click_events_have_key_events -->
+							<!-- svelte-ignore a11y_no_static_element_interactions -->
+							<div class="contenido-expandido" onclick={(e) => e.stopPropagation()}>
+								{#if pedido.catalogo.descripcion}
+									<p class="desc"><strong>Desc:</strong> {pedido.catalogo.descripcion}</p>
+								{/if}
+								{#if pedido.catalogo.caracteristicas}
+									<div class="jsonb">
+										<strong>Características:</strong>
+										<pre>{JSON.stringify(pedido.catalogo.caracteristicas, null, 2)}</pre>
+									</div>
+								{/if}
+								{#if pedido.oportunidades?.necesidades}
+									<p class="desc">
+										<strong>Necesidades:</strong>
+										{pedido.oportunidades.necesidades}
+									</p>
+								{/if}
+							</div>
+							<button
+								class="link-btn"
+								onclick={(e) => {
+									e.stopPropagation();
+									expandidos[pedido.id] = false;
+								}}
+							>
+								Ocultar detalles
+							</button>
+						{:else}
+							<button
+								class="link-btn"
+								onclick={(e) => {
+									e.stopPropagation();
+									expandidos[pedido.id] = true;
+								}}
+							>
+								Leer más detalles...
+							</button>
+						{/if}
+					</div>
+				{/if}
+				<hr>
 			{/each}
 
 			<!-- Validaciones y Totales POR GRUPO -->
@@ -193,7 +230,6 @@
 				<p class="text-danger">No se pueden mezclar USD con MXN</p>
 			{:else}
 				<div class="total">
-					<hr />
 					<h1><b>{formatMoneda(grupo.totalGrupo)}</b></h1>
 				</div>
 			{/if}
@@ -203,18 +239,17 @@
 			{/if}
 		</div>
 
-		<!-- Área de Acciones / Subida -->
 		<div class="acciones-panel">
-			{#if StorePedidoOportunidad.carrito.length > 0}
+			{#if existeSeleccion}
 				{#if pedidoACotizarInvalido}
 					<button class="alerta-error" onclick={editarPedido}>
 						<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Presiona
 						para editar.
 					</button>
 				{:else}
-					<SubirCotizacion
+					<SubirOcc
 						tipo="docs_cotizaciones"
-						action="/documentos?/subirCotizacion"
+						action="/documentos?/subirOcc"
 						oportunidad={{
 							id: oportunidad?.id,
 							cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
@@ -253,13 +288,10 @@
 	}
 	.tarjeta {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
 		border: none;
-	}
-	.tarjeta .meta {
-		grid-column: span 2;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+		align-items: baseline;
+		gap: var(--a);
 	}
 	.titulo-meta {
 		display: flex;
@@ -268,21 +300,25 @@
 		align-items: baseline;
 		font-size: small;
 	}
-	.tarjeta .meta .titulo {
+	.titulo {
 		grid-column: span 3;
 		display: flex;
 		gap: var(--a);
+		align-items: baseline;
 	}
-	.tarjeta .meta .precio {
-		grid-column: span 2;
+	.contenido {
+		grid-column: span 6;
 		display: flex;
-		padding-left: 24px;
+		flex-wrap: wrap;
+		gap: var(--a);
+		align-items: baseline;
 	}
-	.tarjeta .resumen {
-		grid-column: -2 / -1;
+	.resumen {
+		grid-column: -1 / -2;
 		display: flex;
 		align-items: flex-end;
 		justify-content: flex-end;
+		height: var(--d);
 	}
 	.total {
 		width: 100%;

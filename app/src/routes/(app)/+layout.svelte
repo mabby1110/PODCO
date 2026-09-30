@@ -52,9 +52,3 @@
 <ModalInventario />
 <ModalProducto />
 <ModalPedidoEditar />
-
-<style>
-	/* .page-container {
-        background-image: url('bombas.svg');
-    } */
-</style>

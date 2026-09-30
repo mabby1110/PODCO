@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
-	import { StorePedidoNuevo } from '$lib/stores/StorePedidoNuevo.svelte';
+	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 	let canSubmit = $derived(StorePedidoNuevo.carrito.length > 0);
 
 	let carrito = $derived(

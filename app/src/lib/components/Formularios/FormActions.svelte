@@ -40,6 +40,7 @@
 				isOpen = false;
 				if (onSuccess) onSuccess();
 				await update({ reset: true });
+				alert('actualizado con exito');
 			}
 
 			await invalidateAll();

@@ -4,6 +4,7 @@
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 
 	let { elemento } = $props();
+	let inventario = $derived(elemento.inventario[0]);
 	function agregarProducto(e) {
 		e.stopPropagation();
 		StorePedidoEditar.toggleModal(true);
@@ -21,9 +22,9 @@
 		{elemento.descripcion}
 	{/snippet}
 	{#snippet acciones()}
-		<button class="butter">+</button>
+		<p><span>cantidad: </span> {inventario.cantidad}</p>
 	{/snippet}
 	{#snippet meta()}
-		{elemento.id}
+		<p>{elemento.tipo_producto.nombre}</p>
 	{/snippet}
 </ItemLista>

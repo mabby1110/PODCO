@@ -25,7 +25,7 @@
 
 	// ESTADO
 	const oportunidad = $derived(page.data.oportunidad);
-	const potencial_venta = $derived(oportunidad.pedidos.some((p) => p.estatus == 2));
+	const potencial_venta = $derived(oportunidad.pedidos.some((p) => p.fase == 2));
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
 	let editando = $state(false);
 
@@ -146,7 +146,7 @@
 							<button onclick={editarPedido}>~Editar</button>
 						{/if}
 					{:else}
-						<button onclick={relacionarPedido}>+Potencial de venta</button>
+						<button class="butter" onclick={relacionarPedido}>+Potencial de venta</button>
 					{/if}
 				</div>
 			</section>
@@ -159,7 +159,7 @@
 					<h3>Potencial de Venta:</h3>
 				</div>
 
-				<div class="content">
+				<div class="block">
 					{#if potencial_venta}
 						<TarjetaPedidoPotencial {oportunidad} />
 						{#if editando}
@@ -208,7 +208,7 @@
 				<div class="content">
 					{#if oportunidad?.cotizaciones.length > 0}
 						{#each oportunidad?.cotizaciones as documento}
-							{#if documento.pedidos.some((p) => p.estatus == 3) || editando}{/if}
+							{#if documento.pedidos.some((p) => p.fase == 3) || editando}{/if}
 						{/each}
 					{/if}
 				</div>
