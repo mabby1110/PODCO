@@ -2,10 +2,10 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
-	import { fasesPedido } from '$lib';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
+	import { onMount } from 'svelte';
 
 	// DATOS DERIVADOS
 	let pedidosAEditar = $state(page.data.pedidos);
@@ -24,7 +24,7 @@
 			0
 		)
 	);
-	let existeRelacionOportunidad = $derived(pedidos.some((p) => p.id_oportunidad != null));
+	let oportunidades = $derived(pedidos.map((p) => p.id_oportunidad) as string[]);
 	let idAgrupaciones = $derived([
 		...new Set(pedidos.map((pedido) => pedido.id_agrupacion).filter(Boolean))
 	]);
@@ -37,28 +37,12 @@
 		pedidos.some((p) => p.moneda == 'USD') && pedidos.some((p) => p.moneda == 'MX')
 	);
 
-	// HELPERS
-	function actualizarCampo(
-		pedidoId: string,
-		campo: 'cantidad' | 'moneda' | 'precio_unitario',
-		valor: string
-	) {
-		const pedido = pedidos.find((p) => p.id === pedidoId);
-		if (!pedido) return;
-		if (campo === 'cantidad' || campo === 'precio_unitario') {
-			pedido[campo] = Number(valor);
-		} else {
-			pedido[campo] = valor;
-		}
-	}
-
 	// ACCIONES
 	async function limpiarCarritoCompleto() {
 		StorePedidoEditar.limpiar();
 		StorePedidoNuevo.limpiar();
 		StoreContextoRelacion.limpiar();
 	}
-
 	async function editarBorrador() {
 		actualizando = true;
 		mensaje = '';
@@ -88,6 +72,8 @@
 
 				if (idOportunidad) {
 					await goto(`/oportunidades/${idOportunidad}`);
+				} else {
+					await goto(`/pedidos`);
 				}
 				limpiarCarritoCompleto();
 				invalidateAll();
@@ -154,7 +140,6 @@
 			}
 		}
 	}
-
 	async function eliminarRelacion() {
 		const confirmar = window.confirm(
 			'¿Estás seguro de que deseas continuar? Esto podría eliminar las relaciones con oportunidades.'
@@ -183,7 +168,6 @@
 			mensaje = error instanceof Error ? error.message : 'Error al eliminar relación';
 		}
 	}
-
 	async function eliminarPedido(id_pedido: string) {
 		try {
 			const formData = new FormData();
@@ -214,48 +198,17 @@
 			currencyDisplay: 'narrowSymbol'
 		}).format(val);
 	};
+	onMount(() => {
+		console.log('oportunidades: ', oportunidades, oportunidades.length);
+		if (oportunidades.length == 1) {
+			StoreContextoRelacion.setOportunidad(oportunidades[0]);
+		}
+	});
 </script>
-
-{#if StorePedidoNuevo.carrito.length == 0}
-	<button class="butter agregar-producto" onclick={() => goto('/catalogo')}
-		>+Agregar producto</button
-	>
-	<p class="estado-vacio">No hay productos seleccionados</p>
-{/if}
-{#if StorePedidoEditar.carrito.length == 0}
-	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}>+Agregar Pedido</button>
-	<p class="estado-vacio">No hay pedidos seleccionados</p>
-{/if}
 
 <!-- pedidos a editar -->
 {#if StorePedidoEditar.carrito.length > 0}
 	<div class="tarjeta-editar-pedido">
-		<div class="encabezado">
-			<button
-				class="butter honey"
-				type="button"
-				aria-label="Limpiar"
-				title="Limpiar"
-				onclick={StorePedidoEditar.limpiar}
-			>
-				✕
-			</button>
-			<div class="badge" style={fasesPedido[2]?.estilo}>
-				<span>Potencial de Venta</span>
-			</div>
-			<div class="acciones">
-				{#if existeRelacionOportunidad}
-					<button
-						class="butter honey"
-						onclick={eliminarRelacion}
-						aria-label="Eliminar relación"
-						title="Eliminar relación"
-					>
-						<img src="/remove.svg" alt="Elimininar relacion" />
-					</button>
-				{/if}
-			</div>
-		</div>
 		<div class="lista-tarjetas">
 			{#each pedidos as pedido (pedido.id)}
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -269,7 +222,7 @@
 							<div>
 								<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
 								<div class="row enlaces">
-									{#if pedido.id_oportunidad}
+									{#if oportunidades.length > 1}
 										<a
 											href="/oportunidades/{pedido.id_oportunidad}"
 											onclick={(e) => e.stopPropagation()}
@@ -401,9 +354,36 @@
 		{/each}
 	</div>
 {/if}
+{#if StorePedidoEditar.carrito.length == 0}
+	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}>+Agregar Pedido</button>
+	<p class="estado-vacio">No hay pedidos seleccionados</p>
+{/if}
+{#if StorePedidoNuevo.carrito.length == 0}
+	<button class="butter agregar-producto" onclick={() => goto('/catalogo')}
+		>+Agregar producto</button
+	>
+	<p class="estado-vacio">No hay productos seleccionados</p>
+{/if}
 
 <!-- ACCIONES GLOBALES -->
 <div class="acciones-fijas">
+	<button
+		class="butter"
+		type="button"
+		aria-label="Limpiar"
+		title="Limpiar"
+		onclick={limpiarCarritoCompleto}
+	>
+		Limpiar
+	</button>
+	<button
+		class="butter"
+		onclick={eliminarRelacion}
+		aria-label="Eliminar relación"
+		title="Eliminar relación"
+	>
+		<img src="/remove.svg" alt="Elimininar relacion" />
+	</button>
 	<button class="butter" onclick={editarBorrador} disabled={actualizando}>
 		{actualizando ? 'Actualizando...' : 'Guardar Cambios'}
 	</button>
@@ -454,7 +434,6 @@
 		grid-column: span 2;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-		gap: var(--a) 0;
 	}
 	.tarjeta .meta .titulo {
 		grid-column: span 3;

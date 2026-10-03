@@ -105,7 +105,7 @@ export const actions: Actions = {
 		const payload = carrito.map((item) => ({
 			id_producto: item.id,
 			cantidad: item.cantidad,
-			fase: idOportunidad?2:1,
+			fase: idOportunidad ? 2 : 1,
 			id_agrupacion,
 			id_oportunidad: idOportunidad
 		}));
@@ -122,6 +122,92 @@ export const actions: Actions = {
 		}
 
 		return { success: true, result };
+	},
+	descartar: async ({ request, locals: { supabase, user } }) => {
+		if (!user) {
+			return fail(401, {
+				error: 'No autorizado'
+			});
+		}
+
+		const formData = await request.formData();
+		const pedidosRaw = formData.get('pedidosAActualizar');
+
+		if (typeof pedidosRaw !== 'string' || !pedidosRaw.trim()) {
+			return fail(400, {
+				error: 'No se recibieron pedidos para descartar'
+			});
+		}
+
+		let pedidosAActualizar: unknown;
+
+		try {
+			pedidosAActualizar = JSON.parse(pedidosRaw);
+		} catch {
+			return fail(400, {
+				error: 'Los pedidos enviados no tienen un formato válido'
+			});
+		}
+
+		if (!Array.isArray(pedidosAActualizar)) {
+			return fail(400, {
+				error: 'La lista de pedidos no es válida'
+			});
+		}
+
+		const ids = [
+			...new Set(
+				pedidosAActualizar
+					.map((pedido: any) => pedido?.id)
+					.filter((id): id is string => typeof id === 'string' && id.length > 0)
+			)
+		];
+
+		if (ids.length === 0) {
+			return fail(400, {
+				error: 'No se recibieron IDs de pedidos válidos'
+			});
+		}
+
+		console.log('Pedidos a descartar:', ids);
+
+		/*
+		 * Actualización masiva.
+		 *
+		 * En lugar de hacer un UPDATE por cada pedido con Promise.all,
+		 * Supabase ejecuta una sola operación sobre todos los IDs.
+		 */
+		const { data, error } = await supabase
+			.from('pedidos')
+			.update({
+				fase: 0
+			})
+			.in('id', ids)
+			.select('id, fase');
+
+		if (error) {
+			console.error('Error al descartar pedidos:', error);
+
+			return fail(500, {
+				error: error.message
+			});
+		}
+
+		/*
+		 * Verificamos que Supabase realmente haya actualizado
+		 * todos los pedidos solicitados.
+		 */
+		if (!data || data.length !== ids.length) {
+			return fail(409, {
+				error:
+					'No fue posible descartar todos los pedidos seleccionados. Algunos pedidos no existen o no pueden actualizarse.'
+			});
+		}
+
+		return {
+			success: true,
+			actualizados: data
+		};
 	},
 	eliminarRelacion: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();

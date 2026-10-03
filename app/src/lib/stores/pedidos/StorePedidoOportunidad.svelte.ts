@@ -2,209 +2,228 @@ import { browser } from '$app/environment';
 import { getCookieJSON, setCookieJSON } from '$lib/utils/cookies';
 
 interface Elemento {
-    id: string;
-}
-
-interface PedidoEditar {
-    modal: boolean;
-    carrito: Elemento[];
+	id: string;
 }
 
 interface Cotizado {
-    id: string;
-    stock?: boolean;
+	id: string;
+	stock?: boolean;
+	serial?: string;
+}
+
+interface PedidoEditar {
+	modal: boolean;
+	carrito: Elemento[];
 }
 
 interface PedidoACotizar {
-    modal: boolean;
-    carrito: Cotizado[];
+	modal: boolean;
+	carrito: Cotizado[];
 }
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 const defaultState: PedidoEditar = {
-    modal: false,
-    carrito: []
+	modal: false,
+	carrito: []
 };
 
 function getInitialState(cookie: string): PedidoEditar {
-    if (!browser) return structuredClone(defaultState);
+	if (!browser) return structuredClone(defaultState);
 
-    return getCookieJSON<PedidoEditar>(cookie) ?? structuredClone(defaultState);
+	return getCookieJSON<PedidoEditar>(cookie) ?? structuredClone(defaultState);
 }
 
 function crearPedido(cookie: string) {
-    let state = $state<PedidoEditar>(getInitialState(cookie));
+	let state = $state<PedidoEditar>(getInitialState(cookie));
 
-    function saveToCookie() {
-        if (!browser) return;
+	function saveToCookie() {
+		if (!browser) return;
 
-        setCookieJSON(cookie, state, {
-            maxAge: COOKIE_MAX_AGE
-        });
-    }
+		setCookieJSON(cookie, state, {
+			maxAge: COOKIE_MAX_AGE
+		});
+	}
 
-    function toggleModal(estado?: boolean) {
-        if (estado !== undefined) {
-            state.modal = estado;
-        } else {
-            state.modal = !state.modal;
-        }
+	function toggleModal(estado?: boolean) {
+		if (estado !== undefined) {
+			state.modal = estado;
+		} else {
+			state.modal = !state.modal;
+		}
 
-        saveToCookie();
-    }
+		saveToCookie();
+	}
 
-    function push(id: string) {
-        const elemento = state.carrito.find((item) => item.id === id);
+	function push(id: string) {
+		const elemento = state.carrito.find((item) => item.id === id);
 
-        if (!elemento) {
-            state.carrito.push({
-                id
-            });
-        }
+		if (!elemento) {
+			state.carrito.push({
+				id
+			});
+		}
 
-        saveToCookie();
-    }
+		saveToCookie();
+	}
 
-    function pushLista(lista: Record<string, any>[]) {
-        lista.forEach((elemento) => {
-            if (!elemento.id) return;
+	function pushLista(lista: Record<string, any>[]) {
+		lista.forEach((elemento) => {
+			if (!elemento.id) return;
 
-            const existe = state.carrito.some((item) => item.id === elemento.id);
+			const existe = state.carrito.some((item) => item.id === elemento.id);
 
-            if (!existe) {
-                state.carrito.push({
-                    id: elemento.id
-                });
-            }
-        });
+			if (!existe) {
+				state.carrito.push({
+					id: elemento.id
+				});
+			}
+		});
 
-        saveToCookie();
-    }
+		saveToCookie();
+	}
 
-    function pop(id: string) {
-        const index = state.carrito.findIndex((item) => item.id === id);
+	function pop(id: string) {
+		const index = state.carrito.findIndex((item) => item.id === id);
 
-        if (index !== -1) {
-            state.carrito.splice(index, 1);
-        }
+		if (index !== -1) {
+			state.carrito.splice(index, 1);
+		}
 
-        saveToCookie();
-    }
+		saveToCookie();
+	}
 
-    function limpiar() {
-        state.carrito = [];
-    }
+	function limpiar() {
+		state.carrito = [];
+	}
 
-    function reset() {
-        state.modal = false;
-        state.carrito = [];
+	function reset() {
+		state.modal = false;
+		state.carrito = [];
 
-        saveToCookie();
-    }
+		saveToCookie();
+	}
 
-    return {
-        get modal() {
-            return state.modal;
-        },
+	return {
+		get modal() {
+			return state.modal;
+		},
 
-        get carrito() {
-            return state.carrito;
-        },
-        push,
-        pushLista,
-        pop,
-        toggleModal,
-        limpiar,
-        reset
-    };
+		get carrito() {
+			return state.carrito;
+		},
+		push,
+		pushLista,
+		pop,
+		toggleModal,
+		limpiar,
+		reset
+	};
 }
 
 function crearVenta(cookie: string) {
-    let state = $state<PedidoACotizar>(getInitialState(cookie));
+	let state = $state<PedidoACotizar>(getInitialState(cookie));
 
-    function saveToCookie() {
-        if (!browser) return;
+	function saveToCookie() {
+		if (!browser) return;
 
-        setCookieJSON(cookie, state, {
-            maxAge: COOKIE_MAX_AGE
-        });
-    }
+		setCookieJSON(cookie, state, {
+			maxAge: COOKIE_MAX_AGE
+		});
+	}
 
-    function toggleModal(estado?: boolean) {
-        if (estado !== undefined) {
-            state.modal = estado;
-        } else {
-            state.modal = !state.modal;
-        }
+	function toggleModal(estado?: boolean) {
+		if (estado !== undefined) {
+			state.modal = estado;
+		} else {
+			state.modal = !state.modal;
+		}
 
-        saveToCookie();
-    }
+		saveToCookie();
+	}
 
-    function push(id: string) {
-        const elemento = state.carrito.find((item) => item.id === id);
+	function push(id: string, stock?: boolean, serial?: string) {
+		const elemento = state.carrito.find((item) => item.id === id);
 
-        if (!elemento) {
-            state.carrito.push({
-                id
-            });
-        }
+		if (!elemento) {
+			state.carrito.push({
+				id,
+				stock,
+				serial
+			});
+		}
+		console.log('push', id, stock, serial, state.carrito);
 
-        saveToCookie();
-    }
+		saveToCookie();
+	}
 
-    function pushLista(lista: Record<string, any>[]) {
-        lista.forEach((elemento) => {
-            if (!elemento.id) return;
+	function pushLista(lista: Record<string, any>[]) {
+		lista.forEach((elemento) => {
+			if (!elemento.id) return;
 
-            const existe = state.carrito.some((item) => item.id === elemento.id);
+			const existe = state.carrito.some((item) => item.id === elemento.id);
 
-            if (!existe) {
-                state.carrito.push({
-                    id: elemento.id
-                });
-            }
-        });
+			if (!existe) {
+				state.carrito.push({
+					id: elemento.id
+				});
+			}
+		});
 
-        saveToCookie();
-    }
+		saveToCookie();
+	}
 
-    function pop(id: string) {
-        const index = state.carrito.findIndex((item) => item.id === id);
+	function popLista(lista: Record<string, any>[]) {
+		lista.forEach((elemento) => {
+			if (!elemento.id) return;
 
-        if (index !== -1) {
-            state.carrito.splice(index, 1);
-        }
+			const index = state.carrito.findIndex((item) => item.id === elemento.id);
 
-        saveToCookie();
-    }
+			if (index !== -1) {
+				state.carrito.splice(index, 1);
+			}
+		});
 
-    function limpiar() {
-        state.carrito = [];
-    }
+		saveToCookie();
+	}
 
-    function reset() {
-        state.modal = false;
-        state.carrito = [];
+	function pop(id: string) {
+		const index = state.carrito.findIndex((item) => item.id === id);
 
-        saveToCookie();
-    }
+		if (index !== -1) {
+			state.carrito.splice(index, 1);
+		}
 
-    return {
-        get modal() {
-            return state.modal;
-        },
+		saveToCookie();
+	}
 
-        get carrito() {
-            return state.carrito;
-        },
-        push,
-        pushLista,
-        pop,
-        toggleModal,
-        limpiar,
-        reset
-    };
+	function limpiar() {
+		state.carrito = [];
+	}
+
+	function reset() {
+		state.modal = false;
+		state.carrito = [];
+
+		saveToCookie();
+	}
+
+	return {
+		get modal() {
+			return state.modal;
+		},
+
+		get carrito() {
+			return state.carrito;
+		},
+		push,
+		pushLista,
+		pop,
+		popLista,
+		toggleModal,
+		limpiar,
+		reset
+	};
 }
 
 export const StorePotencialVenta = crearPedido('PedidoPotencialVenta');

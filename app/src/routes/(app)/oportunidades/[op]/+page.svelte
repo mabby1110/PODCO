@@ -143,7 +143,7 @@
 
 				<div class="content">
 					{#if oportunidad.pedidos.length > 0}
-						<TarjetaPedidoLista pedidos={oportunidad.pedidos} disable />
+						<TarjetaPedidoPotencial {oportunidad} {editando} disable/>
 						{#if editando}
 							<button onclick={editarPedido}>~Editar</button>
 						{/if}
@@ -163,10 +163,7 @@
 
 				<div class="block">
 					{#if potencial_venta}
-						<TarjetaPedidoPotencial {oportunidad} />
-						{#if editando}
-							<button class="butter" onclick={editarPedido}>~Editar</button>
-						{/if}
+						<TarjetaPedidoPotencial {oportunidad} {editando}/>
 					{:else}
 						<button class="butter" onclick={relacionarPedido}>+Potencial de venta</button>
 					{/if}
@@ -180,7 +177,7 @@
 
 				<div class="block">
 					{#if oportunidad.pedidos.length > 0}
-						<TarjetaPedidoCotizado {oportunidad} />
+						<TarjetaPedidoCotizado {oportunidad} disable/>
 					{/if}
 				</div>
 			</section>
@@ -254,7 +251,7 @@
 			<div class="header">
 				<h3>Historia:</h3>
 			</div>
-			<div class="content">
+			<div class="block">
 				<Entradas
 					{editando}
 					historia={oportunidad?.historia}

@@ -1,7 +1,6 @@
 <!-- SelecciónCotizacion.svelte -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import SubirCotizacion from '../Documentos/SubirCotizacion.svelte';
 	import { fasesPedido } from '$lib';
 	import { StoreVenta } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
@@ -28,9 +27,7 @@
 				}
 
 				acc[clave].pedidos.push(pedido);
-				if (StoreVenta.carrito.some((p) => p.id === pedido.id)) {
-					acc[clave].totalGrupo += (pedido.precio_unitario || 0) * (pedido.cantidad || 0);
-				}
+				acc[clave].totalGrupo += (pedido.precio_unitario || 0) * (pedido.cantidad || 0);
 
 				return acc;
 			},
@@ -154,21 +151,6 @@
 						<span class="precio" class:text-danger={pedido.precio_unitario == null}>
 							{pedido.cantidad} x {formatMoneda(pedido.precio_unitario, pedido.moneda)}
 						</span>
-						<select
-							class="select-estado {estadoPedido}"
-							value={estadoPedido}
-							onchange={(e) => {
-								e.stopPropagation();
-								cambiarEstadoPedido(pedido.id, e.currentTarget.value);
-							}}
-							onclick={(e) => {
-								e.stopPropagation();
-							}}
-						>
-							<option value="ninguno">Sin seleccionar</option>
-							<option value="pedido">Sobre pedido</option>
-							<option value="stock">En stock</option>
-						</select>
 						{#if estadoPedido == 'stock'}
 							apartar
 						{/if}
@@ -222,7 +204,7 @@
 						{/if}
 					</div>
 				{/if}
-				<hr>
+				<hr />
 			{/each}
 
 			<!-- Validaciones y Totales POR GRUPO -->

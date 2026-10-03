@@ -12,7 +12,7 @@
 	let {
 		tipo = 'files',
 		oportunidad,
-		action = '/documentos?/subirAdjunto',
+		action = '/documentos?/subirOcc',
 		required = false,
 		disabled = false,
 		submitLabel = 'Guardar'
@@ -30,7 +30,7 @@
 	let formEl: HTMLFormElement;
 	let isDragging = $state(false);
 	let isSubmitting = $state(false);
-	let pedidosAActualizar = $derived(
+	let pedidosACrear = $derived(
 		StoreVenta.carrito
 			.map((item) => {
 				const pedidoData = page.data.pedidos.find((p) => p.id === item.id);
@@ -38,7 +38,8 @@
 
 				return {
 					...pedidoData,
-					stock: item.stock
+					stock: item.stock,
+					serial: item.serial || null
 				};
 			})
 			.filter((p) => p !== null)
@@ -73,7 +74,8 @@
 
 		try {
 			const formData = new FormData(formEl);
-			formData.append('pedidosAActualizar', JSON.stringify(pedidosAActualizar));
+			console.log(pedidosACrear);
+			formData.append('pedidosACrear', JSON.stringify(pedidosACrear));
 
 			// Si hay un archivo seleccionado, lo agregas al formData
 			if (item) {
@@ -125,26 +127,6 @@
 	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
 
 	<div class="upload-container">
-		<div class="drop-zone" class:dragging={isDragging}>
-			<span class="drop-text">subir cotizacion</span>
-			<input
-				bind:this={inputEl}
-				type="file"
-				class="file-input"
-				required={required && item === null}
-				onchange={handleChange}
-				ondragover={() => {
-					if (!disabled) isDragging = true;
-				}}
-				ondragleave={() => {
-					isDragging = false;
-				}}
-				ondrop={() => {
-					isDragging = false;
-				}}
-			/>
-		</div>
-
 		{#if item}
 			<div class="files">
 				<div class="item">
@@ -164,6 +146,26 @@
 						{submitLabel}
 					{/if}
 				</button>
+			</div>
+		{:else}
+			<div class="drop-zone" class:dragging={isDragging}>
+				<span class="drop-text">subir cotizacion</span>
+				<input
+					bind:this={inputEl}
+					type="file"
+					class="file-input"
+					required={required && item === null}
+					onchange={handleChange}
+					ondragover={() => {
+						if (!disabled) isDragging = true;
+					}}
+					ondragleave={() => {
+						isDragging = false;
+					}}
+					ondrop={() => {
+						isDragging = false;
+					}}
+				/>
 			</div>
 		{/if}
 	</div>

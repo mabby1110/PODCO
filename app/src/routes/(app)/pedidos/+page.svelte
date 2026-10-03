@@ -11,8 +11,9 @@
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
-	let pedidos = $derived(page.data.pedidos.filter((p) => p.fase <= 2));
+	let pedidos = $derived(page.data.pedidos.filter((p) => $profile?.isAdmin??p.fase <= 2));
 
 	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
@@ -54,7 +55,7 @@
 	{/snippet}
 	{#snippet contenido()}
 		{#if !isGrouped}
-			<TarjetaPedidoLista pedidos={lista_ordenada} />
+			<TarjetaPedidoLista {pedidos}/>
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={show}>

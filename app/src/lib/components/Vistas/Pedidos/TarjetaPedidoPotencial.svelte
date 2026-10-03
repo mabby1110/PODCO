@@ -9,7 +9,11 @@
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { goto } from '$app/navigation';
 
-	let { oportunidad } = $props();
+	let {
+		oportunidad,
+		editando,
+		disable
+	}: { oportunidad: undefined; editando?: boolean; disable?: boolean } = $props();
 
 	// DATOS DERIVADOS
 	let potencial_venta = $derived(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
@@ -43,11 +47,11 @@
 		} else {
 			StoreCotizado.push(id);
 		}
-	};
+	}
 
 	function seleccionarPedidoCompleto() {
 		StoreCotizado.pushLista(potencial_venta);
-	};
+	}
 
 	// HELPERS
 	const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
@@ -66,7 +70,7 @@
 		StoreContextoRelacion.setOportunidad(oportunidad.id);
 		await goto('/pedidos');
 		StorePedidoEditar.toggleModal(true);
-	};
+	}
 
 	onMount(() => {
 		console.log(oportunidad.pedidos.filter((p) => p.id_cotizacion));
@@ -160,29 +164,34 @@
 		{/if}
 	</div>
 	<div class="acciones-panel">
-		{#if StoreCotizado.carrito.length > 0}
-			{#if pedidoACotizarInvalido}
-				<button class="alerta-error" onclick={editarPedido}>
-					<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Presiona
-					para editar.
-				</button>
-			{:else}
-				<SubirCotizacion
-					tipo="docs_cotizaciones"
-					action="/documentos?/subirCotizacion"
-					oportunidad={{
-						id: oportunidad?.id,
-						cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
-					}}
-					required
-				/>
+		{#if !disable}
+			{#if StoreCotizado.carrito.length > 0}
+				{#if pedidoACotizarInvalido}
+					<button class="alerta-error" onclick={editarPedido}>
+						<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Presiona
+						para editar.
+					</button>
+				{:else}
+					<SubirCotizacion
+						tipo="docs_cotizaciones"
+						action="/documentos?/subirCotizacion"
+						oportunidad={{
+							id: oportunidad?.id,
+							cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
+						}}
+						required
+					/>
+				{/if}
+			{:else if potencial_venta.length > 0}
+				<div class="acciones-fijas">
+					<button class="butter" onclick={seleccionarPedidoCompleto}>
+						Seleccionar todo para cotizar
+					</button>
+					{#if editando}
+						<button class="butter" onclick={editarPedido}>~Editar</button>
+					{/if}
+				</div>
 			{/if}
-		{:else if potencial_venta.length > 0}
-			<div class="acciones-fijas">
-				<button class="butter" onclick={seleccionarPedidoCompleto}>
-					Seleccionar todo para cotizar
-				</button>
-			</div>
 		{/if}
 	</div>
 </div>
@@ -313,6 +322,7 @@
 	.acciones-fijas {
 		display: flex;
 		justify-content: flex-end;
+		gap: var(--a);
 	}
 
 	.alerta-error {
