@@ -28,7 +28,7 @@
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 </script>
 
-<Vista>
+<Vista titulo='Catalogo'>
 	{#snippet acciones()}
 		<Searchbar data={catalogo} keyColumns={['codigo']} bind:lista />
 		<button onclick={() => appState.toggleModalProducto()} class="butter">+Producto Nuevo</button>

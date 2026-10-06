@@ -29,7 +29,7 @@
 		background: var(--color-primary);
 		backdrop-filter: blur(4px);
 		border: 1px solid var(--color-muted);
-		border-radius: 0 var(--a) var(--a) 0;
+		border-radius: var(--a);
 		padding: var(--a);
 		display: flex;
 		flex-direction: column;

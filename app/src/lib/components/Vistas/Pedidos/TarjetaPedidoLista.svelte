@@ -5,7 +5,7 @@
 	import { fasesPedido } from '$lib';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 
-	let { pedidos, disable } = $props();
+	let { pedidos, disable }: { pedidos: any; disable?: boolean } = $props();
 
 	// Datos derivados
 	let pedidosAgrupados = $derived.by(() => {
@@ -38,6 +38,8 @@
 
 		return Object.values(grupos);
 	});
+	let oportunidades = $derived(pedidos.filter(p=>p.id_oportunidad!=null));
+	console.log('oportunidades', oportunidades);
 
 	// ACCIONES
 	function editarPedido(id: string, id_oportunidad: string) {
@@ -47,6 +49,11 @@
 		if (id_oportunidad) {
 			StoreContextoRelacion.setOportunidad(id_oportunidad);
 		}
+	}
+	function editarPedidoCompleto(pedidos: any) {
+	    goto('/pedidos');
+	    StorePedidoEditar.pushLista(pedidos);
+	    StorePedidoEditar.toggleModal(true);
 	}
 
 	// estados del componente
@@ -66,21 +73,16 @@
 	};
 
 	$effect(() => console.log(pedidosAgrupados));
-	// function editarPedidoCompleto() {
-	//     goto('/pedidos');
-	//     StorePedidoEditar.pushLista(pedidos);
-	//     StorePedidoEditar.toggleModal(true);
-	// }
 </script>
 
 {#each pedidosAgrupados as grupo}
-	<div class="cotizacion-container">
+	<div class="contenedor-lista">
 		<div class="meta-titulo">
 			{#if grupo.id_agrupacion !== 'sin_agrupar'}
 				<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
 			{/if}
 		</div>
-		<div class="lista-tarjetas">
+		<div class="lista">
 			{#each grupo.pedidos as pedido (pedido.id)}
 				<div class="contenedor-pedido">
 					<!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -153,14 +155,14 @@
 					{/if} -->
 				</div>
 				<div class="acciones-fijas">
-					<!-- <button
+					<button
 						class="butter"
 						type="button"
 						disabled={actualizando}
-						onclick={() => descartarGrupo(grupo.pedidos)}
+						onclick={()=>editarPedidoCompleto(grupo.pedidos)}
 					>
-						{actualizando ? 'Descartando...' : 'Descartar'}
-					</button> -->
+						Seleccionar
+					</button>
 				</div>
 			</div>
 		{/if}
@@ -168,17 +170,16 @@
 {/each}
 
 <style>
-	.cotizacion-container {
-		flex-grow: 1;
+	.contenedor-lista {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
 		padding: 16px;
 		border: 2px solid var(--color-muted);
-		border-radius: 32px;
+		border-radius: var(--b);
 	}
 
-	.lista-tarjetas {
+	.lista {
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;
@@ -190,7 +191,9 @@
 		align-items: baseline;
 		border: none;
 	}
-
+	.contenedor-pedido {
+		height: fit-content;
+	}
 	.tarjeta.invalid {
 		border-radius: 8px;
 		background: #fff7f7;

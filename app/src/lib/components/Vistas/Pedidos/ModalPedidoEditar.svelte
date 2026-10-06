@@ -62,7 +62,6 @@
 		initialY = y;
 	}
 
-	// Nueva función para iniciar el redimensionamiento
 	function onResizeMouseDown(event: MouseEvent) {
 		if (isMaximized) return;
 		event.stopPropagation();
@@ -95,6 +94,7 @@
 			calculateQuadrant();
 		}
 	}
+
 	$effect(() => {
 		if (StorePedidoEditar.modal) {
 			// Resetea las medidas originales al abrir
@@ -156,41 +156,41 @@
 {/if}
 
 <style>
-	/* Agregados para redimensionar */
 	.resize-handle {
 		position: absolute;
 		bottom: 0;
-		left: 0;
+		left: 50px;
 		width: 40px;
 		height: 40px;
 		z-index: 100;
-		/* Sustituye el cursor por el ícono convertido a data URI usando CSS puro */
-		cursor:
-			sw-resize;
+		cursor: sw-resize;
 		user-select: none;
 	}
 
-	/* Mantiene el cursor modificado solo al redimensionar */
 	:global(body.resizing) {
-		cursor:
-			sw-resize !important;
+		cursor: sw-resize !important;
 	}
 
-	/* === TUS ESTILOS ORIGINALES INTACTOS === */
 	.panel-controls {
 		position: fixed;
-		top: 0;
+		top: var(--b);
+		left: 0;
 		right: 0;
-		max-width: 600px;
+
 		width: 100%;
+		max-width: 600px;
+		margin-inline: auto;
+
 		height: fit-content;
 		max-height: 80%;
 		min-height: var(--g);
+
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;
 		z-index: 99;
 	}
+
 	.header-actions:active {
 		cursor: grabbing;
 	}
@@ -219,7 +219,6 @@
 		padding: 0 var(--a);
 	}
 
-	/* Reglas para la ventana maximizada */
 	.maximized {
 		position: fixed !important;
 		top: 0 !important;

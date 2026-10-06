@@ -1,10 +1,20 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import type { Snippet } from 'svelte';
 
-	let { acciones, contenido }: { acciones: Snippet; contenido: Snippet } = $props();
+	let {
+		titulo,
+		acciones,
+		contenido
+	}: { titulo?: string; acciones: Snippet; contenido: Snippet } = $props();
 </script>
 
 <div class="vista">
+	{#if titulo}
+		<div class="titulo-vista">
+			<h1>{titulo}</h1>
+		</div>
+	{/if}
 	{#if contenido}
 		{@render contenido()}
 	{/if}
@@ -16,6 +26,12 @@
 </div>
 
 <style>
+	.titulo-vista {
+		min-height: 30vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 	.vista {
 		position: relative;
 		width: 100%;

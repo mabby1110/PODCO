@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { appState } from "$lib/stores/appState.svelte";
-	import Logout from "./Logout.svelte";
-	import ControlsPanel from "$lib/components/Acciones/ControlsPanel.svelte";
-	import { slide } from "svelte/transition";
+	import { appState } from '$lib/stores/appState.svelte';
+	import Logout from './Logout.svelte';
+	import ControlsPanel from '$lib/components/Acciones/ControlsPanel.svelte';
+	import { slide } from 'svelte/transition';
 
 	let expanded = $derived($appState.pageActions);
 	let show = $state(false);
@@ -58,8 +58,8 @@
 <style>
 	.nav-container {
 		position: fixed;
-		bottom: 0;
-		left: 0;
+		bottom: var(--a);
+		left: var(--a);
 		z-index: 1000;
 		display: flex;
 		flex-direction: column;
@@ -92,7 +92,6 @@
 			transform 0.1s;
 		box-shadow: none;
 		background-color: var(--color-primary);
-		border-radius: 0 var(--a) 0 0;
 	}
 
 	.logo {

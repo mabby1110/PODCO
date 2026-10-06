@@ -24,7 +24,9 @@
 			0
 		)
 	);
-	let oportunidades = $derived(pedidos.map((p) => p.id_oportunidad) as string[]);
+	let oportunidades = $derived(
+		Array.from(new Set(pedidos.map((p) => p.id_oportunidad))) as string[]
+	);
 	let idAgrupaciones = $derived([
 		...new Set(pedidos.map((pedido) => pedido.id_agrupacion).filter(Boolean))
 	]);
@@ -32,7 +34,7 @@
 	// ESTADOS
 	let actualizando = $state(false);
 	let mensaje = $state('');
-	let expandidos = $state<Record<string, boolean>>({}); // Controla el "leer más" por tarjeta
+	let expandidos = $state<Record<string, boolean>>({});
 	let pedidoACotizarInvalidoPorMoneda = $derived(
 		pedidos.some((p) => p.moneda == 'USD') && pedidos.some((p) => p.moneda == 'MX')
 	);
@@ -214,106 +216,52 @@
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
 				<div class="tarjeta honey">
-					<div class="meta">
-						<div class="titulo">
-							<button class="butter honey" onclick={() => StorePedidoEditar.pop(pedido.id)}
-								>✕</button
-							>
-							<div>
-								<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
-								<div class="row enlaces">
-									{#if oportunidades.length > 1}
-										<a
-											href="/oportunidades/{pedido.id_oportunidad}"
-											onclick={(e) => e.stopPropagation()}
-										>
-											Op {pedido.oportunidades?.clientes?.razon_social ||
-												pedido.oportunidades?.clientes?.nombre_comercial}
-										</a>
-									{/if}
-								</div>
+					<div class="titulo">
+						<button class="butter honey" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
+						<div>
+							<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
+							<div class="row enlaces">
+								{#if oportunidades.length > 1}
+									<a
+										href="/oportunidades/{pedido.id_oportunidad}"
+										onclick={(e) => e.stopPropagation()}
+									>
+										Op {pedido.oportunidades?.clientes?.razon_social ||
+											pedido.oportunidades?.clientes?.nombre_comercial}
+									</a>
+								{/if}
 							</div>
-						</div>
-
-						<span class="inputs" class:text-danger={pedido.precio_unitario == null}>
-							<label class="input-group">
-								<span class="label-text">Cantidad</span>
-								<input
-									type="number"
-									min="0"
-									step="1"
-									class="input-sm"
-									bind:value={pedido.cantidad}
-								/>
-							</label>
-
-							<label class="input-group">
-								<span class="label-text">P/U</span>
-								<input
-									type="number"
-									min="0"
-									step="0.01"
-									class="input-sm"
-									bind:value={pedido.precio_unitario}
-								/>
-							</label>
-							<label class="input-group">
-								<span class="label-text">Moneda</span>
-								<select class="select-sm" bind:value={pedido.moneda}>
-									<option value="MXN">MXN</option>
-									<option value="USD">USD</option>
-								</select>
-							</label>
-						</span>
-
-						<div class="butter resumen">
-							<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
 						</div>
 					</div>
 
-					<!-- Sección Colapsable: Leer Más -->
-					{#if pedido.catalogo?.descripcion || pedido.catalogo?.caracteristicas || pedido.observaciones}
-						<div class="detalles">
-							{#if expandidos[pedido.id]}
-								<div class="contenido-expandido" onclick={(e) => e.stopPropagation()}>
-									{#if pedido.catalogo.descripcion}
-										<p class="desc"><strong>Desc:</strong> {pedido.catalogo.descripcion}</p>
-									{/if}
-									{#if pedido.catalogo.caracteristicas}
-										<div class="jsonb">
-											<strong>Características:</strong>
-											<pre>{JSON.stringify(pedido.catalogo.caracteristicas, null, 2)}</pre>
-										</div>
-									{/if}
-									{#if pedido.oportunidades?.necesidades}
-										<p class="desc">
-											<strong>Necesidades:</strong>
-											{pedido.oportunidades.necesidades}
-										</p>
-									{/if}
-								</div>
-								<button
-									class="link-btn"
-									onclick={(e) => {
-										e.stopPropagation();
-										expandidos[pedido.id] = false;
-									}}
-								>
-									Ocultar detalles
-								</button>
-							{:else}
-								<button
-									class="link-btn"
-									onclick={(e) => {
-										e.stopPropagation();
-										expandidos[pedido.id] = true;
-									}}
-								>
-									Leer más detalles...
-								</button>
-							{/if}
-						</div>
-					{/if}
+					<span class="inputs" class:text-danger={pedido.precio_unitario == null}>
+						<label class="input-group">
+							<span class="label-text">Cantidad</span>
+							<input type="number" min="0" step="1" class="input-sm" bind:value={pedido.cantidad} />
+						</label>
+
+						<label class="input-group">
+							<span class="label-text">P/U</span>
+							<input
+								type="number"
+								min="0"
+								step="0.01"
+								class="input-sm"
+								bind:value={pedido.precio_unitario}
+							/>
+						</label>
+						<label class="input-group">
+							<span class="label-text">Moneda</span>
+							<select class="select-sm" bind:value={pedido.moneda}>
+								<option value="MXN">MXN</option>
+								<option value="USD">USD</option>
+							</select>
+						</label>
+					</span>
+
+					<div class="butter resumen">
+						<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
+					</div>
 				</div>
 			{/each}
 			<hr />
@@ -430,20 +378,20 @@
 		background-color: transparent;
 		backdrop-filter: none;
 	}
-	.tarjeta .meta {
+	.tarjeta {
 		grid-column: span 2;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 	}
-	.tarjeta .meta .titulo {
+	.tarjeta .titulo {
 		grid-column: span 3;
 		display: flex;
 		align-items: baseline;
 	}
-	.tarjeta .meta .titulo div {
+	.tarjeta .titulo div {
 		flex-grow: 1;
 	}
-	.tarjeta .meta .inputs {
+	.tarjeta .inputs {
 		grid-column: span 3;
 		display: flex;
 		padding-left: 32px;

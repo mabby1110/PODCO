@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { onNavigate } from '$app/navigation';
-	import NavButton from '$lib/components/Acciones/NavButton.svelte';
 	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte.js';
-	import ModalActividad from '$lib/components/Vistas/Actividad/ModalActividad.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte.js';
+	import NavButton from '$lib/components/Acciones/NavButton.svelte';
+	import ModalActividad from '$lib/components/Vistas/Actividad/ModalActividad.svelte';
 	import ModalOportunidad from '$lib/components/Vistas/Oportunidad/ModalOportunidad.svelte';
 	import ModalCliente from '$lib/components/Vistas/Cliente/ModalCliente.svelte';
 	import ModalInventario from '$lib/components/Vistas/Inventario/ModalInventario.svelte';
 	import ModalProducto from '$lib/components/Vistas/Catalogo/ModalProducto.svelte';
 	import ModalPedidoEditar from '$lib/components/Vistas/Pedidos/ModalPedidoEditar.svelte';
+	
 	let { children, data } = $props();
 
 	function handleKeyDown(event: KeyboardEvent) {

@@ -9,9 +9,9 @@
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
-	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
+	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
 
 	let pedidos = $derived(page.data.pedidos.filter((p) => $profile?.isAdmin??p.fase <= 2));
 
@@ -35,7 +35,7 @@
 	// HELPERS
 </script>
 
-<Vista>
+<Vista titulo="Pedidos">
 	{#snippet acciones()}
 		<Searchbar
 			data={pedidos}
