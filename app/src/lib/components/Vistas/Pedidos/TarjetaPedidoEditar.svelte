@@ -5,7 +5,6 @@
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
-	import { onMount } from 'svelte';
 
 	// DATOS DERIVADOS
 	let pedidosAEditar = $state(page.data.pedidos);
@@ -25,8 +24,11 @@
 		)
 	);
 	let oportunidades = $derived(
-		Array.from(new Set(pedidos.map((p) => p.id_oportunidad))) as string[]
+		Array.from(
+			new Set(pedidos.map((p) => p.id_oportunidad).filter((id): id is string => id != null))
+		)
 	);
+
 	let idAgrupaciones = $derived([
 		...new Set(pedidos.map((pedido) => pedido.id_agrupacion).filter(Boolean))
 	]);
@@ -200,10 +202,12 @@
 			currencyDisplay: 'narrowSymbol'
 		}).format(val);
 	};
-	onMount(() => {
+	$effect(() => {
 		console.log('oportunidades: ', oportunidades, oportunidades.length);
 		if (oportunidades.length == 1) {
 			StoreContextoRelacion.setOportunidad(oportunidades[0]);
+		} else if (oportunidades.length > 1) {
+			StoreContextoRelacion.limpiar();
 		}
 	});
 </script>
@@ -215,13 +219,13 @@
 			{#each pedidos as pedido (pedido.id)}
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
-				<div class="tarjeta honey">
+				<div class="tarjeta">
 					<div class="titulo">
-						<button class="butter honey" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
+						<button class="butter milk" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
 						<div>
 							<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
 							<div class="row enlaces">
-								{#if oportunidades.length > 1}
+								{#if pedido.id_oportunidad}
 									<a
 										href="/oportunidades/{pedido.id_oportunidad}"
 										onclick={(e) => e.stopPropagation()}
@@ -302,6 +306,8 @@
 		{/each}
 	</div>
 {/if}
+
+<!-- ACCIONES GLOBALES -->
 {#if StorePedidoEditar.carrito.length == 0}
 	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}>+Agregar Pedido</button>
 	<p class="estado-vacio">No hay pedidos seleccionados</p>
@@ -313,7 +319,6 @@
 	<p class="estado-vacio">No hay productos seleccionados</p>
 {/if}
 
-<!-- ACCIONES GLOBALES -->
 <div class="acciones-fijas">
 	<button
 		class="butter"
@@ -386,7 +391,6 @@
 	.tarjeta .titulo {
 		grid-column: span 3;
 		display: flex;
-		align-items: baseline;
 	}
 	.tarjeta .titulo div {
 		flex-grow: 1;
@@ -428,15 +432,6 @@
 		gap: var(--a);
 		align-items: baseline;
 	}
-	.badge {
-		border-radius: 99px;
-		background: #f1f5f9;
-		height: fit-content;
-		padding: 4px 8px;
-		text-align: center;
-		width: fit-content;
-		font-size: small;
-	}
 	.agregar-producto {
 		border: 1px dashed var(--color-secondary);
 		background-color: transparent;
@@ -444,38 +439,6 @@
 	}
 	.text-danger {
 		color: #ef4444;
-	}
-
-	/* Detalles expandibles */
-	.detalles {
-		margin-top: 0.25rem;
-		padding-top: 0.25rem;
-		border-top: 1px dashed #cbd5e1;
-	}
-	.contenido-expandido {
-		background: rgba(255, 255, 255, 0.6);
-		padding: 0.5rem;
-		border-radius: 4px;
-		margin-bottom: 0.5rem;
-	}
-	.desc {
-		margin: 0 0 0.4rem 0;
-		font-size: 0.8rem;
-	}
-	.jsonb pre {
-		margin: 0;
-		font-size: 0.75rem;
-		white-space: pre-wrap;
-		color: #475569;
-	}
-	.link-btn {
-		background: none;
-		border: none;
-		color: #3b82f6;
-		font-size: 0.8rem;
-		padding: 0;
-		cursor: pointer;
-		text-decoration: underline;
 	}
 
 	/* Acciones inferiores */

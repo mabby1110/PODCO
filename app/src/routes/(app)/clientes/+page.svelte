@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import Controles from '$lib/components/Acciones/Controles.svelte';
 	import ExportarCSV from '$lib/components/Acciones/ExportarCSV.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
@@ -19,7 +20,7 @@
 	// Convertido a $state para soportar bind:lista
 	let lista = $state(clientes);
 	let columnasDinamicas = $derived(extraerColumnas(clientes));
-	
+
 	$effect(() => {
 		lista = clientes;
 	});
@@ -33,16 +34,16 @@
 
 <Vista>
 	{#snippet acciones()}
-		<Searchbar data={clientes} keyColumns={columnasDinamicas.map((a) => a.key)} bind:lista />
-		<PanelFiltros>
+		<Controles>
 			{#snippet header()}
-				<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 				<ExportarCSV {lista_ordenada} />
+				<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 			{/snippet}
-			{#snippet controles()}
+			{#snippet acciones()}
 				<ModList {columnasDinamicas} route={currentRoute} ordenar agrupar />
+				<Searchbar data={clientes} keyColumns={columnasDinamicas.map((a) => a.key)} bind:lista />
 			{/snippet}
-		</PanelFiltros>
+		</Controles>
 	{/snippet}
 
 	{#snippet contenido()}

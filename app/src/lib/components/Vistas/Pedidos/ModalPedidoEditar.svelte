@@ -129,7 +129,7 @@
 		<div class="header-actions" onmousedown={onMouseDown}>
 			<p class="panel-title">Editar Pedido</p>
 			<button
-				class="butter honey max-window"
+				class="butter milk max-window"
 				type="button"
 				onclick={(e) => {
 					e.stopPropagation();
@@ -159,7 +159,6 @@
 	.resize-handle {
 		position: absolute;
 		bottom: 0;
-		left: 50px;
 		width: 40px;
 		height: 40px;
 		z-index: 100;
@@ -173,7 +172,7 @@
 
 	.panel-controls {
 		position: fixed;
-		top: var(--b);
+		top: var(--a);
 		left: 0;
 		right: 0;
 
@@ -229,7 +228,6 @@
 		z-index: 9999;
 		min-height: var(--g);
 	}
-
 	.maximized .header-actions {
 		cursor: default;
 	}

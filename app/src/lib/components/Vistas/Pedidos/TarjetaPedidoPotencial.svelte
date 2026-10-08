@@ -78,7 +78,7 @@
 	});
 </script>
 
-<div class="cotizacion-container">
+<div class="panel cotizacion-container">
 	<div class="badge" style={fasesPedido[2]?.estilo}>
 		<span>Potencial de Venta</span>
 	</div>
@@ -198,14 +198,11 @@
 
 <style>
 	.cotizacion-container {
+		padding: 16px 16px;
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
-		padding: 16px 16px;
-		border: 2px solid;
-		border-radius: 32px;
-		border-color: var(--color-muted);
 	}
 
 	.lista-tarjetas {

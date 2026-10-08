@@ -1,20 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import type { Snippet } from 'svelte';
+	import NavButton from '../Acciones/NavButton.svelte';
 
-	let {
-		titulo,
-		acciones,
-		contenido
-	}: { titulo?: string; acciones: Snippet; contenido: Snippet } = $props();
+	let { acciones, contenido }: { acciones: Snippet; contenido: Snippet } = $props();
 </script>
 
 <div class="vista">
-	{#if titulo}
-		<div class="titulo-vista">
-			<h1>{titulo}</h1>
-		</div>
-	{/if}
 	{#if contenido}
 		{@render contenido()}
 	{/if}
@@ -23,15 +14,10 @@
 	{#if acciones}
 		{@render acciones()}
 	{/if}
+	<NavButton />
 </div>
 
 <style>
-	.titulo-vista {
-		min-height: 30vh;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
 	.vista {
 		position: relative;
 		width: 100%;
@@ -41,20 +27,19 @@
 		flex-direction: column;
 		gap: var(--b);
 		padding: var(--a);
-		padding-bottom: var(--f);
+		padding-bottom: var(--e);
 	}
 	.controles {
 		position: fixed;
-		max-width: 70vw;
 		bottom: 0;
 		right: 0;
 		z-index: 88;
 		padding: var(--a);
 
 		display: flex;
-		flex-wrap: wrap;
 		gap: var(--a);
 		flex-wrap: wrap-reverse;
 		justify-content: flex-end;
+		align-items: center;
 	}
 </style>

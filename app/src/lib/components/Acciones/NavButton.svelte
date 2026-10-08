@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { appState } from '$lib/stores/appState.svelte';
-	import Logout from './Logout.svelte';
-	import ControlsPanel from '$lib/components/Acciones/ControlsPanel.svelte';
 	import { slide } from 'svelte/transition';
+	import { goto } from '$app/navigation';
 
 	let expanded = $derived($appState.pageActions);
 	let show = $state(false);
@@ -22,98 +21,55 @@
 			expanded = false;
 		}
 	}
+	const navigate = (path: string) => {
+		appState.togglePageActions();
+		goto(path);
+	};
 </script>
 
 <svelte:window onkeydown={handleKeyDown} />
 
 <div class="nav-container">
 	{#if expanded}
-		<div class="app-actions" in:slide>
-			<Logout />
-			<!-- <button class="butter honey  {show ? 'active' : ''}" onclick={() => (show = !show)}>
-				<img src="/notifications.svg" alt="options" />
-			</button> -->
-			<div class="content">
-				<!-- {#if show}
-					<PanelNotificaciones />
-				{:else}
-				{/if} -->
-				<ControlsPanel />
-			</div>
+		<div class="nav-links panel" in:slide>
+			<!-- {#if show}
+			<PanelNotificaciones />
+			{:else}
+			{/if} -->
+			<button onclick={() => navigate('/clientes')} class="butter milk"> 👨‍💼 Clientes </button>
+			<button onclick={() => navigate('/oportunidades')} class="butter milk">
+				📋 Oportunidades
+			</button>
+			<button onclick={() => navigate('/actividades')} class="butter milk"> ⚡ Actividades </button>
+			<button onclick={() => navigate('/calendario')} class="butter milk"> 📆 Calendario </button>
+			<button onclick={() => navigate('/pedidos')} class="butter milk"> 📦 Pedidos </button>
+			<button onclick={() => navigate('/inventario')} class="butter milk"> 🗄 Inventario </button>
+			<button onclick={() => navigate('/catalogo')} class="butter milk"> 📑 Catalogo </button>
+			<!-- <button onclick={() => navigate('/pedidos')} class="butter">
+				🛒 Pedidos
+				</button> -->
+			<!-- <button onclick={() => navigate('/estadisticas')} class="butter"> 📊 Estadisticas </button> -->
 		</div>
 	{/if}
-	<button onclick={togglePanel} class="home {expanded ? 'active' : ''}">
-		<div class="logo">
-			<img src="/bms-logo.svg" alt="BMS" />
-			{#if expanded}
-				<div class="title" in:slide={{ axis: 'x' }}>
-					<p>COMPONENTES Y EQUIPOS</p>
-					<p>INDUSTRIALES</p>
-				</div>
-			{/if}
-		</div>
+	<button onclick={togglePanel} class="home honey">
+		<img src="/bms-logo.svg" alt="BMS" />
 	</button>
 </div>
 
 <style>
 	.nav-container {
-		position: fixed;
-		bottom: var(--a);
-		left: var(--a);
 		z-index: 1000;
 		display: flex;
 		flex-direction: column;
-		gap: var(--a);
 		max-width: 100vw;
-	}
-	.app-actions {
-		display: flex;
-		gap: var(--a);
 		align-items: flex-end;
-		justify-content: space-between;
-		flex-wrap: wrap;
-		max-height: 90vh;
 	}
-	.app-actions .content {
-		width: 100%;
-		height: 100%;
-		max-height: 80vh;
-	}
-	.home {
-		background: var(--y2k);
-		backdrop-filter: blur(4px);
-		border: 1px solid var(--color-muted);
-		border-radius: var(--a);
-		cursor: pointer;
-		user-select: none;
-		padding: 4px var(--a);
-		transition:
-			background-color 0.2s,
-			transform 0.1s;
-		box-shadow: none;
-		background-color: var(--color-primary);
-	}
-
-	.logo {
+	.nav-links {
 		display: flex;
-		align-items: center;
-		gap: var(--b);
-	}
-
-	.logo img {
-		pointer-events: none;
-		height: 30px;
-	}
-
-	.title {
-		white-space: nowrap;
-	}
-
-	.title p {
-		margin: 0;
-		font-weight: 600;
-	}
-	.active {
-		width: 100%;
+		flex-direction: column;
+		min-width: var(--g);
+		position: absolute;
+		bottom: var(--e);
+		padding: var(--y) var(--a);
 	}
 </style>

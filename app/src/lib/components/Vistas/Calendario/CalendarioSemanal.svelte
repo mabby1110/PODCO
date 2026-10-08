@@ -21,6 +21,8 @@
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
+	import Controles from '$lib/components/Acciones/Controles.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));
@@ -144,52 +146,52 @@
 
 <Vista>
 	{#snippet acciones()}
-		<div class="calendar-navigation">
-			<button
-				onclick={() => (calendarStore.weekOffset -= 1)}
-				class="butter nav-btn"
-				title="Semana anterior"
-			>
-				←
-			</button>
-			<button onclick={() => (calendarStore.weekOffset = 0)} class="butter current-week">
-				{weekRangeText}
-			</button>
-			<button
-				onclick={() => (calendarStore.weekOffset += 1)}
-				class="butter nav-btn"
-				title="Semana siguiente"
-			>
-				→
-			</button>
-		</div>
-		<select
-			value={$appState.calendarView}
-			onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
-		>
-			<option value="gant">Gant Anual</option>
-			<option value="semanal">Semanal</option>
-		</select>
-		<select
-			value={$appState.calendarList}
-			onchange={(e) => appState.setCalendarList(e.currentTarget.value)}
-		>
-			<option value="" disabled>Todas</option>
-			<option value="actividades">Actividades</option>
-			<option value="oportunidades">Oportunidades</option>
-		</select>
-		<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-			{$appState.calendarCards ? 'Min' : 'Max'}
-		</button>
-		<PanelFiltros>
+		<Controles>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
-			{/snippet}
-			{#snippet controles()}
+				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button
+				>{/snippet}
+			{#snippet acciones()}
+				<select
+					value={$appState.calendarView}
+					onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
+				>
+					<option value="gant">Gant Anual</option>
+					<option value="semanal">Semanal</option>
+				</select>
+				<select
+					value={$appState.calendarList}
+					onchange={(e) => appState.setCalendarList(e.currentTarget.value)}
+				>
+					<option value="" disabled>Todas</option>
+					<option value="actividades">Actividades</option>
+					<option value="oportunidades">Oportunidades</option>
+				</select>
+				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+					{$appState.calendarCards ? 'Min' : 'Max'}
+				</button>
 				<ModList {columnasDinamicas} route={currentRoute} />
+				<div class="calendar-navigation">
+					<button
+						onclick={() => (calendarStore.weekOffset -= 1)}
+						class="honey nav-btn"
+						title="Semana anterior"
+					>
+						←
+					</button>
+					<button onclick={() => (calendarStore.weekOffset = 0)} class="honey current-week">
+						{weekRangeText}
+					</button>
+					<button
+						onclick={() => (calendarStore.weekOffset += 1)}
+						class="honey nav-btn"
+						title="Semana siguiente"
+					>
+						→
+					</button>
+				</div>
 			{/snippet}
-		</PanelFiltros>
+		</Controles>
 	{/snippet}
 	{#snippet contenido()}
 		<div
@@ -409,7 +411,7 @@
 		display: flex;
 		gap: var(--a);
 		flex-grow: 1;
-		width: var(--h);
+		width: 100%;
 		align-self: flex-end;
 	}
 </style>

@@ -12,6 +12,7 @@
 	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
+	import Controles from '$lib/components/Acciones/Controles.svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let show = $derived($appState.min);
@@ -33,21 +34,20 @@
 
 <Vista>
 	{#snippet acciones()}
-		<Searchbar
-			data={oportunidades}
-			keyColumns={categoriasOportunidad.map((c) => c.key).concat(['clientes'])}
-			bind:lista
-		/>
-		
-		<PanelFiltros>
+		<Controles>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 				<ExportarCSV lista_ordenada={lista_filtrada} />
 			{/snippet}
-			{#snippet controles()}
-                <ModList {columnasDinamicas} route={currentRoute} ordenar agrupar/>
+			{#snippet acciones()}
+				<Searchbar
+					data={oportunidades}
+					keyColumns={categoriasOportunidad.map((c) => c.key).concat(['clientes'])}
+					bind:lista
+				/>
+				<ModList {columnasDinamicas} route={currentRoute} ordenar agrupar />
 			{/snippet}
-		</PanelFiltros>
+		</Controles>
 	{/snippet}
 
 	{#snippet contenido()}

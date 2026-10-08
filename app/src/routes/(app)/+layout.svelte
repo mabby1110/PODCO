@@ -9,8 +9,13 @@
 	import ModalInventario from '$lib/components/Vistas/Inventario/ModalInventario.svelte';
 	import ModalProducto from '$lib/components/Vistas/Catalogo/ModalProducto.svelte';
 	import ModalPedidoEditar from '$lib/components/Vistas/Pedidos/ModalPedidoEditar.svelte';
-	
+	import Logout from '$lib/components/Acciones/Logout.svelte';
+	import { page } from '$app/state';
+	import { appState } from '$lib/stores/appState.svelte.js';
+	import { slide } from 'svelte/transition';
+
 	let { children, data } = $props();
+	let expanded = $derived($appState.pageActions);
 
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.altKey && event.key === 'q') {
@@ -42,10 +47,16 @@
 </script>
 
 <svelte:window onkeydown={handleKeyDown} />
-
-<NavButton />
-
-{@render children()}
+<div class="layout">
+	<!-- {#if expanded}
+		<div class="meta-layout" transition:slide>
+			<Logout />
+			<p>{page.url.pathname}</p>
+		</div>
+	{/if} -->
+	
+	{@render children()}
+</div>
 
 <ModalActividad />
 <ModalOportunidad />
@@ -53,3 +64,17 @@
 <ModalInventario />
 <ModalProducto />
 <ModalPedidoEditar />
+
+<style>
+	.layout {
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+	}
+	.meta-layout {
+		display: flex;
+		padding: var(--a);
+		align-items: baseline;
+		gap: var(--a);
+	}
+</style>

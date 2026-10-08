@@ -109,7 +109,7 @@
 			{/if}
 			<p class="panel-title">{tituloBoton}</p>
 			<button
-				class="butter honey max-window"
+				class="butter milk max-window"
 				type="button"
 				onclick={(e) => {
 					e.stopPropagation();
@@ -118,7 +118,7 @@
 			>
 				<img src="/max-win.svg" alt="max-win" />
 			</button>
-			<button class="butter honey" type="button" onclick={resetPosition}>◥</button>
+			<button class="butter milk" type="button" onclick={resetPosition}>◥</button>
 			<button class="butter chile" type="button" onclick={() => (show = false)}>✕</button>
 		</div>
 		<div class="contenido">

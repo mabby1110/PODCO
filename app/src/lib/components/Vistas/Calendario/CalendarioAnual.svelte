@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import Controles from '$lib/components/Acciones/Controles.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
@@ -57,7 +58,7 @@
 
 	const PX_POR_DIA = $derived(
 		contenedorWidth > 0 && totalDiasVisibles > 0
-			? (contenedorWidth / totalDiasVisibles) * zoomLevel-0.001
+			? (contenedorWidth / totalDiasVisibles) * zoomLevel - 0.001
 			: 8
 	);
 
@@ -161,26 +162,17 @@
 
 <Vista>
 	{#snippet acciones()}
-		<select
-			value={$appState.calendarView}
-			onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
-		>
-			<option value="gant">Gant Anual</option>
-			<option value="semanal">Semanal</option>
-		</select>
-		<input
-			type="range"
-			bind:value={zoomLevel}
-			min="1"
-			max="10"
-			step="0.5"
-			title="Nivel de Zoom"
-			class="zoom-slider"
-		/>
-		<PanelFiltros>
+		<Controles>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+				<select
+					value={$appState.calendarView}
+					onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
+				>
+					<option value="gant">Gant Anual</option>
+					<option value="semanal">Semanal</option>
+				</select>
 				{#if $profile?.isAdmin}
 					<button
 						onclick={() => appState.toggleDnd()}
@@ -190,14 +182,24 @@
 						✏️ Editar
 					</button>
 				{/if}
+			{/snippet}
+			{#snippet acciones()}
 				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
 					{$appState.calendarCards ? '📏 Min' : '📐 Max'}
 				</button>
-			{/snippet}
-			{#snippet controles()}
+				<input
+					type="range"
+					bind:value={zoomLevel}
+					min="1"
+					max="10"
+					step="0.5"
+					title="Nivel de Zoom"
+					class="zoom-slider"
+				/>
+
 				<ModList {columnasDinamicas} route={currentRoute} />
 			{/snippet}
-		</PanelFiltros>
+		</Controles>
 	{/snippet}
 
 	{#snippet contenido()}
@@ -251,7 +253,7 @@
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-        height: 100%;
+		height: 100%;
 		overflow: auto;
 		scroll-behavior: smooth;
 	}
@@ -280,7 +282,7 @@
 		flex-direction: column;
 		position: relative;
 		padding-top: var(--b);
-        height: 100%;
+		height: 100%;
 	}
 
 	.contenedor-tarjetas:has(.expanded) {

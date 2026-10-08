@@ -10,6 +10,7 @@
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import TarjetaProducto from '$lib/components/Vistas/Catalogo/TarjetaProducto.svelte';
+	import Controles from '$lib/components/Acciones/Controles.svelte';
 
 	let { catalogo } = $derived(page.data);
 	let show = $derived($appState.min);
@@ -28,18 +29,20 @@
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 </script>
 
-<Vista titulo='Catalogo'>
+<Vista>
 	{#snippet acciones()}
-		<Searchbar data={catalogo} keyColumns={['codigo']} bind:lista />
-		<button onclick={() => appState.toggleModalProducto()} class="butter">+Producto Nuevo</button>
-		<PanelFiltros>
+		<Controles>
 			{#snippet header()}
 				<ExportarCSV {lista_ordenada} />
+				<button onclick={() => appState.toggleModalProducto()} class="butter"
+					>+Producto Nuevo</button
+				>
 			{/snippet}
-			{#snippet controles()}
+			{#snippet acciones()}
 				<ModList {columnasDinamicas} route={currentRoute} agrupar ordenar />
+				<Searchbar data={catalogo} keyColumns={['codigo']} bind:lista />
 			{/snippet}
-		</PanelFiltros>
+		</Controles>
 	{/snippet}
 	{#snippet contenido()}
 		{#if !isGrouped}

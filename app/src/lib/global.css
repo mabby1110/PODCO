@@ -28,7 +28,9 @@ Especiales
 	--color-7: #34d76acc;
 	--color-8: #000000ee;
 	--color-0: #ff444499;
+
 	--y: 4px;
+	--ada: 48px;
 	--a: 8px;
 	--b: 16px;
 	--c: 24px;
@@ -111,19 +113,22 @@ button {
 	border: none;
 	border-radius: var(--b);
 	background-color: var(--color-foreground);
+	border: 1px solid var(--color-muted);
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(2px);
 }
 
 .tarjeta {
-	border-radius: var(--b);
-	background-color: var(--color-foreground);
+	padding: var(--y) var(--a);
+	border-radius: var(--a);
+	background-color: var(--color-y2k);
 	border: 1px solid var(--color-secondary);
-	backdrop-filter: blur(2px);
+	backdrop-filter: blur(8px);
 }
 .tarjeta .honey {
 	border: none;
 	background-color: transparent;
+	border-radius: var(--b);
 }
 .card-calendar-preview {
 	text-decoration: none;
@@ -327,15 +332,15 @@ section .block {
 	align-items: center;
 	color: var(--color-text);
 	height: var(--d);
-	border: 1px solid var(--color-secondary);
+	border: none;
 	border-radius: var(--a);
-	background-color: var(--color-background);
+	background-color: var(--color-y2k);
 	backdrop-filter: blur(16px);
 	cursor: pointer;
 	width: fit-content;
 	min-width: var(--d);
 
-	padding: 4px var(--a);
+	padding: var(--y) var(--a);
 }
 .tiny {
 	width: fit-content;
@@ -346,14 +351,32 @@ section .block {
 	height: 100%;
 	width: 100%;
 }
-
 .honey {
-	background-color: transparent;
-	padding: 0;
-	border: none;
-}
-.honey:hover {
 	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: var(--a);
+	background-color: var(--color-foreground);
+	border: 1px solid var(--color-muted);
+	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(2px);
+
+	padding: var(--y) var(--a);
+
+	height: var(--ada);
+	max-height: var(--ada);
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+.honey img {
+	width: 100%;
+	height: 100%;
+	min-height: 0;
+	min-width: 0;
+	object-fit: cover;
+	display: block;
 }
 
 .chile {
@@ -426,7 +449,7 @@ section .block {
 
 /* Webkit (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
-	width: 8px;
+	width: var(--a);
 	height: 8px;
 }
 
@@ -445,7 +468,7 @@ section .block {
 
 @media (max-width: 768px) {
 	::-webkit-scrollbar {
-		width: 10px;
+		width: var(--a);
 		height: 10px;
 	}
 

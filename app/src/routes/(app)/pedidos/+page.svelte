@@ -12,8 +12,9 @@
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
+	import Controles from '$lib/components/Acciones/Controles.svelte';
 
-	let pedidos = $derived(page.data.pedidos.filter((p) => $profile?.isAdmin??p.fase <= 2));
+	let pedidos = $derived(page.data.pedidos.filter((p) => $profile?.isAdmin ?? p.fase <= 2));
 
 	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
@@ -35,27 +36,27 @@
 	// HELPERS
 </script>
 
-<Vista titulo="Pedidos">
+<Vista>
 	{#snippet acciones()}
-		<Searchbar
-			data={pedidos}
-			keyColumns={['serie', 'codigo', 'descripcion', 'categorias', 'id_agrupacion']}
-			bind:lista
-		/>
-		<button onclick={() => StorePedidoEditar.toggleModal()} class="butter">~Pedido</button>
-		<PanelFiltros>
+		<button onclick={() => StorePedidoEditar.toggleModal()} class="honey">~Pedido</button>
+		<Controles>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
-			{#snippet controles()}
+			{#snippet acciones()}
 				<ModList {columnasDinamicas} route={currentRoute} agrupar ordenar />
+				<Searchbar
+					data={pedidos}
+					keyColumns={['serie', 'codigo', 'descripcion', 'categorias', 'id_agrupacion']}
+					bind:lista
+				/>
 			{/snippet}
-		</PanelFiltros>
+		</Controles>
 	{/snippet}
 	{#snippet contenido()}
 		{#if !isGrouped}
-			<TarjetaPedidoLista {pedidos}/>
+			<TarjetaPedidoLista {pedidos} />
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={show}>

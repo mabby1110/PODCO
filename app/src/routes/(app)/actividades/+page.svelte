@@ -10,6 +10,7 @@
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
+	import Controles from '$lib/components/Acciones/Controles.svelte';
 
 	let { actividades } = $derived(page.data);
 	let show = $derived($appState.min);
@@ -31,17 +32,16 @@
 
 <Vista>
 	{#snippet acciones()}
-		<Searchbar data={actividades} keyColumns={columnasDinamicas.map((a) => a.key)} bind:lista />
-		<PanelFiltros>
+		<Controles>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 				<ExportarCSV {lista_ordenada} />
-				<!-- <Leyenda {steps} /> -->
 			{/snippet}
-            {#snippet controles()}
-                <ModList {columnasDinamicas} route={currentRoute} ordenar agrupar/>
-            {/snippet}
-		</PanelFiltros>
+			{#snippet acciones()}
+				<ModList {columnasDinamicas} route={currentRoute} ordenar agrupar />
+				<Searchbar data={actividades} keyColumns={columnasDinamicas.map((a) => a.key)} bind:lista />
+			{/snippet}
+		</Controles>
 	{/snippet}
 	{#snippet contenido()}
 		{#if !isGrouped}

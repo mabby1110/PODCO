@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
 	import { fasesPedido } from '$lib';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 
@@ -38,7 +37,12 @@
 
 		return Object.values(grupos);
 	});
-	let oportunidades = $derived(pedidos.filter(p=>p.id_oportunidad!=null));
+	let oportunidades = $derived(
+		Array.from(
+			new Set(pedidos.map((p) => p.id_oportunidad).filter((id): id is string => id != null))
+		)
+	);
+
 	console.log('oportunidades', oportunidades);
 
 	// ACCIONES
@@ -51,15 +55,16 @@
 		}
 	}
 	function editarPedidoCompleto(pedidos: any) {
-	    goto('/pedidos');
-	    StorePedidoEditar.pushLista(pedidos);
-	    StorePedidoEditar.toggleModal(true);
+		goto('/pedidos');
+		StorePedidoEditar.pushLista(pedidos);
+		StorePedidoEditar.toggleModal(true);
+		if (oportunidades.length == 1) {
+			StoreContextoRelacion.setOportunidad(oportunidades[0]);
+		}
 	}
 
 	// estados del componente
-	let expandidos = $state<Record<string, boolean>>({});
 	let actualizando = $state(false);
-	let mensaje = $state('');
 
 	// helpers
 	const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
@@ -77,7 +82,7 @@
 
 {#each pedidosAgrupados as grupo}
 	<div class="contenedor-lista">
-		<div class="meta-titulo">
+		<div class="meta-lista">
 			{#if grupo.id_agrupacion !== 'sin_agrupar'}
 				<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
 			{/if}
@@ -85,6 +90,18 @@
 		<div class="lista">
 			{#each grupo.pedidos as pedido (pedido.id)}
 				<div class="contenedor-pedido">
+					<div class="meta-tarjeta">
+						<span>
+							{pedido.oportunidades?.id}
+						</span>
+						<span>
+							{pedido.oportunidades?.clientes?.nombre_comercial ||
+								pedido.oportunidades?.clientes?.razon_social}
+						</span>
+						<span>
+							{pedido.oportunidades?.motivo}
+						</span>
+					</div>
 					<!-- svelte-ignore a11y_click_events_have_key_events -->
 					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<div class="tarjeta honey" onclick={() => editarPedido(pedido.id, pedido.id_oportunidad)}>
@@ -112,18 +129,6 @@
 								)}
 							</b>
 						</div>
-					</div>
-					<div class="meta-titulo">
-						<span>
-							{pedido.oportunidades?.id}
-						</span>
-						<span>
-							{pedido.oportunidades?.clientes?.nombre_comercial ||
-								pedido.oportunidades?.clientes?.razon_social}
-						</span>
-						<span>
-							{pedido.oportunidades?.motivo}
-						</span>
 					</div>
 				</div>
 			{/each}
@@ -159,7 +164,7 @@
 						class="butter"
 						type="button"
 						disabled={actualizando}
-						onclick={()=>editarPedidoCompleto(grupo.pedidos)}
+						onclick={() => editarPedidoCompleto(grupo.pedidos)}
 					>
 						Seleccionar
 					</button>
@@ -184,7 +189,13 @@
 		flex-direction: column;
 		gap: 0.75rem;
 	}
-
+	.meta-lista {
+		display: flex;
+		gap: var(--a);
+		flex-wrap: wrap;
+		align-items: baseline;
+		font-size: small;
+	}
 	.tarjeta {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
@@ -194,19 +205,14 @@
 	.contenedor-pedido {
 		height: fit-content;
 	}
-	.tarjeta.invalid {
-		border-radius: 8px;
-		background: #fff7f7;
-		outline: 1px solid #fca5a5;
-		padding: 0.5rem;
-	}
 
-	.meta-titulo {
+	.meta-tarjeta {
 		display: flex;
 		gap: var(--a);
 		flex-wrap: wrap;
 		align-items: baseline;
 		font-size: small;
+		margin: 0 0 var(--a) var(--a);
 	}
 
 	.titulo {
@@ -222,10 +228,6 @@
 		flex-wrap: wrap;
 		gap: var(--a);
 		align-items: baseline;
-	}
-
-	.contenido input {
-		min-width: 180px;
 	}
 
 	.resumen {
@@ -255,41 +257,6 @@
 		color: #ef4444;
 	}
 
-	.detalles {
-		margin-top: 0.25rem;
-		padding-top: 0.25rem;
-		border-top: 1px dashed #cbd5e1;
-	}
-
-	.contenido-expandido {
-		background: rgba(255, 255, 255, 0.6);
-		padding: 0.5rem;
-		border-radius: 4px;
-		margin-bottom: 0.5rem;
-	}
-
-	.desc {
-		margin: 0 0 0.4rem;
-		font-size: 0.8rem;
-	}
-
-	.jsonb pre {
-		margin: 0;
-		font-size: 0.75rem;
-		white-space: pre-wrap;
-		color: #475569;
-	}
-
-	.link-btn {
-		background: none;
-		border: none;
-		color: #3b82f6;
-		font-size: 0.8rem;
-		padding: 0;
-		cursor: pointer;
-		text-decoration: underline;
-	}
-
 	.acciones-panel {
 		margin-top: 0.5rem;
 	}
@@ -298,35 +265,6 @@
 		display: flex;
 		justify-content: flex-end;
 		gap: var(--a);
-	}
-
-	.alerta-error {
-		background: #fef2f2;
-		border: 1px solid #fca5a5;
-		color: #b91c1c;
-		padding: 0.75rem;
-		border-radius: 6px;
-		font-size: 0.875rem;
-		text-align: center;
-		margin-bottom: 0.75rem;
-	}
-
-	.input-error {
-		border: 1px solid #ef4444;
-		outline: 1px solid #ef4444;
-	}
-
-	.error-text {
-		color: #b91c1c;
-		font-size: 0.75rem;
-		width: 100%;
-	}
-
-	.estado-vacio {
-		text-align: center;
-		color: #94a3b8;
-		font-style: italic;
-		margin-top: 1rem;
 	}
 
 	button:disabled {
