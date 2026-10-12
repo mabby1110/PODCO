@@ -196,6 +196,7 @@
 				</div>
 			</section>
 		{/if}
+
 		<!-- {#if faseActual >= 2 && faseActual <= 3}
 			<section>
 				<div class="header">

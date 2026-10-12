@@ -46,7 +46,7 @@
 	onclick={handleClick}
 	onkeydown={handleKeydown}
 	{style}
-	class="list-card-preview panel"
+	class="list-card-preview butter"
 >
 	<div class="list-card-header">
 		{#if header}
@@ -86,9 +86,9 @@
 	.list-card-preview {
 		display: flex;
 		flex-wrap: wrap;
-		padding: 4px;
 		cursor: pointer;
 		width: 100%;
+		padding: var(--y) var(--a);
 	}
 	.list-card-header {
 		flex-grow: 3;

@@ -6,6 +6,7 @@ Especiales
 */
 :root {
 	--color-primary: #f1f4ff;
+	--color-button: #ffffffbb;
 	--color-secondary: #c6cce3;
 	--color-foreground: #f1f4ffbb;
 	--color-background: #ffffff;
@@ -29,18 +30,22 @@ Especiales
 	--color-8: #000000ee;
 	--color-0: #ff444499;
 
+	--color-tarjeta: rgba(255, 255, 255, 0.82);
+
 	--y: 4px;
 	--ada: 48px;
 	--a: 8px;
-	--b: 16px;
-	--c: 24px;
+	--b: 12px;
+	--c: 20px;
 	--d: 32px;
-	--e: 64px;
-	--f: 124px;
-	--g: 188px;
-	--h: 248px;
-	--i: 496px;
-	--j: 1024px;
+	--e: 52px;
+	--f: 84px;
+	--g: 136px;
+	--h: 220px;
+	--i: 356px;
+	--j: 576px;
+	--k: 932px;
+	--l: 1508px;
 }
 
 * {
@@ -59,14 +64,19 @@ html {
 }
 
 body {
-	margin: auto;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	background-color: var(--color-background);
-	/* background-image: url('bombas.svg'); */
+    margin: auto;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-background);
+    max-width: var(--l);
+
+    background-image: url('bombas.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto;
 }
 
 h1 {
@@ -74,12 +84,10 @@ h1 {
 }
 
 h2 {
-	font-weight: 400;
 	font-size: 1.4rem;
 }
 
 h3 {
-	font-weight: 400;
 	font-size: 1.2rem;
 }
 
@@ -106,29 +114,42 @@ textarea {
 button {
 	margin: 0;
 	padding: 0;
+	cursor: pointer;
 }
+
+.card .close,
+.panel .close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: transparent;
+	border: none;
+	padding: 0 4px;
+	cursor: pointer;
+	opacity: 0.6;
+	transition: opacity 0.2s;
+	flex-shrink: 0;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+
+
 
 /* ESTILOS PARA TARJETAS */
 .panel {
-	border: none;
 	border-radius: var(--b);
 	background-color: var(--color-foreground);
 	border: 1px solid var(--color-muted);
 	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
-	backdrop-filter: blur(2px);
-}
-
-.tarjeta {
-	padding: var(--y) var(--a);
-	border-radius: var(--a);
-	background-color: var(--color-y2k);
-	border: 1px solid var(--color-secondary);
 	backdrop-filter: blur(8px);
 }
-.tarjeta .honey {
-	border: none;
-	background-color: transparent;
+.tarjeta {
 	border-radius: var(--b);
+	background-color: var(--color-tarjeta);
+	border: 1px solid var(--color-muted);
+	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(8px);
 }
 .card-calendar-preview {
 	text-decoration: none;
@@ -152,21 +173,88 @@ button {
 	cursor: pointer;
 }
 
-.card .close,
-.panel .close {
-	position: absolute;
-	top: 0;
-	right: 0;
-	background: transparent;
-	border: none;
-	padding: 0 4px;
-	cursor: pointer;
-	opacity: 0.6;
-	transition: opacity 0.2s;
-	flex-shrink: 0;
-	cursor: pointer;
-	text-decoration: none;
+/* BOTONES */
+.butter:disabled {
+	opacity: 60%;
+	background-color: var(--color-secondary);
 }
+.butter {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: var(--color-text);
+	height: var(--d);
+	border-radius: var(--a);
+	background-color: var(--color-button);
+	border: 1px solid var(--color-muted);
+	backdrop-filter: blur(16px);
+	cursor: pointer;
+	width: fit-content;
+	min-width: var(--d);
+
+	padding: var(--y) var(--a);
+}
+.tiny {
+	width: fit-content;
+	min-width: var(--b);
+	height: fit-content;
+}
+.butter img {
+	height: 100%;
+	width: 100%;
+}
+.honey {
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: var(--b);
+	background-color: var(--color-foreground);
+	border: 1px solid var(--color-muted);
+	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(2px);
+
+	padding: var(--y) var(--a);
+
+	height: var(--ada);
+	max-height: var(--ada);
+	box-sizing: border-box;
+	overflow: hidden;
+}
+.honey img {
+	width: 100%;
+	height: 100%;
+	min-height: 0;
+	min-width: 0;
+	object-fit: cover;
+	display: block;
+}
+.chile {
+	background-color: var(--color-error);
+	padding: 0;
+}
+.milk {
+	background-color: transparent;
+	padding: 0;
+	border: none;
+	backdrop-filter: none;
+}
+.matcha {
+	background-color: var(--color-success);
+}
+.active {
+	background-color: var(--color-highlight);
+}
+
+
+
+
+
+
+
+
+
+
 
 /* GRAFICAS */
 .contenedor-graficas {
@@ -318,85 +406,6 @@ section .block {
 /* FUENTES */
 .tiny {
 	font-size: smaller;
-}
-
-/* ESTILOS PARA BOTONES */
-.butter:disabled {
-	opacity: 60%;
-	background-color: var(--color-secondary);
-}
-
-.butter {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: var(--color-text);
-	height: var(--d);
-	border: none;
-	border-radius: var(--a);
-	background-color: var(--color-y2k);
-	backdrop-filter: blur(16px);
-	cursor: pointer;
-	width: fit-content;
-	min-width: var(--d);
-
-	padding: var(--y) var(--a);
-}
-.tiny {
-	width: fit-content;
-	min-width: var(--b);
-	height: fit-content;
-}
-.butter img {
-	height: 100%;
-	width: 100%;
-}
-.honey {
-	cursor: pointer;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border-radius: var(--a);
-	background-color: var(--color-foreground);
-	border: 1px solid var(--color-muted);
-	box-shadow: 0 8px 6px rgba(0, 0, 0, 0.2);
-	backdrop-filter: blur(2px);
-
-	padding: var(--y) var(--a);
-
-	height: var(--ada);
-	max-height: var(--ada);
-	box-sizing: border-box;
-	overflow: hidden;
-}
-
-.honey img {
-	width: 100%;
-	height: 100%;
-	min-height: 0;
-	min-width: 0;
-	object-fit: cover;
-	display: block;
-}
-
-.chile {
-	background-color: var(--color-error);
-	padding: 0;
-}
-
-.milk {
-	background-color: transparent;
-	padding: 0;
-	border: none;
-	backdrop-filter: none;
-}
-
-.matcha {
-	background-color: var(--color-success);
-}
-
-.active {
-	background-color: var(--color-highlight);
 }
 
 .btn-icon {

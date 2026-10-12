@@ -81,7 +81,7 @@
 </script>
 
 {#each pedidosAgrupados as grupo}
-	<div class="contenedor-lista">
+	<div class="contenedor-lista butter">
 		<div class="meta-lista">
 			{#if grupo.id_agrupacion !== 'sin_agrupar'}
 				<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
@@ -104,7 +104,7 @@
 					</div>
 					<!-- svelte-ignore a11y_click_events_have_key_events -->
 					<!-- svelte-ignore a11y_no_static_element_interactions -->
-					<div class="tarjeta honey" onclick={() => editarPedido(pedido.id, pedido.id_oportunidad)}>
+					<div class="pedido" onclick={() => editarPedido(pedido.id, pedido.id_oportunidad)}>
 						<div class="titulo">
 							<div class="badge" style={fasesPedido[pedido.fase]?.estilo}>
 								<span>{fasesPedido[pedido.fase]?.actual}</span>
@@ -180,8 +180,6 @@
 		flex-direction: column;
 		gap: 1rem;
 		padding: 16px;
-		border: 2px solid var(--color-muted);
-		border-radius: var(--b);
 	}
 
 	.lista {
@@ -196,7 +194,7 @@
 		align-items: baseline;
 		font-size: small;
 	}
-	.tarjeta {
+	.pedido {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
 		align-items: baseline;

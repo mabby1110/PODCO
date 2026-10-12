@@ -123,7 +123,7 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={panel}
-		class="panel panel-controls {isMaximized ? 'maximized' : ''}"
+		class="honey panel-controls {isMaximized ? 'maximized' : ''}"
 		style={panelStyle}
 	>
 		<div class="header-actions" onmousedown={onMouseDown}>

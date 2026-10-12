@@ -18,16 +18,13 @@
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
 	import CSTarjetaActividad from './CSTarjetaActividad.svelte';
 	import CSTarjetaOportunidad from './CSTarjetaOportunidad.svelte';
-	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import Controles from '$lib/components/Acciones/Controles.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));
 	let currentRoute = $derived(page.url.pathname);
-
 	let lista = $derived.by(() => {
 		if ($appState.calendarList == 'actividades') {
 			return actividades;
@@ -37,7 +34,6 @@
 			return allActivities;
 		}
 	});
-
 	let columnasDinamicas = $derived(
 		Array.from(
 			new Map(
@@ -49,16 +45,10 @@
 		)
 	);
 
-	$effect(() => {
-		lista = allActivities;
-	});
-
 	let lista_ordenada = $derived(sortData(lista, currentRoute));
 	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
-
 	let SLOT_MINUTES = $derived($appState.calendarCards ? 10 : 60);
 	let calendarHeight = $state(0);
-
 	let expandedEventId = $state<string | null>(null);
 
 	const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab', 'Dom'];
@@ -67,6 +57,7 @@
 	const PIXELS_PER_HOUR = $derived(
 		$appState.calendarCards ? 120 : calendarHeight > 0 ? (calendarHeight - 60) / totalHours : 60
 	);
+
 	let CELL_HEIGHT = $derived((PIXELS_PER_HOUR / 60) * SLOT_MINUTES);
 	const hours = $derived(
 		Array.from({ length: (totalHours * 60) / SLOT_MINUTES }, (_, i) => {
@@ -108,7 +99,6 @@
 		}
 		await invalidateAll();
 	}
-
 	function getEventsForSlot(hour: number, minute: number, targetDate: Date) {
 		return weekEvents.filter((event) => {
 			const eventDate = new Date(event.inicio);
@@ -122,12 +112,15 @@
 			);
 		});
 	}
-
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape' && expandedEventId) {
 			expandedEventId = null;
 		}
 	}
+
+	$effect(() => {
+		lista = allActivities;
+	});
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
@@ -148,9 +141,9 @@
 	{#snippet acciones()}
 		<Controles>
 			{#snippet header()}
-				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button
-				>{/snippet}
+				<button onclick={() => appState.toggleModalOp()} class="jelly">+Oportunidad</button>
+				<button onclick={() => appState.toggleModalActivity()} class="jelly">+Actividad</button>
+			{/snippet}
 			{#snippet acciones()}
 				<select
 					value={$appState.calendarView}
@@ -167,24 +160,24 @@
 					<option value="actividades">Actividades</option>
 					<option value="oportunidades">Oportunidades</option>
 				</select>
-				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
+				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="jelly toggle">
 					{$appState.calendarCards ? 'Min' : 'Max'}
 				</button>
 				<ModList {columnasDinamicas} route={currentRoute} />
 				<div class="calendar-navigation">
 					<button
 						onclick={() => (calendarStore.weekOffset -= 1)}
-						class="honey nav-btn"
+						class="jelly nav-btn"
 						title="Semana anterior"
 					>
 						←
 					</button>
-					<button onclick={() => (calendarStore.weekOffset = 0)} class="honey current-week">
+					<button onclick={() => (calendarStore.weekOffset = 0)} class="jelly current-week">
 						{weekRangeText}
 					</button>
 					<button
 						onclick={() => (calendarStore.weekOffset += 1)}
-						class="honey nav-btn"
+						class="jelly nav-btn"
 						title="Semana siguiente"
 					>
 						→
@@ -195,7 +188,7 @@
 	{/snippet}
 	{#snippet contenido()}
 		<div
-			class="calendar"
+			class="calendar tarjeta"
 			bind:clientHeight={calendarHeight}
 			style="--dynamic-cell-height: {CELL_HEIGHT}px;"
 		>
@@ -213,6 +206,7 @@
 						{/each}
 					</tr>
 				</thead>
+
 				<tbody>
 					{#each hours as h}
 						<tr>
@@ -290,9 +284,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
-		border: 1px solid var(--color-muted);
-		border-radius: var(--a);
-		max-height: 88vh;
+		height: 100%;
 	}
 	.calendar table {
 		flex-grow: 1;
@@ -347,12 +339,11 @@
 		padding: 0 8px;
 		border-right: 1px solid var(--color-secondary);
 	}
-
 	.event-cell {
 		position: relative;
 		min-width: var(--e, 120px);
-		border-right: 1px solid var(--color-secondary);
-		border-bottom: 1px solid var(--color-secondary);
+		border-left: 1px solid var(--color-secondary);
+		border-top: 1px solid var(--color-secondary);
 		overflow: visible;
 		height: var(--dynamic-cell-height);
 		z-index: 1;

@@ -13,42 +13,42 @@
 	} = $props();
 </script>
 
-<div class="card" transition:slide>
-	{#if header}
-		<div style={headerStyle}>
+<div class="tarjeta" transition:slide>
+	<div class="header" style={headerStyle}>
+		{#if header}
 			{@render header()}
-		</div>
-	{/if}
+		{/if}
+	</div>
 
-	<div class="snippets">
-		<div class="card-content">
-			{#if content}
-				{@render content()}
-			{/if}
-		</div>
+	<div class="card-content">
+		{#if content}
+			{@render content()}
+		{/if}
 	</div>
 </div>
 
 <style>
-	.card {
+	.tarjeta {
+		margin: var(--a);
+		padding: 0;
 		position: relative;
-		width: 100%;
-		max-height: 100dvh;
-		overflow: hidden;
 		display: flex;
 		flex-direction: column;
+		overflow: hidden;
+		max-height: 100%;
 	}
-	.card .snippets {
-		flex-grow: 1;
-		overflow: auto;
-		padding: var(--a) var(--a) var(--f);
+	.header {
+		padding: var(--a);
 	}
 	.card-content {
 		max-width: 1200px;
+		padding: var(--a);
 		width: 100%;
 		margin: auto;
 		display: flex;
 		flex-direction: column;
+		overflow: auto;
 		gap: var(--c) var(--a);
+		height: 100%;
 	}
 </style>

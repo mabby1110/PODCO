@@ -53,7 +53,7 @@
 	onclick={handleClick}
 	onkeydown={handleKeydown}
 	{style}
-	class="item tarjeta"
+	class="item butter"
 >
 	<div class="principal">
 		{#if titulo}

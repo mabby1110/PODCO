@@ -214,8 +214,8 @@
 
 <!-- pedidos a editar -->
 {#if StorePedidoEditar.carrito.length > 0}
-	<div class="tarjeta-editar-pedido">
-		<div class="lista-tarjetas">
+	<div class="contenedor-grupo">
+		<div class="lista-pedidos">
 			{#each pedidos as pedido (pedido.id)}
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -280,7 +280,7 @@
 
 <!-- pedidos nuevos -->
 {#if StorePedidoNuevo.carrito.length > 0}
-	<div class="tarjeta-editar-pedido">
+	<div class="contenedor-grupo tarjeta">
 		<div class="encabezado">
 			<button
 				class="butter honey"
@@ -358,31 +358,21 @@
 	.encabezado .titulo {
 		flex-grow: 1;
 	}
-	.tarjeta-editar-pedido {
+	.contenedor-pedido {
 		flex-grow: 1;
 		max-height: fit-content;
 		display: flex;
 		flex-direction: column;
 		padding: 8px 8px;
 		gap: var(--y);
-		border: 2px solid;
-		border-radius: 16px;
-		border-color: var(--color-muted);
-		background-color: var(--color-background);
 	}
 
-	.lista-tarjetas {
+	.lista-pedidos{
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
 	}
-	.tarjeta {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-		border: none;
-		background-color: transparent;
-		backdrop-filter: none;
-	}
+	
 	.tarjeta {
 		grid-column: span 2;
 		display: grid;
@@ -401,6 +391,7 @@
 		padding-left: 32px;
 		gap: var(--y);
 	}
+
 	.input-group input {
 		width: 100%;
 	}

@@ -31,27 +31,25 @@
 
 <div class="nav-container">
 	{#if expanded}
-		<div class="nav-links panel" in:slide>
+		<div class="nav-links honey" in:slide>
 			<!-- {#if show}
 			<PanelNotificaciones />
 			{:else}
 			{/if} -->
-			<button onclick={() => navigate('/clientes')} class="butter milk"> 👨‍💼 Clientes </button>
-			<button onclick={() => navigate('/oportunidades')} class="butter milk">
-				📋 Oportunidades
-			</button>
-			<button onclick={() => navigate('/actividades')} class="butter milk"> ⚡ Actividades </button>
-			<button onclick={() => navigate('/calendario')} class="butter milk"> 📆 Calendario </button>
-			<button onclick={() => navigate('/pedidos')} class="butter milk"> 📦 Pedidos </button>
-			<button onclick={() => navigate('/inventario')} class="butter milk"> 🗄 Inventario </button>
-			<button onclick={() => navigate('/catalogo')} class="butter milk"> 📑 Catalogo </button>
+			<button onclick={() => navigate('/clientes')} class="jelly"> Clientes 👨‍💼 </button>
+			<button onclick={() => navigate('/oportunidades')} class="jelly"> Oportunidades 📋 </button>
+			<button onclick={() => navigate('/actividades')} class="jelly"> Actividades ⚡ </button>
+			<button onclick={() => navigate('/calendario')} class="jelly"> Calendario 📆 </button>
+			<button onclick={() => navigate('/pedidos')} class="jelly"> Pedidos 📦 </button>
+			<button onclick={() => navigate('/inventario')} class="jelly"> Inventario 🗄 </button>
+			<button onclick={() => navigate('/catalogo')} class="jelly"> Catalogo 📑 </button>
 			<!-- <button onclick={() => navigate('/pedidos')} class="butter">
 				🛒 Pedidos
 				</button> -->
 			<!-- <button onclick={() => navigate('/estadisticas')} class="butter"> 📊 Estadisticas </button> -->
 		</div>
 	{/if}
-	<button onclick={togglePanel} class="home honey">
+	<button onclick={togglePanel} class="home butter" class:activo={expanded}>
 		<img src="/bms-logo.svg" alt="BMS" />
 	</button>
 </div>
@@ -67,9 +65,22 @@
 	.nav-links {
 		display: flex;
 		flex-direction: column;
-		min-width: var(--g);
 		position: absolute;
-		bottom: var(--e);
-		padding: var(--y) var(--a);
+		bottom: var(--f);
+		padding: var(--b);
+		gap: var(--a);
+	}
+	.nav-links button {
+		display: flex;
+		justify-content: flex-end;
+		padding: var(--a);
+		min-width: var(--g);
+	}
+	.nav-links button:hover{
+		background-color: var(--color-button-highlight);
+	}
+	.home {
+		padding: var(--y);
+		height: var(--e);
 	}
 </style>

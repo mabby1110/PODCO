@@ -3,33 +3,27 @@
 	import Controles from '$lib/components/Acciones/Controles.svelte';
 	import ExportarCSV from '$lib/components/Acciones/ExportarCSV.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
-	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
 	import CardClienteListPreview from '$lib/components/Vistas/Cliente/CardClienteListPreview.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { StoreAgrupaciones } from '$lib/stores/StoreAgrupaciones.svelte';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 
 	let { clientes } = $derived(page.data);
 	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
-
-	// Convertido a $state para soportar bind:lista
 	let lista = $state(clientes);
 	let columnasDinamicas = $derived(extraerColumnas(clientes));
+	let lista_ordenada = $derived(sortData(lista, currentRoute));
+	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
+	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
+	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 
 	$effect(() => {
 		lista = clientes;
 	});
-
-	let lista_ordenada = $derived(sortData(lista, currentRoute));
-	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
-	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
-
-	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 </script>
 
 <Vista>

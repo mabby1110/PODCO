@@ -96,7 +96,7 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={panel}
-		class="panel {absolute ? 'panel-controls-local' : 'panel-controls'} {isMaximized
+		class="honey {absolute ? 'panel-controls-local' : 'panel-controls'} {isMaximized
 			? 'maximized'
 			: ''}"
 		style={isMaximized ? '' : `transform: translate(${x}px, ${y}px);`}
@@ -106,35 +106,41 @@
 				{@render acciones()}
 			{/if}
 		</div>
+
 		<div class="header-actions" onmousedown={onMouseDown}>
 			{#if header}
-				{@render header()}
+				<div class="custom">
+					{@render header()}
+				</div>
 			{/if}
-			<button
-				class="butter milk max-window"
-				type="button"
-				onclick={(e) => {
-					e.stopPropagation();
-					isMaximized = !isMaximized;
-				}}
-			>
-				<img src="/max-win.svg" alt="max-win" />
-			</button>
-			<button class="butter milk" type="button" onclick={resetPosition}>◥</button>
-			<button class="butter chile" type="button" onclick={() => (show = false)}>✕</button>
+			<div class="default">
+				<!-- <button
+					class="butter milk max-window"
+					type="button"
+					onclick={(e) => {
+						e.stopPropagation();
+						isMaximized = !isMaximized;
+					}}
+				>
+					<img src="/max-win.svg" alt="max-win" />
+				</button> -->
+				<button class="butter milk" type="button" onclick={resetPosition}>◥</button>
+				<button class="butter rojo" type="button" onclick={() => (show = false)}>✕</button>
+			</div>
 		</div>
 	</div>
 {/if}
-<button class="honey {show ? 'active' : ''}" onclick={() => (show = !show)}>
+
+<button class="control butter" class:activo={show} onclick={() => (show = !show)}>
 	<img src="/options.svg" alt="options" />
 </button>
 
 <style>
 	.panel-controls {
 		position: fixed;
-		bottom: var(--e);
+		bottom: var(--f);
 		right: var(--a);
-		max-width: 600px;
+		max-width: var(--i);
 		width: 96vw;
 		height: fit-content;
 		max-height: 60%;
@@ -142,15 +148,6 @@
 		display: flex;
 		gap: var(--a);
 		flex-direction: column-reverse;
-	}
-	.panel-controls-local {
-		position: sticky;
-		top: 0;
-		right: 0;
-		max-width: 40vw;
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
 	}
 
 	.header-actions:active {
@@ -168,8 +165,14 @@
 		user-select: none;
 		padding: var(--a) var(--a) 4px;
 	}
-	.panel-title {
+	.header-actions .custom {
 		flex-grow: 1;
+		display: flex;
+		gap: var(--a);
+	}
+	.header-actions .default {
+		display: flex;
+		gap: var(--a);
 	}
 	.contenido {
 		flex-grow: 1;
@@ -196,5 +199,20 @@
 	}
 	.maximized .header-actions:active {
 		cursor: default;
+	}
+	.control {
+		padding: var(--y);
+		height: var(--e);
+	}
+
+	/* reglas para filtro dentro de componente */
+	.panel-controls-local {
+		position: sticky;
+		top: 0;
+		right: 0;
+		max-width: 40vw;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
 	}
 </style>

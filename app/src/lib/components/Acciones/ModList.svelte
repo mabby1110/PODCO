@@ -136,56 +136,68 @@
 	{/if}
 	{#if ordenar}
 		<div class="accion">
-			<button class="butter" onclick={agregarOrden}>+ Orden</button>
+			<button class="jelly" onclick={agregarOrden}>+ Orden</button>
 			{#each estado.sorts as orden, i}
 				<div class="mod">
-					<button class="butter chile" onclick={() => eliminarOrden(i)}>X</button>
-					<select
-						value={orden.field}
-						onchange={(e) => actualizarOrden(i, { ...orden, field: e.currentTarget.value })}
-					>
-						{#each columnasDinamicas as campo}
-							<option value={campo.key}>{campo.label}</option>
-						{/each}
-					</select>
-					<select
-						value={orden.direction}
-						onchange={(e) =>
-							actualizarOrden(i, { ...orden, direction: e.currentTarget.value as 'asc' | 'desc' })}
-					>
-						<option value="asc">Asc</option>
-						<option value="desc">Desc</option>
-					</select>
+					<button class="jelly rojo" onclick={() => eliminarOrden(i)}>X</button>
+					<div class="condicion">
+						<select
+							value={orden.field}
+							onchange={(e) => actualizarOrden(i, { ...orden, field: e.currentTarget.value })}
+						>
+							{#each columnasDinamicas as campo}
+								<option value={campo.key}>{campo.label}</option>
+							{/each}
+						</select>
+						<select
+							value={orden.direction}
+							onchange={(e) =>
+								actualizarOrden(i, {
+									...orden,
+									direction: e.currentTarget.value as 'asc' | 'desc'
+								})}
+						>
+							<option value="asc">Asc</option>
+							<option value="desc">Desc</option>
+						</select>
+					</div>
 				</div>
 			{/each}
 		</div>
 	{/if}
 
 	<div class="accion">
-		<button class="butter" onclick={agregarFiltro}>+ Filtro</button>
+		<button class="jelly" onclick={agregarFiltro}>+ Filtro</button>
 		{#each estado.filters as filtro, i}
 			{@const campoDef = getCampoDef(filtro.field)}
-			<div class="mod">
-				<button class="butter chile" onclick={() => eliminarFiltro(i)}>X</button>
-				<select value={filtro.field} onchange={(e) => cambiarCampoFiltro(i, e.currentTarget.value)}>
-					{#each columnasDinamicas as campo}
-						<option value={campo.key}>{campo.label}</option>
-					{/each}
-				</select>
-				<select
-					value={filtro.operator}
-					onchange={(e) =>
-						actualizarFiltro(i, { ...filtro, operator: e.currentTarget.value as Operator })}
-				>
-					{#each operadoresMap[campoDef.type] as op}
-						<option value={op.valor}>{op.label}</option>
-					{/each}
-				</select>
-				<input
-					type={inputTypeMap[campoDef.type]}
-					value={filtro.value}
-					oninput={(e) => actualizarFiltro(i, { ...filtro, value: e.currentTarget.value })}
-				/>
+			<div class="filtro">
+				<button class="jelly rojo" onclick={() => eliminarFiltro(i)}>X</button>
+				<div class="categoria">
+					<select
+						value={filtro.field}
+						onchange={(e) => cambiarCampoFiltro(i, e.currentTarget.value)}
+					>
+						{#each columnasDinamicas as campo}
+							<option value={campo.key}>{campo.label}</option>
+						{/each}
+					</select>
+					<div class="mod">
+						<select
+							value={filtro.operator}
+							onchange={(e) =>
+								actualizarFiltro(i, { ...filtro, operator: e.currentTarget.value as Operator })}
+						>
+							{#each operadoresMap[campoDef.type] as op}
+								<option value={op.valor}>{op.label}</option>
+							{/each}
+						</select>
+						<input
+							type={inputTypeMap[campoDef.type]}
+							value={filtro.value}
+							oninput={(e) => actualizarFiltro(i, { ...filtro, value: e.currentTarget.value })}
+						/>
+					</div>
+				</div>
 			</div>
 		{/each}
 	</div>
@@ -195,15 +207,24 @@
 	.mod-list {
 		display: flex;
 		flex-direction: column;
-		gap: var(--a);
+		gap: var(--c);
 	}
 	.accion {
 		display: flex;
 		flex-wrap: wrap;
 		flex-direction: column;
+		gap: var(--a);
+	}
+	.filtro {
+		display: flex;
+		align-items: flex-start;
+		gap: var(--y);
+	}
+	.categoria {
+		display: flex;
+		flex-wrap: wrap;
 	}
 	.mod {
 		display: flex;
-		flex-wrap: wrap;
 	}
 </style>

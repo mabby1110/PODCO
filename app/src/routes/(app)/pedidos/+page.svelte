@@ -38,7 +38,7 @@
 
 <Vista>
 	{#snippet acciones()}
-		<button onclick={() => StorePedidoEditar.toggleModal()} class="honey">~Pedido</button>
+		<button onclick={() => StorePedidoEditar.toggleModal()} class="butter">~Pedido</button>
 		<Controles>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>

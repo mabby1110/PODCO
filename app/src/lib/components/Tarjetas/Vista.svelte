@@ -2,9 +2,18 @@
 	import type { Snippet } from 'svelte';
 	import NavButton from '../Acciones/NavButton.svelte';
 
-	let { acciones, contenido }: { acciones: Snippet; contenido: Snippet } = $props();
+	let {
+		portada,
+		acciones,
+		contenido
+	}: { portada?: Snippet; acciones: Snippet; contenido: Snippet } = $props();
 </script>
 
+{#if portada}
+	<div class="portada">
+		{@render portada()}
+	</div>
+{/if}
 <div class="vista">
 	{#if contenido}
 		{@render contenido()}

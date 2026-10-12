@@ -21,7 +21,7 @@
 					<p>{oportunidad?.agentes?.nombre}: {oportunidad?.motivo}</p>
 				</div>
 			</div>
-			<button class="butter honey" onclick={() => goto(`/oportunidades/${oportunidad.id}`)}
+			<button class="butter" onclick={() => goto(`/oportunidades/${oportunidad.id}`)}
 				>ver</button
 			>
 		</div>
