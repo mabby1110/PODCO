@@ -15,7 +15,6 @@
 	import { slide } from 'svelte/transition';
 
 	let { children, data } = $props();
-	let expanded = $derived($appState.pageActions);
 
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.altKey && event.key === 'q') {

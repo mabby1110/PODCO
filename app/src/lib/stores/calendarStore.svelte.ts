@@ -6,10 +6,13 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const saveCookies = (filters: typeof calendarStore) => {
 	if (!browser) return;
 	setCookie('weekOffset', String(filters.weekOffset), { maxAge: COOKIE_MAX_AGE });
+	setCookie('monthOffset', String(filters.monthOffset), { maxAge: COOKIE_MAX_AGE });
 };
 
 export const calendarStore = $state({
-	weekOffset: Number(getCookie('weekOffset') || 0)
+	weekOffset: Number(getCookie('weekOffset') || 0),
+	monthOffset: Number(getCookie('monthOffset') || 0),
+
 });
 
 $effect.root(() => {

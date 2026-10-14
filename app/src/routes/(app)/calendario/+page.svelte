@@ -1,10 +1,14 @@
 <script lang="ts">
 	import CalendarioAnual from '$lib/components/Vistas/Calendario/CalendarioAnual.svelte';
+	import CalendarioMensual from '$lib/components/Vistas/Calendario/CalendarioMensual.svelte';
 	import CalendarioSemanal from '$lib/components/Vistas/Calendario/CalendarioSemanal.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 </script>
+
 {#if $appState.calendarView == 'gant'}
 	<CalendarioAnual />
+{:else if $appState.calendarView == 'mensual'}
+	<CalendarioMensual />
 {:else}
 	<CalendarioSemanal />
 {/if}

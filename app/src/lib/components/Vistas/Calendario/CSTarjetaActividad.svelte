@@ -12,7 +12,7 @@
 </script>
 
 <div
-	class="tarjeta-actividad"
+	class="tarjeta-actividad jelly"
 	style="{style} {fase?.estilo}"
 	use:draggable={{ data: actividad.id, enabled: isDndEnabled }}
 >

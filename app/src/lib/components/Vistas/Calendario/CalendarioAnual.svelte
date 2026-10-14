@@ -164,40 +164,49 @@
 	{#snippet acciones()}
 		<Controles>
 			{#snippet header()}
-				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
+				<button onclick={() => appState.toggleModalOp()} class="jelly">+Oportunidad</button>
+				<button onclick={() => appState.toggleModalActivity()} class="jelly">+Actividad</button>
+			{/snippet}
+			{#snippet acciones()}
 				<select
 					value={$appState.calendarView}
 					onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
 				>
 					<option value="gant">Gant Anual</option>
+					<option value="mensual">Mensual</option>
 					<option value="semanal">Semanal</option>
 				</select>
-				{#if $profile?.isAdmin}
-					<button
-						onclick={() => appState.toggleDnd()}
-						class="butter toggle"
-						class:active={$appState.dnd}
-					>
-						✏️ Editar
-					</button>
-				{/if}
-			{/snippet}
-			{#snippet acciones()}
-				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="butter toggle">
-					{$appState.calendarCards ? '📏 Min' : '📐 Max'}
+				<select
+					value={$appState.calendarList}
+					onchange={(e) => appState.setCalendarList(e.currentTarget.value)}
+				>
+					<option value="">Todas</option>
+					<option value="actividades">Actividades</option>
+					<option value="oportunidades">Oportunidades</option>
+				</select>
+				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="jelly toggle">
+					{$appState.calendarCards ? 'Min' : 'Max'}
 				</button>
-				<input
-					type="range"
-					bind:value={zoomLevel}
-					min="1"
-					max="10"
-					step="0.5"
-					title="Nivel de Zoom"
-					class="zoom-slider"
-				/>
-
 				<ModList {columnasDinamicas} route={currentRoute} />
+				<div class="calendar-navigation">
+					<button
+						onclick={() => (calendarStore.weekOffset -= 1)}
+						class="jelly nav-btn"
+						title="Semana anterior"
+					>
+						←
+					</button>
+					<button onclick={() => (calendarStore.weekOffset = 0)} class="jelly current-week">
+						{weekRangeText}
+					</button>
+					<button
+						onclick={() => (calendarStore.weekOffset += 1)}
+						class="jelly nav-btn"
+						title="Semana siguiente"
+					>
+						→
+					</button>
+				</div>
 			{/snippet}
 		</Controles>
 	{/snippet}

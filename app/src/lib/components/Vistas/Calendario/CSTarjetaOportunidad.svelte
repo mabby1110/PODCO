@@ -11,7 +11,7 @@
 </script>
 
 <div
-	class="tarjeta-actividad"
+	class="tarjeta jelly"
 	style="{style} {fase?.estilo}"
 	use:draggable={{ data: oportunidad.id, enabled: isDndEnabled }}
 >
@@ -40,18 +40,14 @@
 </div>
 
 <style>
-	.tarjeta-actividad {
+	.tarjeta {
 		text-decoration: none;
 		color: inherit;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		border: 1px solid var(--color-muted);
-		border-radius: var(--a);
-		padding: 4px var(--a);
 		text-align: left;
 		align-items: flex-start;
-		backdrop-filter: blur(16px);
 		overflow: hidden;
 		z-index: 1;
 		position: absolute;

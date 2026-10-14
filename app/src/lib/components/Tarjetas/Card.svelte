@@ -13,7 +13,7 @@
 	} = $props();
 </script>
 
-<div class="tarjeta" transition:slide>
+<div class="tarjeta honey" transition:slide>
 	<div class="header" style={headerStyle}>
 		{#if header}
 			{@render header()}
