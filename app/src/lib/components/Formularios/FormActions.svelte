@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import type { Snippet } from 'svelte';
+	import NavButton from '../Acciones/NavButton.svelte';
 
 	let {
 		action,
@@ -34,7 +35,6 @@
 	function handleSubmit() {
 		isSubmitting = true;
 		return async ({ result, update }: any) => {
-
 			if (result.type === 'success') {
 				isSubmitting = false;
 				isOpen = false;
@@ -61,6 +61,7 @@
 		{#if submitContent}
 			<div class="submit">
 				{@render submitContent(isSubmitting)}
+				<NavButton />
 			</div>
 		{/if}
 	</form>

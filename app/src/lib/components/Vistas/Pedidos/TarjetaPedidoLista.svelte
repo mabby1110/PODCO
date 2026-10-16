@@ -81,7 +81,7 @@
 </script>
 
 {#each pedidosAgrupados as grupo}
-	<div class="contenedor-lista butter">
+	<div class="contenedor-lista milk">
 		<div class="meta-lista">
 			{#if grupo.id_agrupacion !== 'sin_agrupar'}
 				<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>

@@ -73,7 +73,7 @@
 		{/if}
 		<div class="actions">
 			{#if !ocultarAcciones}
-				<button class="butter" onclick={handleNavigationClick}>Ver</button>
+				<button class="milk" onclick={handleNavigationClick}>Ver</button>
 			{/if}
 			{#if acciones}
 				{@render acciones()}
@@ -88,7 +88,7 @@
 		flex-wrap: wrap;
 		cursor: pointer;
 		width: 100%;
-		padding: var(--y) var(--a);
+		padding: var(--a);
 	}
 	.list-card-header {
 		flex-grow: 3;

@@ -189,12 +189,11 @@
 
 	{#snippet submitContent(isSubmitting: boolean)}
 		{#if fase.id_fase <= 3 && fase.id_fase != 0}
-			<FormOptionalSubmit {siguienteFase} bind:submit bind:submitCancel bind:isOpen />
 			{#if submit}
 				<input type="hidden" name="fase" value={siguienteFase.id_fase} />
 				<button
 					type="submit"
-					class="honey"
+					class="honey accion"
 					style={siguienteFase.estilo}
 					disabled={isSubmitting || !canSubmit}
 				>
@@ -202,14 +201,15 @@
 				</button>
 			{:else if submitCancel}
 				<input type="hidden" name="fase" value={0} />
-				<button type="submit" class="honey" disabled={isSubmitting || !canSubmit}>Descartar</button>
+				<button type="submit" class="honey accion" disabled={isSubmitting || !canSubmit}>Descartar</button>
 			{:else}
-				<button type="button" class="honey {editando}" onclick={() => (editando = !editando)}>
-					Editar
+				<button type="button" class="honey accion {editando}" onclick={() => (editando = !editando)}>
+					~Editar
 				</button>
 			{/if}
 		{/if}
-	{/snippet} 	
+		<FormOptionalSubmit {siguienteFase} bind:submit bind:submitCancel bind:isOpen />
+	{/snippet}
 </FormActions>
 
 <style>

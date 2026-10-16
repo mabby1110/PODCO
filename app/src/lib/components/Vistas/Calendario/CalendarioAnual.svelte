@@ -213,7 +213,7 @@
 
 	{#snippet contenido()}
 		<div
-			class="calendario-contenedor panel"
+			class="calendario-contenedor"
 			bind:this={contenedor}
 			bind:clientWidth={contenedorWidth}
 		>
@@ -232,7 +232,7 @@
 			</div>
 
 			<div class="contenedor-tarjetas">
-				<div class="grid-fondo">
+				<div class="grid-fondo butter">
 					{#each columnasMeses as mes (mes.indice)}
 						<div class="grid-linea" style="width: {mes.ancho}px;"></div>
 					{/each}

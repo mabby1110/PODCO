@@ -24,7 +24,7 @@
 </script>
 
 <div class="grupo" bind:this={listRef}>
-	<button class="titulo jelly" onclick={handleToggle}>
+	<button class="titulo milk" onclick={handleToggle}>
 		<h2>{groupTitle} ({agrupacion.items.length})</h2>
 	</button>
 	{#if show}

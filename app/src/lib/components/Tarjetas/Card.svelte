@@ -40,7 +40,7 @@
 		display: flex;
 		flex-direction: column;
 		overflow: auto;
-		padding: var(--a) var(--a) var(--e);
+		padding: var(--a) var(--a) var(--f);
 	}
 	.header {
 		padding: var(--a);

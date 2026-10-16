@@ -78,17 +78,17 @@
 	});
 </script>
 
-<div class="panel cotizacion-container">
-	<div class="badge" style={fasesPedido[2]?.estilo}>
-		<span>Potencial de Venta</span>
-	</div>
-	<div class="lista-tarjetas">
+<div class="pedido">
+	<div class="lista-tarjetas honey">
+		<div class="badge" style={fasesPedido[2]?.estilo}>
+			<span>Potencial de Venta</span>
+		</div>
 		{#each potencial_venta as pedido (pedido.id)}
 			{@const seleccionado = StoreCotizado.carrito.some((item) => item.id === pedido.id)}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
-				class="tarjeta honey"
+				class="tarjeta"
 				class:selected={seleccionado}
 				class:invalid={seleccionado && pedido.precio_unitario == null}
 				onclick={() => seleccionarPedido(pedido.id)}
@@ -184,12 +184,10 @@
 				{/if}
 			{:else if potencial_venta.length > 0}
 				<div class="acciones-fijas">
+					<button class="butter" onclick={editarPedido}>~Editar</button>
 					<button class="butter" onclick={seleccionarPedidoCompleto}>
 						Seleccionar todo para cotizar
 					</button>
-					{#if editando}
-						<button class="butter" onclick={editarPedido}>~Editar</button>
-					{/if}
 				</div>
 			{/if}
 		{/if}
@@ -197,8 +195,7 @@
 </div>
 
 <style>
-	.cotizacion-container {
-		padding: 16px 16px;
+	.pedido {
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
@@ -208,7 +205,8 @@
 	.lista-tarjetas {
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
+		gap: var(--a);
+		padding: var(--a);
 	}
 	.tarjeta {
 		display: grid;

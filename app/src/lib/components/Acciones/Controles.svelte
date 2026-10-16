@@ -131,7 +131,7 @@
 	</div>
 {/if}
 
-<button class="control butter" class:activo={show} onclick={() => (show = !show)}>
+<button class="control honey" class:activo={show} onclick={() => (show = !show)}>
 	<img src="/options.svg" alt="options" />
 </button>
 

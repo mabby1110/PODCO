@@ -139,7 +139,7 @@
 			<button class="jelly" onclick={agregarOrden}>+ Orden</button>
 			{#each estado.sorts as orden, i}
 				<div class="mod">
-					<button class="jelly rojo" onclick={() => eliminarOrden(i)}>X</button>
+					<button class="jelly rojo accion" onclick={() => eliminarOrden(i)}>✕</button>
 					<div class="condicion">
 						<select
 							value={orden.field}
@@ -171,7 +171,7 @@
 		{#each estado.filters as filtro, i}
 			{@const campoDef = getCampoDef(filtro.field)}
 			<div class="filtro">
-				<button class="jelly rojo" onclick={() => eliminarFiltro(i)}>X</button>
+				<button class="jelly rojo accion" onclick={() => eliminarFiltro(i)}>✕</button>
 				<div class="categoria">
 					<select
 						value={filtro.field}

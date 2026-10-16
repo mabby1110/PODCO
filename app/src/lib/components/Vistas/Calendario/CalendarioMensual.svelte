@@ -55,7 +55,7 @@
 		return new Date(now.getFullYear(), now.getMonth() + calendarStore.monthOffset, 1);
 	});
 
-	console.log(calendarStore.monthOffset)
+	console.log(calendarStore.monthOffset);
 	const monthDates = $derived.by(() => {
 		const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
 		const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
@@ -188,7 +188,7 @@
 
 	{#snippet contenido()}
 		<div
-			class="calendar tarjeta"
+			class="calendar"
 			style="--dynamic-cell-height: {CELL_HEIGHT}px; --cols: 7; --rows: {rowsCount};"
 		>
 			<h1 class="month-title">{getMonth(monthDate)}</h1>
@@ -198,7 +198,7 @@
 				class:max={$appState.calendarCards}
 				bind:clientHeight={containerHeight}
 			>
-				<div class="calendar-grid">
+				<div class="calendar-grid butter">
 					{#each weekdays as day, i (day)}
 						<div class="day-th" data-col={i} bind:clientHeight={headerHeight}>
 							<div class="day-header">
@@ -267,6 +267,7 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
+		min-height: var(--i);
 		overflow: hidden;
 		border-radius: 8px;
 	}
@@ -280,7 +281,6 @@
 		font-weight: bold;
 		padding: 12px;
 		background: var(--bg-color, transparent);
-		border-bottom: 1px solid var(--color-muted);
 		z-index: 10;
 		flex-shrink: 0;
 	}
@@ -306,8 +306,8 @@
 		top: 0;
 		z-index: 11;
 		padding: 8px;
-		background: var(--bg-color, transparent);
-		backdrop-filter: blur(16px);
+		background: transparent;
+		border-radius: 8px;
 		border-right: 1px solid var(--color-muted);
 		border-bottom: 1px solid var(--color-muted);
 	}
@@ -336,6 +336,7 @@
 		min-height: 0;
 		height: var(--dynamic-cell-height);
 		overflow: hidden;
+		border-radius: 8px;
 		border-right: 1px solid var(--color-muted);
 		border-bottom: 1px solid var(--color-muted);
 	}
@@ -361,6 +362,7 @@
 		flex: 1 1 0;
 		min-height: 0;
 		overflow-y: auto;
+		border-radius: inherit;
 	}
 
 	.event-cell:has(.expanded) .event-stack {

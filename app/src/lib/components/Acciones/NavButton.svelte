@@ -49,7 +49,7 @@
 			<!-- <button onclick={() => navigate('/estadisticas')} class="butter"> 📊 Estadisticas </button> -->
 		</div>
 	{/if}
-	<button onclick={togglePanel} class="home butter" class:activo={expanded}>
+	<button onclick={togglePanel} class="home honey" class:activo={expanded}>
 		<img src="/bms-logo.svg" alt="BMS" />
 	</button>
 </div>

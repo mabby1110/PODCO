@@ -73,7 +73,7 @@
 	});
 </script>
 
-{#if value || isEditing}
+{#if value || isEditing || editando}
 	<form method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={id} />
 

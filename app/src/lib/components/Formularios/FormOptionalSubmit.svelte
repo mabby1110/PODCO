@@ -39,9 +39,9 @@
 
 {#if !isOpen}
 	{#if submitCancel}
-		<button class="honey" type="button" onclick={toggleCancel}> Descartar </button>
+		<button class="honey accion" type="button" onclick={toggleCancel}> Descartar </button>
 	{/if}
-	<button class="honey" style={siguienteFase.estilo} type="button" onclick={toggleSubmit}> {siguienteFase.actual} </button>
+	<button class="honey accion" style={siguienteFase.estilo} type="button" onclick={toggleSubmit}> {siguienteFase.actual} </button>
 {:else}
-	<button class="honey rojo" type="button" onclick={close}>✕</button>
+	<button class="honey accion rojo" type="button" onclick={close}>✕</button>
 {/if}

@@ -15,10 +15,10 @@
 	/* fases */
 	--color-1: #c6cce399;
 	--color-2: #5ca8ff99;
-	--color-3: #ffd70099;
+	--color-3: #ffff00cc;
 	--color-4: #34d76a99;
 	--color-5: #5ca8ffcc;
-	--color-6: #ffd700cc;
+	--color-6: #ffff00cc;
 	--color-7: #34d76acc;
 	--color-8: #000000ee;
 	--color-0: #ff444499;
@@ -130,6 +130,7 @@ button img {
 .milk {
 	border: none;
 	background-color: var(--color-milk);
+	border: 1px solid var(--color-muted);
 	border-radius: var(--br-b);
 	backdrop-filter: blur(8px);
 }
