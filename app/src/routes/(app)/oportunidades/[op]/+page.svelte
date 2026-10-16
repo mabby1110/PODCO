@@ -119,7 +119,7 @@
 			placeholder="Requisitos"
 		/>
 
-		<EditableInput
+		<!-- <EditableInput
 			{editando}
 			id={oportunidad?.id}
 			label="Observaciones"
@@ -128,18 +128,11 @@
 			value={oportunidad?.observaciones}
 			action="/oportunidades?/update"
 			placeholder="Observaciones"
-		/>
+		/> -->
 
-		{#if editando}
-			<CustomInput
-				label="Postergar"
-				action="/oportunidades?/update"
-				id={oportunidad?.id}
-				{editando}
-			>
-				<DatePicker />
-			</CustomInput>
-		{/if}
+		<CustomInput label="Postergar" action="/oportunidades?/update" id={oportunidad?.id} {editando}>
+			<DatePicker />
+		</CustomInput>
 
 		<!-- Borrador -->
 		{#if fase.id_fase == 1}
@@ -258,7 +251,7 @@
 
 		<section>
 			<div class="header">
-				<h3>Historia:</h3>
+				<h3>Observaciones:</h3>
 			</div>
 			<div class="block">
 				<Entradas

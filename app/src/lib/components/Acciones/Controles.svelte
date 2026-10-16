@@ -1,12 +1,12 @@
 <script lang="ts">
+	import { StoreHotkeys } from '$lib/stores/StoreHotkeys.svelte';
 	import { onMount } from 'svelte';
 	import type { Snippet } from 'svelte';
-
 	let {
 		acciones,
 		header,
 		absolute,
-		show
+		show = $bindable(false)
 	}: {
 		acciones?: Snippet;
 		header?: Snippet;
@@ -37,14 +37,6 @@
 
 		quadrantX = centerX > window.innerWidth / 2 ? 'right' : 'left';
 		quadrantY = centerY > window.innerHeight / 2 ? 'bottom' : 'top';
-	}
-
-	function handleKeyDown(event: KeyboardEvent) {
-		if (event.altKey && event.key === '3') {
-			event.preventDefault();
-			show = !show;
-		}
-		if (event.key === 'Escape') show = false;
 	}
 
 	function onMouseDown(event: MouseEvent) {
@@ -83,14 +75,26 @@
 			setTimeout(calculateQuadrant, 0);
 		}
 	});
-
 	onMount(() => {
 		window.addEventListener('resize', calculateQuadrant);
-		return () => window.removeEventListener('resize', calculateQuadrant);
+
+		const unregister = StoreHotkeys.register({
+			id: 'panel-controls',
+			key: 'a',
+			label: 'Abrir/cerrar panel de opciones',
+			action: () => {
+				show = !show;
+			}
+		});
+
+		return () => {
+			window.removeEventListener('resize', calculateQuadrant);
+			unregister();
+		};
 	});
 </script>
 
-<svelte:window onkeydown={handleKeyDown} onmousemove={onMouseMove} onmouseup={onMouseUp} />
+<svelte:window onmousemove={onMouseMove} onmouseup={onMouseUp} />
 
 {#if show}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -133,6 +137,11 @@
 
 <button class="control honey" class:activo={show} onclick={() => (show = !show)}>
 	<img src="/options.svg" alt="options" />
+	{#if StoreHotkeys.active && StoreHotkeys.get('a')}
+		<span class="hotkey-badge">
+			{StoreHotkeys.get('a')?.key.toUpperCase()}
+		</span>
+	{/if}
 </button>
 
 <style>
@@ -202,6 +211,7 @@
 		cursor: default;
 	}
 	.control {
+		position: relative;
 		padding: var(--y);
 		height: var(--d);
 	}

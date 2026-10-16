@@ -179,3 +179,24 @@ button img {
 .modal form {
 	margin: auto;
 }
+
+/* hotkeys */
+.hotkey-badge {
+	position: absolute;
+	top: -4px;
+	left: -4px;
+	display: grid;
+	place-items: center;
+	min-width: 14px;
+	height: 14px;
+	padding: 0 2px;
+	border: 1px solid currentColor;
+	border-radius: 3px;
+	background: var(--color-background, Canvas);
+	color: var(--color-foreground, CanvasText);
+	font-family: monospace;
+	font-size: 10px;
+	font-weight: 700;
+	line-height: 1;
+	pointer-events: none;
+}

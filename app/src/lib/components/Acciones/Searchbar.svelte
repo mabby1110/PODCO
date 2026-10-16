@@ -20,10 +20,10 @@
 		unique = $bindable(false),
 		showResults = false
 	}: Props = $props();
-	
+
 	let term = $state('');
 	let visibleColumns = $state([...keyColumns]);
-
+	let searchInput = $state<HTMLInputElement | undefined>(undefined);
 	let results = $derived(
 		term.trim() === ''
 			? []
@@ -64,6 +64,10 @@
 		lenght = results.length;
 		unique = term.length > 0 && lenght === 0;
 	});
+
+	$effect(() => {
+		searchInput?.focus();
+	});
 </script>
 
 {#if showResults}
@@ -75,7 +79,7 @@
 			<button class="reset-button" onclick={resetColumns}>Resetear Columnas</button>
 		{/if}
 
-		<input type="search" bind:value={term} placeholder="Buscar..." />
+		<input type="search" bind:this={searchInput} bind:value={term} placeholder="Buscar..." />
 
 		{#if results.length > 0 && visibleColumns.length > 0}
 			<div class="results" style="--col-count: {visibleColumns.length};">
@@ -109,7 +113,7 @@
 		{/if}
 	</div>
 {:else}
-	<input type="search" bind:value={term} placeholder="Buscar..." />
+	<input type="search" bind:this={searchInput} bind:value={term} placeholder="Buscar..." />
 {/if}
 
 <style>

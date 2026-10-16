@@ -25,7 +25,7 @@
 </script>
 
 {#if !isOpen}
-	<button class="honey optional-button" type="button" onclick={open}>
+	<button class="butter optional-button" type="button" onclick={open}>
 		{title}
 	</button>
 {:else}

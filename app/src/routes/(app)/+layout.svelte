@@ -8,20 +8,9 @@
 	import ModalInventario from '$lib/components/Vistas/Inventario/ModalInventario.svelte';
 	import ModalProducto from '$lib/components/Vistas/Catalogo/ModalProducto.svelte';
 	import ModalPedidoEditar from '$lib/components/Vistas/Pedidos/ModalPedidoEditar.svelte';
-	import Logout from '$lib/components/Acciones/Logout.svelte';
+	import Hotkeys from '$lib/components/Acciones/Hotkeys.svelte';
 
 	let { children, data } = $props();
-
-	function handleKeyDown(event: KeyboardEvent) {
-		if (event.altKey && event.key === 'q') {
-			event.preventDefault();
-			window.history.back();
-		}
-		if (event.altKey && event.key === 'w') {
-			event.preventDefault();
-			window.history.forward();
-		}
-	}
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
@@ -41,7 +30,9 @@
 	});
 </script>
 
-<svelte:window onkeydown={handleKeyDown} />
+<Hotkeys/>
+
+
 <div class="layout">
 	<!-- {#if expanded}
 		<div class="meta-layout" transition:slide>
@@ -65,11 +56,5 @@
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
-	}
-	.meta-layout {
-		display: flex;
-		padding: var(--a);
-		align-items: baseline;
-		gap: var(--a);
 	}
 </style>
