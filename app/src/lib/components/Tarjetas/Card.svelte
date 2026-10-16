@@ -38,16 +38,19 @@
 	.tarjeta {
 		position: relative;
 		display: flex;
+		gap: var(--c);
 		flex-direction: column;
 		overflow: auto;
 		padding: var(--a) var(--a) var(--f);
 	}
 	.header {
+		max-width: 1200px;
+		width: 100%;
 		padding: var(--a);
 		position: sticky;
 		top: 0;
 		z-index: 1;
-		margin-bottom: var(--a);
+		margin: 0 auto;
 		display: flex;
 		flex-direction: column-reverse;
 	}

@@ -32,7 +32,6 @@
 	{/snippet}
 
 	{#snippet inputs()}
-		<hr />
 		{#if submit}
 			{#if fase.id_fase == 1}
 				<section>

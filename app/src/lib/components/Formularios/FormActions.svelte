@@ -75,6 +75,7 @@
 	.inputs {
 		display: flex;
 		flex-direction: column;
+		padding: var(--a);
 		gap: var(--b);
 	}
 	.submit {

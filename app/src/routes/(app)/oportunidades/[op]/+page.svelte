@@ -54,18 +54,22 @@
 
 <Card headerStyle={fase.estilo}>
 	{#snippet header()}
-		<div class="title">
-			<h1>{oportunidad?.motivo}</h1>
-			<a href="/clientes/{oportunidad?.clientes.id}"
-				><h3>{oportunidad?.clientes.razon_social || oportunidad?.clientes.nombre_comercial}</h3></a
-			>
-		</div>
-		<div class="meta">
-			<p class="date">{formatDateToReadable(oportunidad?.fecha_creacion)}</p>
-			<p class="date">|</p>
-			<p>{oportunidad?.agentes?.nombre}</p>
-			<p class="date">|</p>
-			<p>{fase.actual}</p>
+		<div class="card-title">
+			<div class="card-content">
+				<h1>{oportunidad?.motivo}</h1>
+				<a href="/clientes/{oportunidad?.clientes.id}"
+					><h3>
+						{oportunidad?.clientes.razon_social || oportunidad?.clientes.nombre_comercial}
+					</h3></a
+				>
+			</div>
+			<div class="card-meta">
+				<p class="date">{formatDateToReadable(oportunidad?.fecha_creacion)}</p>
+				<p class="date">|</p>
+				<p>{oportunidad?.agentes?.nombre}</p>
+				<p class="date">|</p>
+				<p>{fase.actual}</p>
+			</div>
 		</div>
 	{/snippet}
 
@@ -168,7 +172,7 @@
 					{#if potencial_venta}
 						<TarjetaPedidoPotencial {oportunidad} {editando} />
 					{:else}
-						<button class="honey" onclick={relacionarPedido}>+Potencial de venta</button>
+						<button class="butter" onclick={relacionarPedido}>+Potencial de venta</button>
 					{/if}
 				</div>
 			</section>
@@ -272,8 +276,20 @@
 </Card>
 
 <style>
-	.meta {
+	.card-title {
+		width: 100%;
 		display: flex;
+		flex-wrap: wrap;
 		gap: var(--a);
+	}
+	.card-content {
+		flex-grow: 1;
+	}
+	.card-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		align-self: flex-end;
+		justify-self: flex-end;
 	}
 </style>

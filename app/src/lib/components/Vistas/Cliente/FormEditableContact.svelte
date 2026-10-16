@@ -40,6 +40,7 @@
 	let contacto_compuesto = $derived(lista || []);
 
 	function openNewPerson() {
+		isEditing = true;
 		showPersonForm = true;
 		resetPersonForm();
 	}
@@ -162,7 +163,7 @@
 					>
 				{/if}
 				<div class="contact-list">
-					{#if lista.length > 0}
+					{#if lista}
 						{#each lista as persona, i}
 							<!-- svelte-ignore a11y_no_static_element_interactions -->
 							<div
@@ -207,7 +208,9 @@
 							</button>
 						{/if}
 					{:else}
-						<p>No hay contactos registrados</p>
+						<button type="button" class="butter accion" onclick={openNewPerson}>
+							Nueva persona
+						</button>
 					{/if}
 				</div>
 
