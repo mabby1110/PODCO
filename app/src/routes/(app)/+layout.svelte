@@ -2,7 +2,6 @@
 	import { onNavigate } from '$app/navigation';
 	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte.js';
 	import { profile } from '$lib/stores/profileStore.svelte.js';
-	import NavButton from '$lib/components/Acciones/NavButton.svelte';
 	import ModalActividad from '$lib/components/Vistas/Actividad/ModalActividad.svelte';
 	import ModalOportunidad from '$lib/components/Vistas/Oportunidad/ModalOportunidad.svelte';
 	import ModalCliente from '$lib/components/Vistas/Cliente/ModalCliente.svelte';
@@ -10,9 +9,6 @@
 	import ModalProducto from '$lib/components/Vistas/Catalogo/ModalProducto.svelte';
 	import ModalPedidoEditar from '$lib/components/Vistas/Pedidos/ModalPedidoEditar.svelte';
 	import Logout from '$lib/components/Acciones/Logout.svelte';
-	import { page } from '$app/state';
-	import { appState } from '$lib/stores/appState.svelte.js';
-	import { slide } from 'svelte/transition';
 
 	let { children, data } = $props();
 

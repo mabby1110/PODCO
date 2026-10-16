@@ -221,7 +221,7 @@
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
 				<div class="tarjeta">
 					<div class="titulo">
-						<button class="butter milk" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
+						<button class="jelly rojo" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
 						<div>
 							<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
 							<div class="row enlaces">
@@ -314,33 +314,37 @@
 {/if}
 {#if StorePedidoNuevo.carrito.length == 0}
 	<button class="butter agregar-producto" onclick={() => goto('/catalogo')}
-		>+Agregar producto</button
+		>+{StorePedidoEditar.carrito.length ? 'Agregar Pedido' : 'Crear Pedido'}</button
 	>
 	<p class="estado-vacio">No hay productos seleccionados</p>
 {/if}
 
-<div class="acciones-fijas">
-	<button
-		class="butter"
-		type="button"
-		aria-label="Limpiar"
-		title="Limpiar"
-		onclick={limpiarCarritoCompleto}
-	>
-		Limpiar
-	</button>
-	<button
-		class="butter"
-		onclick={eliminarRelacion}
-		aria-label="Eliminar relación"
-		title="Eliminar relación"
-	>
-		<img src="/remove.svg" alt="Elimininar relacion" />
-	</button>
-	<button class="butter" onclick={editarBorrador} disabled={actualizando}>
-		{actualizando ? 'Actualizando...' : 'Guardar Cambios'}
-	</button>
-</div>
+{#if StorePedidoEditar.carrito.length > 0 || StorePedidoNuevo.carrito.length > 0}
+	<div class="acciones-fijas">
+		<button
+			class="butter"
+			type="button"
+			aria-label="Limpiar"
+			title="Limpiar"
+			onclick={limpiarCarritoCompleto}
+		>
+			Limpiar
+		</button>
+		{#if StorePedidoEditar.carrito.length > 0}
+			<button
+				class="butter eliminar-relacion"
+				onclick={eliminarRelacion}
+				aria-label="Eliminar relación"
+				title="Eliminar relación"
+			>
+				<img src="/remove.svg" alt="Elimininar relacion" />
+			</button>
+		{/if}
+		<button class="butter" onclick={editarBorrador} disabled={actualizando}>
+			{actualizando ? 'Actualizando...' : 'Guardar Cambios'}
+		</button>
+	</div>
+{/if}
 
 <style>
 	.encabezado {
@@ -366,13 +370,16 @@
 		padding: 8px 8px;
 		gap: var(--y);
 	}
-
-	.lista-pedidos{
+	.eliminar-relacion {
+		height: var(--d);
+		padding: 0;
+	}
+	.lista-pedidos {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
 	}
-	
+
 	.tarjeta {
 		grid-column: span 2;
 		display: grid;
@@ -381,6 +388,8 @@
 	.tarjeta .titulo {
 		grid-column: span 3;
 		display: flex;
+		align-items: baseline;
+		gap: var(--a);
 	}
 	.tarjeta .titulo div {
 		flex-grow: 1;
@@ -388,7 +397,6 @@
 	.tarjeta .inputs {
 		grid-column: span 3;
 		display: flex;
-		padding-left: 32px;
 		gap: var(--y);
 	}
 

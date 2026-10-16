@@ -41,7 +41,7 @@
 		<button onclick={() => StorePedidoEditar.toggleModal()} class="butter">~Pedido</button>
 		<Controles>
 			{#snippet header()}
-				<button onclick={() => appState.toggleModalInventario()} class="butter">+Producto</button>
+				<button onclick={() => appState.toggleModalInventario()} class="jelly">+Producto</button>
 				<ExportarCSV {lista_ordenada} />
 			{/snippet}
 			{#snippet acciones()}

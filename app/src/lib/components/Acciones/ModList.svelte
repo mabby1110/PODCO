@@ -135,7 +135,7 @@
 		</div>
 	{/if}
 	{#if ordenar}
-		<div class="accion">
+		<div class="mod-accion">
 			<button class="jelly" onclick={agregarOrden}>+ Orden</button>
 			{#each estado.sorts as orden, i}
 				<div class="mod">
@@ -166,7 +166,7 @@
 		</div>
 	{/if}
 
-	<div class="accion">
+	<div class="mod-accion">
 		<button class="jelly" onclick={agregarFiltro}>+ Filtro</button>
 		{#each estado.filters as filtro, i}
 			{@const campoDef = getCampoDef(filtro.field)}
@@ -209,7 +209,7 @@
 		flex-direction: column;
 		gap: var(--c);
 	}
-	.accion {
+	.mod-accion {
 		display: flex;
 		flex-wrap: wrap;
 		flex-direction: column;

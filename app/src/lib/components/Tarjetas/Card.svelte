@@ -4,51 +4,65 @@
 
 	let {
 		header,
-		content,
+		contenido,
+		acciones,
 		headerStyle
 	}: {
 		header?: Snippet;
-		content?: Snippet;
+		contenido?: Snippet;
+		acciones?: Snippet;
 		headerStyle?: string;
 	} = $props();
 </script>
 
-<div class="tarjeta honey" transition:slide>
-	<div class="header" style={headerStyle}>
+<div class="tarjeta">
+	<div class="header honey" style={headerStyle}>
 		{#if header}
 			{@render header()}
 		{/if}
 	</div>
 
-	<div class="card-content">
-		{#if content}
-			{@render content()}
+	<div class="contenido milk">
+		{#if contenido}
+			{@render contenido()}
+		{/if}
+	</div>
+	<div class="acciones">
+		{#if acciones}
+			{@render acciones()}
 		{/if}
 	</div>
 </div>
 
 <style>
 	.tarjeta {
-		margin: var(--a);
-		padding: 0;
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		overflow: hidden;
-		max-height: 100%;
+		overflow: auto;
+		padding: var(--a) var(--a) var(--e);
 	}
 	.header {
 		padding: var(--a);
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		margin-bottom: var(--a);
+		display: flex;
+		flex-direction: column-reverse;
 	}
-	.card-content {
+	.contenido {
 		max-width: 1200px;
 		padding: var(--a);
 		width: 100%;
 		margin: auto;
 		display: flex;
 		flex-direction: column;
-		overflow: auto;
 		gap: var(--c) var(--a);
-		height: 100%;
+	}
+	.acciones {
+		max-width: 1200px;
+		width: 100%;
+		margin: auto;
 	}
 </style>

@@ -48,7 +48,7 @@
 
 <button
     type="button"
-    class="butter btn-exportar"
+    class="btn-exportar jelly"
     disabled={!lista_ordenada || lista_ordenada.length === 0}
     onclick={exportarACSV}
 >
@@ -61,15 +61,9 @@
 <style>
     .btn-exportar {
         position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2px 4px;
+        padding: 0;
+        width: var(--d);
     }
-	.btn-exportar img {
-		height: 100%;
-		aspect-ratio: 1 / 1;
-	}
     .btn-exportar .cantidad {
         position: absolute;
         bottom: -5px;

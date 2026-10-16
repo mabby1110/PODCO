@@ -99,50 +99,56 @@
 	<input type="hidden" name="id" value={objId} />
 	<input type="hidden" name="historia" value={list_stringified} />
 
-	<div class="contenedor-historial">
+	<div class="contenedor-historial honey">
 		<div class="lista-entradas">
 			{#if lista.length > 0}
 				{#each lista as item, i}
-					<div class="tarjeta-entrada">
+					<div class="entrada">
 						<span class="fecha-etiqueta">
 							{formatDateToReadable(item.fecha)}
 							{#if item.id_op}
 								<a class="enlace-oportunidad" href="/oportunidades/{item.id_op}"> Oportunidad </a>
 							{/if}
 						</span>
-						{#if item.nombre_perfil}
-							<span class="autor-etiqueta">{item.nombre_perfil}</span>
-						{/if}
+						<div class="tarjeta-entrada">
+							{#if item.nombre_perfil}
+								<span class="autor-etiqueta">{item.nombre_perfil}</span>
+							{/if}
 
-						{#if editando}
-							<div class="campo-edicion">
-								<textarea
-									class="area-texto"
-									bind:value={item.entrada}
-									onchange={(e) => actualizarEntrada(i, e.currentTarget.value)}
-								></textarea>
-								<div class="acciones-edicion">
-									<button type="button" class="butter" onclick={() => handleHotOp(i, item.entrada)}>
-										+Oportunidad
-									</button>
-									<button type="button" class="butter" onclick={() => eliminarEntrada(i)}>
-										Eliminar
-									</button>
-									<button
-										type="button"
-										class="butter matcha"
-										onclick={syncAndSubmit}
-										disabled={isSubmitting}
-									>
-										Guardar
-									</button>
+							{#if editando}
+								<div class="campo-edicion">
+									<textarea
+										class="area-texto"
+										bind:value={item.entrada}
+										onchange={(e) => actualizarEntrada(i, e.currentTarget.value)}
+									></textarea>
+									<div class="acciones-edicion">
+										<button
+											type="button"
+											class="butter"
+											onclick={() => handleHotOp(i, item.entrada)}
+										>
+											+Oportunidad
+										</button>
+										<button type="button" class="butter" onclick={() => eliminarEntrada(i)}>
+											Eliminar
+										</button>
+										<button
+											type="button"
+											class="butter matcha"
+											onclick={syncAndSubmit}
+											disabled={isSubmitting}
+										>
+											Guardar
+										</button>
+									</div>
 								</div>
-							</div>
-						{:else if item.entrada}
-							<div class="contenido-texto">
-								<p>{item.entrada}</p>
-							</div>
-						{/if}
+							{:else if item.entrada}
+								<div class="contenido-texto">
+									<p>{item.entrada}</p>
+								</div>
+							{/if}
+						</div>
 					</div>
 				{/each}
 			{:else}
@@ -176,8 +182,6 @@
 		gap: 1rem;
 		width: 100%;
 		pointer-events: none;
-		border: 1px solid #e0e0e0;
-		border-radius: var(--a);
 	}
 	button,
 	textarea,
@@ -191,17 +195,19 @@
 		width: 100%;
 		overflow-y: auto;
 	}
-
+	.entrada {
+		display: flex;
+		flex-direction: column;
+		padding: var(--a);
+	}
 	.tarjeta-entrada {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(var(--d), 1fr));
-		padding: var(--a);
 		gap: var(--a);
 	}
 
 	.fecha-etiqueta {
 		grid-column: span 3;
-		color: var(--color-muted);
 		font-size: small;
 	}
 

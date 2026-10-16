@@ -12,7 +12,7 @@
 		$props();
 
 	// DATOS DERIVADOS
-	let cotizaciones = $derived(oportunidad.pedidos.filter((p) => p.fase === 3)||[]);
+	let cotizaciones = $derived(oportunidad.pedidos.filter((p) => p.fase === 3) || []);
 
 	// ESTADO COMPONENTE
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
@@ -66,7 +66,7 @@
 			{:else if fase.id_fase == 2}
 				<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
 				<input type="hidden" name="fecha_venta" value={new Date().toISOString()} />
-				<input type="number" disabled bind:value={cotizaciones.length} required>
+				<input type="number" disabled bind:value={cotizaciones.length} required />
 				<FormInput
 					label="Motivo"
 					name="motivo"
@@ -189,11 +189,12 @@
 
 	{#snippet submitContent(isSubmitting: boolean)}
 		{#if fase.id_fase <= 3 && fase.id_fase != 0}
+			<FormOptionalSubmit {siguienteFase} bind:submit bind:submitCancel bind:isOpen />
 			{#if submit}
 				<input type="hidden" name="fase" value={siguienteFase.id_fase} />
 				<button
 					type="submit"
-					class="butter"
+					class="honey"
 					style={siguienteFase.estilo}
 					disabled={isSubmitting || !canSubmit}
 				>
@@ -201,25 +202,17 @@
 				</button>
 			{:else if submitCancel}
 				<input type="hidden" name="fase" value={0} />
-				<button type="submit" class="butter" disabled={isSubmitting || !canSubmit}>Descartar</button
-				>
+				<button type="submit" class="honey" disabled={isSubmitting || !canSubmit}>Descartar</button>
 			{:else}
-				<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
+				<button type="button" class="honey {editando}" onclick={() => (editando = !editando)}>
 					Editar
 				</button>
 			{/if}
-			<FormOptionalSubmit {siguienteFase} bind:submit bind:submitCancel bind:isOpen />
 		{/if}
-	{/snippet}
+	{/snippet} 	
 </FormActions>
 
 <style>
-	.butter:hover:not(:disabled) {
-		transform: translateY(-2px);
-	}
-	.butter:active:not(:disabled) {
-		transform: translateY(0);
-	}
 	.butter:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;

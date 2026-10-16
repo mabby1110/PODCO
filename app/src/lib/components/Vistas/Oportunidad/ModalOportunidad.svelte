@@ -15,7 +15,7 @@
 
 {#if $appState.ModalOp}
     <div
-        class="overlay"
+        class="overlay honey"
         role="button"
         tabindex="0"
         onkeydown={(e) => e.key === 'Escape' && closeAndClear()}
@@ -24,7 +24,7 @@
         <div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" tabindex="-1">
             <div class="modal-header">
                 <h2>Nueva Oportunidad</h2>
-                <button class="close" onclick={closeAndClear}>✕</button>
+                <button class="jelly rojo" onclick={closeAndClear}>✕</button>
             </div>
             <form
                 method="POST"
@@ -54,26 +54,6 @@
 {/if}
 
 <style>
-    .overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        padding: 1rem;
-    }
-
-    .close {
-        background: none;
-        border: none;
-        cursor: pointer;
-        width: 2rem;
-        height: 2rem;
-        border-radius: 4px;
-    }
-
     .actions {
         display: flex;
         gap: 0.5rem;

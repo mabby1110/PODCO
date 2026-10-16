@@ -21,7 +21,7 @@
 		tabindex="0"
 		onkeydown={(e) => e.key === 'Escape' && appState.toggleModalActivity()}
 	>
-		<div class="modal" role="dialog" tabindex="-1">
+		<div class="modal honey" role="dialog" tabindex="-1">
 			<div class="modal-header">
 				<h2>Nueva Actividad</h2>
 				<button class="close" onclick={() => appState.toggleModalActivity()}>✕</button>
@@ -82,17 +82,6 @@
 {/if}
 
 <style>
-	.overlay {
-		position: fixed;
-		inset: 0;
-		background: rgba(0, 0, 0, 0.5);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 9999;
-		padding: 1rem;
-	}
-
 	.close {
 		background: none;
 		border: none;

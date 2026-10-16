@@ -51,17 +51,15 @@
 <div class="form-actions">
 	<form method="POST" {action} enctype="multipart/form-data" use:enhance={handleSubmit}>
 		{#if isOpen && inputs}
-			<div class="inputs" bind:this={actionsElement}>
+			<div class="inputs milk" bind:this={actionsElement}>
 				{@render inputs()}
 			</div>
 		{/if}
-
 		{#if hiddenContent}
 			{@render hiddenContent()}
 		{/if}
-
 		{#if submitContent}
-			<div class="submit panel">
+			<div class="submit">
 				{@render submitContent(isSubmitting)}
 			</div>
 		{/if}
@@ -80,13 +78,12 @@
 	}
 	.submit {
 		position: fixed;
-		bottom: 0;
+		bottom: var(--a);
 		right: var(--a);
 		display: flex;
 		flex-wrap: wrap-reverse;
 		justify-content: flex-end;
 		gap: var(--a);
-		margin: 0 var(--a) var(--a) var(--e);
 		padding: var(--a);
 	}
 </style>

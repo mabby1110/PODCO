@@ -12,9 +12,9 @@
 </script>
 
 {#if StoreContextoRelacion.id_oportunidad}
-	<div class="tarjeta oportunidad" style={fasesOportunidad[oportunidad.fase].estilo}>
+	<div class="butter oportunidad" style={fasesOportunidad[oportunidad.fase].estilo}>
 		<div class="header">
-			<button class="butter milk" onclick={() => StoreContextoRelacion.limpiar()}>✕</button>
+			<button class="jelly rojo" onclick={() => StoreContextoRelacion.limpiar()}>✕</button>
 			<div class="titulo">
 				<h3>{oportunidad?.clientes.razon_social || oportunidad?.clientes.nombre_comercial}</h3>
 				<div class="meta-titulo">

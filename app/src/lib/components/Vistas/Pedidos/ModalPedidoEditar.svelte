@@ -34,7 +34,7 @@
 					(w ? ` width: ${w}px; max-width: none;` : '') +
 					(h ? ` height: ${h}px; max-height: none;` : '')
 	);
-
+	
 	function calculateQuadrant() {
 		if (!panel) return;
 		const rect = panel.getBoundingClientRect();
@@ -44,7 +44,6 @@
 		quadrantX = centerX > window.innerWidth / 2 ? 'right' : 'left';
 		quadrantY = centerY > window.innerHeight / 2 ? 'bottom' : 'top';
 	}
-
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.altKey && event.key === '3') {
 			event.preventDefault();
@@ -52,7 +51,6 @@
 		}
 		if (event.key === 'Escape') StorePedidoEditar.toggleModal(false);
 	}
-
 	function onMouseDown(event: MouseEvent) {
 		if (isMaximized) return;
 		isDragging = true;
@@ -61,32 +59,37 @@
 		initialX = x;
 		initialY = y;
 	}
-
 	function onResizeMouseDown(event: MouseEvent) {
 		if (isMaximized) return;
 		event.stopPropagation();
 		isResizing = true;
 		startX = event.clientX;
 		startY = event.clientY;
+		initialX = x; // <-- nuevo
 		if (panel) {
 			const rect = panel.getBoundingClientRect();
 			startW = rect.width;
 			startH = rect.height;
 		}
 	}
-
 	function onMouseMove(event: MouseEvent) {
 		if (isDragging) {
 			x = initialX + (event.clientX - startX);
 			y = initialY + (event.clientY - startY);
 			calculateQuadrant();
 		} else if (isResizing) {
-			// El panel está anclado a la derecha, por lo que mover a la izquierda aumenta el ancho.
-			w = Math.max(300, startW + (startX - event.clientX));
-			h = Math.max(200, startH + (event.clientY - startY));
+			// Esquina inferior izquierda: arrastrar a la izquierda aumenta el ancho,
+			// arrastrar hacia abajo aumenta el alto. El borde derecho y el superior quedan fijos.
+			const newW = Math.max(300, startW + (startX - event.clientX));
+			const newH = Math.max(200, startH + (event.clientY - startY));
+
+			w = newW;
+			h = newH;
+
+			// Compensa el centrado automático (margin-inline: auto) para fijar el borde derecho
+			x = initialX + (startW - newW) / 2;
 		}
 	}
-
 	function onMouseUp() {
 		if (isDragging || isResizing) {
 			isDragging = false;
@@ -129,7 +132,7 @@
 		<div class="header-actions" onmousedown={onMouseDown}>
 			<p class="panel-title">Editar Pedido</p>
 			<button
-				class="butter milk max-window"
+				class="jelly max-window"
 				type="button"
 				onclick={(e) => {
 					e.stopPropagation();
@@ -138,7 +141,7 @@
 			>
 				<img src="/max-win.svg" alt="max-win" />
 			</button>
-			<button class="butter chile" type="button" onclick={() => StorePedidoEditar.toggleModal()}>
+			<button class="butter rojo" type="button" onclick={() => StorePedidoEditar.toggleModal()}>
 				✕
 			</button>
 		</div>
@@ -233,5 +236,9 @@
 	}
 	.maximized .header-actions:active {
 		cursor: default;
+	}
+	.jelly {
+		height: var(--d);
+		padding: 0;
 	}
 </style>

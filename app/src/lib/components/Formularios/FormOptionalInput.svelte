@@ -25,12 +25,12 @@
 </script>
 
 {#if !isOpen}
-	<button class="butter optional-button" type="button" onclick={open}>
+	<button class="honey optional-button" type="button" onclick={open}>
 		{title}
 	</button>
 {:else}
 	<div class="optional-input" bind:this={input}>
-		<button class="butter chile" type="button" onclick={close}>✕</button>
+		<button class="jelly rojo" type="button" onclick={close}>✕</button>
 		{#if children}
 			{@render children()}
 		{/if}

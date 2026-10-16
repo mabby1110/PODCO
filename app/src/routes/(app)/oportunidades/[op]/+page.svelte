@@ -21,12 +21,14 @@
 	import TarjetaPedidoPotencial from '$lib/components/Vistas/Pedidos/TarjetaPedidoPotencial.svelte';
 	import TarjetaPedidoCotizado from '$lib/components/Vistas/Pedidos/TarjetaPedidoCotizado.svelte';
 	import TarjetaPedidoVenta from '$lib/components/Vistas/Pedidos/TarjetaPedidoVenta.svelte';
+	import { formatDateToReadable } from '$lib/utils/util';
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 
 	// ESTADO
 	const oportunidad = $derived(page.data.oportunidad);
 	const potencial_venta = $derived(oportunidad.pedidos.some((p) => p.fase == 2));
+	const cotizaciones = $derived(oportunidad.pedidos.some((p) => p.fase == 3));
 	const ventas = $derived(oportunidad.pedidos.filter((p) => p.fase == 4) || []);
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
 	let editando = $state(false);
@@ -59,14 +61,15 @@
 			>
 		</div>
 		<div class="meta">
-			<p class="date">{oportunidad?.inicio}</p>
+			<p class="date">{formatDateToReadable(oportunidad?.fecha_creacion)}</p>
 			<p class="date">|</p>
-			<p>{oportunidad?.agente?.nombre}</p>
-			<p>Fase: <strong>{oportunidad?.fase?.actual}</strong></p>
+			<p>{oportunidad?.agentes?.nombre}</p>
+			<p class="date">|</p>
+			<p>{fase.actual}</p>
 		</div>
 	{/snippet}
 
-	{#snippet content()}
+	{#snippet contenido()}
 		<EditableInput
 			{editando}
 			id={oportunidad?.id}
@@ -143,7 +146,7 @@
 
 				<div class="content">
 					{#if oportunidad.pedidos.length > 0}
-						<TarjetaPedidoPotencial {oportunidad} {editando} disable/>
+						<TarjetaPedidoPotencial {oportunidad} {editando} disable />
 						{#if editando}
 							<button onclick={editarPedido}>~Editar</button>
 						{/if}
@@ -163,24 +166,25 @@
 
 				<div class="block">
 					{#if potencial_venta}
-						<TarjetaPedidoPotencial {oportunidad} {editando}/>
+						<TarjetaPedidoPotencial {oportunidad} {editando} />
 					{:else}
-						<button class="butter" onclick={relacionarPedido}>+Potencial de venta</button>
+						<button class="honey" onclick={relacionarPedido}>+Potencial de venta</button>
 					{/if}
 				</div>
 			</section>
+			{#if cotizaciones}
+				<section>
+					<div class="header">
+						<h3>Cotizado:</h3>
+					</div>
 
-			<section>
-				<div class="header">
-					<h3>Cotizado:</h3>
-				</div>
-
-				<div class="block">
-					{#if oportunidad.pedidos.length > 0}
-						<TarjetaPedidoCotizado {oportunidad} disable/>
-					{/if}
-				</div>
-			</section>
+					<div class="block">
+						{#if oportunidad.pedidos.length > 0}
+							<TarjetaPedidoCotizado {oportunidad} disable />
+						{/if}
+					</div>
+				</section>
+			{/if}
 		{/if}
 
 		<!-- Cotizado y vendido -->
@@ -191,7 +195,7 @@
 				</div>
 				<div class="content">
 					{#if ventas.length > 0}
-						<TarjetaPedidoVenta  {oportunidad} />
+						<TarjetaPedidoVenta {oportunidad} />
 					{/if}
 				</div>
 			</section>
@@ -261,7 +265,8 @@
 				/>
 			</div>
 		</section>
-
+	{/snippet}
+	{#snippet acciones()}
 		<AgentActions {oportunidad} bind:editando />
 	{/snippet}
 </Card>

@@ -124,7 +124,7 @@
 				>
 					<img src="/max-win.svg" alt="max-win" />
 				</button> -->
-				<button class="butter milk" type="button" onclick={resetPosition}>◥</button>
+				<button class="jelly" type="button" onclick={resetPosition}>◥</button>
 				<button class="butter rojo" type="button" onclick={() => (show = false)}>✕</button>
 			</div>
 		</div>
@@ -169,6 +169,7 @@
 		flex-grow: 1;
 		display: flex;
 		gap: var(--a);
+		max-height: var(--d);
 	}
 	.header-actions .default {
 		display: flex;
@@ -202,7 +203,7 @@
 	}
 	.control {
 		padding: var(--y);
-		height: var(--e);
+		height: var(--d);
 	}
 
 	/* reglas para filtro dentro de componente */

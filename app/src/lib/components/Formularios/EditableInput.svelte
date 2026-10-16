@@ -34,74 +34,94 @@
 	} = $props();
 
 	let editedValue = $state(value);
+	let isEditing = $state(editando);
 	let isSubmitting = $state(false);
+
+	$effect(() => {
+		if (!isEditing) {
+			editedValue = value;
+		}
+	});
+
+	function startEditing() {
+		editedValue = value;
+		isEditing = true;
+	}
 
 	function handleSubmit() {
 		isSubmitting = true;
+
 		return async ({ result }: any) => {
 			if (result.type === 'success') {
 				value = editedValue;
+				isEditing = false;
 				await invalidateAll();
 			}
+
 			isSubmitting = false;
 		};
 	}
 
 	$effect(() => {
-		if (type === 'select' && !editando && options.length > 0) {
-			const selectedOption = options.find((opt) => opt.id == value);
+		if (type === 'select' && !isEditing && options.length > 0) {
+			const selectedOption = options.find((option) => option.id == value);
+
 			if (selectedOption) {
-				editedValue = selectedOption.nombre;
+				editedValue = String(selectedOption.id);
 			}
 		}
 	});
 </script>
 
-{#if value || editando}
+{#if value || isEditing}
 	<form method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={id} />
+
 		{#if id_agente}
 			<input type="hidden" name="id_agente" value={id_agente} />
 		{/if}
+
 		<section>
 			<div class="header">
 				<h3>{label}:</h3>
-				{#if hint && !editando}
+				{#if hint && !isEditing}
 					<p class="hint">{hint}</p>
 				{/if}
 			</div>
 
-			{#if editando}
-				<div class="content">
-					{#if type === 'textarea'}
-						<textarea {name} bind:value={editedValue} {rows} {placeholder}></textarea>
-					{:else if type === 'file'}
-						<input type="file" {name} class="file-input" />
-					{:else if type === 'select'}
-						<select {name} bind:value={editedValue} class="select">
-							<option value=""> seleccionar </option>
-							{#each options as option}
-								<option value={option.id}>
-									{option.nombre}
-								</option>
-							{/each}
-						</select>
-					{:else}
-						<input {type} {name} bind:value={editedValue} {placeholder} />
-					{/if}
-					<button
-						type="submit"
-						class="butter matcha"
-						disabled={isSubmitting}
-						style:opacity={isSubmitting ? 0.5 : 1}
-						style:cursor={isSubmitting ? 'not-allowed' : 'pointer'}
+			{#if isEditing}
+				<div class="acciones">
+					<button class="jelly rojo accion" type="button" onclick={() => (isEditing = !isEditing)}
+						>✕</button
 					>
-						Guardar
-					</button>
+					<div class="content">
+						{#if type === 'textarea'}
+							<textarea {name} bind:value={editedValue} {rows} {placeholder}></textarea>
+						{:else if type === 'file'}
+							<input type="file" {name} class="file-input" />
+						{:else if type === 'select'}
+							<select {name} bind:value={editedValue} class="select">
+								<option value="">Seleccionar</option>
+								{#each options as option}
+									<option value={option.id}>{option.nombre}</option>
+								{/each}
+							</select>
+						{:else}
+							<input {type} {name} bind:value={editedValue} {placeholder} />
+						{/if}
+					</div>
+					<button type="submit" class="butter accion" disabled={isSubmitting}> Guardar </button>
 				</div>
 			{:else}
 				<div class="content">
-					<p class="value">{editedValue || 'Sin información'}</p>
+					<p class="value editable" ondblclick={startEditing} title="Doble clic para editar">
+						{#if type === 'select'}
+							{options.find((option) => String(option.id) === String(value))?.nombre ??
+								'Sin información'}
+						{:else}
+							{value || 'Sin información'}
+						{/if}
+					</p>
 				</div>
 			{/if}
 		</section>
@@ -113,23 +133,51 @@
 		grid-column: span 2;
 		width: 100%;
 	}
+
+	.header {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
 	.hint {
 		font-size: 14px;
 		opacity: 0.7;
 		margin: 0;
 	}
+
 	.value {
 		margin: 0;
 		white-space: pre-wrap;
 		word-break: break-word;
 	}
-	input {
+
+	.editable {
+		cursor: pointer;
+		border-radius: 4px;
+		padding: 4px;
+	}
+
+	.editable:hover {
+		background: rgba(255, 255, 255, 0.08);
+	}
+
+	.content {
+		flex-grow: 1;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	input,
+	select,
+	textarea {
 		flex-grow: 1;
 	}
+
 	select {
 		cursor: pointer;
 		transition: all 0.2s;
-		flex-grow: 1;
 	}
 
 	select:hover {
@@ -145,9 +193,9 @@
 
 	textarea {
 		resize: vertical;
-		flex-grow: 1;
 		min-width: 200px;
 	}
+
 	.file-input {
 		padding: 8px;
 		border-radius: 4px;
@@ -156,7 +204,12 @@
 		color: inherit;
 		cursor: pointer;
 	}
+
 	.select {
 		width: fit-content;
+	}
+	.acciones {
+		display: flex;
+		gap: var(--a);
 	}
 </style>
