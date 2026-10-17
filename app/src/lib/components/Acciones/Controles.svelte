@@ -78,18 +78,23 @@
 	onMount(() => {
 		window.addEventListener('resize', calculateQuadrant);
 
-		const unregister = StoreHotkeys.register({
+		const unregisterHotkey = StoreHotkeys.register({
 			id: 'panel-controls',
-			key: 'a',
+			key: 'q',
 			label: 'Abrir/cerrar panel de opciones',
 			action: () => {
 				show = !show;
 			}
 		});
 
+		const unregisterEscape = StoreHotkeys.registerEscape('panel-controls', () => {
+			if (show) show = false;
+		});
+
 		return () => {
 			window.removeEventListener('resize', calculateQuadrant);
-			unregister();
+			unregisterHotkey();
+			unregisterEscape();
 		};
 	});
 </script>
@@ -137,9 +142,9 @@
 
 <button class="control honey" class:activo={show} onclick={() => (show = !show)}>
 	<img src="/options.svg" alt="options" />
-	{#if StoreHotkeys.active && StoreHotkeys.get('a')}
+	{#if StoreHotkeys.active && StoreHotkeys.get('q')}
 		<span class="hotkey-badge">
-			{StoreHotkeys.get('a')?.key.toUpperCase()}
+			{StoreHotkeys.get('q')?.key.toUpperCase()}
 		</span>
 	{/if}
 </button>

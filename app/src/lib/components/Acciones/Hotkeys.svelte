@@ -21,10 +21,15 @@
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
-		if (event.key === 'Escape' && active) {
-			cancel();
-			event.preventDefault();
-			return;
+		if (event.key === 'Escape') {
+			if (active) {
+				cancel();
+				event.preventDefault();
+				return;
+			}
+
+			StoreHotkeys.escape();
+			return; 
 		}
 
 		if (
@@ -70,14 +75,14 @@
 		};
 
 		window.addEventListener('keydown', handleKeyDown);
-		window.addEventListener('mousemove', onMouseMove);
+		// window.addEventListener('mousemove', onMouseMove);
 		window.addEventListener('blur', onBlur);
 		window.addEventListener('focusin', onFocusIn);
 
 		return () => {
 			clearTimeout(timeout);
 			window.removeEventListener('keydown', handleKeyDown);
-			window.removeEventListener('mousemove', onMouseMove);
+			// window.removeEventListener('mousemove', onMouseMove);
 			window.removeEventListener('blur', onBlur);
 			window.removeEventListener('focusin', onFocusIn);
 		};

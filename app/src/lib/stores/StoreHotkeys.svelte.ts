@@ -10,7 +10,21 @@ export interface HotkeyCommand {
 export class HotkeysStore {
 	#commands = $state<HotkeyCommand[]>([]);
 	#active = $state(false);
+	#escapeHandlers = new Map<string, () => void>();
 
+	registerEscape(id: string, action: () => void): () => void {
+		this.#escapeHandlers.set(id, action);
+
+		return () => {
+			this.#escapeHandlers.delete(id);
+		};
+	}
+
+	escape() {
+		const handlers = [...this.#escapeHandlers.values()];
+		handlers.at(-1)?.();
+	}
+	
 	get commands(): HotkeyCommand[] {
 		return this.#commands;
 	}
