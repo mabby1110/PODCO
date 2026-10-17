@@ -82,7 +82,7 @@
 		{/if}
 
 		<section>
-			<div class="header">
+			<div class="section-header">
 				<h3>{label}:</h3>
 				{#if hint && !isEditing}
 					<p class="hint">{hint}</p>

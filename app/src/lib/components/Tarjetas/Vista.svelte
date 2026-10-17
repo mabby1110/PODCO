@@ -47,7 +47,7 @@
 
 		display: flex;
 		gap: var(--a);
-		flex-wrap: wrap-reverse;
 		justify-content: flex-end;
+		align-items: flex-end;
 	}
 </style>

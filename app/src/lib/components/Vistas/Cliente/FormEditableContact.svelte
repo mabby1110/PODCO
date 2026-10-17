@@ -151,11 +151,11 @@
 	{/if}
 
 	<section>
-		<div class="header">
+		<div class="section-header">
 			<h3 class="label">Contactos:</h3>
 		</div>
 
-		<div class="block">
+		<div class="section-content">
 			<div class="acciones">
 				{#if isEditing}
 					<button class="jelly rojo accion" type="button" onclick={() => (isEditing = !isEditing)}

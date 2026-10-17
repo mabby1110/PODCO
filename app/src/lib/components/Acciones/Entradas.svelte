@@ -134,7 +134,7 @@
 										</button>
 										<button
 											type="button"
-											class="butter matcha"
+											class="butter accion"
 											onclick={syncAndSubmit}
 											disabled={isSubmitting}
 										>
@@ -171,6 +171,7 @@
 
 <style>
 	.historial {
+		flex-grow: 1;
 		display: flex;
 		gap: var(--a);
 	}

@@ -24,7 +24,7 @@ export const actions: Actions = {
 				moneda: pedido.moneda,
 				precio_unitario: pedido.precio_unitario,
 				id_oportunidad: idOportunidad,
-				fase: idOportunidad ? 2 : 0
+				fase: idOportunidad ? 2 : 1
 			}));
 
 			const updatePromises = pedidosParaActualizar.map(async (pedido) => {
@@ -221,7 +221,8 @@ export const actions: Actions = {
 
 			const pedidosParaActualizar = pedidosAActualizar.map((pedido: any) => ({
 				id: pedido.id,
-				id_oportunidad: null
+				id_oportunidad: null,
+				fase: 1
 			}));
 
 			const updatePromises = pedidosParaActualizar.map(async (pedido) => {

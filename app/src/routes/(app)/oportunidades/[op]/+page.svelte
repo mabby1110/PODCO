@@ -137,11 +137,11 @@
 		<!-- Borrador -->
 		{#if fase.id_fase == 1}
 			<section>
-				<div class="header">
+				<div class="section-header">
 					<h3>Borrador:</h3>
 				</div>
 
-				<div class="content">
+				<div class="section-content">
 					{#if oportunidad.pedidos.length > 0}
 						<TarjetaPedidoPotencial {oportunidad} {editando} disable />
 						{#if editando}
@@ -155,13 +155,13 @@
 		{/if}
 
 		<!-- Potencia de venta & cotizado -->
-		{#if fase.id_fase >= 2 && fase.id_fase <= 3}
+		{#if fase.id_fase == 2}
 			<section>
-				<div class="header">
+				<div class="section-header">
 					<h3>Potencial de Venta:</h3>
 				</div>
 
-				<div class="block">
+				<div class="section-content">
 					{#if potencial_venta}
 						<TarjetaPedidoPotencial {oportunidad} {editando} />
 					{:else}
@@ -171,11 +171,11 @@
 			</section>
 			{#if cotizaciones}
 				<section>
-					<div class="header">
+					<div class="section-header">
 						<h3>Cotizado:</h3>
 					</div>
 
-					<div class="block">
+					<div class="section-content">
 						{#if oportunidad.pedidos.length > 0}
 							<TarjetaPedidoCotizado {oportunidad} disable />
 						{/if}
@@ -186,11 +186,35 @@
 
 		<!-- Cotizado y vendido -->
 		{#if fase.id_fase >= 3}
+			<section>
+				<div class="section-header">
+					<h3>Potencial de Venta:</h3>
+				</div>
+
+				<div class="section-content">
+					{#if potencial_venta}
+						<TarjetaPedidoPotencial {oportunidad} {editando} />
+					{:else}
+						<button class="butter" onclick={relacionarPedido}>+Potencial de venta</button>
+					{/if}
+				</div>
+			</section>
+			<section>
+				<div class="section-header">
+					<h3>Cotizado:</h3>
+				</div>
+
+				<div class="section-content">
+					{#if oportunidad.pedidos.length > 0}
+						<TarjetaPedidoCotizado {oportunidad}  />
+					{/if}
+				</div>
+			</section>
 			<section class="occ">
-				<div class="header">
+				<div class="section-header">
 					<h3>Orden de compra:</h3>
 				</div>
-				<div class="content">
+				<div class="section-content">
 					{#if ventas.length > 0}
 						<TarjetaPedidoVenta {oportunidad} />
 					{/if}
@@ -200,10 +224,10 @@
 
 		<!-- {#if faseActual >= 2 && faseActual <= 3}
 			<section>
-				<div class="header">
+				<div class="section-header">
 					<h3>Potencial de venta:</h3>
 				</div>
-				<div class="content">
+				<div class="section-content">
 					{#if oportunidad?.pedidos.length > 0}
 						<PedidoRelacionado
 							pedidos={oportunidad?.pedidos ?? []}
@@ -215,10 +239,10 @@
 				</div>
 			</section>
 			<section>
-				<div class="header">
+				<div class="section-header">
 					<h3>Cotizacion(es):</h3>
 				</div>
-				<div class="content">
+				<div class="section-content">
 					{#if oportunidad?.cotizaciones.length > 0}
 						{#each oportunidad?.cotizaciones as documento}
 							{#if documento.pedidos.some((p) => p.fase == 3) || editando}{/if}
@@ -229,10 +253,10 @@
 		{/if}-->
 
 		<section class="adjunto">
-			<div class="header">
+			<div class="section-header">
 				<h3>Adjuntos:</h3>
 			</div>
-			<div class="content">
+			<div class="section-content">
 				<FormOptionalInput title="+Adjuntos">
 					<SubirAdjunto
 						tipo="docs_adjuntos"
@@ -250,10 +274,10 @@
 		</section>
 
 		<section>
-			<div class="header">
+			<div class="section-header">
 				<h3>Observaciones:</h3>
 			</div>
-			<div class="block">
+			<div class="section-content">
 				<Entradas
 					{editando}
 					historia={oportunidad?.historia}

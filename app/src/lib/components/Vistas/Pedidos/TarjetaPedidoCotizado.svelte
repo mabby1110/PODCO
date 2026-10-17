@@ -211,218 +211,218 @@
 	});
 </script>
 
-{#each pedidosAgrupados as grupo}
-	{@const existeSeleccion = grupo.pedidos.some((pedido) =>
-		carrito.some((item) => item.id === pedido.id)
-	)}
+<div class="cotizaciones">
+	{#each pedidosAgrupados as grupo}
+		{@const existeSeleccion = grupo.pedidos.some((pedido) =>
+			carrito.some((item) => item.id === pedido.id)
+		)}
 
-	<div class="cotizacion-container">
-		<div class="titulo-meta">
-			<div class="badge" style={fasesPedido[3]?.estilo}>
-				<span>Cotizado</span>
-			</div>
-
-			{#if grupo.id_agrupacion !== 'sin_agrupar'}
-				<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
-			{/if}
-		</div>
-
-		<div class="lista-tarjetas">
-			{#each grupo.pedidos as pedido (pedido.id)}
-				{@const itemStore = obtenerItem(pedido.id)}
-				{@const esSerializado = pedido.catalogo?.tipo_producto?.es_serializado === true}
-				{@const serialInvalido =
-					itemStore?.stock === true && esSerializado && !itemStore?.serial?.trim()}
-				{@const pedidoInvalido = itemStore && pedido.precio_unitario == null}
-
-				<!-- svelte-ignore a11y_click_events_have_key_events -->
-				<!-- svelte-ignore a11y_no_static_element_interactions -->
-				<div
-					class="tarjeta honey"
-					class:selected={!!itemStore}
-					class:invalid={!!pedidoInvalido || serialInvalido}
-				>
-					<strong class="titulo">
-						{pedido.catalogo?.codigo || 'Sin código'}
-					</strong>
-
-					<div class="contenido">
-						{#if !disable}
-							<select
-								class="select-estado"
-								class:stock={itemStore?.stock === true}
-								class:pedido={itemStore?.stock === false}
-								value={!itemStore ? '' : itemStore.stock ? 'stock' : 'pedido'}
-								onchange={(e) => {
-									e.stopPropagation();
-									cambiarEstadoPedido(pedido.id, e.currentTarget.value);
-								}}
-								onclick={(e) => e.stopPropagation()}
-							>
-								<option value="" disabled>Selecciona una opción</option>
-								<option value="pedido">Sobre pedido</option>
-								<option value="stock">En stock</option>
-								<option value="descartar">Descartar</option>
-							</select>
-						{/if}
-						{#if esSerializado && itemStore?.stock}
-							<input
-								type="text"
-								placeholder="Número de serie"
-								value={itemStore.serial ?? ''}
-								class:input-error={serialInvalido}
-								oninput={(e) => {
-									e.stopPropagation();
-									ingresarSerial(pedido.id, e.currentTarget.value);
-								}}
-								onclick={(e) => e.stopPropagation()}
-							/>
-
-							{#if serialInvalido}
-								<small class="error-text"> El número de serie es obligatorio. </small>
-							{/if}
-						{/if}
-
-						<span class="precio" class:text-danger={pedido.precio_unitario == null}>
-							{pedido.cantidad} x
-							{formatMoneda(pedido.precio_unitario, pedido.moneda)}
-						</span>
+		<div class="pedido">
+			<div class="lista-tarjetas honey">
+				<div class="titulo-meta">
+					<div class="badge" style={fasesPedido[3]?.estilo}>
+						<span>Cotizado</span>
 					</div>
 
-					<div class="resumen">
-						<b class="subtotal">
-							{formatMoneda((pedido.precio_unitario || 0) * (pedido.cantidad || 0), pedido.moneda)}
-						</b>
-					</div>
-				</div>
-
-				<div class="detalles">
-					{#if pedido.catalogo?.descripcion || pedido.catalogo?.caracteristicas || pedido.oportunidades?.necesidades}
-						{#if expandidos[pedido.id]}
-							<!-- svelte-ignore a11y_click_events_have_key_events -->
-							<!-- svelte-ignore a11y_no_static_element_interactions -->
-							<div class="contenido-expandido" onclick={(e) => e.stopPropagation()}>
-								{#if pedido.catalogo?.descripcion}
-									<p class="desc">
-										<strong>Desc:</strong>
-										{pedido.catalogo.descripcion}
-									</p>
-								{/if}
-
-								{#if pedido.catalogo?.caracteristicas}
-									<div class="jsonb">
-										<strong>Características:</strong>
-										<pre>{JSON.stringify(pedido.catalogo.caracteristicas, null, 2)}</pre>
-									</div>
-								{/if}
-
-								{#if pedido.oportunidades?.necesidades}
-									<p class="desc">
-										<strong>Necesidades:</strong>
-										{pedido.oportunidades.necesidades}
-									</p>
-								{/if}
-							</div>
-
-							<button
-								class="link-btn"
-								onclick={(e) => {
-									e.stopPropagation();
-									toggleDetalles(pedido.id);
-								}}
-							>
-								Ocultar detalles
-							</button>
-						{:else}
-							<button
-								class="link-btn"
-								onclick={(e) => {
-									e.stopPropagation();
-									toggleDetalles(pedido.id);
-								}}
-							>
-								Leer más detalles...
-							</button>
-						{/if}
+					{#if grupo.id_agrupacion !== 'sin_agrupar'}
+						<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
 					{/if}
 				</div>
-			{/each}
 
-			<div class="total">
-				<h1>
-					<b>{formatMoneda(grupo.totalGrupo)}</b>
-				</h1>
-			</div>
+				{#each grupo.pedidos as pedido (pedido.id)}
+					{@const itemStore = obtenerItem(pedido.id)}
+					{@const esSerializado = pedido.catalogo?.tipo_producto?.es_serializado === true}
+					{@const serialInvalido =
+						itemStore?.stock === true && esSerializado && !itemStore?.serial?.trim()}
+					{@const pedidoInvalido = itemStore && pedido.precio_unitario == null}
 
-			{#if grupo.pedidos.length === 0}
-				<p class="estado-vacio">No hay pedidos pendientes por cotizar en este grupo.</p>
-			{/if}
-		</div>
-		{#if !disable}
-			<div class="acciones-panel">
-				{#if existeSeleccion}
-					<div class="occ-wrapper">
-						{#if pedidosInvalidos}
-							<div class="alerta-error">
-								{#if carrito.some((item) => item.stock === true && !item.serial?.trim() && oportunidad.pedidos.some((p) => p.id === item.id && p.catalogo?.tipo_producto?.es_serializado === true))}
-									Completa el número de serie de los productos en stock antes de subir el OCC.
-								{:else}
-									Revisa los productos seleccionados antes de subir el OCC.
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
+					<div
+						class="tarjeta"
+						class:selected={!!itemStore}
+						class:invalid={!!pedidoInvalido || serialInvalido}
+					>
+						<strong class="titulo">
+							{pedido.catalogo?.codigo || 'Sin código'}
+						</strong>
+
+						<div class="contenido">
+							{#if !disable}
+								<select
+									class="select-estado"
+									class:stock={itemStore?.stock === true}
+									class:pedido={itemStore?.stock === false}
+									value={!itemStore ? '' : itemStore.stock ? 'stock' : 'pedido'}
+									onchange={(e) => {
+										e.stopPropagation();
+										cambiarEstadoPedido(pedido.id, e.currentTarget.value);
+									}}
+									onclick={(e) => e.stopPropagation()}
+								>
+									<option value="" disabled>Selecciona una opción</option>
+									<option value="pedido">Sobre pedido</option>
+									<option value="stock">En stock</option>
+									<option value="descartar">Descartar</option>
+								</select>
+							{/if}
+							{#if esSerializado && itemStore?.stock}
+								<input
+									type="text"
+									placeholder="Número de serie"
+									value={itemStore.serial ?? ''}
+									class:input-error={serialInvalido}
+									oninput={(e) => {
+										e.stopPropagation();
+										ingresarSerial(pedido.id, e.currentTarget.value);
+									}}
+									onclick={(e) => e.stopPropagation()}
+								/>
+
+								{#if serialInvalido}
+									<small class="error-text"> El número de serie es obligatorio. </small>
 								{/if}
-							</div>
-						{/if}
+							{/if}
 
-						{#if puedeSubirOcc}
-							<SubirOcc
-								tipo="docs_cotizaciones"
-								action="/documentos?/subirOcc"
-								oportunidad={{
-									id: oportunidad?.id,
-									cliente:
-										oportunidad?.clientes?.nombre_comercial || oportunidad?.clientes?.razon_social
-								}}
-								required
-							/>
+							<span class="precio" class:text-danger={pedido.precio_unitario == null}>
+								{pedido.cantidad} x
+								{formatMoneda(pedido.precio_unitario, pedido.moneda)}
+							</span>
+						</div>
+
+						<div class="resumen">
+							<b class="subtotal">
+								{formatMoneda(
+									(pedido.precio_unitario || 0) * (pedido.cantidad || 0),
+									pedido.moneda
+								)}
+							</b>
+						</div>
+					</div>
+
+					<div class="detalles">
+						{#if pedido.catalogo?.descripcion || pedido.catalogo?.caracteristicas || pedido.oportunidades?.necesidades}
+							{#if expandidos[pedido.id]}
+								<!-- svelte-ignore a11y_click_events_have_key_events -->
+								<!-- svelte-ignore a11y_no_static_element_interactions -->
+								<div class="contenido-expandido" onclick={(e) => e.stopPropagation()}>
+									{#if pedido.catalogo?.descripcion}
+										<p class="desc">
+											<strong>Desc:</strong>
+											{pedido.catalogo.descripcion}
+										</p>
+									{/if}
+
+									{#if pedido.catalogo?.caracteristicas}
+										<div class="jsonb">
+											<strong>Características:</strong>
+											<pre>{JSON.stringify(pedido.catalogo.caracteristicas, null, 2)}</pre>
+										</div>
+									{/if}
+
+									{#if pedido.oportunidades?.necesidades}
+										<p class="desc">
+											<strong>Necesidades:</strong>
+											{pedido.oportunidades.necesidades}
+										</p>
+									{/if}
+								</div>
+
+								<button
+									class="link-btn"
+									onclick={(e) => {
+										e.stopPropagation();
+										toggleDetalles(pedido.id);
+									}}
+								>
+									Ocultar detalles
+								</button>
+							{:else}
+								<button
+									class="link-btn"
+									onclick={(e) => {
+										e.stopPropagation();
+										toggleDetalles(pedido.id);
+									}}
+								>
+									Leer más detalles...
+								</button>
+							{/if}
 						{/if}
 					</div>
-				{:else}
-					<div class="acciones-fijas">
-						<button
-							class="butter"
-							type="button"
-							disabled={actualizando}
-							onclick={() => descartarGrupo(grupo.pedidos)}
-						>
-							{actualizando ? 'Descartando...' : 'Descartar'}
-						</button>
-					</div>
+				{/each}
+
+				<div class="total">
+					<h1>
+						<b>{formatMoneda(grupo.totalGrupo)}</b>
+					</h1>
+				</div>
+
+				{#if grupo.pedidos.length === 0}
+					<p class="estado-vacio">No hay pedidos pendientes por cotizar en este grupo.</p>
 				{/if}
 			</div>
-		{/if}
-	</div>
-{/each}
+			<div class="acciones-panel">
+				{#if !disable}
+					{#if existeSeleccion}
+						<div class="occ-wrapper">
+							{#if pedidosInvalidos}
+								<div class="alerta-error">
+									{#if carrito.some((item) => item.stock === true && !item.serial?.trim() && oportunidad.pedidos.some((p) => p.id === item.id && p.catalogo?.tipo_producto?.es_serializado === true))}
+										Completa el número de serie de los productos en stock antes de subir el OCC.
+									{:else}
+										Revisa los productos seleccionados antes de subir el OCC.
+									{/if}
+								</div>
+							{/if}
+
+							{#if puedeSubirOcc}
+								<SubirOcc
+									tipo="docs_cotizaciones"
+									action="/documentos?/subirOcc"
+									oportunidad={{
+										id: oportunidad?.id,
+										cliente:
+											oportunidad?.clientes?.nombre_comercial || oportunidad?.clientes?.razon_social
+									}}
+									required
+								/>
+							{/if}
+						</div>
+					{:else}
+						<div class="acciones-fijas">
+							<button
+								class="butter"
+								type="button"
+								disabled={actualizando}
+								onclick={() => descartarGrupo(grupo.pedidos)}
+							>
+								{actualizando ? 'Descartando...' : 'Descartar'}
+							</button>
+						</div>
+					{/if}
+				{/if}
+			</div>
+		</div>
+	{/each}
+</div>
 
 <style>
-	.cotizacion-container {
+	.cotizaciones {
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
-		padding: 16px;
-		border: 2px solid var(--color-muted);
-		border-radius: 32px;
 	}
-
 	.lista-tarjetas {
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
+		gap: var(--a);
+		padding: var(--a);
 	}
-
 	.tarjeta {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
-		align-items: baseline;
+		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 		border: none;
 	}
 

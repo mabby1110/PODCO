@@ -162,35 +162,36 @@
 		{#if potencial_venta.length === 0}
 			<p class="estado-vacio">No hay pedidos pendientes por cotizar en esta oportunidad.</p>
 		{/if}
-	</div>
-	<div class="acciones-panel">
-		{#if !disable}
-			{#if StoreCotizado.carrito.length > 0}
-				{#if pedidoACotizarInvalido}
-					<button class="alerta-error" onclick={editarPedido}>
-						<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Presiona
-						para editar.
-					</button>
-				{:else}
-					<SubirCotizacion
-						tipo="docs_cotizaciones"
-						action="/documentos?/subirCotizacion"
-						oportunidad={{
-							id: oportunidad?.id,
-							cliente: oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
-						}}
-						required
-					/>
+		<div class="acciones-panel">
+			{#if !disable}
+				{#if StoreCotizado.carrito.length > 0}
+					{#if pedidoACotizarInvalido}
+						<button class="alerta-error" onclick={editarPedido}>
+							<strong>Atención:</strong> Uno o más pedidos seleccionados no tienen precio unitario. Presiona
+							para editar.
+						</button>
+					{:else}
+						<SubirCotizacion
+							tipo="docs_cotizaciones"
+							action="/documentos?/subirCotizacion"
+							oportunidad={{
+								id: oportunidad?.id,
+								cliente:
+									oportunidad?.clientes.nombre_comercial || oportunidad?.clientes.razon_social
+							}}
+							required
+						/>
+					{/if}
+				{:else if potencial_venta.length > 0}
+					<div class="acciones-fijas">
+						<button class="butter" onclick={editarPedido}>~Editar</button>
+						<button class="butter" onclick={seleccionarPedidoCompleto}>
+							Seleccionar todo para cotizar
+						</button>
+					</div>
 				{/if}
-			{:else if potencial_venta.length > 0}
-				<div class="acciones-fijas">
-					<button class="butter" onclick={editarPedido}>~Editar</button>
-					<button class="butter" onclick={seleccionarPedidoCompleto}>
-						Seleccionar todo para cotizar
-					</button>
-				</div>
 			{/if}
-		{/if}
+		</div>
 	</div>
 </div>
 
@@ -199,7 +200,7 @@
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		gap: var(--a);
 	}
 
 	.lista-tarjetas {
@@ -310,10 +311,6 @@
 	}
 
 	/* Acciones inferiores */
-	.acciones-panel {
-		margin-top: 0.5rem;
-	}
-
 	.acciones-fijas {
 		display: flex;
 		justify-content: flex-end;

@@ -95,7 +95,7 @@ export function formatDate(date: Date): string {
  * Formatea una fecha como mes
  */
 export function getMonth(date: Date, full: boolean = false): string {
-	return `${String(full?fullMonths[date.getMonth()]:fullMonths[date.getMonth()])}`;
+	return `${String(full ? fullMonths[date.getMonth()] : fullMonths[date.getMonth()])}`;
 }
 /**
 
@@ -145,17 +145,17 @@ export function parseDateTimeLocal(dateTimeStr: string): Date {
  * @param slotMinutes - Minutos por slot (default: 15)
  */
 export function calculateSlots(
-    inicio: string | Date,
-    fin: string | Date,
-    slotMinutes: number = 15
+	inicio: string | Date,
+	fin: string | Date,
+	slotMinutes: number = 15
 ): number {
-    const start = inicio instanceof Date ? inicio : new Date(inicio);
-    const end = fin instanceof Date ? fin : new Date(fin);
-    
-    const durationMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
-    const exactSlots = durationMinutes / slotMinutes;
-    
-    return Math.max(0.5, exactSlots);
+	const start = inicio instanceof Date ? inicio : new Date(inicio);
+	const end = fin instanceof Date ? fin : new Date(fin);
+
+	const durationMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+	const exactSlots = durationMinutes / slotMinutes;
+
+	return Math.max(0.5, exactSlots);
 }
 
 /**
@@ -183,3 +183,4 @@ export function roundToNearestSlot(date: Date, slotMinutes: number = 15): Date {
 	const ms = 1000 * 60 * slotMinutes;
 	return new Date(Math.round(date.getTime() / ms) * ms);
 }
+

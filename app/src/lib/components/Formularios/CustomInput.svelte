@@ -34,12 +34,12 @@
 	<form method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={id} />
 		<section>
-			<div class="header">
+			<div class="section-header">
 				{#if label}
 					<h3>{label}:</h3>
 				{/if}
 			</div>
-			<div class="content">
+			<div class="section-content">
 				{#if children}
 					{@render children()}
 				{/if}

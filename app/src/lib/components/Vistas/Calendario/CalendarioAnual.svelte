@@ -1,30 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Controles from '$lib/components/Acciones/Controles.svelte';
-	import ModList from '$lib/components/Acciones/ModList.svelte';
-	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
-	import Vista from '$lib/components/Tarjetas/Vista.svelte';
-	import { appState } from '$lib/stores/appState.svelte';
-	import { calendarStore } from '$lib/stores/calendarStore.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
-	import { formatWeekRange, getWeekDates } from '$lib/utils/agenda';
-	import { extraerColumnas, filterData, sortData } from '$lib/utils/ModList';
+	import { filterData, sortData } from '$lib/utils/ModList';
 	import CGTarjetaOportunidad from './CGTarjetaOportunidad.svelte';
-	import { onMount } from 'svelte';
-
-	let { oportunidades } = $derived(page.data);
-	let currentRoute = $derived(page.url.pathname);
-
-	let lista = $state(oportunidades);
-	let columnasDinamicas = $derived(extraerColumnas(oportunidades));
-	let expandedEventId = $state<string | null>(null);
-
-	$effect(() => {
-		lista = oportunidades;
-	});
-
-	let lista_ordenada = $derived(sortData(lista, currentRoute));
-	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
+	import { calendarStore } from '$lib/stores/calendarStore.svelte';
+	import { tick, untrack } from 'svelte';
 
 	const MESES = [
 		'Ene',
@@ -40,223 +19,205 @@
 		'Nov',
 		'Dic'
 	];
-	const anioActual = new Date().getFullYear();
-	const getDiasMes = (mes: number, anio: number) => new Date(anio, mes + 1, 0).getDate();
+	const DIA_MS = 24 * 60 * 60 * 1000;
+	const ZOOM_MIN = 1;
 
+	const anioReal = new Date().getFullYear();
+
+	let oportunidades = $derived(page.data.oportunidades);
+	let currentRoute = $derived(page.url.pathname);
+
+	let lista = $derived(filterData(sortData(oportunidades, currentRoute), currentRoute));
+
+	let expandedEventId = $state<string | null>(null);
 	let mesesOcultos = $state<number[]>([]);
 	let contenedor = $state<HTMLElement>();
-	let contenedorWidth = $state<number>(0);
-	let zoomLevel = $state<number>(1);
+	let contenedorWidth = $state(0);
+	const anioVista = $derived(anioReal + calendarStore.yearOffset);
+
+	const inicioAnio = $derived(new Date(anioVista, 0, 1).getTime());
+	const finAnio = $derived(new Date(anioVista, 11, 31, 23, 59, 59, 999).getTime());
+	const getDiasMes = (mes: number) => new Date(anioVista, mes + 1, 0).getDate();
 
 	const totalDiasVisibles = $derived(
-		MESES.reduce(
-			(total, _, indice) =>
-				!mesesOcultos.includes(indice) ? total + getDiasMes(indice, anioActual) : total,
-			0
-		)
+		MESES.reduce((total, _, i) => (mesesOcultos.includes(i) ? total : total + getDiasMes(i)), 0)
 	);
 
-	const PX_POR_DIA = $derived(
+	const pxPorDia = $derived(
 		contenedorWidth > 0 && totalDiasVisibles > 0
-			? (contenedorWidth / totalDiasVisibles) * zoomLevel - 0.001
+			? (contenedorWidth / totalDiasVisibles) * calendarStore.zoom
 			: 8
 	);
 
-	const weekDates = $derived(getWeekDates(calendarStore.weekOffset));
-	const weekRangeText = $derived(formatWeekRange(weekDates));
-
-	function ocultarMes(indice: number) {
-		if (!mesesOcultos.includes(indice)) {
-			mesesOcultos = [...mesesOcultos, indice];
-		}
-	}
+	const anchoTotal = $derived(totalDiasVisibles * pxPorDia);
 
 	const columnasMeses = $derived(
 		MESES.map((nombre, indice) => ({
 			nombre,
 			indice,
-			ancho: getDiasMes(indice, anioActual) * PX_POR_DIA,
-			visible: !mesesOcultos.includes(indice)
-		})).filter((mes) => mes.visible)
+			ancho: getDiasMes(indice) * pxPorDia
+		})).filter((mes) => !mesesOcultos.includes(mes.indice))
 	);
 
-	const inicioAnio = new Date(anioActual, 0, 1).getTime();
-	const finAnio = new Date(anioActual, 11, 31, 23, 59, 59, 999).getTime();
+	function ocultarMes(indice: number) {
+		if (!mesesOcultos.includes(indice)) mesesOcultos = [...mesesOcultos, indice];
+	}
 
 	function calcularPosicionX(timestamp: number) {
 		const fecha = new Date(Math.max(inicioAnio, Math.min(timestamp, finAnio)));
-		const mesObjetivo = fecha.getMonth();
+		const mes = fecha.getMonth();
 		let x = 0;
 
-		for (let i = 0; i <= mesObjetivo; i++) {
-			if (!mesesOcultos.includes(i)) {
-				if (i === mesObjetivo) {
-					x += (fecha.getDate() - 1) * PX_POR_DIA;
-				} else {
-					x += getDiasMes(i, anioActual) * PX_POR_DIA;
-				}
-			}
+		for (let i = 0; i < mes; i++) {
+			if (!mesesOcultos.includes(i)) x += getDiasMes(i) * pxPorDia;
 		}
+		if (!mesesOcultos.includes(mes)) x += (fecha.getDate() - 1) * pxPorDia;
+
 		return x;
 	}
 
-	const posicionHoy = $derived(calcularPosicionX(Date.now()));
+	const posicionHoy = $derived(anioVista === anioReal ? calcularPosicionX(Date.now()) : null);
 
-	onMount(() => {
-		if (contenedor) {
-			contenedor.scrollLeft = posicionHoy - contenedor.clientWidth / 2;
+	const FASES_ABIERTAS = [1, 2, 3, 4];
+
+	function obtenerFechaFin(item: any): number {
+		const creacion = new Date(item.fecha_creacion).getTime();
+
+		if (!FASES_ABIERTAS.includes(Number(item.fase))) {
+			return item.fecha_cierre ? new Date(item.fecha_cierre).getTime() : creacion + DIA_MS;
 		}
-	});
+
+		return anioVista > anioReal ? finAnio : Date.now();
+	}
 
 	const eventosProcesados = $derived(
-		lista_filtrada
+		lista
 			.map((item) => {
-				const fechaCreacion = new Date(item.fecha_creacion).getTime();
-				let fechaFin = Date.now();
-
-				switch (item.fase) {
-					case 1:
-						fechaFin = Date.now();
-						break;
-					case 2:
-						fechaFin = item.fecha_analisis ? new Date(item.fecha_analisis).getTime() : Date.now();
-						break;
-					case 3:
-						fechaFin = item.fecha_negociacion
-							? new Date(item.fecha_negociacion).getTime()
-							: Date.now();
-						break;
-					case 4:
-						fechaFin = item.fecha_pedido ? new Date(item.fecha_pedido).getTime() : Date.now();
-						break;
-					default:
-						fechaFin = item.fecha_cierre
-							? new Date(item.fecha_cierre).getTime()
-							: new Date(item.fecha_creacion).getTime() + 24 * 60 * 60 * 1000;
-						break;
-				}
-
-				const inicio = Math.max(fechaCreacion, inicioAnio);
-				const fin = Math.min(fechaFin, finAnio);
-
+				const inicio = Math.max(new Date(item.fecha_creacion).getTime(), inicioAnio);
+				const fin = Math.min(obtenerFechaFin(item), finAnio);
 				const left = calcularPosicionX(inicio);
-				const width = calcularPosicionX(fin) - left;
-
-				return {
-					...item,
-					left,
-					width: Math.max(0, width)
-				};
+				const width = Math.max(0, calcularPosicionX(fin) - left);
+				return { ...item, left, width };
 			})
 			.filter((evento) => evento.width > 0)
 	);
+	let zoomPrevio = calendarStore.zoom;
+
+	$effect.pre(() => {
+		const zoom = calendarStore.zoom;
+		const el = contenedor;
+		if (!el || zoom === zoomPrevio) return;
+
+		const hoy = posicionHoy; // valor antiguo: el efecto es "pre"
+		const anchoAntes = el.scrollWidth;
+		const scrollAntes = el.scrollLeft;
+		zoomPrevio = zoom;
+
+		// Anclaje: hoy si estamos en el año actual, si no el centro del viewport
+		const fraccion =
+			hoy !== null && anchoAntes > 0
+				? hoy / anchoAntes
+				: (scrollAntes + el.clientWidth / 2) / anchoAntes;
+
+		// Posición en pantalla del ancla antes del zoom, para mantenerla fija
+		const offsetPantalla = hoy !== null ? hoy - scrollAntes : el.clientWidth / 2;
+
+		tick().then(() => {
+			el.scrollTo({
+				left: (fraccion * el.scrollWidth - offsetPantalla)-40,
+				behavior: 'instant'
+			});
+		});
+	});
+	const listo = $derived(contenedorWidth > 0);
+
+	$effect(() => {
+		anioVista; // dependencia: al cambiar de año
+		if (!listo) return; // espera a que el contenedor tenga ancho real
+
+		untrack(() => {
+			expandedEventId = null;
+		});
+
+		tick().then(() => {
+			const el = contenedor;
+			if (!el) return;
+			const left = posicionHoy !== null ? Math.max(0, posicionHoy - el.clientWidth / 2) : 0;
+			el.scrollTo({ left, behavior: 'instant' });
+		});
+	});
+
+	function alternarExpandido(id: string) {
+		expandedEventId = expandedEventId === id ? null : id;
+	}
 </script>
 
-<Vista>
-	{#snippet acciones()}
-		<Controles>
-			{#snippet header()}
-				<button onclick={() => appState.toggleModalOp()} class="jelly">+Oportunidad</button>
-				<button onclick={() => appState.toggleModalActivity()} class="jelly">+Actividad</button>
-			{/snippet}
-			{#snippet acciones()}
-				<select
-					value={$appState.calendarView}
-					onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
+<div
+	class="calendario-contenedor"
+	class:con-zoom={calendarStore.zoom > ZOOM_MIN}
+	bind:this={contenedor}
+	bind:clientWidth={contenedorWidth}
+>
+	<div class="lienzo" style="width: {anchoTotal}px;">
+		<div class="cabecera-meses">
+			{#each columnasMeses as mes (mes.indice)}
+				<button
+					class="columna-mes"
+					style="width: {mes.ancho}px;"
+					onclick={() => ocultarMes(mes.indice)}
+					aria-label="Ocultar mes de {mes.nombre}"
 				>
-					<option value="gant">Gant Anual</option>
-					<option value="mensual">Mensual</option>
-					<option value="semanal">Semanal</option>
-				</select>
-				<select
-					value={$appState.calendarList}
-					onchange={(e) => appState.setCalendarList(e.currentTarget.value)}
-				>
-					<option value="">Todas</option>
-					<option value="actividades">Actividades</option>
-					<option value="oportunidades">Oportunidades</option>
-				</select>
-				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="jelly toggle">
-					{$appState.calendarCards ? 'Min' : 'Max'}
+					{mes.nombre}
 				</button>
-				<ModList {columnasDinamicas} route={currentRoute} />
-				<div class="calendar-navigation">
-					<button
-						onclick={() => (calendarStore.weekOffset -= 1)}
-						class="jelly nav-btn"
-						title="Semana anterior"
-					>
-						←
-					</button>
-					<button onclick={() => (calendarStore.weekOffset = 0)} class="jelly current-week">
-						{weekRangeText}
-					</button>
-					<button
-						onclick={() => (calendarStore.weekOffset += 1)}
-						class="jelly nav-btn"
-						title="Semana siguiente"
-					>
-						→
-					</button>
-				</div>
-			{/snippet}
-		</Controles>
-	{/snippet}
-
-	{#snippet contenido()}
-		<div
-			class="calendario-contenedor"
-			bind:this={contenedor}
-			bind:clientWidth={contenedorWidth}
-		>
-			<!-- Contenido omitido (sin cambios) -->
-			<div class="cabecera-meses">
-				{#each columnasMeses as mes (mes.indice)}
-					<button
-						class="columna-mes"
-						style="width: {mes.ancho}px;"
-						onclick={() => ocultarMes(mes.indice)}
-						aria-label="Ocultar mes de {mes.nombre}"
-					>
-						{mes.nombre}
-					</button>
-				{/each}
-			</div>
-
-			<div class="contenedor-tarjetas">
-				<div class="grid-fondo butter">
-					{#each columnasMeses as mes (mes.indice)}
-						<div class="grid-linea" style="width: {mes.ancho}px;"></div>
-					{/each}
-				</div>
-
-				<div class="linea-fecha-actual" style="left: {posicionHoy}px;"></div>
-
-				{#each eventosProcesados as evento}
-					<div
-						class="fila-evento"
-						class:expanded={expandedEventId === evento.id}
-						onclick={(e) => {
-							e.stopPropagation();
-							expandedEventId = expandedEventId === evento.id ? null : evento.id;
-						}}
-					>
-						<CGTarjetaOportunidad {evento} isExpanded={expandedEventId === evento.id} />
-					</div>
-				{/each}
-			</div>
+			{/each}
 		</div>
-	{/snippet}
-</Vista>
+
+		<div class="contenedor-tarjetas">
+			<div class="grid-fondo">
+				{#each columnasMeses as mes (mes.indice)}
+					<div class="grid-linea" style="width: {mes.ancho}px;"></div>
+				{/each}
+			</div>
+
+			{#if posicionHoy !== null}
+				<div class="linea-fecha-actual" style="left: {posicionHoy}px;"></div>
+			{/if}
+
+			{#each eventosProcesados as evento (evento.id)}
+				{@const expandido = expandedEventId === evento.id}
+				<div
+					class="fila-evento"
+					class:expanded={expandido}
+					role="button"
+					tabindex="0"
+					onclick={() => alternarExpandido(evento.id)}
+					onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && alternarExpandido(evento.id)}
+				>
+					<CGTarjetaOportunidad {evento} isExpanded={expandido} />
+				</div>
+			{/each}
+		</div>
+	</div>
+</div>
 
 <style>
 	.calendario-contenedor {
+		width: 100%;
+		max-width: 90vw;
+		height: 100%;
+		margin-inline: auto;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+
+	.calendario-contenedor.con-zoom {
+		overflow-x: auto;
+	}
+
+	.lienzo {
 		display: flex;
 		flex-direction: column;
-		width: 100%;
-		height: 100%;
-		overflow: auto;
-		scroll-behavior: smooth;
+		min-height: 100%;
 	}
 
 	.cabecera-meses {
@@ -267,43 +228,34 @@
 	}
 
 	.columna-mes {
-		padding: 4px var(--a);
-		border-right: 1px solid var(--color-secondary, #eee);
 		flex-shrink: 0;
-		border-top: none;
-		border-bottom: none;
-		border-left: none;
-		cursor: pointer;
-		text-align: left;
+		padding: 4px var(--a);
+		border: none;
+		border-right: 1px solid var(--color-secondary, #eee);
 		background-color: var(--color-secondary);
+		text-align: left;
+		cursor: pointer;
 	}
 
 	.contenedor-tarjetas {
-		display: flex;
-		flex-direction: column;
 		position: relative;
+		display: flex;
+		flex: 1;
+		flex-direction: column;
 		padding-top: var(--b);
-		height: 100%;
-	}
-
-	.contenedor-tarjetas:has(.expanded) {
-		z-index: 9999;
 	}
 
 	.grid-fondo {
 		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
+		inset: 0 auto 0 0;
 		display: flex;
 		pointer-events: none;
-		z-index: 0;
 	}
 
 	.grid-linea {
 		flex-shrink: 0;
-		border-right: 1px dashed var(--color-muted, rgba(0, 0, 0, 0.1));
 		height: 100%;
+		border-right: 1px dashed var(--color-muted, rgba(0, 0, 0, 0.1));
 	}
 
 	.linea-fecha-actual {
@@ -312,26 +264,22 @@
 		bottom: 0;
 		width: 1px;
 		background-color: var(--color-text, #ff0000);
-		z-index: 2;
 		pointer-events: none;
+		z-index: 2;
 	}
 
 	.fila-evento {
 		position: relative;
+		flex-shrink: 0;
+		width: 100%;
 		height: var(--d);
-		min-width: max-content;
-		z-index: 1;
 		cursor: pointer;
+		z-index: 1;
 	}
 
 	.fila-evento.expanded {
-		min-height: 120px !important; /* Ajustable según el contenido del hijo */
-		z-index: 9999 !important;
+		height: auto;
+		min-height: var(--alto-expandido, 120px);
 		cursor: default;
-	}
-	.zoom-slider {
-		width: 100px;
-		margin-right: var(--a);
-		cursor: ew-resize;
 	}
 </style>

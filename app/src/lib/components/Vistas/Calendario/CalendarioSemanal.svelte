@@ -32,17 +32,6 @@
 		return allActivities;
 	});
 
-	let columnasDinamicas = $derived(
-		Array.from(
-			new Map(
-				[...extraerColumnas(oportunidades), ...extraerColumnas(actividades)].map((col) => [
-					col.key,
-					col
-				])
-			).values()
-		)
-	);
-
 	let lista_ordenada = $derived(sortData(lista, currentRoute));
 	let eventList = $derived(filterData(lista_ordenada, currentRoute));
 
@@ -155,138 +144,83 @@
 		}}
 	></div>
 {/if}
+<div
+	class="calendar tarjeta"
+	style="--dynamic-cell-height: {CELL_HEIGHT}px; --cols: {weekDates.length}; --rows: {hours.length};"
+>
+	<h1 class="month-title">{getMonth(weekDates[0])}</h1>
 
-<Vista>
-	{#snippet acciones()}
-		<Controles>
-			{#snippet header()}
-				<button onclick={() => appState.toggleModalOp()} class="jelly">+Oportunidad</button>
-				<button onclick={() => appState.toggleModalActivity()} class="jelly">+Actividad</button>
-			{/snippet}
-			{#snippet acciones()}
-				<select
-					value={$appState.calendarView}
-					onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
-				>
-					<option value="gant">Gant Anual</option>
-					<option value="mensual">Mensual</option>
-					<option value="semanal">Semanal</option>
-				</select>
-				<select
-					value={$appState.calendarList}
-					onchange={(e) => appState.setCalendarList(e.currentTarget.value)}
-				>
-					<option value="">Todas</option>
-					<option value="actividades">Actividades</option>
-					<option value="oportunidades">Oportunidades</option>
-				</select>
-				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="jelly toggle">
-					{$appState.calendarCards ? 'Min' : 'Max'}
-				</button>
-				<ModList {columnasDinamicas} route={currentRoute} />
-				<div class="calendar-navigation">
-					<button
-						onclick={() => (calendarStore.weekOffset -= 1)}
-						class="jelly nav-btn"
-						title="Semana anterior"
-					>
-						←
-					</button>
-					<button onclick={() => (calendarStore.weekOffset = 0)} class="jelly current-week">
-						{weekRangeText}
-					</button>
-					<button
-						onclick={() => (calendarStore.weekOffset += 1)}
-						class="jelly nav-btn"
-						title="Semana siguiente"
-					>
-						→
-					</button>
+	<div
+		class="calendar-grid-container"
+		class:max={$appState.calendarCards}
+		bind:clientHeight={containerHeight}
+		bind:this={containerEl}
+	>
+		<div class="calendar-grid" class:max={$appState.calendarCards}>
+			<!-- Fila 1: cabeceras (días) + esquina a la derecha -->
+			<div class="corner" bind:clientHeight={headerHeight}></div>
+			{#each weekDates as date, i (date.toISOString())}
+				<div class="day-th" data-col={i}>
+					<div class="day-header">
+						<div>{weekdays[i]}</div>
+						<div class="date-label">{formatDate(date)}</div>
+					</div>
 				</div>
-			{/snippet}
-		</Controles>
-	{/snippet}
+			{/each}
 
-	{#snippet contenido()}
-		<div
-			class="calendar tarjeta"
-			style="--dynamic-cell-height: {CELL_HEIGHT}px; --cols: {weekDates.length}; --rows: {hours.length};"
-		>
-			<h1 class="month-title">{getMonth(weekDates[0])}</h1>
+			<!-- Filas: celdas de eventos + hora a la derecha -->
+			{#each hours as h (h.hour * 60 + h.minute)}
+				<div class="hour-cell">
+					{String(h.hour).padStart(2, '0')}:{String(h.minute).padStart(2, '0')}
+				</div>
+				{#each weekDates as date (date.toISOString())}
+					{@const eventosSuperpuestos = getEventsForSlot(h.hour, h.minute, date)}
+					<div
+						class="event-cell"
+						use:dropzone={{
+							on_dropzone: (eventId: string) => handleDrop(eventId, h.hour, h.minute, date)
+						}}
+					>
+						{#if eventosSuperpuestos.length > 0}
+							<div class="event-stack">
+								{#each eventosSuperpuestos as event, index (event.id)}
+									{@const slots = calculateSlots(event.inicio, event.fin, SLOT_MINUTES)}
+									{@const isExpanded = expandedEventId === event.id}
 
-			<div
-				class="calendar-grid-container"
-				class:max={$appState.calendarCards}
-				bind:clientHeight={containerHeight}
-				bind:this={containerEl}
-			>
-				<div class="calendar-grid" class:max={$appState.calendarCards}>
-					<!-- Fila 1: cabeceras (días) + esquina a la derecha -->
-					<div class="corner" bind:clientHeight={headerHeight}></div>
-					{#each weekDates as date, i (date.toISOString())}
-						<div class="day-th" data-col={i}>
-							<div class="day-header">
-								<div>{weekdays[i]}</div>
-								<div class="date-label">{formatDate(date)}</div>
-							</div>
-						</div>
-					{/each}
-
-					<!-- Filas: celdas de eventos + hora a la derecha -->
-					{#each hours as h (h.hour * 60 + h.minute)}
-						<div class="hour-cell">
-							{String(h.hour).padStart(2, '0')}:{String(h.minute).padStart(2, '0')}
-						</div>
-						{#each weekDates as date (date.toISOString())}
-							{@const eventosSuperpuestos = getEventsForSlot(h.hour, h.minute, date)}
-							<div
-								class="event-cell"
-								use:dropzone={{
-									on_dropzone: (eventId: string) => handleDrop(eventId, h.hour, h.minute, date)
-								}}
-							>
-								{#if eventosSuperpuestos.length > 0}
-									<div class="event-stack">
-										{#each eventosSuperpuestos as event, index (event.id)}
-											{@const slots = calculateSlots(event.inicio, event.fin, SLOT_MINUTES)}
-											{@const isExpanded = expandedEventId === event.id}
-
-											<!-- svelte-ignore a11y_click_events_have_key_events -->
-											<!-- svelte-ignore a11y_no_static_element_interactions -->
-											<div
-												class="event-wrapper honey"
-												class:expanded={isExpanded}
-												onclick={(e) => {
-													e.stopPropagation();
-													expandedEventId = isExpanded ? null : event.id;
-												}}
-												style={wrapperStyle(isExpanded, index, eventosSuperpuestos.length, slots)}
-											>
-												{#if event.id.toLowerCase().includes('op')}
-													<CSTarjetaOportunidad
-														oportunidad={event}
-														style="height: 100%; width: 100%;"
-														expanded={isExpanded}
-													/>
-												{:else}
-													<CSTarjetaActividad
-														actividad={event}
-														style="height: 100%; width: 100%;"
-														expanded={isExpanded}
-													/>
-												{/if}
-											</div>
-										{/each}
+									<!-- svelte-ignore a11y_click_events_have_key_events -->
+									<!-- svelte-ignore a11y_no_static_element_interactions -->
+									<div
+										class="event-wrapper honey"
+										class:expanded={isExpanded}
+										onclick={(e) => {
+											e.stopPropagation();
+											expandedEventId = isExpanded ? null : event.id;
+										}}
+										style={wrapperStyle(isExpanded, index, eventosSuperpuestos.length, slots)}
+									>
+										{#if event.id.toLowerCase().includes('op')}
+											<CSTarjetaOportunidad
+												oportunidad={event}
+												style="height: 100%; width: 100%;"
+												expanded={isExpanded}
+											/>
+										{:else}
+											<CSTarjetaActividad
+												actividad={event}
+												style="height: 100%; width: 100%;"
+												expanded={isExpanded}
+											/>
+										{/if}
 									</div>
-								{/if}
+								{/each}
 							</div>
-						{/each}
-					{/each}
-				</div>
-			</div>
+						{/if}
+					</div>
+				{/each}
+			{/each}
 		</div>
-	{/snippet}
-</Vista>
+	</div>
+</div>
 
 <style>
 	.backdrop {
@@ -427,18 +361,5 @@
 		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 		margin: 0;
 		cursor: default;
-	}
-
-	.current-week {
-		text-align: center;
-		flex-grow: 1;
-	}
-
-	.calendar-navigation {
-		display: flex;
-		gap: var(--a);
-		flex-grow: 1;
-		width: 100%;
-		align-self: flex-end;
 	}
 </style>

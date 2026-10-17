@@ -114,7 +114,7 @@
 	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
 
 	<div class="upload-container">
-		<div class="drop-zone" class:dragging={isDragging}>
+		<div class="drop-zone milk" class:dragging={isDragging}>
 			<span class="drop-text">subir cotizacion</span>
 			<input
 				bind:this={inputEl}
@@ -138,7 +138,7 @@
 			<div class="files">
 				<div class="item">
 					<!-- Ya no pasamos el índice (i), solo llamamos a removeItem -->
-					<button type="button" class="close-btn" onclick={removeItem}> × </button>
+					<button type="button" class="jelly rojo" onclick={removeItem}> × </button>
 
 					<div class="info">
 						<!-- El binding se hace directamente sobre item.titulo -->
@@ -146,7 +146,7 @@
 					</div>
 				</div>
 
-				<button type="submit" class="btn-save-small butter" disabled={isSubmitting}>
+				<button type="submit" class="butter accion" disabled={isSubmitting}>
 					{#if isSubmitting}
 						Guardando...
 					{:else}
@@ -196,21 +196,20 @@
 		justify-content: center;
 		align-items: center;
 		width: 100%;
-		max-width: 800px;
-		min-height: var(--f);
+		margin: auto;
+		min-height: var(--g);
 		padding: var(--c);
-		border: 1px dashed var(--color-muted);
-		border-radius: 16px;
-		background-color: #fafafa;
+		border: 2px dashed var(--color-muted);
 		transition:
 			border-color 0.2s ease,
 			background-color 0.2s ease;
 		overflow: hidden;
+		color: var(--color-muted);
 	}
 
 	.drop-zone:hover {
-		border-color: var(--color-secondary);
-		background-color: #f4f4f5;
+		border-color: black;
+		color: black;
 	}
 
 	.drop-zone.dragging {
@@ -260,7 +259,6 @@
 		display: flex;
 		gap: var(--a);
 		align-items: baseline;
-		padding: var(--a);
 	}
 
 	.info {
@@ -268,12 +266,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
-	}
-	.close-btn {
-		border: none;
-		cursor: pointer;
-		padding: 0.25rem 0.5rem;
-		border-radius: 4px;
 	}
 
 	.close-btn:hover {
