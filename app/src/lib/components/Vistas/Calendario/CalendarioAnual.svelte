@@ -150,15 +150,7 @@
 			})
 			.filter((evento) => evento.width > 0)
 	);
-
-	function handleKeydown(event: KeyboardEvent) {
-		if (event.key === 'Escape' && expandedEventId) {
-			expandedEventId = null;
-		}
-	}
 </script>
-
-<svelte:window onkeydown={handleKeydown} />
 
 <Vista>
 	{#snippet acciones()}

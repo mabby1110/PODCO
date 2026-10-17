@@ -52,22 +52,3 @@
         </div>
     </div>
 {/if}
-
-<style>
-    .actions {
-        display: flex;
-        gap: 0.5rem;
-        justify-content: flex-end;
-        padding-top: 1rem;
-    }
-    .butter:hover:not(:disabled) {
-        transform: translateY(-2px);
-    }
-    .butter:active:not(:disabled) {
-        transform: translateY(0);
-    }
-    .butter:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-</style>

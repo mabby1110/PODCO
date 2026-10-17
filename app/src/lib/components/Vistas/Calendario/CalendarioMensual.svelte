@@ -198,7 +198,7 @@
 				class:max={$appState.calendarCards}
 				bind:clientHeight={containerHeight}
 			>
-				<div class="calendar-grid jelly">
+				<div class="calendar-grid">
 					{#each weekdays as day, i (day)}
 						<div class="day-th" data-col={i} bind:clientHeight={headerHeight}>
 							<div class="day-header">

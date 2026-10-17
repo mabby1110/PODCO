@@ -227,4 +227,7 @@
 	.mod {
 		display: flex;
 	}
+	.mod input {
+		max-width: 50%;
+	}
 </style>
