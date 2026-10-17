@@ -15,7 +15,7 @@
 	let { clientes } = $derived(page.data);
 
 	const sectores = [...new Set(clientes.map((item) => item.sector))];
-    
+
 	// --- Único picker para la búsqueda ---
 	let nombre_comercial = $state('');
 	let ubicacion = $state('');
@@ -48,16 +48,20 @@
 	});
 </script>
 
-<div class="form-content">
-	<label>
-		<span>Cliente (Nombre comercial o Razón social)</span>
-		<input
-			name="nombre_comercial"
-			bind:value={nombre_comercial}
-			placeholder="Ej. Nestlé / BMS"
-			required
-		/>
-	</label>
+<div class="form-content milk">
+	<section>
+		<div class="section-header">
+			<h3>Cliente</h3>
+		</div>
+		<div class="section-block">
+			<input
+				name="nombre_comercial"
+				bind:value={nombre_comercial}
+				placeholder="Nombre comercial o Razón social"
+				required
+			/>
+		</div>
+	</section>
 
 	{#if matches.length > 0}
 		<ul class="matches">
@@ -81,27 +85,35 @@
 		list={motivosProspeccion}
 	/>
 
-	<label>
-		<span>Ubicacion</span>
-		<textarea
-			name="ubicacion"
-			id="ubicacion"
-			bind:value={ubicacion}
-			required
-			rows="3"
-			placeholder="copiar y pegar de google maps plus code o ej. Antonio Bravo 128, Las Liebres, 45623 San Pedro Tlaquepaque, Jal."
-		></textarea>
-	</label>
+	<section>
+		<div class="section-header">
+			<h3>Ubicacion</h3>
+		</div>
+		<div class="section-block">
+			<textarea
+				name="ubicacion"
+				id="ubicacion"
+				bind:value={ubicacion}
+				required
+				rows="3"
+				placeholder="copiar y pegar de google maps plus code o ej. Antonio Bravo 128, Las Liebres, 45623 San Pedro Tlaquepaque, Jal."
+			></textarea>
+		</div>
+	</section>
 
-	<FormInput
-		label="Estado"
-		name="estado"
-		type="text"
-		placeholder="Estado de la republica"
-		required
-		bind:value={estado}
-	/>
+	<FormInputAddContact />
+
 	<div class="form-group">
+		<FormOptionalInput title="+Estado">
+			<FormInput
+				label="Estado"
+				name="estado"
+				type="text"
+				placeholder="Estado de la republica"
+				required
+				bind:value={estado}
+			/>
+		</FormOptionalInput>
 		<FormOptionalInput title="+Ciudad">
 			<FormInput
 				label="Ciudad"
@@ -136,8 +148,6 @@
 			/>
 		</FormOptionalInput>
 	</div>
-
-	<FormInputAddContact />
 </div>
 
 <style>
@@ -152,8 +162,7 @@
 		flex-direction: column;
 		gap: var(--b);
 		border-radius: 12px;
-		border: 1px solid var(--color-contrast);
-		padding: var(--b);
+		padding: var(--a);
 	}
 	.matches {
 		list-style: none;
@@ -169,5 +178,10 @@
 	.matches li.exact {
 		color: #c0392b;
 		font-weight: 600;
+	}
+	.form-group {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
 	}
 </style>

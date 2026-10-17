@@ -29,13 +29,13 @@
 
 {#if isOpen}
 	<div class="optional-input" bind:this={input}>
-		<button class="butter chile" type="button" onclick={close}>✕</button>
+		<button class="butter rojo" type="button" onclick={close}>✕</button>
 		{#if children}
 			{@render children()}
 		{/if}
 	</div>
 {:else}
-	<button class="butter" type="button" onclick={open}>
+	<button class="butter accion" type="button" onclick={open}>
 		{titleOpen}
 	</button>
 {/if}

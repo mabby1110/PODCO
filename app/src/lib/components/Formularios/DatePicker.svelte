@@ -146,66 +146,69 @@
 <input type="hidden" name="inicio" value={inicio} />
 <input type="hidden" name="fin" value={fin} />
 
-<p>{title}</p>
-<div class="datetime-split">
-	<div class="datetime-item">
-		<span>Fecha</span>
-		<input class="butter" type="date" bind:value={fecha} required />
+<section>
+	<div class="section-header">
+		<h3>{title}</h3>
 	</div>
-	<div class="datetime-item">
-		<span>Duración</span>
-		<select class="butter" bind:value={duracion} required>
-			<option value="" disabled selected>Duración</option>
-			{#each opcionesDuracion as opcion}
-				<option value={opcion.value}>{opcion.label}</option>
-			{/each}
-		</select>
-	</div>
-	<div class="datetime-item">
-		<span>Hora</span>
-		<select class="butter" bind:value={hora} required>
-			<option value="" disabled selected>inicio</option>
-			{#each horasGeneradas as h}
-				<option value={h}>{h}</option>
-			{/each}
-		</select>
-	</div>
-</div>
-
-{#if fecha && duracion}
-	<div class="lane-container" bind:this={datepicker}>
-		<span class="lane-title">Disponibilidad del {fecha}</span>
-
-		<div class="lane">
-			<div class="lane-grid">
-				{#each Array.from({ length: 11 }, (_, i) => i + 8) as hr, i}
-					<div class="lane-hour" style="top: {i * 10}%;">
-						<span class="hour-label">{hr}:00</span>
-						<div class="hour-line"></div>
-					</div>
-				{/each}
+	<div class="section-block">
+		<div class="datetime-split">
+			<div class="datetime-item">
+				<input class="butter" type="date" bind:value={fecha} required />
 			</div>
-
-			<div class="lane-events">
-				{#each eventosDelDia.reverse() as evento}
-					<div
-						class="event-block"
-						style="top: {evento._top}%; height: {evento._height}%; width: {evento._width}%; left: {evento._left}%;"
-					>
-						<DatePickerCard event={evento} />
-					</div>
-				{/each}
-
-				{#if hora && duracion}
-					{@const pre = getLayoutProps(inicio, fin)}
-					<div class="new-event" style="top: {pre.top}%; height: {pre.height}%;">
-						<p>✨ Nuevo evento</p>
-					</div>
-				{/if}
+			<div class="datetime-item">
+				<select class="butter" bind:value={duracion} required>
+					<option value="" disabled selected>Duración</option>
+					{#each opcionesDuracion as opcion}
+						<option value={opcion.value}>{opcion.label}</option>
+					{/each}
+				</select>
+			</div>
+			<div class="datetime-item">
+				<select class="butter" bind:value={hora} required>
+					<option value="" disabled selected>inicio</option>
+					{#each horasGeneradas as h}
+						<option value={h}>{h}</option>
+					{/each}
+				</select>
 			</div>
 		</div>
+
+		{#if fecha && duracion}
+			<div class="lane-container" bind:this={datepicker}>
+				<span class="lane-title">Disponibilidad del {fecha}</span>
+
+				<div class="lane">
+					<div class="lane-grid">
+						{#each Array.from({ length: 11 }, (_, i) => i + 8) as hr, i}
+							<div class="lane-hour" style="top: {i * 10}%;">
+								<span class="hour-label">{hr}:00</span>
+								<div class="hour-line"></div>
+							</div>
+						{/each}
+					</div>
+
+					<div class="lane-events">
+						{#each eventosDelDia.reverse() as evento}
+							<div
+								class="event-block"
+								style="top: {evento._top}%; height: {evento._height}%; width: {evento._width}%; left: {evento._left}%;"
+							>
+								<DatePickerCard event={evento} />
+							</div>
+						{/each}
+
+						{#if hora && duracion}
+							{@const pre = getLayoutProps(inicio, fin)}
+							<div class="new-event" style="top: {pre.top}%; height: {pre.height}%;">
+								<p>✨ Nuevo evento</p>
+							</div>
+						{/if}
+					</div>
+				</div>
+			</div>
+		{/if}
 	</div>
-{/if}
+</section>
 
 <style>
 	.datetime-split {
@@ -219,7 +222,6 @@
 		flex-direction: column;
 		flex-grow: 1;
 		font-size: smaller;
-		color: var(--color-muted);
 	}
 
 	/* Estilos del Carril (Mini Agenda) */
@@ -260,7 +262,6 @@
 	.hour-label {
 		width: 45px;
 		font-size: smaller;
-		color: var(--color-muted);
 		text-align: right;
 		padding-right: 8px;
 		margin: 0;

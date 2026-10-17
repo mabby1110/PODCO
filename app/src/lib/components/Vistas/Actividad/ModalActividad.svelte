@@ -16,12 +16,12 @@
 
 {#if $appState.ModalActivity}
 	<div
-		class="overlay"
+		class="overlay honey"
 		role="button"
 		tabindex="0"
 		onkeydown={(e) => e.key === 'Escape' && appState.toggleModalActivity()}
 	>
-		<div class="modal honey" role="dialog" tabindex="-1">
+		<div class="modal" role="dialog" tabindex="-1">
 			<div class="modal-header">
 				<h2>Nueva Actividad</h2>
 				<button class="close" onclick={() => appState.toggleModalActivity()}>✕</button>
@@ -33,12 +33,12 @@
 					appState.toggleModalActivity();
 				}}
 			>
-				<!-- si es admin queda el input oculto -->
-				<FormSelectAgente bind:selected={agenteSeleccionado} />
+				<div class="form-content">
+					<!-- si es admin queda el input oculto -->
+					<FormSelectAgente bind:selected={agenteSeleccionado} />
 
-				<FormSelectMotivo list={motivosActividades} disableCustom />
+					<FormSelectMotivo list={motivosActividades} disableCustom />
 
-				<div class="optional">
 					<FormInput
 						label="Objetivo"
 						name="objetivo"
@@ -47,32 +47,32 @@
 						type="textarea"
 						required
 					/>
-					<FormOptionalInput title="+Requisitos">
-						<FormInput
-							label="Requisitos"
-							name="requisitos"
-							bind:value={requisitos}
-							placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-							type="textarea"
-							required
-						/>
-					</FormOptionalInput>
-					<FormOptionalInput title="+Observaciones">
-						<FormInput
-							label="Observaciones"
-							name="observaciones"
-							bind:value={observaciones}
-							placeholder="Detalles importantes y pautas a seguir"
-							type="textarea"
-							required
-						/>
-					</FormOptionalInput>
+					<DatePicker />
+					<div class="form-group">
+						<FormOptionalInput title="+Requisitos">
+							<FormInput
+								label="Requisitos"
+								name="requisitos"
+								bind:value={requisitos}
+								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+						<FormOptionalInput title="+Observaciones">
+							<FormInput
+								label="Observaciones"
+								name="observaciones"
+								bind:value={observaciones}
+								placeholder="Detalles importantes y pautas a seguir"
+								type="textarea"
+								required
+							/>
+						</FormOptionalInput>
+					</div>
+
+					<input type="hidden" name="fase" value={1} />
 				</div>
-
-				<DatePicker />
-				
-				<input type="hidden" name="fase" value={1} />
-
 				<div class="actions">
 					<button class="butter success" type="submit">Agregar</button>
 				</div>
@@ -101,6 +101,5 @@
 		gap: var(--a);
 		justify-content: flex-end;
 		padding-top: 1rem;
-		border-top: 1px solid #e5e5e5;
 	}
 </style>

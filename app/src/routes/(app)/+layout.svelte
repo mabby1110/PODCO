@@ -44,12 +44,12 @@
 	{@render children()}
 </div>
 
-<ModalActividad />
 <ModalOportunidad />
+<ModalPedidoEditar />
+<ModalActividad />
 <ModalCliente />
 <ModalInventario />
 <ModalProducto />
-<ModalPedidoEditar />
 
 <style>
 	.layout {

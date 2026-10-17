@@ -30,7 +30,7 @@
 	{#snippet acciones()}
 		<Controles>
 			{#snippet header()}
-				<ExportarCSV {lista_ordenada} />
+				<!-- <ExportarCSV {lista_ordenada} /> -->
 				<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
 			{/snippet}
 			{#snippet acciones()}

@@ -74,57 +74,65 @@
 
 <div class="search-container">
 	{#if selectedItem}
-		<label for="id_cliente">
-			<h3>Cliente</h3>
-			<div class="selected-client">
-				<button
-					type="button"
-					class="close-btn"
-					onclick={(e) => {
-						e.stopPropagation();
-						selectedItem = null;
-					}}>✕</button
-				>
-				<p>{selectedItem?.razon_social || selectedItem?.nombre_comercial}</p>
+		<section>
+			<div class="section-header">
+				<h3>Cliente</h3>
 			</div>
-		</label>
+			<div class="section-content">
+				<div class="selected-client">
+					<button
+						type="button"
+						class="jelly rojo"
+						onclick={(e) => {
+							e.stopPropagation();
+							selectedItem = null;
+						}}>✕</button
+					>
+					<p>{selectedItem?.razon_social || selectedItem?.nombre_comercial}</p>
+				</div>
+			</div>
+		</section>
 	{:else}
-		<label bind:this={input}>
-			<h3>Buscar Cliente</h3>
-			{#if isOpen}
-				<FormNewClient bind:isDuplicate />
-			{:else}
-				<input
-					class="butter"
-					type="text"
-					value={keyword}
-					oninput={handleInput}
-					placeholder="Buscar..."
-					required
-				/>
-				{#if keyword}
-					<div class="results" transition:slide>
-						{#if filteredData.length > 0}
-							{#each filteredData as item (item.id)}
-								<button
-									type="button"
-									class="search-result"
-									onclick={(e) => {
-										e.stopPropagation();
-										selectItem(item);
-									}}
-								>
-									<span class="meta">{item.razon_social || item.nombre_comercial}</span>
-								</button>
-							{/each}
-						{:else}
-							<div class="no-results">No se encontraron resultados</div>
-						{/if}
-					</div>
+		<section bind:this={input}>
+			<div class="section-header">
+				<h3>Buscar Cliente</h3>
+			</div>
+			<div class="section-content">
+				<FormConditionalInput titleOpen="Registrar nuevo" bind:isOpen />
+				{#if isOpen}
+					<FormNewClient bind:isDuplicate />
+				{:else}
+					<input
+						class="milk"
+						type="text"
+						value={keyword}
+						oninput={handleInput}
+						placeholder="Buscar..."
+						required
+					/>
+					{#if keyword}
+						<div class="results milk" in:slide>
+							{#if filteredData.length > 0}
+								{#each filteredData as item (item.id)}
+									<button
+										type="button"
+										class="jelly"
+										onclick={(e) => {
+											e.stopPropagation();
+											selectItem(item);
+										}}
+									>
+										<span class="meta">{item.razon_social || item.nombre_comercial}</span>
+									</button>
+								{/each}
+							{:else}
+								<div class="no-results">No se encontraron resultados</div>
+							{/if}
+						</div>
+					{/if}
 				{/if}
-			{/if}
-			<FormConditionalInput titleOpen="Agregar nuevo" bind:isOpen />
-		</label>
+			</div>
+		</section>
 	{/if}
 </div>
 
@@ -138,19 +146,9 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
-		max-height: var(--g);
+		max-height: var(--);
 		overflow: auto;
-	}
-	.search-result {
-		background: none;
-		border: 1px solid var(--border-color, #ddd);
-		padding: var(--a);
-		border-radius: var(--a);
-		cursor: pointer;
-		text-align: left;
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
+		width: 100%;
 	}
 	.meta {
 		font-size: 0.85em;

@@ -46,56 +46,55 @@
 	}
 </script>
 
-<div class="field-block">
-	<div class="field-header">
-		<label for={name} class="label">
-			<h3>
-				{label}{required ? '*' : ''}
-			</h3>
-		</label>
+<section>
+	<div class="section-header">
+		<h3>
+			{label}{required ? '*' : ''}
+		</h3>
 	</div>
-    
-	{#if type === 'textarea'}
-		<textarea
-			id={name}
-			{name}
-			bind:value
-			{rows}
-			{placeholder}
-			{required}
-			{disabled}
-            title={hint}
-			oninput={handleInput}
-			onblur={handleBlur}
-		></textarea>
-	{:else if type === 'file'}
-		<input
-			id={name}
-			type="file"
-			{name}
-			class="file-input"
-			onchange={onFileChange}
-			{required}
-			{disabled}
-		/>
-	{:else}
-		<input
-			id={name}
-			{type}
-			{name}
-			bind:value
-			{placeholder}
-			{required}
-			{disabled}
-			oninput={handleInput}
-			onblur={handleBlur}
-			pattern={type === 'text' && required ? '.*\\S+.*' : undefined}
-			title={type === 'text' && required
-				? 'Este campo no puede estar vacío ni contener solo espacios'
-				: undefined}
-		/>
-	{/if}
-</div>
+	<div class="section-content">
+		{#if type === 'textarea'}
+			<textarea
+				id={name}
+				{name}
+				bind:value
+				{rows}
+				{placeholder}
+				{required}
+				{disabled}
+				title={hint}
+				oninput={handleInput}
+				onblur={handleBlur}
+			></textarea>
+		{:else if type === 'file'}
+			<input
+				id={name}
+				type="file"
+				{name}
+				class="file-input"
+				onchange={onFileChange}
+				{required}
+				{disabled}
+			/>
+		{:else}
+			<input
+				id={name}
+				{type}
+				{name}
+				bind:value
+				{placeholder}
+				{required}
+				{disabled}
+				oninput={handleInput}
+				onblur={handleBlur}
+				pattern={type === 'text' && required ? '.*\\S+.*' : undefined}
+				title={type === 'text' && required
+					? 'Este campo no puede estar vacío ni contener solo espacios'
+					: undefined}
+			/>
+		{/if}
+	</div>
+</section>
 
 <style>
 	.field-block {

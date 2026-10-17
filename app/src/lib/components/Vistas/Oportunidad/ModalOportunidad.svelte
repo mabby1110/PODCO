@@ -23,7 +23,7 @@
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" tabindex="-1">
             <div class="modal-header">
-                <h2>Nueva Oportunidad</h2>
+                <h1>Nueva Oportunidad</h1>
                 <button class="jelly rojo" onclick={closeAndClear}>✕</button>
             </div>
             <form
@@ -59,7 +59,6 @@
         gap: 0.5rem;
         justify-content: flex-end;
         padding-top: 1rem;
-        border-top: 1px solid #e5e5e5;
     }
     .butter:hover:not(:disabled) {
         transform: translateY(-2px);

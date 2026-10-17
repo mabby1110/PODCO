@@ -110,6 +110,7 @@ button img {
 	height: 100%;
 	width: 100%;
 }
+
 /* CONTENEDORES */
 .butter {
 	display: flex;
@@ -150,10 +151,10 @@ button img {
 }
 .accion {
 	height: var(--d);
+	width: fit-content;
 }
 
 /* MODALES */
-
 .overlay {
 	position: fixed;
 	inset: 0;
@@ -168,9 +169,11 @@ button img {
 .modal {
 	display: flex;
 	flex-direction: column;
+	gap: var(--d);
 	padding: var(--a);
 	height: 100%;
-	width: 100%;
+	width: 80%;
+	max-width: 1200px;
 }
 .modal-header {
 	display: flex;
@@ -178,9 +181,53 @@ button img {
 }
 .modal form {
 	margin: auto;
+	width: 100%;
+	overflow: auto;
 }
 
-/* hotkeys */
+/* SECCIONES */
+section {
+	/* siempre tendra header y contenido */
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+}
+
+section .section-header {
+	display: flex;
+	min-width: var(--h);
+}
+
+section .section-content {
+	flex-grow: 5;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+	align-items: flex-end;
+	/* min-width: 60vw; */
+	min-width: var(--h);
+	max-width: var(--j);
+}
+section .section-block {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: var(--a);
+}
+
+/* FORMULARIOS */
+.form-content {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: var(--c);
+}
+.form-group {
+	display: flex;
+	gap: var(--a);
+}
+
+/* HOTKEYS */
 .hotkey-badge {
 	position: absolute;
 	top: -4px;

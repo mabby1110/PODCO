@@ -51,11 +51,8 @@
 </script>
 
 <div class="form-content">
-	<div class="form-group">
-		<FormSelectMotivo list={motivosOportunidad} />
-		<FormSelectAgente bind:selected={selectedAgent} />
-		{observaciones}
-	</div>
+	<FormSelectMotivo list={motivosOportunidad} />
+	<FormSelectAgente bind:selected={selectedAgent} />
 
 	<Searchbar
 		data={clientesFiltrados}
@@ -73,30 +70,31 @@
 		hint="ej. levantamiento técnico en sitio,  o presentar cotización"
 		required
 	/>
-	<FormOptionalInput title="+Observaciones" openByDefault={observaciones?true:false}>
-		<FormInput
-			label="Observaciones"
-			name="observaciones"
-			bind:value={observaciones}
-			type="textarea"
-			required
-		/>
-	</FormOptionalInput>
-	<FormConditionalInput bind:isOpen titleOpen="+Necesidad detectada">
-		<div class="form-group">
+
+	<DatePicker title="Fecha de seguimiento" />
+
+	<div class="form-group">
+		<FormOptionalInput title="+Observaciones" openByDefault={observaciones ? true : false}>
 			<FormInput
-				label="Necesidad"
-				name="necesidades"
-				bind:value={necesidades}
-				placeholder="Requerimiento técnico u operacional detectados"
+				label="Observaciones"
+				name="observaciones"
+				bind:value={observaciones}
 				type="textarea"
 				required
 			/>
-		</div>
-	</FormConditionalInput>
-
-	<div class="form-group">
-		<DatePicker title="Fecha de seguimiento" />
+		</FormOptionalInput>
+		<FormConditionalInput bind:isOpen titleOpen="+Necesidad detectada">
+			<div class="form-group">
+				<FormInput
+					label="Necesidad"
+					name="necesidades"
+					bind:value={necesidades}
+					placeholder="Requerimiento técnico u operacional detectados"
+					type="textarea"
+					required
+				/>
+			</div>
+		</FormConditionalInput>
 	</div>
 
 	{#if selectedClient}
@@ -107,12 +105,3 @@
 	{/if}
 	<input type="hidden" name="fase" bind:value={fase} />
 </div>
-
-<style>
-	.form-content {
-		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--b);
-	}
-</style>

@@ -36,7 +36,7 @@
 		</div>
 	{/snippet}
 
-	{#snippet content()}
+	{#snippet contenido()}
 		{#if $profile?.isAdmin}
 			<EditableSelect
 				{editando}
@@ -209,7 +209,7 @@
 		</div>
 	{/snippet}
 
-	{#snippet actions()}
+	{#snippet acciones()}
 		<div class="submit panel">
 			<button onclick={() => (editando = !editando)} class="butter {editando}">Editar</button>
 			<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>

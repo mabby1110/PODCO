@@ -37,33 +37,21 @@
 <input type="hidden" name="contactos" value={contacto_compuesto} required />
 
 <div class="contact-row">
-	<label>
-		<span>Primer contacto</span>
+	<label class="nombre">
+		<h3>Primer contacto</h3>
 		<input bind:value={contact_name} required placeholder="Nombre completo" />
 	</label>
-	<label class="field">
-		<span>Puesto</span>
-		<input bind:value={contact_position} />
-	</label>
+	<input bind:value={contact_position} placeholder="Puesto" />
+	<select bind:value={contact_type}>
+		<option value="telefono">Teléfono</option>
+		<option value="whatsapp">WhatsApp</option>
+		<option value="email">Correo</option>
+		<option value="linkedin">LinkedIn</option>
+		<option value="otro">Otro</option>
+	</select>
+	<input bind:value={contact_value} placeholder="3322558174, correo@empresa.com" />
 </div>
-<div class="contact-row">
-	<label>
-		<span>Contacto</span>
-		<input bind:value={contact_value} placeholder="3322558174 o correo@empresa.com" />
-	</label>
-
-	<label>
-		<span>Medio</span>
-		<select bind:value={contact_type}>
-			<option value="telefono">Teléfono</option>
-			<option value="whatsapp">WhatsApp</option>
-			<option value="email">Correo</option>
-			<option value="linkedin">LinkedIn</option>
-			<option value="otro">Otro</option>
-		</select>
-	</label>
-	<button class="butter" type="button" onclick={addContacto}>Agregar Contacto</button>
-</div>
+<button class="butter accion" type="button" onclick={addContacto}>Agregar Contacto</button>
 
 {#if contactos.length}
 	<div class="contact-list">
@@ -82,10 +70,9 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--a);
-		align-items: end;
 	}
-	.contact-row label {
-		flex-grow: 1;
+	.contact-row .nombre {
+		width: 100%;
 	}
 	.contact-list {
 		display: flex;
