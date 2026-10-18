@@ -8,6 +8,9 @@
 	--color-honey: #f1f4ff99;
 	--color-milk: #ffffffe2;
 
+	--color-text-ow: #000000;
+	--color-text-ob: #ffffff;
+
 	/* acciones */
 	--color-error: #ff0000;
 	--color-success: #00b944;
@@ -185,34 +188,6 @@ button img {
 	overflow: auto;
 }
 
-/* SECCIONES */
-section {
-	/* siempre tendra header y contenido */
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
-}
-
-section .section-header {
-	display: flex;
-	min-width: var(--h);
-}
-
-section .section-content {
-	flex-grow: 5;
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
-	align-items: flex-end;
-	min-width: var(--h);
-}
-section .section-block {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	gap: var(--a);
-}
-
 /* FORMULARIOS */
 .form-content {
 	width: 100%;
@@ -244,4 +219,48 @@ section .section-block {
 	font-weight: 700;
 	line-height: 1;
 	pointer-events: none;
+}
+
+/* TARJETAS & SECCIONES */
+section {
+	/* siempre tendra header y contenido */
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+}
+
+section .section-header {
+	display: flex;
+	min-width: var(--h);
+}
+
+section .section-content {
+	flex-grow: 5;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+	align-items: flex-end;
+	min-width: var(--h);
+}
+section .section-block {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: var(--a);
+}
+.card-title {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+}
+.card-content {
+	flex-grow: 1;
+}
+.card-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--a);
+	align-self: flex-end;
+	justify-self: flex-end;
 }

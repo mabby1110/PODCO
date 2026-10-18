@@ -23,7 +23,6 @@
 	let submit = $state(false);
 
 	let submitCancel = $state(false);
-	console.log(cotizaciones);
 </script>
 
 <FormActions action="/oportunidades?/actualizarOportunidad" bind:isOpen>

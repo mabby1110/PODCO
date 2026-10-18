@@ -90,7 +90,7 @@
 			</div>
 
 			{#if isEditing}
-				<div class="acciones">
+				<div class="c acciones">
 					<button class="jelly rojo accion" type="button" onclick={() => (isEditing = !isEditing)}
 						>✕</button
 					>
@@ -113,7 +113,7 @@
 					<button type="submit" class="butter accion" disabled={isSubmitting}> Guardar </button>
 				</div>
 			{:else}
-				<div class="content">
+				<div class="section-content">
 					<p class="value editable" ondblclick={startEditing} title="Doble clic para editar">
 						{#if type === 'select'}
 							{options.find((option) => String(option.id) === String(value))?.nombre ??
@@ -133,69 +133,52 @@
 		grid-column: span 2;
 		width: 100%;
 	}
-
-	.header {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-
 	.hint {
 		font-size: 14px;
 		opacity: 0.7;
 		margin: 0;
 	}
-
 	.value {
 		margin: 0;
 		white-space: pre-wrap;
 		word-break: break-word;
 	}
-
 	.editable {
 		cursor: pointer;
 		border-radius: 4px;
 		padding: 4px;
 	}
-
 	.editable:hover {
 		background: rgba(255, 255, 255, 0.08);
 	}
-
 	.content {
 		flex-grow: 1;
 		display: flex;
 		align-items: center;
 		gap: 8px;
 	}
-
 	input,
 	select,
 	textarea {
 		flex-grow: 1;
 	}
-
 	select {
 		cursor: pointer;
 		transition: all 0.2s;
 	}
-
 	select:hover {
 		background: rgba(255, 255, 255, 0.15);
 		border-color: rgba(255, 255, 255, 0.5);
 	}
-
 	select:focus {
 		outline: none;
 		border-color: var(--color-secondary, #fff);
 		background: rgba(255, 255, 255, 0.2);
 	}
-
 	textarea {
 		resize: vertical;
 		min-width: 200px;
 	}
-
 	.file-input {
 		padding: 8px;
 		border-radius: 4px;
@@ -204,7 +187,6 @@
 		color: inherit;
 		cursor: pointer;
 	}
-
 	.select {
 		width: fit-content;
 	}

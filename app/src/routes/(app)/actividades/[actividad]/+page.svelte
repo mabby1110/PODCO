@@ -9,7 +9,6 @@
 	import ActivityActions from '$lib/components/Vistas/Actividad/ActivityActions.svelte';
 
 	const actividad = $derived(page.data.actividad);
-	console.log(actividad);
 
 	// ESTADO
 	let editando = $state(false);
@@ -19,19 +18,24 @@
 {#if actividad}
 	<Card headerStyle={fase.estilo}>
 		{#snippet header()}
-			<h1>{actividad.motivo}</h1>
-			<div class="meta">
-				<p class="date">{actividad.inicio}</p>
-				<p>|</p>
-				<p>{actividad?.agente?.nombre}</p>
-				<p>Fase: <strong>{fase.actual}</strong></p>
+			<div class="card-title">
+				<div class="card-content">
+					<h1>{actividad.motivo}</h1>
+				</div>
+				<div class="card-meta">
+					<p class="date">{actividad.inicio}</p>
+					<p>|</p>
+					<p>{actividad?.agente?.nombre}</p>
+					<p>Fase: <strong>{fase.actual}</strong></p>
+				</div>
 			</div>
 		{/snippet}
 
-		{#snippet content()}
+		{#snippet contenido()}
 			<CustomInput action="/actividades?/update" id={actividad.id} {editando}>
 				<DatePicker />
 			</CustomInput>
+
 			<EditableInput
 				{editando}
 				id={actividad.id}
@@ -46,6 +50,7 @@
 					<input type="hidden" name="id" value={actividad.id} />
 				{/snippet}
 			</EditableInput>
+
 			<EditableInput
 				{editando}
 				id={actividad.id}
@@ -60,6 +65,7 @@
 					<input type="hidden" name="id" value={actividad.id} />
 				{/snippet}
 			</EditableInput>
+
 			<EditableInput
 				{editando}
 				id={actividad.id}
@@ -76,10 +82,10 @@
 			</EditableInput>
 
 			<section>
-				<div class="header">
+				<div class="section-header">
 					<h3>Historia:</h3>
 				</div>
-				<div class="content">
+				<div class="section-content">
 					<Entradas
 						{editando}
 						historia={actividad?.historia}
@@ -88,6 +94,9 @@
 					/>
 				</div>
 			</section>
+		{/snippet}
+
+		{#snippet acciones()}
 			<ActivityActions {actividad} bind:editando />
 		{/snippet}
 	</Card>

@@ -91,44 +91,29 @@
 
 		{#snippet submitContent()}
 			{#if !submit && !submitCancel}
-				<button type="button" class="butter {editando}" onclick={() => (editando = !editando)}>
+				<button type="button" class="honey accion {editando}" onclick={() => (editando = !editando)}>
 					Editar
 				</button>
 			{/if}
 			{#if submit}
 				<input type="hidden" name="fase" value={fase.id_fase} />
-				<button type="submit" class="butter" disabled={isSubmitting}>
+				<button type="submit" class="honey accion" disabled={isSubmitting}>
 					{isSubmitting ? 'Procesando...' : 'Finzalizar'}
 				</button>
 			{:else if newOp}
-				<button type="submit" class="butter" disabled={isSubmitting}>
+				<button type="submit" class="honey accion" disabled={isSubmitting}>
 					{isSubmitting ? 'Procesando...' : 'Crear Oportunidad'}
 				</button>
 			{:else if submitCancel}
 				<input type="hidden" name="fase" value={0} />
-				<button type="submit" class="butter" disabled={isSubmitting}>Cancelar Actividad</button>
+				<button type="submit" class="honey accion" disabled={isSubmitting}>Cancelar Actividad</button>
 			{/if}
-			<ActivityOptionalSubmit
-				nextFase={fase.accion}
-				bind:isOpen
-				bind:submit
-				bind:submitCancel
-			/>
+			<ActivityOptionalSubmit nextFase={fase.accion} bind:isOpen bind:submit bind:submitCancel />
 		{/snippet}
 	</FormActions>
 {/if}
 
 <style>
-	.butter:hover:not(:disabled) {
-		transform: translateY(-2px);
-	}
-
-	.butter:active:not(:disabled) {
-		transform: translateY(0);
-	}
-	.true {
-		background-color: var(--color-highlight);
-	}
 	.butter:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
@@ -138,6 +123,9 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
+	}
+	.true {
+		background-color: var(--color-highlight);
 	}
 	.opciones {
 		display: flex;

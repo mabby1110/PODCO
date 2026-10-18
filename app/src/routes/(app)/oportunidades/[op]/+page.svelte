@@ -291,22 +291,3 @@
 		<AgentActions {oportunidad} bind:editando />
 	{/snippet}
 </Card>
-
-<style>
-	.card-title {
-		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-	}
-	.card-content {
-		flex-grow: 1;
-	}
-	.card-meta {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-		align-self: flex-end;
-		justify-self: flex-end;
-	}
-</style>

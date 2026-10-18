@@ -40,8 +40,8 @@
 </script>
 
 {#if !isOpen}
-	<button class="butter" type="button" onclick={toggleCancel}>Descartar</button>
-	<button class="butter" type="button" onclick={toggleSubmit}> {nextFase} </button>
+	<button class="honey accion" type="button" onclick={toggleCancel}>Descartar</button>
+	<button class="honey accion" type="button" onclick={toggleSubmit}> {nextFase} </button>
 {:else}
 	<button class="close-btn" type="button" onclick={close}>✕</button>
 {/if}
