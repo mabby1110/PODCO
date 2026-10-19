@@ -11,6 +11,7 @@
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import TarjetaProducto from '$lib/components/Vistas/Catalogo/TarjetaProducto.svelte';
 	import Controles from '$lib/components/Acciones/Controles.svelte';
+	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 
 	let { catalogo } = $derived(page.data);
 	let show = $derived($appState.min);
@@ -29,8 +30,12 @@
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 </script>
 
-<Vista>
+<Vista grid>
+	{#snippet portada()}
+		{currentRoute}
+	{/snippet}
 	{#snippet acciones()}
+		<button onclick={() => StorePedidoEditar.toggleModal()} class="honey accion">~Pedido</button>
 		<Controles>
 			{#snippet header()}
 				<ExportarCSV {lista_ordenada} />

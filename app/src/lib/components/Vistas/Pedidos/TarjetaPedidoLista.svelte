@@ -39,7 +39,12 @@
 	});
 	let oportunidades = $derived(
 		Array.from(
-			new Set(pedidos.map((p) => p.id_oportunidad).filter((id): id is string => id != null))
+			new Set(
+				pedidos
+					.filter((p) => StorePedidoEditar.carrito.find((s) => s.id == p.id))
+					.map((p) => p.id_oportunidad)
+					.filter((id): id is string => id != null)
+			)
 		)
 	);
 
@@ -58,7 +63,8 @@
 		goto('/pedidos');
 		StorePedidoEditar.pushLista(pedidos);
 		StorePedidoEditar.toggleModal(true);
-		if (oportunidades.length == 1) {
+		console.log(oportunidades);
+		if (oportunidades.length === 1) {
 			StoreContextoRelacion.setOportunidad(oportunidades[0]);
 		}
 	}

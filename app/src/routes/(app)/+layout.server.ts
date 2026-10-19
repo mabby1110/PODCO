@@ -13,7 +13,8 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	console.log('perfil:');
 	console.log('\nadmin: ', profile?.isAdmin);
 	console.log('oper: ', profile?.isOper);
-
+	const { data, error } = await supabase.from('serializados').select('*');
+	console.log(data?.length, error);
 	let agentes: any[] = [];
 	let queryOportunidades = supabase
 		.from('oportunidades')
@@ -25,10 +26,14 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		.from('actividades')
 		.select('*, agentes(*)')
 		.order('inicio', { ascending: false });
-	let queryClientes = supabase.from('clientes').select('*, agentes(*), oportunidades(*, clientes(nombre_comercial, razon_social))');
+	let queryClientes = supabase
+		.from('clientes')
+		.select('*, agentes(*), oportunidades(*, clientes(nombre_comercial, razon_social))');
 	let queryDocumentos = supabase.from('docs_adjuntos').select('*');
 	let queryInventario = supabase.from('inventario').select('*, catalogo(*)');
-	let queryCatalogo = supabase.from('catalogo').select('*, tipo_producto(*), inventario(*)');
+	let queryCatalogo = supabase
+		.from('catalogo')
+		.select('*, tipo_producto(*), inventario(*), serializados(*)');
 	let queryTipoProducto = supabase.from('tipo_producto').select('*');
 	let queryPedidos = supabase
 		.from('pedidos')

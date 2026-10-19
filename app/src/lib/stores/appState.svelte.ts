@@ -26,7 +26,7 @@ const defaultState: AppState = {
 	dnd: false,
 	panelMinimized: false,
 	calendarCards: false,
-	calendarView: 'semanal',
+	calendarView: 'mensual',
 	calendarList: 'actividades',
 	ModalActivity: false,
 	ModalOp: false,

@@ -228,12 +228,10 @@ section {
 	flex-wrap: wrap;
 	gap: var(--a);
 }
-
 section .section-header {
 	display: flex;
 	min-width: var(--h);
 }
-
 section .section-content {
 	flex-grow: 5;
 	display: flex;

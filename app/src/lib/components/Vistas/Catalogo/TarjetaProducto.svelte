@@ -4,27 +4,53 @@
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 
 	let { elemento } = $props();
-	let inventario = $derived(elemento.inventario[0]);
-	function agregarProducto(e) {
-		e.stopPropagation();
-		StorePedidoEditar.toggleModal(true);
-		StorePedidoNuevo.push(elemento.id);
-	}
+	console.log(elemento);
+	// Inventario general (sin serie) del producto
+	let inventario = $derived(
+		elemento.inventario?.find((i) => i.id_producto === elemento.id) ?? elemento.inventario?.[0]
+	);
+
+	// Unidades con número de serie
+	let serializados = $derived(elemento?.serializados ?? []);
+
+	// Total = cantidad en inventario + unidades serializadas
+	let cantidadTotal = $derived((inventario?.cantidad ?? 0) + serializados.length);
 </script>
 
-<ItemLista onclick={(e) => agregarProducto(e)}>
+<ItemLista
+	onclick={() => {
+		if (!StorePedidoEditar.modal) return false;
+		StorePedidoNuevo.push(elemento.id);
+	}}
+>
 	{#snippet titulo()}
 		<h3>
 			{elemento.codigo}
 		</h3>
 	{/snippet}
 	{#snippet contenido()}
-		{elemento.descripcion}
+		{#if elemento.tipo_producto.es_serializado}
+			{#each serializados as unico}
+				<div class="producto-meta">
+					<p>{unico.serie}</p>
+					<p>{unico.estado}</p>
+				</div>
+			{/each}
+		{:else}
+			{elemento.descripcion}
+		{/if}
 	{/snippet}
 	{#snippet acciones()}
-		<p><span>cantidad: </span> {inventario.cantidad}</p>
+		<p><span>cantidad: </span> {cantidadTotal}</p>
 	{/snippet}
 	{#snippet meta()}
 		<p>{elemento.tipo_producto.nombre}</p>
 	{/snippet}
 </ItemLista>
+
+<style>
+	.producto-meta {
+		display: flex;
+		gap: var(--a);
+	}
+</style>

@@ -7,7 +7,6 @@
 	let show = $derived(showByDefault);
 
 	let groupTitle = $derived.by(() => {
-		console.log(typeof agrupacion.columna, agrupacion.columna.cantidad);
 		return agrupacion.columna;
 	});
 

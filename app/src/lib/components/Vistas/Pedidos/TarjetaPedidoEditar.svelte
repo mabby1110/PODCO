@@ -28,7 +28,6 @@
 			new Set(pedidos.map((p) => p.id_oportunidad).filter((id): id is string => id != null))
 		)
 	);
-
 	let idAgrupaciones = $derived([
 		...new Set(pedidos.map((pedido) => pedido.id_agrupacion).filter(Boolean))
 	]);
@@ -202,88 +201,79 @@
 			currencyDisplay: 'narrowSymbol'
 		}).format(val);
 	};
-	$effect(() => {
-		console.log('oportunidades: ', oportunidades, oportunidades.length);
-		if (oportunidades.length == 1) {
-			StoreContextoRelacion.setOportunidad(oportunidades[0]);
-		} else if (oportunidades.length > 1) {
-			StoreContextoRelacion.limpiar();
-		}
-	});
+	console.log(oportunidades)
 </script>
 
 <!-- pedidos a editar -->
 {#if StorePedidoEditar.carrito.length > 0}
-	<div class="contenedor-grupo">
-		<div class="lista-pedidos">
-			{#each pedidos as pedido (pedido.id)}
-				<!-- svelte-ignore a11y_click_events_have_key_events -->
-				<!-- svelte-ignore a11y_no_static_element_interactions -->
-				<div class="tarjeta">
-					<div class="titulo">
-						<button class="jelly rojo" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
-						<div>
-							<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
-							<div class="row enlaces">
-								{#if pedido.id_oportunidad}
-									<a
-										href="/oportunidades/{pedido.id_oportunidad}"
-										onclick={(e) => e.stopPropagation()}
-									>
-										Op {pedido.oportunidades?.clientes?.razon_social ||
-											pedido.oportunidades?.clientes?.nombre_comercial}
-									</a>
-								{/if}
-							</div>
+	<div class="contenedor-grupo milk">
+		{#each pedidos as pedido (pedido.id)}
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
+			<div class="pedido">
+				<div class="titulo">
+					<button class="jelly rojo" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
+					<div>
+						<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
+						<div class="row enlaces">
+							{#if pedido.id_oportunidad}
+								<a
+									href="/oportunidades/{pedido.id_oportunidad}"
+									onclick={(e) => e.stopPropagation()}
+								>
+									Op {pedido.oportunidades?.clientes?.razon_social ||
+										pedido.oportunidades?.clientes?.nombre_comercial}
+								</a>
+							{/if}
 						</div>
 					</div>
-
-					<span class="inputs" class:text-danger={pedido.precio_unitario == null}>
-						<label class="input-group">
-							<span class="label-text">Cantidad</span>
-							<input type="number" min="0" step="1" class="input-sm" bind:value={pedido.cantidad} />
-						</label>
-
-						<label class="input-group">
-							<span class="label-text">P/U</span>
-							<input
-								type="number"
-								min="0"
-								step="0.01"
-								class="input-sm"
-								bind:value={pedido.precio_unitario}
-							/>
-						</label>
-						<label class="input-group">
-							<span class="label-text">Moneda</span>
-							<select class="select-sm" bind:value={pedido.moneda}>
-								<option value="MXN">MXN</option>
-								<option value="USD">USD</option>
-							</select>
-						</label>
-					</span>
-
-					<div class="butter resumen">
-						<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
-					</div>
 				</div>
-			{/each}
-			<hr />
-			{#if pedidoACotizarInvalidoPorMoneda}
-				<p>no se pueden mezclar USD con MX</p>
-			{:else}
-				<h1 class="total"><b>{formatMoneda(total)}</b></h1>
-			{/if}
-		</div>
+
+				<span class="inputs" class:text-danger={pedido.precio_unitario == null}>
+					<label class="input-group">
+						<span class="label-text">Cantidad</span>
+						<input type="number" min="0" step="1" class="input-sm" bind:value={pedido.cantidad} />
+					</label>
+
+					<label class="input-group">
+						<span class="label-text">P/U</span>
+						<input
+							type="number"
+							min="0"
+							step="0.01"
+							class="input-sm"
+							bind:value={pedido.precio_unitario}
+						/>
+					</label>
+					<label class="input-group">
+						<span class="label-text">Moneda</span>
+						<select class="select-sm" bind:value={pedido.moneda}>
+							<option value="MXN">MXN</option>
+							<option value="USD">USD</option>
+						</select>
+					</label>
+				</span>
+
+				<div class="butter resumen">
+					<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
+				</div>
+			</div>
+		{/each}
+		<hr />
+		{#if pedidoACotizarInvalidoPorMoneda}
+			<p>no se pueden mezclar USD con MX</p>
+		{:else}
+			<h1 class="total"><b>{formatMoneda(total)}</b></h1>
+		{/if}
 	</div>
 {/if}
 
 <!-- pedidos nuevos -->
 {#if StorePedidoNuevo.carrito.length > 0}
-	<div class="contenedor-grupo tarjeta">
+	<div class="contenedor-grupo milk">
 		<div class="encabezado">
 			<button
-				class="butter honey"
+				class="butter jelly rojo"
 				type="button"
 				aria-label="Limpiar"
 				title="Limpiar"
@@ -291,7 +281,7 @@
 			>
 				✕
 			</button>
-			<h4 class="titulo">Nuevos a agregar:</h4>
+			<h4 class="titulo">Crear pedido:</h4>
 			<div class="acciones"></div>
 		</div>
 		{#each productos as producto}
@@ -328,11 +318,11 @@
 			title="Limpiar"
 			onclick={limpiarCarritoCompleto}
 		>
-			Limpiar
+			<img src="/clean.svg" alt="Elimininar relacion" />
 		</button>
 		{#if StorePedidoEditar.carrito.length > 0}
 			<button
-				class="butter eliminar-relacion"
+				class="butter accion rojo"
 				onclick={eliminarRelacion}
 				aria-label="Eliminar relación"
 				title="Eliminar relación"
@@ -362,14 +352,6 @@
 	.encabezado .titulo {
 		flex-grow: 1;
 	}
-	.contenedor-pedido {
-		flex-grow: 1;
-		max-height: fit-content;
-		display: flex;
-		flex-direction: column;
-		padding: 8px 8px;
-		gap: var(--y);
-	}
 	.eliminar-relacion {
 		height: var(--d);
 		padding: 0;
@@ -379,34 +361,39 @@
 		flex-direction: column;
 		gap: var(--a);
 	}
-
-	.tarjeta {
+	.contenedor-grupo {
+		padding: var(--a);
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+	}
+	.pedido {
 		grid-column: span 2;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 	}
-	.tarjeta .titulo {
+	.pedido .titulo {
 		grid-column: span 3;
 		display: flex;
 		align-items: baseline;
 		gap: var(--a);
 	}
-	.tarjeta .titulo div {
+	.pedido .titulo div {
 		flex-grow: 1;
 	}
-	.tarjeta .inputs {
+	.pedido .inputs {
 		grid-column: span 3;
 		display: flex;
 		gap: var(--y);
 	}
 
-	.input-group input {
+	.pedido .input-group input {
 		width: 100%;
 	}
-	.label-text {
+	.pedido .label-text {
 		font-size: small;
 	}
-	.tarjeta .resumen {
+	.pedido .resumen {
 		grid-column: -2 / -1;
 		display: flex;
 		align-items: flex-end;
@@ -452,9 +439,6 @@
 		align-items: flex-end;
 		gap: var(--y);
 		margin-top: var(--a);
-	}
-	.acciones-fijas button:hover {
-		background-color: var(--color-highlight);
 	}
 
 	.estado-vacio {

@@ -191,6 +191,7 @@
 		width: fit-content;
 	}
 	.acciones {
+		flex-grow: 1;
 		display: flex;
 		gap: var(--a);
 	}

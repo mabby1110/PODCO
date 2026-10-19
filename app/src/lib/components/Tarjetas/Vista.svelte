@@ -5,8 +5,14 @@
 	let {
 		portada,
 		acciones,
-		contenido
-	}: { portada?: Snippet; acciones: Snippet; contenido: Snippet } = $props();
+		contenido,
+		grid = false
+	}: {
+		portada?: Snippet;
+		acciones: Snippet;
+		contenido: Snippet;
+		grid?: boolean;
+	} = $props();
 </script>
 
 {#if portada}
@@ -14,7 +20,7 @@
 		{@render portada()}
 	</div>
 {/if}
-<div class="vista">
+<div class="vista" class:grid>
 	{#if contenido}
 		{@render contenido()}
 	{/if}
@@ -34,9 +40,37 @@
 		overflow: auto;
 		display: flex;
 		flex-direction: column;
-		gap: var(--b);
+		gap: var(--y);
 		padding: var(--a);
 		padding-bottom: var(--e);
+	}
+	.vista.grid {
+		display: grid;
+		grid-auto-flow: column;
+		grid-template-rows: 20rem; /* una sola fila */
+		grid-auto-columns: 16rem; /* ancho de cada ventana */
+		align-content: start;
+		gap: var(--b);
+
+		overflow-x: auto;
+		overflow-y: hidden;
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x proximity;
+		-webkit-overflow-scrolling: touch;
+	}
+	.vista.grid > :global(*) {
+		min-width: 0;
+		min-height: 0;
+		height: 100%;
+		overflow-y: auto;
+		scroll-snap-align: start;
+	}
+	/* Cada elemento del grid es una ventana con scroll propio */
+	.vista.grid > :global(*) {
+		min-height: 0;
+		min-width: 0;
+		height: 100%;
+		overflow: auto;
 	}
 	.controles {
 		position: fixed;

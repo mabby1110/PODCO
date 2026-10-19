@@ -32,9 +32,8 @@
 
 	// Actualizamos la función para recibir el evento
 	function handleClick(e: MouseEvent | KeyboardEvent) {
-		if (onclick) {
-			onclick(e);
-		} else {
+		const manejado = onclick?.(e);
+		if (manejado === false || !onclick) {
 			show = !show;
 		}
 	}
