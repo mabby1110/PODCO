@@ -90,7 +90,7 @@
 			</div>
 
 			{#if isEditing}
-				<div class="acciones section-content">
+				<div class="section-content">
 					<button class="jelly rojo accion" type="button" onclick={() => (isEditing = !isEditing)}
 						>✕</button
 					>
@@ -189,10 +189,5 @@
 	}
 	.select {
 		width: fit-content;
-	}
-	.acciones {
-		flex-grow: 1;
-		display: flex;
-		gap: var(--a);
 	}
 </style>

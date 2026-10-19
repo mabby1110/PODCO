@@ -99,7 +99,7 @@
 		display: flex;
 		flex-direction: column;
 		position: absolute;
-		bottom: var(--f);
+		bottom: var(--e);
 		right: 0;
 		padding: var(--b);
 		gap: var(--a);
@@ -108,7 +108,7 @@
 	.nav-links button {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: flex-end;
 		gap: var(--a);
 		padding: var(--a);
 		min-width: var(--g);
@@ -120,7 +120,7 @@
 
 	.home {
 		padding: var(--y);
-		height: var(--e);
+		height: var(--d);
 	}
 	.jelly {
 		position: relative;
