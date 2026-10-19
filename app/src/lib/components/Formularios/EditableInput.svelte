@@ -34,7 +34,7 @@
 	} = $props();
 
 	let editedValue = $state(value);
-	let isEditing = $state(editando);
+	let isEditing = $derived(editando);
 	let isSubmitting = $state(false);
 
 	$effect(() => {
@@ -90,7 +90,7 @@
 			</div>
 
 			{#if isEditing}
-				<div class="c acciones">
+				<div class="acciones section-content">
 					<button class="jelly rojo accion" type="button" onclick={() => (isEditing = !isEditing)}
 						>✕</button
 					>

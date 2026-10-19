@@ -224,16 +224,16 @@ button img {
 /* TARJETAS & SECCIONES */
 section {
 	/* siempre tendra header y contenido */
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--a);
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(var(--h), 1fr));
 }
 section .section-header {
+	grid-column: span 1;
 	display: flex;
 	min-width: var(--h);
 }
 section .section-content {
-	flex-grow: 5;
+	grid-column: span 3;
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--a);
