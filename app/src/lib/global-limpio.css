@@ -67,7 +67,6 @@ body {
 	left: 0;
 	right: 0;
 	background-color: var(--color-background);
-	max-width: var(--l);
 
 	background-image: url('/bombas.svg');
 	background-position: center;

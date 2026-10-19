@@ -6,12 +6,14 @@
 		portada,
 		acciones,
 		contenido,
-		grid = false
+		grid = false,
+		fullscreen = false
 	}: {
 		portada?: Snippet;
 		acciones: Snippet;
 		contenido: Snippet;
 		grid?: boolean;
+		fullscreen?: boolean;
 	} = $props();
 </script>
 
@@ -20,7 +22,7 @@
 		{@render portada()}
 	</div>
 {/if}
-<div class="vista" class:grid>
+<div class="vista" class:grid class:fullscreen>
 	{#if contenido}
 		{@render contenido()}
 	{/if}
@@ -43,12 +45,13 @@
 		gap: var(--y);
 		padding: var(--a);
 		padding-bottom: var(--e);
+		max-width: var(--l);
 	}
 	.vista.grid {
 		display: grid;
 		grid-auto-flow: column;
-		grid-template-rows: 20rem; /* una sola fila */
-		grid-auto-columns: 16rem; /* ancho de cada ventana */
+		grid-template-rows: 20rem;
+		grid-auto-columns: 16rem;
 		align-content: start;
 		gap: var(--b);
 
@@ -65,13 +68,6 @@
 		overflow-y: auto;
 		scroll-snap-align: start;
 	}
-	/* Cada elemento del grid es una ventana con scroll propio */
-	.vista.grid > :global(*) {
-		min-height: 0;
-		min-width: 0;
-		height: 100%;
-		overflow: auto;
-	}
 	.controles {
 		position: fixed;
 		bottom: 0;
@@ -83,5 +79,10 @@
 		gap: var(--a);
 		justify-content: flex-end;
 		align-items: flex-end;
+	}
+	.vista.fullscreen > :global(*){
+		max-width: 100%;
+	}.vista.fullscreen {
+		max-width: 100%;
 	}
 </style>

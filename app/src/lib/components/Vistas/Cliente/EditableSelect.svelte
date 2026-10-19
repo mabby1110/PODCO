@@ -58,14 +58,13 @@
 <form method="POST" {action} use:enhance={handleSubmit}>
 	<input type="hidden" name="id_cliente" value={id_cliente} />
 	<input type="hidden" name="field" value={name} />
-
-	<section class="detail-block">
-		<div class="detail-header">
+	<section>
+		<div class="section-header">
 			<h3>{label}:</h3>
 		</div>
 
-		<div class="detail-body">
-			{#if hint && !editando}
+		<div class="section-content">
+			{#if hint}
 				<p class="hint">{hint}</p>
 			{/if}
 			{#if editando && $profile?.isAdmin}
@@ -88,25 +87,6 @@
 </form>
 
 <style>
-	form {
-		width: 100%;
-	}
-	.detail-block {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-	}
-	.detail-header {
-		display: flex;
-		align-items: center;
-	}
-	.detail-body {
-		padding-left: var(--a);
-		display: flex;
-		gap: var(--a);
-		flex-wrap: wrap;
-	}
-
 	.hint {
 		font-size: 14px;
 		opacity: 0.7;
@@ -134,35 +114,5 @@
 	.button-group-inline {
 		display: flex;
 		gap: 8px;
-	}
-
-	.btn-edit-small {
-		background: none;
-		border: none;
-		cursor: pointer;
-		font-size: 18px;
-		padding: 4px;
-		opacity: 0.7;
-	}
-	.btn-edit-small:hover {
-		opacity: 1;
-	}
-
-	.btn-save-small,
-	.btn-cancel-small {
-		padding: 6px 12px;
-		border-radius: 4px;
-		border: none;
-		cursor: pointer;
-		font-size: 14px;
-		font-weight: 500;
-	}
-
-	.btn-save-small {
-		background: var(--color-ganada, #4caf50);
-	}
-	.btn-cancel-small {
-		background: rgba(255, 255, 255, 0.1);
-		color: inherit;
 	}
 </style>

@@ -51,7 +51,7 @@
 	}
 </script>
 
-<Vista>
+<Vista fullscreen>
 	{#snippet acciones()}
 		{#if $appState.calendarView == 'gant'}
 			<div class="calendar-navigation">
@@ -81,17 +81,17 @@
 			<div class="calendar-navigation">
 				<button
 					onclick={() => (calendarStore.monthOffset -= 1)}
-					class="jelly nav-btn"
+					class="honey nav-btn"
 					title="Mes anterior"
 				>
 					←
 				</button>
-				<button onclick={() => (calendarStore.monthOffset = 0)} class="jelly current-month">
+				<button onclick={() => (calendarStore.monthOffset = 0)} class="honey current-month">
 					{getMonth(monthDate)}
 				</button>
 				<button
 					onclick={() => (calendarStore.monthOffset += 1)}
-					class="jelly nav-btn"
+					class="honey nav-btn"
 					title="Mes siguiente"
 				>
 					→

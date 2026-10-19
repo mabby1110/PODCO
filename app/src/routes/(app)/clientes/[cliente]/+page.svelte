@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import NavButton from '$lib/components/Acciones/NavButton.svelte';
 	import EditableInput from '$lib/components/Formularios/EditableInput.svelte';
 	import Card from '$lib/components/Tarjetas/Card.svelte';
 	import EditableSelect from '$lib/components/Vistas/Cliente/EditableSelect.svelte';
@@ -37,32 +38,6 @@
 	{/snippet}
 
 	{#snippet contenido()}
-		{#if $profile?.isAdmin}
-			<EditableSelect
-				{editando}
-				label="Agente"
-				name="id_agente"
-				id_cliente={cliente.id}
-				value={cliente.id_agente}
-				options={agentes}
-				action="/clientes?/update"
-				hint="Asignar responsable"
-			/>
-		{:else}
-			<section class="detail-block">
-				<h3 class="label">Agente:</h3>
-				<div class="detail-body">
-					<p class="value">{$profile?.nombre}</p>
-				</div>
-			</section>
-		{/if}
-		<FormEditableContact
-			{editando}
-			lista={cliente.contactos}
-			id={cliente.id}
-			id_agente={$profile?.isAdmin ? cliente.id_agente : $profile?.id}
-			action="/clientes?/update"
-		/>
 		<EditableInput
 			{editando}
 			label="Razón Social"
@@ -98,6 +73,33 @@
 			id_agente={$profile?.isAdmin ? cliente.id_agente : $profile?.id}
 			action="/clientes?/update"
 			placeholder="Clasificación"
+		/>
+		{#if $profile?.isAdmin}
+			<EditableSelect
+				{editando}
+				label="Agente"
+				name="id_agente"
+				id_cliente={cliente.id}
+				value={cliente.id_agente}
+				options={agentes}
+				action="/clientes?/update"
+			/>
+		{:else}
+			<section>
+				<div class="section-header">
+					<h3 class="label">Agente:</h3>
+				</div>
+				<div class="section-content">
+					<h3 class="value">{$profile?.nombre}</h3>
+				</div>
+			</section>
+		{/if}
+		<FormEditableContact
+			{editando}
+			lista={cliente.contactos}
+			id={cliente.id}
+			id_agente={$profile?.isAdmin ? cliente.id_agente : $profile?.id}
+			action="/clientes?/update"
 		/>
 		<EditableInput
 			{editando}
@@ -173,7 +175,7 @@
 			{editando}
 			label="Observaciones"
 			name="observaciones"
-			type='textarea'
+			type="textarea"
 			value={cliente.observaciones}
 			id={cliente.id}
 			id_agente={$profile?.isAdmin ? cliente.id_agente : $profile?.id}
@@ -211,8 +213,9 @@
 
 	{#snippet acciones()}
 		<div class="submit panel">
-			<button onclick={() => (editando = !editando)} class="butter {editando}">Editar</button>
-			<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+			<button onclick={() => (editando = !editando)} class="honey {editando}">Editar</button>
+			<button onclick={() => appState.toggleModalOp()} class="honey">+Oportunidad</button>
+			<NavButton />
 		</div>
 	{/snippet}
 </Card>
