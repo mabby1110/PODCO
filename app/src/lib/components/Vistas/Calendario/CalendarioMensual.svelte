@@ -14,6 +14,7 @@
     import CSTarjetaActividad from './CSTarjetaActividad.svelte';
     import CSTarjetaOportunidad from './CSTarjetaOportunidad.svelte';
     import { filterData, sortData } from '$lib/utils/ModList';
+	import { arrowScroll } from '$lib/actions/keyboardScroll';
 
     let { oportunidades, actividades } = $derived(page.data);
     let allActivities = $derived(oportunidades.concat(actividades));
@@ -126,6 +127,7 @@
         class="calendar-grid-container"
         class:max={$appState.calendarCards}
         bind:clientHeight={containerHeight}
+		use:arrowScroll={{ step: 40, enabled: !expandedEventId }}
     >
         <div class="calendar-grid">
             {#each weekdays as day, i (day)}

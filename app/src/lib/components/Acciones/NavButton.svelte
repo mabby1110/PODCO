@@ -14,8 +14,8 @@
 		{ path: '/actividades', label: 'Actividades', icon: '⚡', key: '3' },
 		{ path: '/calendario', label: 'Calendario', icon: '📆', key: '4' },
 		{ path: '/pedidos', label: 'Pedidos', icon: '📦', key: '5' },
-		{ path: '/inventario', label: 'Inventario', icon: '🗄', key: '6' },
-		{ path: '/catalogo', label: 'Catálogo', icon: '📑', key: '7' }
+		// { path: '/inventario', label: 'Inventario', icon: '🗄', key: '6' },
+		{ path: '/catalogo', label: 'Catálogo', icon: '📑', key: '6' }
 	];
 
 	function togglePanel(event: MouseEvent) {

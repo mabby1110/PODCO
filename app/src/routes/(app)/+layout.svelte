@@ -9,6 +9,7 @@
 	import ModalProducto from '$lib/components/Vistas/Catalogo/ModalProducto.svelte';
 	import ModalPedidoEditar from '$lib/components/Vistas/Pedidos/ModalPedidoEditar.svelte';
 	import Hotkeys from '$lib/components/Acciones/Hotkeys.svelte';
+	import Logout from '$lib/components/Acciones/Logout.svelte';
 
 	let { children, data } = $props();
 
@@ -30,17 +31,10 @@
 	});
 </script>
 
-<Hotkeys/>
-
+<Hotkeys />
 
 <div class="layout">
-	<!-- {#if expanded}
-		<div class="meta-layout" transition:slide>
-			<Logout />
-			<p>{page.url.pathname}</p>
-		</div>
-	{/if} -->
-	
+	<Logout />
 	{@render children()}
 </div>
 

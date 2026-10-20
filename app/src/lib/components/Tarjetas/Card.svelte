@@ -61,7 +61,7 @@
 		margin: auto;
 		display: flex;
 		flex-direction: column;
-		gap: var(--c) var(--a);
+		gap: var(--d) var(--a);
 	}
 	.acciones {
 		max-width: 1200px;

@@ -5,11 +5,9 @@
 </script>
 
 <div class="page-container">
-	<div class="login-wrapper">
-		<div class="login-panel panel">
+	<div class="login-wrapper jelly">
+		<div class="login-panel honey">
 			<h1 class="login-title">PODCO</h1>
-			<h3 class="login-title">Iniciar Sesión</h3>
-
 			{#if form?.error}
 				<div class="error-message">
 					{form.error}
@@ -52,8 +50,9 @@
 
 <style>
 	.login-wrapper {
+		position: fixed;
 		width: 100%;
-		height: 60%;
+		height: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -66,6 +65,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--c);
+		padding: var(--a);
 	}
 
 	.login-title {
@@ -114,15 +114,16 @@
 	.login-button {
 		width: 100%;
 		background-color: var(--color-contrast);
-		color: white;
 		font-weight: bold;
 		font-size: 16px;
 		cursor: pointer;
 		transition: all 0.2s ease;
+		justify-content: center;
 	}
 
 	.login-button:hover {
 		background-color: rgba(0, 0, 105, 0.9);
+		color: white;
 		transform: translateY(-2px);
 		box-shadow: 0 10px 8px rgba(0, 0, 0, 0.25);
 	}

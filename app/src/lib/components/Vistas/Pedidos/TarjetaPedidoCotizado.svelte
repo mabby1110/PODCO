@@ -9,30 +9,17 @@
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 
+	// ─── Datos y derivados ───
 	let { oportunidad, disable }: { oportunidad: undefined; disable?: boolean } = $props();
 
 	let expandidos = $state<Record<string, boolean>>({});
 	let actualizando = $state(false);
 	let mensaje = $state('');
 
-	const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
-		if (val == null) return 'Sin precio';
-
-		return new Intl.NumberFormat('es-MX', {
-			style: 'currency',
-			currency: moneda,
-			currencyDisplay: 'narrowSymbol'
-		}).format(val);
-	};
-
-	/*
-	 * Se genera una nueva referencia para que Svelte 5 detecte
-	 * correctamente los cambios realizados sobre el carrito.
-	 */
 	let carrito = $derived(StoreVenta.carrito);
 
 	let pedidosCotizados = $derived(oportunidad.pedidos.filter((pedido) => pedido.fase === 3));
-
+	console.log(pedidosCotizados);
 	let pedidosAgrupados = $derived.by(() => {
 		const grupos = pedidosCotizados.reduce(
 			(acc, pedido) => {
@@ -69,47 +56,22 @@
 		return Object.values(grupos);
 	});
 
-	/*
-	 * Un producto es inválido cuando:
-	 *
-	 * - Está en stock
-	 * - Es serializado
-	 * - No tiene serial
-	 *
-	 * También se considera inválido un producto seleccionado sin precio.
-	 */
-	let pedidosInvalidos = $derived.by(() => {
-		return oportunidad.pedidos
-			.filter((pedido) => carrito.some((item) => item.id === pedido.id))
-			.some((pedido) => {
-				const item = carrito.find((item) => item.id === pedido.id);
+	// ─── Helpers ───
+	const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
+		if (val == null) return 'Sin precio';
 
-				if (!item) return false;
-
-				if (pedido.precio_unitario == null) {
-					return true;
-				}
-
-				if (
-					item.stock === true &&
-					pedido.catalogo?.tipo_producto?.es_serializado === true &&
-					!item.serial?.trim()
-				) {
-					return true;
-				}
-
-				return false;
-			});
-	});
-
-	let tieneSeleccion = $derived(carrito.length > 0);
-
-	let puedeSubirOcc = $derived(tieneSeleccion && !pedidosInvalidos);
+		return new Intl.NumberFormat('es-MX', {
+			style: 'currency',
+			currency: moneda,
+			currencyDisplay: 'narrowSymbol'
+		}).format(val);
+	};
 
 	function obtenerItem(id: string) {
 		return carrito.find((item) => item.id === id);
 	}
 
+	// ─── Acciones ───
 	function cambiarEstadoPedido(id: string, nuevoEstado: string) {
 		switch (nuevoEstado) {
 			case 'descartar':
@@ -117,10 +79,12 @@
 				break;
 
 			case 'pedido':
+				StoreVenta.pop(id);
 				StoreVenta.push(id, false);
 				break;
 
 			case 'stock':
+				StoreVenta.pop(id);
 				StoreVenta.push(id, true);
 				break;
 
@@ -140,21 +104,12 @@
 				serial: valor
 			});
 		} else {
-			/*
-			 * Reasignar el elemento completo evita depender de mutaciones
-			 * profundas que pueden no activar correctamente la reactividad.
-			 */
 			StoreVenta.carrito[index] = {
 				...StoreVenta.carrito[index],
 				stock: true,
 				serial: valor
 			};
 		}
-
-		/*
-		 * Si StoreVenta expone algún mecanismo de actualización,
-		 * push/pop deberían encargarse de notificar al store.
-		 */
 	}
 
 	async function descartarGrupo(pedidos: typeof pedidosCotizados) {
@@ -209,6 +164,35 @@
 	onMount(() => {
 		StoreVenta.limpiar();
 	});
+
+	// ─── Condiciones ───
+	let pedidosInvalidos = $derived.by(() => {
+		return oportunidad.pedidos
+			.filter((pedido) => carrito.some((item) => item.id === pedido.id))
+			.some((pedido) => {
+				const item = carrito.find((item) => item.id === pedido.id);
+
+				if (!item) return false;
+
+				if (pedido.precio_unitario == null) {
+					return true;
+				}
+
+				if (
+					item.stock === true &&
+					pedido.catalogo?.tipo_producto?.es_serializado === true &&
+					!item.serial?.trim()
+				) {
+					return true;
+				}
+
+				return false;
+			});
+	});
+
+	let tieneSeleccion = $derived(carrito.length > 0);
+
+	let puedeSubirOcc = $derived(tieneSeleccion && !pedidosInvalidos);
 </script>
 
 <div class="cotizaciones">
@@ -361,47 +345,48 @@
 				{#if grupo.pedidos.length === 0}
 					<p class="estado-vacio">No hay pedidos pendientes por cotizar en este grupo.</p>
 				{/if}
-			</div>
-			<div class="acciones-panel">
-				{#if !disable}
-					{#if existeSeleccion}
-						<div class="occ-wrapper">
-							{#if pedidosInvalidos}
-								<div class="alerta-error">
-									{#if carrito.some((item) => item.stock === true && !item.serial?.trim() && oportunidad.pedidos.some((p) => p.id === item.id && p.catalogo?.tipo_producto?.es_serializado === true))}
-										Completa el número de serie de los productos en stock antes de subir el OCC.
-									{:else}
-										Revisa los productos seleccionados antes de subir el OCC.
-									{/if}
-								</div>
-							{/if}
 
-							{#if puedeSubirOcc}
-								<SubirOcc
-									tipo="docs_cotizaciones"
-									action="/documentos?/subirOcc"
-									oportunidad={{
-										id: oportunidad?.id,
-										cliente:
-											oportunidad?.clientes?.nombre_comercial || oportunidad?.clientes?.razon_social
-									}}
-									required
-								/>
-							{/if}
-						</div>
-					{:else}
-						<div class="acciones-fijas">
-							<button
-								class="butter"
-								type="button"
-								disabled={actualizando}
-								onclick={() => descartarGrupo(grupo.pedidos)}
-							>
-								{actualizando ? 'Descartando...' : 'Descartar'}
-							</button>
-						</div>
+				<div class="acciones-panel">
+					{#if !disable}
+						{#if existeSeleccion}
+							<div class="occ-wrapper">
+								{#if pedidosInvalidos}
+									<div class="alerta-error">
+										{#if carrito.some((item) => item.stock === true && !item.serial?.trim() && oportunidad.pedidos.some((p) => p.id === item.id && p.catalogo?.tipo_producto?.es_serializado === true))}
+											Completa el número de serie de los productos en stock antes de subir el OCC.
+										{:else}
+											Revisa los productos seleccionados antes de subir el OCC.
+										{/if}
+									</div>
+								{/if}
+	
+								{#if puedeSubirOcc}
+									<SubirOcc
+										tipo="docs_cotizaciones"
+										action="/documentos?/subirOcc"
+										oportunidad={{
+											id: oportunidad?.id,
+											cliente:
+												oportunidad?.clientes?.nombre_comercial || oportunidad?.clientes?.razon_social
+										}}
+										required
+									/>
+								{/if}
+							</div>
+						{:else}
+							<div class="acciones-fijas">
+								<button
+									class="butter"
+									type="button"
+									disabled={actualizando}
+									onclick={() => descartarGrupo(grupo.pedidos)}
+								>
+									{actualizando ? 'Descartando...' : 'Descartar todo'}
+								</button>
+							</div>
+						{/if}
 					{/if}
-				{/if}
+				</div>
 			</div>
 		</div>
 	{/each}

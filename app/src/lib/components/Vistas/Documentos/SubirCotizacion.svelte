@@ -190,45 +190,6 @@
 		background-color: #f4f4f5;
 	}
 
-	.drop-zone {
-		position: relative;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		width: 100%;
-		margin: auto;
-		min-height: var(--g);
-		padding: var(--c);
-		border: 2px dashed var(--color-muted);
-		transition:
-			border-color 0.2s ease,
-			background-color 0.2s ease;
-		overflow: hidden;
-		color: var(--color-muted);
-	}
-
-	.drop-zone:hover {
-		border-color: black;
-		color: black;
-	}
-
-	.drop-zone.dragging {
-		background-color: var(--color-highlight);
-		border-color: var(--color-highlight);
-	}
-
-	/* Mantiene el borde negro al navegar con teclado */
-	.drop-zone:has(.file-input:focus-visible) {
-		border-color: #18181b;
-		border-style: solid;
-	}
-
-	.drop-text {
-		color: var(--color-secondary);
-		pointer-events: none; /* Asegura que el clic lo reciba el input debajo */
-		z-index: 1;
-	}
-
 	.file-input {
 		position: absolute;
 		inset: 0;

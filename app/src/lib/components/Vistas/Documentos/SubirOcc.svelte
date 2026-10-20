@@ -148,8 +148,8 @@
 				</button>
 			</div>
 		{:else}
-			<div class="drop-zone" class:dragging={isDragging}>
-				<span class="drop-text">subir cotizacion</span>
+			<div class="drop-zone milk" class:dragging={isDragging}>
+				<span class="drop-text">subir orden de compra</span>
 				<input
 					bind:this={inputEl}
 					type="file"
@@ -201,46 +201,6 @@
 	.file-input:hover:not(:disabled) {
 		border-color: var(--color-secondary);
 		background-color: #f4f4f5;
-	}
-
-	.drop-zone {
-		position: relative;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		width: 100%;
-		max-width: 800px;
-		min-height: var(--f);
-		padding: var(--c);
-		border: 1px dashed var(--color-muted);
-		border-radius: 16px;
-		background-color: #fafafa;
-		transition:
-			border-color 0.2s ease,
-			background-color 0.2s ease;
-		overflow: hidden;
-	}
-
-	.drop-zone:hover {
-		border-color: var(--color-secondary);
-		background-color: #f4f4f5;
-	}
-
-	.drop-zone.dragging {
-		background-color: var(--color-highlight);
-		border-color: var(--color-highlight);
-	}
-
-	/* Mantiene el borde negro al navegar con teclado */
-	.drop-zone:has(.file-input:focus-visible) {
-		border-color: #18181b;
-		border-style: solid;
-	}
-
-	.drop-text {
-		color: var(--color-secondary);
-		pointer-events: none; /* Asegura que el clic lo reciba el input debajo */
-		z-index: 1;
 	}
 
 	.file-input {

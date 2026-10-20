@@ -5,11 +5,11 @@
 	--color-button-highlight: #00000099;
 	--color-highlight: #ffff00cc;
 	--color-butter: #f1f4ffcc;
-	--color-honey: #f1f4ff99;
+	--color-honey: #fbfbff99;
 	--color-milk: #ffffffe2;
 
 	--color-text-ow: #000000;
-	--color-text-ob: #ffffff;
+	--color-text-ob: #ccd2f6;
 
 	/* acciones */
 	--color-error: #ff0000;
@@ -76,11 +76,9 @@ body {
 h1 {
 	font-size: 2rem;
 }
-
 h2 {
 	font-size: 1.5rem;
 }
-
 h3 {
 	font-size: 1.2rem;
 }
@@ -225,6 +223,7 @@ section {
 	/* siempre tendra header y contenido */
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(var(--h), 1fr));
+	gap: var(--a) 0;
 }
 section .section-header {
 	grid-column: span 1;
@@ -260,4 +259,44 @@ section .section-block {
 	gap: var(--a);
 	align-self: flex-end;
 	justify-self: flex-end;
+}
+
+/* DROP ZONE */
+.drop-zone {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	margin: auto;
+	min-height: var(--g);
+	padding: var(--c);
+	border: 2px dashed var(--color-muted);
+	transition:
+		border-color 0.2s ease,
+		background-color 0.2s ease;
+	overflow: hidden;
+	color: var(--color-muted);
+}
+
+.drop-zone:hover {
+	border-color: black;
+	color: black;
+}
+
+.drop-zone.dragging {
+	background-color: var(--color-highlight);
+	border-color: var(--color-highlight);
+}
+
+/* Mantiene el borde negro al navegar con teclado */
+.drop-zone:has(.file-input:focus-visible) {
+	border-color: #18181b;
+	border-style: solid;
+}
+
+.drop-text {
+	color: var(--color-secondary);
+	pointer-events: none; /* Asegura que el clic lo reciba el input debajo */
+	z-index: 1;
 }

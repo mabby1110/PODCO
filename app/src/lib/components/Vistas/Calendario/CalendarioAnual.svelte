@@ -4,6 +4,7 @@
 	import CGTarjetaOportunidad from './CGTarjetaOportunidad.svelte';
 	import { calendarStore } from '$lib/stores/calendarStore.svelte';
 	import { tick, untrack } from 'svelte';
+	import { arrowScroll } from '$lib/actions/keyboardScroll';
 
 	const MESES = [
 		'Ene',
@@ -124,7 +125,7 @@
 
 		tick().then(() => {
 			el.scrollTo({
-				left: (fraccion * el.scrollWidth - offsetPantalla)-40,
+				left: fraccion * el.scrollWidth - offsetPantalla - 40,
 				behavior: 'instant'
 			});
 		});
@@ -157,6 +158,7 @@
 	class:con-zoom={calendarStore.zoom > ZOOM_MIN}
 	bind:this={contenedor}
 	bind:clientWidth={contenedorWidth}
+	use:arrowScroll={{ step: 40, enabled: !expandedEventId }}
 >
 	<div class="lienzo" style="width: {anchoTotal}px;">
 		<div class="cabecera-meses">
@@ -278,8 +280,7 @@
 	}
 
 	.fila-evento.expanded {
-		height: auto;
-		min-height: var(--alto-expandido, 120px);
+		min-height: var(--f);
 		cursor: default;
 	}
 </style>

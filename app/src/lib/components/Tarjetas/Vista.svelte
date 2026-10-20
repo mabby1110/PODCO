@@ -45,7 +45,8 @@
 		gap: var(--y);
 		padding: var(--a);
 		padding-bottom: var(--e);
-		max-width: var(--l);
+		max-width: var(--k);
+		margin: auto;
 	}
 	.vista.grid {
 		display: grid;

@@ -21,6 +21,7 @@
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import { extraerColumnas, filterData, sortData } from '$lib/utils/ModList';
 	import Controles from '$lib/components/Acciones/Controles.svelte';
+	import { arrowScroll } from '$lib/actions/keyboardScroll';
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));
@@ -155,6 +156,7 @@
 		class:max={$appState.calendarCards}
 		bind:clientHeight={containerHeight}
 		bind:this={containerEl}
+		use:arrowScroll={{ step: 40, enabled: !expandedEventId }}
 	>
 		<div class="calendar-grid" class:max={$appState.calendarCards}>
 			<!-- Fila 1: cabeceras (días) + esquina a la derecha -->
@@ -190,7 +192,7 @@
 									<!-- svelte-ignore a11y_click_events_have_key_events -->
 									<!-- svelte-ignore a11y_no_static_element_interactions -->
 									<div
-										class="event-wrapper honey"
+										class="event-wrapper"
 										class:expanded={isExpanded}
 										onclick={(e) => {
 											e.stopPropagation();
@@ -244,7 +246,6 @@
 		font-size: 1.2em;
 		font-weight: bold;
 		padding: 12px;
-		background: var(--bg-color, transparent);
 		border-bottom: 1px solid var(--color-muted);
 		z-index: 10;
 		flex-shrink: 0;
@@ -273,7 +274,6 @@
 	.corner {
 		position: sticky;
 		top: 0;
-		background: var(--bg-color, transparent);
 		left: 0;
 		border-right: 1px solid var(--color-muted);
 		border-bottom: 1px solid var(--color-muted);
@@ -314,6 +314,7 @@
 		font-size: 0.8em;
 		height: var(--dynamic-cell-height);
 		white-space: nowrap;
+		z-index: 99;
 	}
 
 	.event-cell {

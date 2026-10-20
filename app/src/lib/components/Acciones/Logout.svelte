@@ -3,12 +3,17 @@
 	import { fade } from 'svelte/transition';
 </script>
 
-<form method="POST" action="/auth/logout">
-	<button type="submit" class="butter logout-button">Cerrar sesión</button>
-</form>
+{#if $appState.pageActions}
+	<form method="POST" action="/auth/logout">
+		<button type="submit" class="butter logout-button">Cerrar sesión</button>
+	</form>
+{/if}
 
 <style>
 	.logout-button {
+		position: fixed;
+		top: var(--a);
+		left: var(--a);
 		z-index: 9999;
 		background-color: var(--color-error);
 		color: white;
