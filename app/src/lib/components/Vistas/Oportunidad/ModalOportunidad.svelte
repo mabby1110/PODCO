@@ -32,6 +32,7 @@
 				use:enhance={() => {
 					return async ({ result, update }) => {
 						if (result.type === 'success' && result.data?.id) {
+							appState.toggleModalOp();
 							StoreEntradas.onSuccess?.(result.data.id);
 							closeAndClear();
 							invalidateAll();

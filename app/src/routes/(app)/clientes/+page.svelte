@@ -11,18 +11,18 @@
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 
-	let { clientes } = $derived(page.data);
+	let { cartera } = $derived(page.data);
 	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
-	let lista = $state(clientes);
-	let columnasDinamicas = $derived(extraerColumnas(clientes));
+	let lista = $state(cartera);
+	let columnasDinamicas = $derived(extraerColumnas(cartera));
 	let lista_ordenada = $derived(sortData(lista, currentRoute));
 	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
 	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 
 	$effect(() => {
-		lista = clientes;
+		lista = cartera;
 	});
 </script>
 
@@ -35,7 +35,7 @@
 			{/snippet}
 			{#snippet acciones()}
 				<ModList {columnasDinamicas} route={currentRoute} ordenar agrupar />
-				<Searchbar data={clientes} keyColumns={columnasDinamicas.map((a) => a.key)} bind:lista />
+				<Searchbar data={cartera} keyColumns={columnasDinamicas.map((a) => a.key)} bind:lista />
 			{/snippet}
 		</Controles>
 	{/snippet}

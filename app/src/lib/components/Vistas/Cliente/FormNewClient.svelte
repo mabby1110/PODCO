@@ -13,7 +13,7 @@
 	} = $props();
 
 	let { clientes } = $derived(page.data);
-
+	console.log(clientes)
 	const sectores = [...new Set(clientes.map((item) => item.sector))];
 
 	// --- Único picker para la búsqueda ---
@@ -46,6 +46,7 @@
 	$effect(() => {
 		isDuplicate = nombre_comercial.trim() === '' || matches.length > 0;
 	});
+	$effect(()=>console.log(matches));
 </script>
 
 <div class="form-content milk">
@@ -73,6 +74,7 @@
 				>
 					{match.nombre_comercial ?? match.razon_social}
 					<br />
+					<small style="font-style: italic;">Agente: {match.agentes.nombre}</small>
 					<small style="font-style: italic;">Razon social: {match.razon_social}</small>
 				</li>
 			{/each}
@@ -169,6 +171,8 @@
 		margin: -0.5rem 0 0;
 		padding: 0;
 		font-size: 0.85rem;
+		max-height: var(--h);
+		overflow: auto;
 	}
 	.matches li {
 		padding: 0.2rem 0;

@@ -96,6 +96,11 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		queryNotificaciones
 	]);
 
+	let cartera;
+	if (!profile.isAdmin) {
+		cartera = clientes?.filter((f) => f.id_agente == profile.id);
+	}
+
 	console.log('\nactividades: ', actividades?.length);
 	console.log('oportunidades: ', oportunidades?.length);
 	console.log('clientes: ', clientes?.length);
@@ -118,6 +123,7 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 		oportunidades: oportunidades || [],
 		actividades: actividades || [],
 		clientes: clientes || [],
+		cartera: cartera || [],
 		documentos: documentos || [],
 		inventario: inventario || [],
 		catalogo: catalogo || [],
