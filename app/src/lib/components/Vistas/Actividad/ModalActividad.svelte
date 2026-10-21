@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import { motivosActividades } from '$lib';
 	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
 	import FormInput from '$lib/components/Formularios/FormInput.svelte';
@@ -7,11 +8,16 @@
 	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
 	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
+	import { StoreEntradas } from '$lib/stores/StoreEntradas.svelte';
 
 	let objetivo = $state('');
 	let observaciones = $state('');
 	let requisitos = $state('');
 	let agenteSeleccionado = $state<string>('');
+	function closeAndClear() {
+		appState.toggleModalOp();
+		StoreEntradas.clearStore();
+	}
 </script>
 
 {#if $appState.ModalActivity}
@@ -30,9 +36,21 @@
 				method="POST"
 				action="/actividades?/add"
 				use:enhance={() => {
-					appState.toggleModalActivity();
+					return async ({ result, update }) => {
+						if (result.type === 'success' && result.data?.id) {
+							appState.toggleModalActivity();
+							StoreEntradas.onSuccess?.(result.data.id as string);
+							closeAndClear();
+							invalidateAll();
+							await update({ reset: true });
+						}
+					};
 				}}
 			>
+				{#if StoreEntradas.origen?.tipo === 'oportunidad'}
+					<input type="hidden" name="id_oportunidad" value={StoreEntradas.origen.id} />
+					{StoreEntradas.origen?.tipo} > {StoreEntradas.destino} id: {StoreEntradas.origen?.id}
+				{/if}
 				<div class="form-content">
 					<!-- si es admin queda el input oculto -->
 					<FormSelectAgente bind:selected={agenteSeleccionado} />

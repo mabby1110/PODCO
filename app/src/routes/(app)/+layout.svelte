@@ -10,6 +10,7 @@
 	import ModalPedidoEditar from '$lib/components/Vistas/Pedidos/ModalPedidoEditar.svelte';
 	import Hotkeys from '$lib/components/Acciones/Hotkeys.svelte';
 	import Logout from '$lib/components/Acciones/Logout.svelte';
+	import ModalTipoProductoNuevo from '$lib/components/Vistas/Catalogo/ModalTipoProductoNuevo.svelte';
 
 	let { children, data } = $props();
 
@@ -44,6 +45,7 @@
 <ModalCliente />
 <ModalInventario />
 <ModalProducto />
+<ModalTipoProductoNuevo />
 
 <style>
 	.layout {

@@ -89,7 +89,7 @@
 					<Entradas
 						{editando}
 						historia={actividad?.historia}
-						objId={actividad?.id}
+						id_actividad={actividad?.id}
 						action={'/actividades?/update'}
 					/>
 				</div>
@@ -101,10 +101,3 @@
 		{/snippet}
 	</Card>
 {/if}
-
-<style>
-	.meta {
-		display: flex;
-		gap: var(--a);
-	}
-</style>

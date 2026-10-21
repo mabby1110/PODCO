@@ -30,7 +30,7 @@
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 </script>
 
-<Vista grid>
+<Vista>
 	{#snippet portada()}
 		{currentRoute}
 	{/snippet}
@@ -39,6 +39,7 @@
 		<Controles>
 			{#snippet header()}
 				<ExportarCSV {lista_ordenada} />
+				<!-- <button onclick={() => appState.toggleModalTipoProducto()} class="butter accion">+Tipo</button> -->
 				<button onclick={() => appState.toggleModalProducto()} class="butter"
 					>+Producto Nuevo</button
 				>

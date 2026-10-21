@@ -2,42 +2,46 @@
 	import { enhance } from '$app/forms';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { opModalStore } from '$lib/stores/opModalStore.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatDateToReadable } from '$lib/utils/util';
+	import { StoreEntradas, type TipoEvento } from '$lib/stores/StoreEntradas.svelte';
+	import { tick } from 'svelte';
 
 	type Entrada = {
 		fecha: string;
 		entrada: string;
 		nombre_perfil?: string;
 		id?: string;
-		id_op?: string;
+		id_oportunidad?: string;
+		id_actividad?: string;
 	};
 
 	let {
-		historia = $bindable('[]'),
-		objId,
+		historia,
+		id_oportunidad,
+		id_actividad,
 		action = '?/updateHistoria',
 		editando = false
 	}: {
-		historia: string;
-		objId: string;
+		historia: Entrada[];
+		id_oportunidad?: string;
+		id_actividad?: string;
 		action?: string;
 		editando?: boolean;
 	} = $props();
 
-	let lista = $state<Entrada[]>(historia ? JSON.parse(historia) : []);
+	let lista = $state<Entrada[]>(historia || []);
 	let nuevaEntrada = $state('');
-	let isEditing = $state(editando);
+	let isEditing = $derived(editando);
 	let isSubmitting = $state(false);
 	let formEl = $state<HTMLFormElement | null>(null);
 
 	let listaSerializada = $derived(JSON.stringify(lista));
 
-	function syncAndSubmit() {
-		historia = listaSerializada;
+	async function syncAndSubmit() {
 		isSubmitting = true;
-		queueMicrotask(() => formEl?.requestSubmit());
+		await tick();
+		formEl?.requestSubmit();
 	}
 
 	const handleSubmit: SubmitFunction = () => {
@@ -71,18 +75,43 @@
 		lista[i].id = $profile?.id;
 	}
 
-	function asociarOp(i: number, id_op: string) {
-		lista[i].id_op = id_op;
+	function asociarEvento(i: number, destino: TipoEvento, id: string) {
+		// Validar que el modal realmente esté enviando el ID
+		if (!id) {
+			console.error(`Error: No se recibió el ID desde el modal al crear ${destino}`);
+			return;
+		}
+
+		if (destino === 'oportunidad') {
+			lista[i].id_oportunidad = id;
+		} else {
+			lista[i].id_actividad = id;
+		}
+
+		lista = [...lista];
+		console.log('actualizar comentario', lista);
 		syncAndSubmit();
 	}
+	function crearEvento(i: number, destino: TipoEvento) {
+		// El origen es la entidad que estoy viendo, según el destino:
+		// crear oportunidad desde una actividad -> creado_de_actividad
+		// crear actividad desde una oportunidad -> creado_de_oportunidad
+		const origen =
+			destino === 'oportunidad'
+				? id_actividad && { tipo: 'actividad' as const, id: id_actividad }
+				: id_oportunidad && { tipo: 'oportunidad' as const, id: id_oportunidad };
+		if (!origen) return;
 
-	function abrirOportunidad(i: number) {
-		opModalStore.open({
-			index: i,
+		StoreEntradas.open({
+			destino,
+			origen,
+			index_entrada: i,
 			observaciones: lista[i].entrada,
-			onSuccess: (id_op: string) => asociarOp(i, id_op)
+			onSuccess: (id) => asociarEvento(i, destino, id)
 		});
-		appState.toggleModalOp();
+
+		if (destino === 'oportunidad') appState.toggleModalOp();
+		else appState.toggleModalActivity();
 	}
 </script>
 
@@ -91,7 +120,7 @@
 		<button class="jelly rojo accion" onclick={() => (isEditing = false)}>x</button>
 	{/if}
 	<form bind:this={formEl} method="POST" {action} use:enhance={handleSubmit}>
-		<input type="hidden" name="id" value={objId} />
+		<input type="hidden" name="id" value={id_actividad || id_oportunidad} />
 		<input type="hidden" name="historia" value={listaSerializada} />
 
 		<div class="contenedor-historial honey">
@@ -110,11 +139,18 @@
 								{/if}
 								<span class="fecha-etiqueta">
 									{formatDateToReadable(item.fecha)}
-									{#if item.id_op}
-										<a class="enlace-oportunidad" href="/oportunidades/{item.id_op}">
-											Oportunidad
-										</a>
-									{/if}
+									<span class="fecha-etiqueta">
+										{#if item.id_oportunidad}
+											<a class="enlace-evento" href="/oportunidades/{item.id_oportunidad}">
+												Oportunidad
+											</a>
+										{/if}
+										{#if item.id_actividad}
+											<a class="enlace-evento" href="/actividades/{item.id_actividad}">
+												Actividad
+											</a>
+										{/if}
+									</span>
 								</span>
 							</div>
 
@@ -126,9 +162,24 @@
 										onchange={() => marcarAutor(i)}
 									></textarea>
 									<div class="acciones-edicion">
-										<button type="button" class="butter" onclick={() => abrirOportunidad(i)}>
-											+Oportunidad
-										</button>
+										{#if id_actividad}
+											<button
+												type="button"
+												class="butter"
+												onclick={() => crearEvento(i, 'oportunidad')}
+											>
+												+Oportunidad
+											</button>
+										{/if}
+										{#if id_oportunidad}
+											<button
+												type="button"
+												class="butter"
+												onclick={() => crearEvento(i, 'actividad')}
+											>
+												+Actividad
+											</button>
+										{/if}
 										<button type="button" class="butter" onclick={() => eliminar(i)}>
 											Eliminar
 										</button>

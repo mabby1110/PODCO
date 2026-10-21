@@ -4,7 +4,7 @@
 	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
-	import { getStyleForPhase } from '$lib/utils/util';
+	import { formatDateToReadable, getStyleForPhase } from '$lib/utils/util';
 
 	let { actividad } = $props();
 	let fase = $derived(fasesActividad[actividad.fase]);
@@ -25,7 +25,7 @@
 			<div class="brief">
 				<h3>Historia</h3>
 				<div class="entradas">
-					{#each JSON.parse(actividad?.historia) as item}
+					{#each actividad?.historia as item}
 						<div class="entrada">
 							<p>{formatDateFull(parseDateTimeLocal(item.fecha))}:</p>
 							{#if item.nombre_perfil}
@@ -42,7 +42,7 @@
 	{/snippet}
 
 	{#snippet meta()}
-		<p>{formatDateFull(parseDateTimeLocal(actividad?.inicio))}</p>
-		<p>{actividad?.agente?.nombre}</p>
+		<p>{actividad?.agentes?.nombre}</p>
+		<p>{formatDateToReadable(actividad?.inicio)}</p>
 	{/snippet}
 </ListPreview>

@@ -17,6 +17,8 @@ export type Actividad = {
 	objetivo: string;
 	requisitos: string;
 	observaciones: string;
+
+	id_oportunidad: string;
 };
 
 export type Oportunidad = {
@@ -37,6 +39,7 @@ export type Oportunidad = {
 	objetivo: string;
 	requisitos: string;
 	observaciones: string;
+	id_actividad: string;
 
 	// de la oportunidad
 	necesidades: string;

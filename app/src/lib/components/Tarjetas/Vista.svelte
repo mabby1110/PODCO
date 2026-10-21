@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import NavButton from '../Acciones/NavButton.svelte';
+	import { arrowScroll } from '$lib/actions/keyboardScroll';
 
 	let {
 		portada,
@@ -22,7 +23,8 @@
 		{@render portada()}
 	</div>
 {/if}
-<div class="vista" class:grid class:fullscreen>
+<div class="vista" class:grid class:fullscreen 
+		use:arrowScroll={{ step: 40, enabled: true }}>
 	{#if contenido}
 		{@render contenido()}
 	{/if}

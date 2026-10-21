@@ -145,19 +145,16 @@
 		padding: var(--a);
 		display: flex;
 		flex-direction: column;
-		gap: var(--a);
 		max-height: var(--);
 		overflow: auto;
 		width: 100%;
 	}
 	.meta {
 		font-size: 0.85em;
-		color: var(--text-secondary, #666);
 	}
 	.no-results {
 		padding: var(--a);
 		text-align: center;
-		color: var(--text-secondary, #666);
 	}
 	.selected-client {
 		display: flex;

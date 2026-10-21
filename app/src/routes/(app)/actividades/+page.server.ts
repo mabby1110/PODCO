@@ -59,21 +59,29 @@ export const actions: Actions = {
 		if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
 		console.log('\nNotificación creada:\n', notificacion);
 
-		return { success: true, act: result.id };
+		return { success: true, id: result.id };
 	},
 
 	update: async ({ request, locals: { user, supabase } }) => {
-		console.log('\nActualizar actividad:\n');
 		if (!user) return fail(401, { error: 'No autorizado' });
 
+		console.log('\nActualizar actividad:\n');
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
 		console.log(data);
 
+		const actividad = Object.fromEntries(formData.entries());
+		if (typeof actividad.historia === 'string') {
+			try {
+				actividad.historia = JSON.parse(actividad.historia);
+			} catch (e) {
+				console.error('Error al parsear la historia', e);
+			}
+		}
+
 		const id = data['id'] as string;
 		if (!id) return fail(400, { error: 'ID requerido' });
 
-		const actividad = construirDatosActividad(data, id);
 		const { data: result, error: err } = await supabase
 			.from('actividades')
 			.update(actividad)

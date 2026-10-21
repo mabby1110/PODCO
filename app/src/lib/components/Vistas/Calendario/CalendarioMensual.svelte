@@ -155,7 +155,7 @@
                             <!-- svelte-ignore a11y_click_events_have_key_events -->
                             <!-- svelte-ignore a11y_no_static_element_interactions -->
                             <div
-                                class="event-wrapper honey"
+                                class="event-wrapper"
                                 class:expanded={isExpanded}
                                 onclick={(e) => {
                                     e.stopPropagation();

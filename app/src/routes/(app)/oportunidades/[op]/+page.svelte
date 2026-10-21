@@ -8,7 +8,6 @@
 	import { fasesOportunidad } from '$lib';
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 	import Card from '$lib/components/Tarjetas/Card.svelte';
-	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
 	import CustomInput from '$lib/components/Formularios/CustomInput.svelte';
 	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
 	import EditableInput from '$lib/components/Formularios/EditableInput.svelte';
@@ -27,6 +26,7 @@
 
 	// ESTADO
 	const oportunidad = $derived(page.data.oportunidad);
+	console.log(oportunidad);
 	const potencial_venta = $derived(oportunidad.pedidos.some((p) => p.fase == 2));
 	const cotizaciones = $derived(oportunidad.pedidos.some((p) => p.fase == 3));
 	const ventas = $derived(oportunidad.pedidos.filter((p) => p.fase == 4) || []);
@@ -206,7 +206,7 @@
 
 				<div class="section-content">
 					{#if oportunidad.pedidos.length > 0}
-						<TarjetaPedidoCotizado {oportunidad}  />
+						<TarjetaPedidoCotizado {oportunidad} />
 					{/if}
 				</div>
 			</section>
@@ -281,12 +281,13 @@
 				<Entradas
 					{editando}
 					historia={oportunidad?.historia}
-					objId={oportunidad?.id}
+					id_oportunidad={oportunidad?.id}
 					action={'/oportunidades?/actualizarOportunidad'}
 				/>
 			</div>
 		</section>
 	{/snippet}
+
 	{#snippet acciones()}
 		<AgentActions {oportunidad} bind:editando />
 	{/snippet}

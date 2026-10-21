@@ -13,21 +13,19 @@
 	import Controles from '$lib/components/Acciones/Controles.svelte';
 
 	let { actividades } = $derived(page.data);
-	let show = $derived($appState.min);
+	let lista = $state(actividades);
 	let currentRoute = $derived(page.url.pathname);
 
-	// Convertido a $state para soportar bind:lista
-	let lista = $state(actividades);
 	let columnasDinamicas = $derived(extraerColumnas(actividades));
+	let lista_ordenada = $derived(sortData(lista, currentRoute));
+	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
+	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
+	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 	$effect(() => {
 		lista = actividades;
 	});
 
-	let lista_ordenada = $derived(sortData(lista, currentRoute));
-	let lista_filtrada = $derived(filterData(lista_ordenada, currentRoute));
-	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
-
-	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
+	let show = $derived($appState.min);
 </script>
 
 <Vista>
@@ -45,7 +43,7 @@
 	{/snippet}
 	{#snippet contenido()}
 		{#if !isGrouped}
-			{#each lista_ordenada as actividad}
+			{#each lista_filtrada as actividad}
 				<TarjetaListaActividades {actividad} />
 			{/each}
 		{:else}

@@ -9,6 +9,7 @@ export const actions: Actions = {
 		if (!user) return 0;
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
+		console.log(data);
 
 		// ¿Necesitamos crear un cliente nuevo primero?
 		if (data['nombre_comercial']) {
@@ -75,7 +76,7 @@ export const actions: Actions = {
 			.single();
 		if (errorNotif) console.error('Fallo al registrar notificación:', errorNotif);
 		console.log('\nNotificación creada:\n', notificacion);
-		return { success: true, op: result.id };
+		return { success: true, id: result.id };
 	},
 	update: async ({ request, locals: { supabase, user } }) => {
 		console.log('\nAccion: Actualizar Oportunidad\n');
@@ -145,11 +146,20 @@ export const actions: Actions = {
 	actualizarOportunidad: async ({ request, locals: { supabase, user } }) => {
 		const formData = await request.formData();
 		const oportunidad = Object.fromEntries(formData.entries());
+
+		if (typeof oportunidad.historia === 'string') {
+			try {
+				oportunidad.historia = JSON.parse(oportunidad.historia);
+			} catch (e) {
+				console.error('Error al parsear la historia', e);
+			}
+		}
+
 		console.log('actualizar oportunidad\n', oportunidad);
 
 		const { data, error } = await supabase
 			.from('oportunidades')
-			.update(oportunidad)
+			.update(oportunidad) // Ahora historia es un Array válido
 			.eq('id', oportunidad.id)
 			.select()
 			.single();

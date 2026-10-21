@@ -124,7 +124,7 @@
 	{@const existeSeleccion = StoreVenta.carrito.some((itemCarrito) =>
 		grupo.pedidos.some((pedido) => pedido.id === itemCarrito.id)
 	)}
-	<div class="cotizacion-container">
+	<div class="cotizacion-container honey">
 		<div class="titulo-meta">
 			<div class="badge" style={fasesPedido[4]?.estilo}>
 				<span>Venta</span>
@@ -142,7 +142,7 @@
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
 				<div
-					class="tarjeta honey"
+					class="tarjeta"
 					class:selected={itemStore}
 					class:invalid={itemStore && pedido.precio_unitario == null}
 				>
@@ -160,8 +160,8 @@
 					</div>
 				</div>
 				<!-- Sección Colapsable -->
-				{#if pedido.catalogo?.descripcion || pedido.catalogo?.caracteristicas || pedido.observaciones}
-					<div class="detalles">
+				<div class="detalles">
+					{#if pedido.catalogo?.descripcion || pedido.catalogo?.caracteristicas || pedido.observaciones}
 						{#if expandidos[pedido.id]}
 							<!-- svelte-ignore a11y_click_events_have_key_events -->
 							<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -202,9 +202,8 @@
 								Leer más detalles...
 							</button>
 						{/if}
-					</div>
-				{/if}
-				<hr />
+					{/if}
+				</div>
 			{/each}
 
 			<!-- Validaciones y Totales POR GRUPO -->
@@ -258,9 +257,6 @@
 		flex-direction: column;
 		gap: 1rem;
 		padding: 16px 16px;
-		border: 2px solid;
-		border-radius: 32px;
-		border-color: var(--color-muted);
 	}
 
 	.lista-tarjetas {

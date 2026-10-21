@@ -45,7 +45,8 @@ const CLAVES_ACTIVIDAD: (keyof Actividad)[] = [
 	'motivo',
 	'objetivo',
 	'requisitos',
-	'observaciones'
+	'observaciones',
+	'id_oportunidad'
 ];
 
 const CLAVES_DOCUMENTO: (keyof Cotizacion)[] = [
@@ -81,7 +82,8 @@ const CLAVES_OPORTUNIDAD: (keyof Oportunidad)[] = [
 	'cotizaciones_presentadas',
 	'cotizaciones_ganadas',
 	'oc_cliente',
-	'documentos_operacion'
+	'documentos_operacion',
+	'id_actividad'
 ];
 
 const CLAVES_PEDIDO: (keyof Pedido)[] = [

@@ -2,14 +2,14 @@
 	/* tema */
 	--color-primary: #ffffff;
 	--color-muted: #d4d9e899;
-	--color-button-highlight: #00000099;
+	--color-button-highlight: #10151eb2;
 	--color-highlight: #ffff00cc;
 	--color-butter: #f1f4ffcc;
 	--color-honey: #fbfbff99;
 	--color-milk: #ffffffe2;
 
 	--color-text-ow: #000000;
-	--color-text-ob: #ccd2f6;
+	--color-text-ob: #d3d3d4;
 
 	/* acciones */
 	--color-error: #ff0000;
@@ -183,6 +183,12 @@ button img {
 	margin: auto;
 	width: 100%;
 	overflow: auto;
+}
+.modal .acciones {
+	display: flex;
+	align-self: flex-end;
+	justify-self: flex-end;
+	justify-content: flex-end;
 }
 
 /* FORMULARIOS */
