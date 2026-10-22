@@ -33,34 +33,27 @@
 	{#snippet inputs()}
 		{#if submit}
 			{#if fase.id_fase == 1}
-				<section>
-					<div class="header">
-						<h3>Análisis:</h3>
-					</div>
-
-					<div class="content">
-						<FormSelectMotivo
-							title="Especificar Motivo"
-							list={motivosOportunidad}
-							disableCustom={false}
-						/>
-						<FormInput
-							label="Objetivo"
-							name="objetivo"
-							placeholder={fase.placeholder_accion}
-							type="text"
-							required
-						/>
-						<FormInput
-							label="Necesidad"
-							name="necesidades"
-							placeholder="Requerimiento detectados"
-							type="textarea"
-							required
-						/>
-						<DatePicker title="Salida de paquete" />
-					</div>
-				</section>
+				<h1>{fase.accion}:</h1>
+				<FormSelectMotivo
+					title="Especificar Motivo"
+					list={motivosOportunidad}
+					disableCustom={false}
+				/>
+				<FormInput
+					label="Objetivo"
+					name="objetivo"
+					placeholder={fase.placeholder_accion}
+					type="text"
+					required
+				/>
+				<FormInput
+					label="Necesidad"
+					name="necesidades"
+					placeholder="Requerimiento detectados"
+					type="textarea"
+					required
+				/>
+				<DatePicker />
 			{:else if fase.id_fase == 2}
 				<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
 				<input type="hidden" name="fecha_venta" value={new Date().toISOString()} />
@@ -199,9 +192,15 @@
 				</button>
 			{:else if submitCancel}
 				<input type="hidden" name="fase" value={0} />
-				<button type="submit" class="honey accion" disabled={isSubmitting || !canSubmit}>Descartar</button>
+				<button type="submit" class="honey accion" disabled={isSubmitting || !canSubmit}
+					>Descartar</button
+				>
 			{:else}
-				<button type="button" class="honey accion {editando}" onclick={() => (editando = !editando)}>
+				<button
+					type="button"
+					class="honey accion {editando}"
+					onclick={() => (editando = !editando)}
+				>
 					~Editar
 				</button>
 			{/if}

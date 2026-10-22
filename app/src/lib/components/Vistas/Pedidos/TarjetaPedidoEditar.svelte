@@ -298,13 +298,13 @@
 {/if}
 
 <!-- ACCIONES GLOBALES -->
-{#if StorePedidoEditar.carrito.length == 0}
-	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}>+Agregar Pedido</button>
+{#if StorePedidoEditar.carrito.length == 0  && page.url.pathname != '/pedidos'}
+	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}>+Seleccionar Pedido</button>
 	<p class="estado-vacio">No hay pedidos seleccionados</p>
 {/if}
-{#if StorePedidoNuevo.carrito.length == 0}
+{#if StorePedidoNuevo.carrito.length == 0 && page.url.pathname != '/catalogo'}
 	<button class="butter agregar-producto" onclick={() => goto('/catalogo')}
-		>+{StorePedidoEditar.carrito.length ? 'Agregar Pedido' : 'Crear Pedido'}</button
+		>+{StorePedidoEditar.carrito.length ? 'Agregar a Pedido' : 'Crear Pedido'}</button
 	>
 	<p class="estado-vacio">No hay productos seleccionados</p>
 {/if}

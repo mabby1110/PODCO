@@ -150,7 +150,7 @@
 	<div class="section-header">
 		<h3>{title}</h3>
 	</div>
-	<div class="section-block">
+	<div class="section-content">
 		<div class="datetime-split">
 			<div class="datetime-item">
 				<input class="butter" type="date" bind:value={fecha} required />
