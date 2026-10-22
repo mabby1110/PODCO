@@ -102,6 +102,7 @@
 			})
 			.filter((evento) => evento.width > 0)
 	);
+
 	let zoomPrevio = calendarStore.zoom;
 
 	$effect.pre(() => {
@@ -109,32 +110,25 @@
 		const el = contenedor;
 		if (!el || zoom === zoomPrevio) return;
 
-		const hoy = posicionHoy; // valor antiguo: el efecto es "pre"
 		const anchoAntes = el.scrollWidth;
-		const scrollAntes = el.scrollLeft;
+		const centroAntes = el.scrollLeft + el.clientWidth / 2;
+		const fraccion = anchoAntes > 0 ? centroAntes / anchoAntes : 0;
 		zoomPrevio = zoom;
 
-		// Anclaje: hoy si estamos en el año actual, si no el centro del viewport
-		const fraccion =
-			hoy !== null && anchoAntes > 0
-				? hoy / anchoAntes
-				: (scrollAntes + el.clientWidth / 2) / anchoAntes;
-
-		// Posición en pantalla del ancla antes del zoom, para mantenerla fija
-		const offsetPantalla = hoy !== null ? hoy - scrollAntes : el.clientWidth / 2;
-
 		tick().then(() => {
+			const destino = posicionHoy !== null ? posicionHoy : fraccion * el.scrollWidth;
 			el.scrollTo({
-				left: fraccion * el.scrollWidth - offsetPantalla - 40,
+				left: Math.max(0, destino - el.clientWidth / 2),
 				behavior: 'instant'
 			});
 		});
 	});
+
 	const listo = $derived(contenedorWidth > 0);
 
 	$effect(() => {
-		anioVista; // dependencia: al cambiar de año
-		if (!listo) return; // espera a que el contenedor tenga ancho real
+		anioVista;
+		if (!listo) return;
 
 		untrack(() => {
 			expandedEventId = null;

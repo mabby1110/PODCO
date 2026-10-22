@@ -135,15 +135,16 @@
 					<option value="mensual">Mensual</option>
 					<option value="semanal">Semanal</option>
 				</select>
-				{#if $appState.calendarView == 'gant'}
+				{#if $appState.calendarView == 'gant' || $appState.calendarView == 'mensual'}
 					<input
 						type="range"
 						bind:value={calendarStore.zoom}
 						min={ZOOM_MIN}
 						max={ZOOM_MAX}
-						step="0.5"
+						step="0.01"
 						title="Nivel de Zoom"
 						class="zoom-slider"
+						style="width: 80%;margin:auto"
 					/>
 				{/if}
 				<select

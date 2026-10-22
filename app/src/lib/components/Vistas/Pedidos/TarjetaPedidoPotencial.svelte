@@ -314,6 +314,7 @@
 	.acciones-fijas {
 		display: flex;
 		justify-content: flex-end;
+		align-items: flex-end;
 		gap: var(--a);
 	}
 

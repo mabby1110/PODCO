@@ -112,12 +112,20 @@
 	<input type="hidden" name="id_oportunidad" value={oportunidad.id} />
 	<input type="hidden" name="nombre_agente" value={$profile?.nombre} />
 	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
-
 	<div class="upload-container">
+		<input
+			type="text" 
+			title="Ingresa nombre o razón social del cliente final"
+			name="cliente_final"
+			value=""
+			placeholder="Cliente final"
+		/>
+
 		<div class="drop-zone milk" class:dragging={isDragging}>
 			<span class="drop-text">subir cotizacion</span>
 			<input
 				bind:this={inputEl}
+				title="Click o arrastra"
 				type="file"
 				class="file-input"
 				required={required && item === null}
@@ -228,8 +236,7 @@
 		flex-direction: column;
 		gap: var(--a);
 	}
-
-	.close-btn:hover {
-		background-color: var(--color-error);
+	.accion {
+		align-self: flex-end;
 	}
 </style>

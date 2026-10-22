@@ -33,8 +33,9 @@ export const actions: Actions = {
 	subirCotizacion: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const tipo = formData.get('tipo') as string;
+		const cliente_final = formData.get('cliente_final') as string;
 		const pedidosACrear = JSON.parse((formData.get('pedidosACrear') as string) || '[]');
-		console.log('Subir cotizacion: \n', pedidosACrear);
+		console.log('Subir cotizacion: \n', formData);
 		try {
 			const documentos = await procesarDocumentos(formData);
 
@@ -68,7 +69,8 @@ export const actions: Actions = {
 					id_oportunidad: pedido.id_oportunidad,
 					fase: 3,
 					id_agrupacion,
-					id_cotizacion: doc_cotizacion.id
+					id_cotizacion: doc_cotizacion.id,
+					cliente_final: cliente_final || ''
 				}));
 
 				const { data: resultCreacion, error: errorCreacion } = await supabase

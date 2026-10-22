@@ -1,19 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { fasesOportunidad } from '$lib';
-	import { draggable } from '$lib/actions/dnd';
-	import { appState } from '$lib/stores/appState.svelte';
-
 	let { oportunidad, expanded, style } = $props();
 	
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
-	const isDndEnabled = $derived($appState.dnd);
 </script>
 
 <div
 	class="tarjeta jelly"
 	style="{style} {fase?.estilo}"
-	use:draggable={{ data: oportunidad.id, enabled: isDndEnabled }}
 >
 	{#if expanded}
 		<div class="header">
@@ -54,7 +49,6 @@
 		top: 0;
 		left: 0;
 		right: 0;
-		pointer-events: auto;
 		cursor: pointer;
 	}
 	.header {
