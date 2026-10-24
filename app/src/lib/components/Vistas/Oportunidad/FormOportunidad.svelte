@@ -84,16 +84,14 @@
 			/>
 		</FormOptionalInput>
 		<FormConditionalInput bind:isOpen titleOpen="+Necesidad detectada">
-			<div class="form-group">
-				<FormInput
-					label="Necesidad"
-					name="necesidades"
-					bind:value={necesidades}
-					placeholder="Requerimiento técnico u operacional detectados"
-					type="textarea"
-					required
-				/>
-			</div>
+			<FormInput
+				label="Necesidad"
+				name="necesidades"
+				bind:value={necesidades}
+				placeholder="Requerimiento técnico u operacional detectados"
+				type="textarea"
+				required
+			/>
 		</FormConditionalInput>
 	</div>
 

@@ -30,7 +30,7 @@
 	</button>
 {:else}
 	<div class="optional-input" bind:this={input}>
-		<button class="butter rojo accion" type="button" onclick={close}>✕</button>
+		<button class="jelly rojo accion" type="button" onclick={close}>✕</button>
 		{#if children}
 			{@render children()}
 		{/if}
@@ -40,10 +40,9 @@
 <style>
 	.optional-input {
 		display: flex;
-		flex-wrap: wrap;
 		flex-grow: 1;
 		width: 100%;
 		gap: var(--a);
-		align-items: flex-start;
+		align-items: baseline;
 	}
 </style>

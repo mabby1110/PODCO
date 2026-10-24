@@ -72,80 +72,74 @@
 	});
 </script>
 
-<div class="search-container">
-	{#if selectedItem}
-		<section>
-			<div class="section-header">
-				<h3>Cliente</h3>
+{#if selectedItem}
+	<section>
+		<div class="section-header">
+			<h3>Cliente</h3>
+		</div>
+		<div class="section-content">
+			<div class="selected-client">
+				<button
+					type="button"
+					class="jelly rojo"
+					onclick={(e) => {
+						e.stopPropagation();
+						selectedItem = null;
+					}}>✕</button
+				>
+				<p>{selectedItem?.razon_social || selectedItem?.nombre_comercial}</p>
 			</div>
-			<div class="section-content">
-				<div class="selected-client">
-					<button
-						type="button"
-						class="jelly rojo"
-						onclick={(e) => {
-							e.stopPropagation();
-							selectedItem = null;
-						}}>✕</button
-					>
-					<p>{selectedItem?.razon_social || selectedItem?.nombre_comercial}</p>
-				</div>
-			</div>
-		</section>
-	{:else}
-		<section bind:this={input}>
-			<div class="section-header">
-				<h3>Buscar Cliente</h3>
-			</div>
-			<div class="section-content">
-				<FormConditionalInput titleOpen="Registrar nuevo" bind:isOpen />
-				{#if isOpen}
-					<FormNewClient bind:isDuplicate />
-				{:else}
-					<input
-						class="milk"
-						type="text"
-						value={keyword}
-						oninput={handleInput}
-						placeholder="Buscar..."
-						required
-					/>
-					{#if keyword}
-						<div class="results milk" in:slide>
-							{#if filteredData.length > 0}
-								{#each filteredData as item (item.id)}
-									<button
-										type="button"
-										class="jelly"
-										onclick={(e) => {
-											e.stopPropagation();
-											selectItem(item);
-										}}
-									>
-										<span class="meta">{item.razon_social || item.nombre_comercial}</span>
-									</button>
-								{/each}
-							{:else}
-								<div class="no-results">No se encontraron resultados</div>
-							{/if}
-						</div>
-					{/if}
+		</div>
+	</section>
+{:else}
+	<section bind:this={input}>
+		<div class="section-header">
+			<h3>Buscar Cliente</h3>
+		</div>
+		<div class="section-content">
+			<FormConditionalInput titleOpen="Registrar nuevo" bind:isOpen />
+			{#if isOpen}
+				<FormNewClient bind:isDuplicate />
+			{:else}
+				<input
+					class="milk"
+					type="text"
+					value={keyword}
+					oninput={handleInput}
+					placeholder="Buscar..."
+					required
+				/>
+				{#if keyword}
+					<div class="results milk" in:slide>
+						{#if filteredData.length > 0}
+							{#each filteredData as item (item.id)}
+								<button
+									type="button"
+									class="jelly"
+									onclick={(e) => {
+										e.stopPropagation();
+										selectItem(item);
+									}}
+								>
+									<span class="meta">{item.razon_social || item.nombre_comercial}</span>
+								</button>
+							{/each}
+						{:else}
+							<div class="no-results">No se encontraron resultados</div>
+						{/if}
+					</div>
 				{/if}
-			</div>
-		</section>
-	{/if}
-</div>
+			{/if}
+		</div>
+	</section>
+{/if}
 
 <style>
-	.search-container {
-		width: 100%;
-		max-width: var(--j);
-	}
 	.results {
 		padding: var(--a);
 		display: flex;
 		flex-direction: column;
-		max-height: var(--);
+		max-height: var(--g);
 		overflow: auto;
 		width: 100%;
 	}

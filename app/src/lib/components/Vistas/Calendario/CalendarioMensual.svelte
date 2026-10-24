@@ -15,6 +15,7 @@
 	import CSTarjetaOportunidad from './CSTarjetaOportunidad.svelte';
 	import { filterData, sortData } from '$lib/utils/ModList';
 	import { arrowScroll } from '$lib/actions/keyboardScroll';
+	import { formatDateToReadable } from '$lib/utils/util';
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));
@@ -118,7 +119,7 @@
         --col-min-width: {$appState.calendarCards ? 10 * (calendarStore.zoom || 1) : 0}vw;
     "
 >
-	<h1 class="month-title">{getMonth(monthDate)}</h1>
+	<h1 class="month-title">{getMonth(monthDate)} hoy: {formatDateToReadable(monthDate)}</h1>
 
 	<div
 		class="calendar-grid-container"
@@ -140,7 +141,8 @@
 				<div
 					class="event-cell"
 					class:outside={date.getMonth() !== monthDate.getMonth()}
-					class:today={isSameDay(date, new Date())} class:con-scroll={eventosDia.length > 0}
+					class:today={isSameDay(date, new Date())}
+					class:con-scroll={eventosDia.length > 0}
 				>
 					<div class="date-label">{formatDate(date)}</div>
 					<div class="event-stack">
@@ -254,14 +256,17 @@
 		min-height: 0;
 		height: var(--dynamic-cell-height);
 		overflow: hidden;
-        pointer-events: none;
+		pointer-events: none;
 	}
 	.event-cell.con-scroll {
 		overflow-y: auto;
-        pointer-events: all;
+		pointer-events: all;
 	}
 	.event-cell.outside {
 		opacity: 0.5;
+	}
+	.event-cell.today {
+		background-color: var(--color-highlight);
 	}
 	.event-cell.today .date-label {
 		opacity: 1;

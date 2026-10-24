@@ -99,6 +99,8 @@ export const load: LayoutServerLoad = async ({ depends, locals: { supabase, sess
 	let cartera;
 	if (!profile.isAdmin) {
 		cartera = clientes?.filter((f) => f.id_agente == profile.id);
+	} else {
+		cartera = clientes;
 	}
 
 	console.log('\nactividades: ', actividades?.length);

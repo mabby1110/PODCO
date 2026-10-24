@@ -20,6 +20,7 @@
 
 	// Convertido a $state para soportar bind:lista
 	let lista = $state(oportunidades);
+	console.log(oportunidades);
 	let columnasDinamicas = $derived(extraerColumnas(oportunidades));
 
 	$effect(() => {

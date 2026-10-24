@@ -29,7 +29,7 @@
 
 {#if isOpen}
 	<div class="optional-input" bind:this={input}>
-		<button class="butter rojo" type="button" onclick={close}>✕</button>
+		<button class="jelly rojo" type="button" onclick={close}>✕</button>
 		{#if children}
 			{@render children()}
 		{/if}
@@ -49,6 +49,6 @@
 		flex-grow: 1;
 		width: 100%;
 		gap: var(--a);
-		align-items: flex-start;
+		align-items: baseline;
 	}
 </style>

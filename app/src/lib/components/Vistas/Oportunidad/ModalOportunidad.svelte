@@ -3,6 +3,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { StoreEntradas } from '$lib/stores/StoreEntradas.svelte';
+	import { fade } from 'svelte/transition';
 	import FormOportunidad from './FormOportunidad.svelte';
 
 	let canSubmit = $state(false);
@@ -19,12 +20,13 @@
 		role="button"
 		tabindex="0"
 		onkeydown={(e) => e.key === 'Escape' && closeAndClear()}
+		in:fade
 	>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" tabindex="-1">
 			<div class="modal-header">
 				<h1>Nueva Oportunidad</h1>
-				<button class="jelly rojo" onclick={closeAndClear}>✕</button>
+				<button class="jelly rojo accion" onclick={closeAndClear}>✕</button>
 			</div>
 			<form
 				method="POST"
@@ -32,7 +34,6 @@
 				use:enhance={() => {
 					return async ({ result, update }) => {
 						if (result.type === 'success' && result.data?.id) {
-							appState.toggleModalOp();
 							StoreEntradas.onSuccess?.(result.data.id);
 							closeAndClear();
 							invalidateAll();
