@@ -119,7 +119,7 @@
         --col-min-width: {$appState.calendarCards ? 10 * (calendarStore.zoom || 1) : 0}vw;
     "
 >
-	<h1 class="month-title">{getMonth(monthDate)} hoy: {formatDateToReadable(monthDate)}</h1>
+	<h1 class="month-title">Hoy: {formatDateToReadable(new Date())}</h1>
 
 	<div
 		class="calendar-grid-container"
@@ -139,9 +139,8 @@
 			{#each monthDates as date (date.toISOString())}
 				{@const eventosDia = getEventsForDay(date)}
 				<div
-					class="event-cell"
+					class="event-cell {isSameDay(date, new Date())?'butter today':''}"
 					class:outside={date.getMonth() !== monthDate.getMonth()}
-					class:today={isSameDay(date, new Date())}
 					class:con-scroll={eventosDia.length > 0}
 				>
 					<div class="date-label">{formatDate(date)}</div>

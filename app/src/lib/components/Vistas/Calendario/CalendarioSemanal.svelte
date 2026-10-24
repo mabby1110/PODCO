@@ -15,13 +15,11 @@
 	} from '$lib/utils/agenda';
 
 	import { page } from '$app/state';
-	import Vista from '$lib/components/Tarjetas/Vista.svelte';
 	import CSTarjetaActividad from './CSTarjetaActividad.svelte';
 	import CSTarjetaOportunidad from './CSTarjetaOportunidad.svelte';
-	import ModList from '$lib/components/Acciones/ModList.svelte';
-	import { extraerColumnas, filterData, sortData } from '$lib/utils/ModList';
-	import Controles from '$lib/components/Acciones/Controles.svelte';
+	import { filterData, sortData } from '$lib/utils/ModList';
 	import { arrowScroll } from '$lib/actions/keyboardScroll';
+	import { formatDateToReadable } from '$lib/utils/util';
 
 	let { oportunidades, actividades } = $derived(page.data);
 	let allActivities = $derived(oportunidades.concat(actividades));
@@ -35,7 +33,10 @@
 
 	let lista_ordenada = $derived(sortData(lista, currentRoute));
 	let eventList = $derived(filterData(lista_ordenada, currentRoute));
-
+	const monthDate = $derived.by(() => {
+		const now = new Date();
+		return new Date(now.getFullYear(), now.getMonth() + calendarStore.monthOffset, 1);
+	});
 	let SLOT_MINUTES = $derived($appState.calendarCards ? 10 : 60);
 
 	// Medidas reales: alto del contenedor scrolleable y de la fila de cabecera
@@ -149,7 +150,7 @@
 	class="calendar tarjeta"
 	style="--dynamic-cell-height: {CELL_HEIGHT}px; --cols: {weekDates.length}; --rows: {hours.length};"
 >
-	<h1 class="month-title">{getMonth(weekDates[0])}</h1>
+	<h1 class="month-title">Hoy: {formatDateToReadable(new Date())}</h1>
 
 	<div
 		class="calendar-grid-container"
@@ -162,7 +163,7 @@
 			<!-- Fila 1: cabeceras (días) + esquina a la derecha -->
 			<div class="corner" bind:clientHeight={headerHeight}></div>
 			{#each weekDates as date, i (date.toISOString())}
-				<div class="day-th" data-col={i}>
+				<div class="day-th" data-col={i} class:today={isSameDay(date, new Date())}>
 					<div class="day-header">
 						<div>{weekdays[i]}</div>
 						<div class="date-label">{formatDate(date)}</div>
@@ -294,6 +295,9 @@
 		justify-content: center;
 	}
 
+	.day-th.today {
+		background-color: var(--color-highlight);
+	}
 	.date-label {
 		font-size: 0.75em;
 		opacity: 0.7;

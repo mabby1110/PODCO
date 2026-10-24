@@ -207,7 +207,7 @@
 	.mod-list {
 		display: flex;
 		flex-direction: column;
-		gap: var(--c);
+		gap: var(--a);
 	}
 	.mod-accion {
 		display: flex;

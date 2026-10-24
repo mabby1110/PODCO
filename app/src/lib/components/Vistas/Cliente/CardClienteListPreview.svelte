@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ListPreview from "$lib/components/Tarjetas/ListPreview.svelte";
+	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
 
 	let { client } = $props();
 </script>
@@ -28,6 +28,7 @@
 		</div>
 	{/snippet}
 	{#snippet meta()}
+		<p>{client.agentes.nombre}</p>
 		<p>oportunidades: {client.oportunidades.length || 0}</p>
 	{/snippet}
 </ListPreview>

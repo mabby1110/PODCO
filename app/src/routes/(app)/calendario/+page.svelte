@@ -135,7 +135,7 @@
 					<option value="mensual">Mensual</option>
 					<option value="semanal">Semanal</option>
 				</select>
-				{#if $appState.calendarView == 'gant' || $appState.calendarView == 'mensual'}
+				{#if $appState.calendarView == 'gant'}
 					<input
 						type="range"
 						bind:value={calendarStore.zoom}
@@ -146,19 +146,36 @@
 						class="zoom-slider"
 						style="width: 80%;margin:auto"
 					/>
+				{:else if $appState.calendarView == 'mensual'}
+					<select
+						value={$appState.calendarList}
+						onchange={(e) => appState.setCalendarList(e.currentTarget.value)}
+					>
+						<option value="">Todas</option>
+						<option value="actividades">Actividades</option>
+						<option value="oportunidades">Oportunidades</option>
+					</select>
+					<button onclick={() => appState.toggleMinimizedCalendarCards()} class="jelly toggle">
+						{$appState.calendarCards ? 'Min' : 'Max'}
+					</button>
+					{#if $appState.calendarCards}
+						<input
+							type="range"
+							bind:value={calendarStore.zoom}
+							min={ZOOM_MIN}
+							max={ZOOM_MAX}
+							step="0.01"
+							title="Nivel de Zoom"
+							class="zoom-slider"
+							style="width: 100%;margin:auto;"
+						/>
+					{/if}
+				{:else}
+					<button onclick={() => appState.toggleMinimizedCalendarCards()} class="jelly toggle">
+						{$appState.calendarCards ? 'Min' : 'Max'}
+					</button>
 				{/if}
-				<select
-					value={$appState.calendarList}
-					onchange={(e) => appState.setCalendarList(e.currentTarget.value)}
-				>
-					<option value="">Todas</option>
-					<option value="actividades">Actividades</option>
-					<option value="oportunidades">Oportunidades</option>
-				</select>
-				<button onclick={() => appState.toggleMinimizedCalendarCards()} class="jelly toggle">
-					{$appState.calendarCards ? 'Min' : 'Max'}
-				</button>
-				<ModList {columnasDinamicas} route={currentRoute} />
+				<ModList {columnasDinamicas} route={currentRoute} ordenar />
 			{/snippet}
 		</Controles>
 	{/snippet}
