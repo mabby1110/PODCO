@@ -3,7 +3,7 @@ import { construirDatosPedido } from '$lib/server/supabase/util';
 import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
-	editarBorrador: async ({ request, locals: { supabase, user } }) => {
+	actualizarPedido: async ({ request, locals: { supabase, user } }) => {
 		const formData = await request.formData();
 		const pedidosAActualizar = JSON.parse((formData.get('pedidosAActualizar') as string) || '[]');
 		const pedidosACrear = JSON.parse((formData.get('pedidosACrear') as string) || '[]');
@@ -24,7 +24,8 @@ export const actions: Actions = {
 				moneda: pedido.moneda,
 				precio_unitario: pedido.precio_unitario,
 				id_oportunidad: idOportunidad,
-				fase: idOportunidad ? 2 : 1
+				fase: idOportunidad ? 2 : 1,
+				ref: pedido.ref
 			}));
 
 			const updatePromises = pedidosParaActualizar.map(async (pedido) => {

@@ -2,6 +2,9 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
+	import BindableSelect from '$lib/components/Formularios/BindableSelect.svelte';
+	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
+	import Select from '$lib/components/Formularios/Select.svelte';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
@@ -46,7 +49,7 @@
 		StorePedidoNuevo.limpiar();
 		StoreContextoRelacion.limpiar();
 	}
-	async function editarBorrador() {
+	async function actualizarPedido() {
 		actualizando = true;
 		mensaje = '';
 		if (StorePedidoEditar.carrito.length == 0) {
@@ -116,7 +119,7 @@
 					formData.append('idOportunidad', StoreContextoRelacion.id_oportunidad);
 				}
 
-				const response = await fetch('/pedidos?/editarBorrador', {
+				const response = await fetch('/pedidos?/actualizarPedido', {
 					method: 'POST',
 					body: formData
 				});
@@ -201,7 +204,7 @@
 			currencyDisplay: 'narrowSymbol'
 		}).format(val);
 	};
-	console.log(oportunidades)
+	console.log(oportunidades);
 </script>
 
 <!-- pedidos a editar -->
@@ -227,39 +230,47 @@
 							{/if}
 						</div>
 					</div>
+					<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
 				</div>
 
-				<span class="inputs" class:text-danger={pedido.precio_unitario == null}>
-					<label class="input-group">
-						<span class="label-text">Cantidad</span>
-						<input type="number" min="0" step="1" class="input-sm" bind:value={pedido.cantidad} />
-					</label>
+				<div class="inputs" class:text-danger={pedido.precio_unitario == null}>
+					<input
+						type="number"
+						min="0"
+						step="1"
+						class="input-s"
+						title="Cantidad"
+						placeholder="cuantos"
+						bind:value={pedido.cantidad}
+					/>
 
-					<label class="input-group">
-						<span class="label-text">P/U</span>
-						<input
-							type="number"
-							min="0"
-							step="0.01"
-							class="input-sm"
-							bind:value={pedido.precio_unitario}
+					<select class="input-s" bind:value={pedido.moneda} title="Moneda">
+						<option value="MXN">MXN</option>
+						<option value="USD">USD</option>
+					</select>
+
+					<input
+						type="number"
+						min="0"
+						step="0.01"
+						class="input-s"
+						title="Precio Unitario"
+						placeholder="Precio Unitario"
+						bind:value={pedido.precio_unitario}
+					/>
+
+					<div class="input-l">
+						<BindableSelect
+							bind:value={pedido.ref}
+							list={['FASTRAQ']}
+							name="ref"
+							placeholder="De donde se obtiene precio"
+							defaultOption="REF"
 						/>
-					</label>
-					<label class="input-group">
-						<span class="label-text">Moneda</span>
-						<select class="select-sm" bind:value={pedido.moneda}>
-							<option value="MXN">MXN</option>
-							<option value="USD">USD</option>
-						</select>
-					</label>
-				</span>
-
-				<div class="butter resumen">
-					<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
+					</div>
 				</div>
 			</div>
 		{/each}
-		<hr />
 		{#if pedidoACotizarInvalidoPorMoneda}
 			<p>no se pueden mezclar USD con MX</p>
 		{:else}
@@ -298,8 +309,10 @@
 {/if}
 
 <!-- ACCIONES GLOBALES -->
-{#if StorePedidoEditar.carrito.length == 0  && page.url.pathname != '/pedidos'}
-	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}>+Seleccionar Pedido</button>
+{#if StorePedidoEditar.carrito.length == 0 && page.url.pathname != '/pedidos'}
+	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}
+		>+Seleccionar Pedido</button
+	>
 	<p class="estado-vacio">No hay pedidos seleccionados</p>
 {/if}
 {#if StorePedidoNuevo.carrito.length == 0 && page.url.pathname != '/catalogo'}
@@ -308,7 +321,6 @@
 	>
 	<p class="estado-vacio">No hay productos seleccionados</p>
 {/if}
-
 {#if StorePedidoEditar.carrito.length > 0 || StorePedidoNuevo.carrito.length > 0}
 	<div class="acciones-fijas">
 		<button
@@ -330,7 +342,7 @@
 				<img src="/remove.svg" alt="Elimininar relacion" />
 			</button>
 		{/if}
-		<button class="butter" onclick={editarBorrador} disabled={actualizando}>
+		<button class="butter" onclick={actualizarPedido} disabled={actualizando}>
 			{actualizando ? 'Actualizando...' : 'Guardar Cambios'}
 		</button>
 	</div>
@@ -352,15 +364,6 @@
 	.encabezado .titulo {
 		flex-grow: 1;
 	}
-	.eliminar-relacion {
-		height: var(--d);
-		padding: 0;
-	}
-	.lista-pedidos {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-	}
 	.contenedor-grupo {
 		padding: var(--a);
 		display: flex;
@@ -368,9 +371,11 @@
 		gap: var(--a);
 	}
 	.pedido {
-		grid-column: span 2;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+		border-bottom: 2px dashed var(--color-muted);
+		padding: var(--a) 0;
 	}
 	.pedido .titulo {
 		grid-column: span 3;
@@ -382,28 +387,21 @@
 		flex-grow: 1;
 	}
 	.pedido .inputs {
-		grid-column: span 3;
-		display: flex;
-		gap: var(--y);
-	}
-
-	.pedido .input-group input {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(var(--f), 1fr));
+		grid-auto-rows: auto;
 		width: 100%;
 	}
-	.pedido .label-text {
-		font-size: small;
-	}
-	.pedido .resumen {
-		grid-column: -2 / -1;
+	.input-m {
+		grid-column: span 2;
 		display: flex;
-		align-items: flex-end;
-		justify-content: flex-end;
-		border: none;
-		justify-self: flex-end;
-		align-self: last baseline;
-
-		background-color: transparent;
-		backdrop-filter: none;
+	}
+	.input-l {
+		grid-column: span 3;
+		display: flex;
+	}
+	.pedido .enlaces {
+		font-size: small;
 	}
 	.total {
 		width: fit-content;

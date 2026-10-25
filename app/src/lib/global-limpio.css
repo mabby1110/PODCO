@@ -153,6 +153,30 @@ button img {
 	height: var(--d);
 	width: fit-content;
 }
+.checkbox {
+	width: 16px;
+	height: 16px;
+	border: 1px solid #cbd5e1;
+	border-radius: 4px;
+	background: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.15s;
+}
+.checkbox.checked {
+	border-color: #3b82f6;
+	background-color: #3b82f6;
+}
+.checkbox.checked::after {
+	content: '';
+	width: 4px;
+	height: 8px;
+	border: solid white;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+	margin-bottom: 2px;
+}
 
 /* MODALES */
 .overlay {

@@ -133,27 +133,7 @@
 		<CustomInput label="Postergar" action="/oportunidades?/update" id={oportunidad?.id} {editando}>
 			<DatePicker />
 		</CustomInput>
-
-		<!-- Borrador -->
-		{#if fase.id_fase == 1}
-			<section>
-				<div class="section-header">
-					<h3>Borrador:</h3>
-				</div>
-
-				<div class="section-content">
-					{#if oportunidad.pedidos.length > 0}
-						<TarjetaPedidoPotencial {oportunidad} {editando} disable />
-						{#if editando}
-							<button onclick={editarPedido}>~Editar</button>
-						{/if}
-					{:else}
-						<button class="butter" onclick={relacionarPedido}>+Potencial de venta</button>
-					{/if}
-				</div>
-			</section>
-		{/if}
-
+		
 		<!-- Potencia de venta & cotizado -->
 		{#if fase.id_fase == 2}
 			<section>
@@ -252,6 +232,20 @@
 			</section>
 		{/if}-->
 
+		<section>
+			<div class="section-header">
+				<h3>Observaciones:</h3>
+			</div>
+			<div class="section-content">
+				<Entradas
+					{editando}
+					historia={oportunidad?.historia}
+					id_oportunidad={oportunidad?.id}
+					action={'/oportunidades?/actualizarOportunidad'}
+				/>
+			</div>
+		</section>
+
 		<section class="adjunto">
 			<div class="section-header">
 				<h3>Adjuntos:</h3>
@@ -270,20 +264,6 @@
 				{#each oportunidad?.adjuntos as documento}
 					<TarjetaListaDocumentos {documento} />
 				{/each}
-			</div>
-		</section>
-
-		<section>
-			<div class="section-header">
-				<h3>Observaciones:</h3>
-			</div>
-			<div class="section-content">
-				<Entradas
-					{editando}
-					historia={oportunidad?.historia}
-					id_oportunidad={oportunidad?.id}
-					action={'/oportunidades?/actualizarOportunidad'}
-				/>
 			</div>
 		</section>
 	{/snippet}

@@ -3,7 +3,6 @@
 	import { page } from '$app/state';
 	import { fasesOportunidad } from '$lib';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
-	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 
 	// DATOS DERIVADOS
 	let oportunidad = $derived(
@@ -38,7 +37,7 @@
 	}
 	.header {
 		display: flex;
-		align-items: center;
+		align-items: baseline;
 		gap: var(--y);
 	}
 	.header .titulo {

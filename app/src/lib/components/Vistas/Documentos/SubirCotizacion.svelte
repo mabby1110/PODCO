@@ -119,6 +119,7 @@
 			name="cliente_final"
 			value=""
 			placeholder="Cliente final"
+			required
 		/>
 
 		<div class="drop-zone milk" class:dragging={isDragging}>

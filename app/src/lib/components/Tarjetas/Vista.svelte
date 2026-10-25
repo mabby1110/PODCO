@@ -23,10 +23,11 @@
 		{@render portada()}
 	</div>
 {/if}
-<div class="vista" class:grid class:fullscreen 
-		use:arrowScroll={{ step: 40, enabled: true }}>
+<div class="vista" class:grid class:fullscreen use:arrowScroll={{ step: 40, enabled: true }}>
 	{#if contenido}
-		{@render contenido()}
+		<div class="contenido">
+			{@render contenido()}
+		</div>
 	{/if}
 </div>
 <div class="controles">
@@ -45,10 +46,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--y);
-		padding: var(--a);
-		padding-bottom: var(--e);
-		max-width: var(--k);
-		margin: auto;
+		padding: var(--a) var(--a) var(--e);
 	}
 	.vista.grid {
 		display: grid;
@@ -83,9 +81,16 @@
 		justify-content: flex-end;
 		align-items: flex-end;
 	}
-	.vista.fullscreen > :global(*){
+	.vista.fullscreen > :global(*) {
 		max-width: 100%;
-	}.vista.fullscreen {
+	}
+	.vista.fullscreen {
 		max-width: 100%;
+	}
+	.contenido {
+		width: 100%;
+		height: fit-content;
+		max-width: var(--k);
+		margin: auto;
 	}
 </style>

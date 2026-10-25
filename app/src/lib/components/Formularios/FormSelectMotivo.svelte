@@ -2,7 +2,7 @@
 	// Motivos base
 	let {
 		title = 'Motivo',
-		disableCustom = true,
+		disableCustom,
 		list = [
 			'Prospección en frío',
 			'Prospección inbound',
@@ -24,7 +24,17 @@
 			'Recompra',
 			'Urgencia operativa'
 		],
-		name = 'motivo'
+		name = 'motivo',
+		placeholder="Describe el motivo",
+		defaultOption="Selecciona una opción"
+	}:
+	{
+		title?: string;
+		disableCustom?: boolean;
+		list?: string[];
+		name?: string;
+		placeholder?: string;
+		defaultOption?: string;
 	} = $props();
 
 	let selected = $state('');
@@ -43,7 +53,7 @@
 	</div>
 	<div class="section-content">
 		<select class="milk" bind:value={selected} required>
-			<option value="" disabled selected>Selecciona una opción</option>
+			<option value="" disabled selected>{defaultOption}</option>
 			{#if !disableCustom}
 				<option value="__otro__">Otro…</option>
 			{/if}
@@ -58,14 +68,14 @@
 {#if selected === '__otro__'}
 	<section>
 		<div class="section-header">
-			<h3>Especificar motivo</h3>
+			<h3>Especificar</h3>
 		</div>
 		<div class="section-content">
 			<input
 				class="milk"
 				type="text"
 				bind:value={custom}
-				placeholder="Describe el motivo"
+				{placeholder}
 				required
 			/>
 		</div>

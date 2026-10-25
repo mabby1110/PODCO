@@ -132,7 +132,7 @@
 		<div class="header-actions" onmousedown={onMouseDown}>
 			<p class="panel-title">Editar Pedido</p>
 			<button
-				class="jelly max-window"
+				class="jelly accion"
 				type="button"
 				onclick={(e) => {
 					e.stopPropagation();
@@ -141,7 +141,7 @@
 			>
 				<img src="/max-win.svg" alt="max-win" />
 			</button>
-			<button class="butter rojo" type="button" onclick={() => StorePedidoEditar.toggleModal()}>
+			<button class="jelly rojo" type="button" onclick={() => StorePedidoEditar.toggleModal()}>
 				✕
 			</button>
 		</div>
@@ -220,7 +220,9 @@
 		gap: var(--a);
 		padding: 0 var(--a);
 	}
-
+	.max-window {
+		padding: 0;
+	}
 	.maximized {
 		position: fixed !important;
 		top: 0 !important;
@@ -236,9 +238,5 @@
 	}
 	.maximized .header-actions:active {
 		cursor: default;
-	}
-	.jelly {
-		height: var(--d);
-		padding: 0;
 	}
 </style>
