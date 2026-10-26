@@ -397,7 +397,7 @@
 		display: flex;
 	}
 	.input-l {
-		grid-column: span 3;
+		grid-column: span 4;
 		display: flex;
 	}
 	.pedido .enlaces {

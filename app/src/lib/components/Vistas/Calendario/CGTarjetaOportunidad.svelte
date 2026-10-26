@@ -21,7 +21,7 @@
 </script>
 
 <div
-	class="tarjeta-wrapper butter"
+	class="tarjeta-wrapper honey"
 	class:expanded={isExpanded}
 	style="
         left: {evento.left}px; 

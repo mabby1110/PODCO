@@ -86,10 +86,11 @@
 	}
 	.vista.fullscreen {
 		max-width: 100%;
+		padding: 0;
 	}
 	.contenido {
 		width: 100%;
-		height: fit-content;
+		height: 100%;
 		max-width: var(--k);
 		margin: auto;
 	}

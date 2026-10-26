@@ -1,15 +1,8 @@
 <script lang="ts">
-	import { dropzone } from '$lib/actions/dnd';
 	import { calendarStore } from '$lib/stores/calendarStore.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { invalidateAll } from '$app/navigation';
-	import {
-		isSameDay,
-		formatDate,
-		formatDateTime,
-		calculateDuration,
-		getMonth
-	} from '$lib/utils/agenda';
+	import { isSameDay, formatDate, formatDateTime, calculateDuration } from '$lib/utils/agenda';
 	import { page } from '$app/state';
 	import CSTarjetaActividad from './CSTarjetaActividad.svelte';
 	import CSTarjetaOportunidad from './CSTarjetaOportunidad.svelte';
@@ -57,7 +50,7 @@
 
 	const CELL_HEIGHT = $derived(
 		$appState.calendarCards
-			? 180
+			? 480
 			: containerHeight > 0
 				? Math.max(0, (containerHeight - headerHeight - BORDER_BOTTOM) / rowsCount)
 				: 100
@@ -106,30 +99,31 @@
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape' && expandedEventId) expandedEventId = null;
 	}
+	function handleWheel(e) {
+		// alert('algo');
+		e.preventDefault();
+	}
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
 
 <div
-	class="calendar"
+	class="calendar milk"
 	style="
-        --dynamic-cell-height: {CELL_HEIGHT - 16}px; 
+        --dynamic-cell-height: {CELL_HEIGHT}px; 
         --cols: 7; 
         --rows: {rowsCount};
-        --col-min-width: {$appState.calendarCards ? 10 * (calendarStore.zoom || 1) : 0}vw;
+        --col-min-width: {10 * (calendarStore.zoom || 1)}vw;
     "
 >
-	<h1 class="month-title">Hoy: {formatDateToReadable(new Date())}</h1>
-
 	<div
 		class="calendar-grid-container"
-		class:max={$appState.calendarCards}
 		bind:clientHeight={containerHeight}
 		use:arrowScroll={{ step: 40, enabled: !expandedEventId }}
 	>
 		<div class="calendar-grid">
 			{#each weekdays as day, i (day)}
-				<div class="day-th honey" data-col={i} bind:clientHeight={headerHeight}>
+				<div class="day-th" data-col={i} bind:clientHeight={headerHeight}>
 					<div class="day-header">
 						<div>{day}</div>
 					</div>
@@ -139,11 +133,13 @@
 			{#each monthDates as date (date.toISOString())}
 				{@const eventosDia = getEventsForDay(date)}
 				<div
-					class="event-cell {isSameDay(date, new Date())?'butter today':''}"
+					class="event-cell"
 					class:outside={date.getMonth() !== monthDate.getMonth()}
 					class:con-scroll={eventosDia.length > 0}
 				>
-					<div class="date-label">{formatDate(date)}</div>
+					<div class="date-label">
+						{formatDate(date)}
+					</div>
 					<div class="event-stack">
 						{#each eventosDia as event (event.id)}
 							{@const isExpanded = expandedEventId === event.id}
@@ -181,57 +177,40 @@
 </div>
 
 <style>
-	.backdrop {
-		position: fixed;
-		inset: 0;
-		cursor: pointer;
-	}
 	.calendar {
 		display: flex;
 		flex-direction: column;
+		min-height: var(--j);
+		min-width: var(--k);
 		height: 100%;
-		min-height: var(--i);
 		overflow: hidden;
+		overflow-y: auto;
+		overflow-x: auto;
 		border-radius: 8px;
 	}
 	.calendar,
 	.calendar :global(*) {
 		box-sizing: border-box;
 	}
-	.month-title {
-		text-align: center;
-		font-size: 1.2em;
-		font-weight: bold;
-		padding: 12px;
-		background: var(--bg-color, transparent);
-		z-index: 10;
-		flex-shrink: 0;
-	}
 	.calendar-grid-container {
 		flex: 1 1 0;
 		min-height: 0;
-		overflow-x: hidden;
-		overflow-y: hidden;
 		position: relative;
-		padding: var(--a);
-	}
-	.calendar-grid-container.max {
-		overflow-y: auto;
-		overflow-x: auto;
 	}
 	.calendar-grid {
 		display: grid;
 		grid-template-columns: repeat(var(--cols), minmax(var(--col-min-width), 1fr));
 		grid-template-rows: auto repeat(var(--rows), var(--dynamic-cell-height));
 		min-width: 100%;
-		gap: var(--a);
 	}
 	.day-th {
 		position: sticky;
 		top: 0;
 		z-index: 11;
 		padding: 8px;
-		margin-bottom: var(--a);
+		border-bottom: 1px solid var(--color-muted);
+		border-right: 1px solid var(--color-muted);
+		background-color: var(--color-primary);
 	}
 	.day-header {
 		display: flex;
@@ -241,11 +220,18 @@
 		justify-content: center;
 	}
 	.date-label {
-		font-size: 0.75em;
+		top: 0;
 		opacity: 0.7;
 		font-weight: normal;
-		padding: 2px 4px;
+		padding: 0 var(--a);
 		flex-shrink: 0;
+		position: sticky;
+	}
+	.date-label.today {
+		background-color: var(--color-highlight);
+		color: black;
+		font-weight: bold;
+		opacity: 1;
 	}
 	.event-cell {
 		position: relative;
@@ -254,22 +240,17 @@
 		min-width: 0;
 		min-height: 0;
 		height: var(--dynamic-cell-height);
-		overflow: hidden;
 		pointer-events: none;
+		border-bottom: 1px solid var(--color-muted);
+		border-right: 1px solid var(--color-muted);
 	}
 	.event-cell.con-scroll {
 		overflow-y: auto;
 		pointer-events: all;
 	}
 	.event-cell.outside {
-		opacity: 0.5;
-	}
-	.event-cell.today {
-		background-color: var(--color-highlight);
-	}
-	.event-cell.today .date-label {
-		opacity: 1;
-		font-weight: bold;
+		opacity: 0.1;
+		pointer-events: none;
 	}
 	.event-cell:has(.expanded) {
 		overflow: visible;
@@ -282,6 +263,7 @@
 		flex: 1 1 0;
 		min-height: 0;
 		border-radius: inherit;
+		padding: var(--a);
 	}
 	.event-cell:has(.expanded) .event-stack {
 		overflow: visible;

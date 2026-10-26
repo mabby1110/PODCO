@@ -10,6 +10,7 @@
 	import { calendarStore } from '$lib/stores/calendarStore.svelte';
 	import { formatWeekRange, getMonth, getWeekDates } from '$lib/utils/agenda';
 	import { extraerColumnas } from '$lib/utils/ModList';
+	import { formatDateToReadable } from '$lib/utils/util';
 	import { tick } from 'svelte';
 
 	let { oportunidades, actividades } = $derived(page.data);
@@ -52,6 +53,14 @@
 </script>
 
 <Vista fullscreen>
+	{#snippet portada()}
+		<div class="calendar-header">
+			<h1>
+				{getMonth(monthDate)}
+			</h1>
+			<p class="month">Hoy: {formatDateToReadable(new Date())}</p>
+		</div>
+	{/snippet}
 	{#snippet acciones()}
 		{#if $appState.calendarView == 'gant'}
 			<div class="calendar-navigation">
@@ -127,26 +136,18 @@
 				<button onclick={() => appState.toggleModalActivity()} class="jelly">+Actividad</button>
 			{/snippet}
 			{#snippet acciones()}
-				<select
-					value={$appState.calendarView}
-					onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
-				>
-					<option value="gant">Gant Anual</option>
-					<option value="mensual">Mensual</option>
-					<option value="semanal">Semanal</option>
-				</select>
-				{#if $appState.calendarView == 'gant'}
-					<input
-						type="range"
-						bind:value={calendarStore.zoom}
-						min={ZOOM_MIN}
-						max={ZOOM_MAX}
-						step="0.01"
-						title="Nivel de Zoom"
-						class="zoom-slider"
-						style="width: 80%;margin:auto"
-					/>
-				{:else if $appState.calendarView == 'mensual'}
+				<div class="form-group">
+					<button onclick={() => appState.toggleMinimizedCalendarCards()} class="jelly toggle">
+						{$appState.calendarCards ? 'Min' : 'Max'}
+					</button>
+					<select
+						value={$appState.calendarView}
+						onchange={(e) => appState.setCalendarView(e.currentTarget.value)}
+					>
+						<option value="gant">Gant Anual</option>
+						<option value="mensual">Mensual</option>
+						<option value="semanal">Semanal</option>
+					</select>
 					<select
 						value={$appState.calendarList}
 						onchange={(e) => appState.setCalendarList(e.currentTarget.value)}
@@ -155,26 +156,17 @@
 						<option value="actividades">Actividades</option>
 						<option value="oportunidades">Oportunidades</option>
 					</select>
-					<button onclick={() => appState.toggleMinimizedCalendarCards()} class="jelly toggle">
-						{$appState.calendarCards ? 'Min' : 'Max'}
-					</button>
-					{#if $appState.calendarCards}
-						<input
-							type="range"
-							bind:value={calendarStore.zoom}
-							min={ZOOM_MIN}
-							max={ZOOM_MAX}
-							step="0.01"
-							title="Nivel de Zoom"
-							class="zoom-slider"
-							style="width: 100%;margin:auto;"
-						/>
-					{/if}
-				{:else}
-					<button onclick={() => appState.toggleMinimizedCalendarCards()} class="jelly toggle">
-						{$appState.calendarCards ? 'Min' : 'Max'}
-					</button>
-				{/if}
+				</div>
+				<input
+					type="range"
+					bind:value={calendarStore.zoom}
+					min={ZOOM_MIN}
+					max={ZOOM_MAX}
+					step="0.01"
+					title="Nivel de Zoom"
+					class="zoom-slider"
+					style="width: 100%;margin:auto;"
+				/>
 				<ModList {columnasDinamicas} route={currentRoute} ordenar />
 			{/snippet}
 		</Controles>
@@ -209,5 +201,10 @@
 		width: 100px;
 		margin-right: var(--a);
 		cursor: ew-resize;
+	}
+	.calendar-header {
+		display: flex;
+		align-items: baseline;
+		gap: var(--a);
 	}
 </style>

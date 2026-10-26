@@ -3,6 +3,7 @@
 	import { fasesActividad } from '$lib';
 	import { draggable } from '$lib/actions/dnd';
 	import { appState } from '$lib/stores/appState.svelte';
+	import { formatDateToReadable, obtenerIniciales } from '$lib/utils/util';
 
 	let { actividad, expanded, style } = $props();
 
@@ -12,53 +13,49 @@
 </script>
 
 <div
-	class="tarjeta-actividad jelly"
+	class="tarjeta butter"
+	class:min={!$appState.calendarCards}
 	style="{style} {fase?.estilo}"
 	use:draggable={{ data: actividad.id, enabled: isDndEnabled }}
 >
-	{#if $appState.calendarCards}
+	{#if $appState.calendarCards || expanded}
 		<div class="header">
-			<p class="date">{actividad?.inicio.split(' ')[1]}</p>
-			<b class="title">{actividad?.motivo}</b>
+			<h3>Actividad: {actividad?.motivo}</h3>
 			<div class="meta">
 				<b>{actividad?.agentes?.nombre}</b>
 			</div>
 			<p class="motivo">{actividad?.objetivo}</p>
 		</div>
 	{:else}
-		<div class="header">
-			<b class="title">{actividad?.motivo}</b>
-			<div class="meta">
-				<b>{actividad?.agentes?.nombre}</b>
-			</div>
-			<p class="motivo">{actividad?.objetivo}</p>
+		<div class="header-min">
+			<b>{obtenerIniciales(actividad?.agentes?.nombre)}</b>
+			<p>{actividad?.objetivo}</p>
 		</div>
 	{/if}
 	{#if expanded}
-		<button class="butter" onclick={() => goto(`/actividades/${actividad.id}`)}> Ver </button>
+		<div class="acciones">
+			<p class="date">{formatDateToReadable(actividad?.inicio)}</p>
+			<button class="butter" onclick={() => goto(`/actividades/${actividad.id}`)}> Ver </button>
+		</div>
 	{/if}
 </div>
 
 <style>
-	.tarjeta-actividad {
+	.tarjeta {
 		text-decoration: none;
 		color: inherit;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		border: 1px solid var(--color-muted);
-		border-radius: var(--a);
-		padding: 4px var(--a);
+		padding: var(--a);
 		text-align: left;
 		align-items: flex-start;
-		backdrop-filter: blur(16px);
 		overflow: hidden;
 		z-index: 1;
 		position: absolute;
 		top: 0;
 		left: 0;
 		right: 0;
-		pointer-events: auto;
 		cursor: pointer;
 	}
 	.header {
@@ -69,26 +66,18 @@
 		gap: var(--b);
 		width: 100%;
 	}
-	.title {
-		width: 80%;
-	}
-	.meta {
+	.header-min {
 		display: flex;
-		font-size: smaller;
+		align-items: baseline;
 		gap: var(--a);
 	}
-	.date {
-		position: absolute;
-		top: 0;
-		right: 0;
-		font-size: smaller;
-	}
-	.meta {
+	.acciones {
 		display: flex;
-		flex-direction: column;
-		gap: var(--a);
+		justify-content: space-between;
+		align-items: baseline;
+		width: 100%;
 	}
-	.butter {
-		align-self: flex-end;
+	.min {
+		padding: 0;
 	}
 </style>

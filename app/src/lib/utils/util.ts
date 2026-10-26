@@ -40,3 +40,11 @@ export function formatDateToReadable(date: string | number | Date): string {
     if (!date) return '';
     return new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(new Date(date));
 }
+
+export function obtenerIniciales(nombre: string): string {
+  return nombre
+    .trim()
+    .split(/\s+/)
+    .map(palabra => palabra[0].toUpperCase())
+    .join("");
+}
