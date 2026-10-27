@@ -70,10 +70,9 @@
 	}
 	.controles {
 		position: fixed;
-		bottom: 0;
-		right: 0;
+		bottom: var(--c);
+		right: var(--c);
 		z-index: 88;
-		padding: var(--a);
 
 		display: flex;
 		gap: var(--a);

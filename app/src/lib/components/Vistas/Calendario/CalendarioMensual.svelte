@@ -195,6 +195,8 @@
 	.calendar-grid-container {
 		flex: 1 1 0;
 		min-height: 0;
+		overflow-x: auto;
+		overflow-y: auto;
 		position: relative;
 	}
 	.calendar-grid {

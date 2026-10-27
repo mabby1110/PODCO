@@ -443,7 +443,7 @@ export const fasesActividad = [
 		actual: 'Programada',
 		accion: 'Finalizar',
 		placeholder: 'Actividad agendada',
-		estilo: 'background-color: var(--color-milk);'
+		estilo: 'background-color: none;'
 	},
 	{
 		id_fase: 6,
