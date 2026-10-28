@@ -62,10 +62,10 @@
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion} showByDefault={show}>
-					{#each agrupacion.items as oportunidad (oportunidad.id)}
-						<TarjetaListaOportunidades {oportunidad} />
-					{/each}
+				<Grupo {agrupacion}>
+					{#snippet children(elemento: any)}
+						<TarjetaListaOportunidades oportunidad={elemento} />
+					{/snippet}
 				</Grupo>
 			{:else}
 				<div class="no-results">

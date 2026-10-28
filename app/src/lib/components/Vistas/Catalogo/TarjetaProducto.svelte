@@ -4,7 +4,7 @@
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 
 	let { elemento } = $props();
-	console.log(elemento);
+
 	// Inventario general (sin serie) del producto
 	let inventario = $derived(
 		elemento.inventario?.find((i) => i.id_producto === elemento.id) ?? elemento.inventario?.[0]
@@ -27,6 +27,7 @@
 		<h3>
 			{elemento.codigo}
 		</h3>
+		<p>{elemento.descripcion}</p>
 	{/snippet}
 	{#snippet contenido()}
 		{#if elemento.tipo_producto.es_serializado}
@@ -36,8 +37,6 @@
 					<p>{unico.estado}</p>
 				</div>
 			{/each}
-		{:else}
-			{elemento.descripcion}
 		{/if}
 	{/snippet}
 	{#snippet acciones()}

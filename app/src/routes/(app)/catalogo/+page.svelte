@@ -57,10 +57,10 @@
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion} showByDefault={show}>
-					{#each agrupacion.items as elemento (elemento.id)}
+				<Grupo {agrupacion}>
+					{#snippet children(elemento: any)}
 						<TarjetaProducto {elemento} />
-					{/each}
+					{/snippet}
 				</Grupo>
 			{:else}
 				<div class="no-results">

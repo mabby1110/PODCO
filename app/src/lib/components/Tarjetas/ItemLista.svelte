@@ -56,7 +56,10 @@
 >
 	<div class="principal">
 		{#if titulo}
+		<div class="titulo">
 			{@render titulo()}
+
+		</div>
 		{/if}
 		{#if acciones}
 			<div class="acciones">
@@ -90,7 +93,10 @@
 		align-items: baseline;
 	}
 	.titulo {
-		flex-grow: 1;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(var(--h), 1fr));
+		grid-auto-rows: auto;
+		gap: var(--a);
 	}
 	.acciones {
 		display: flex;

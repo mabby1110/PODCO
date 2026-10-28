@@ -38,7 +38,7 @@
 
 <Vista>
 	{#snippet acciones()}
-	<button onclick={() => StorePedidoEditar.toggleModal()} class="honey accion">~Pedido</button>
+		<button onclick={() => StorePedidoEditar.toggleModal()} class="honey accion">~Pedido</button>
 		<Controles>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalInventario()} class="jelly">+Producto</button>
@@ -59,8 +59,10 @@
 			<TarjetaPedidoLista {pedidos} />
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion} showByDefault={show}>
-					<TarjetaPedidoLista pedidos={agrupacion.items} />
+				<Grupo {agrupacion}>
+					{#snippet children(elemento: any)}
+						<TarjetaPedidoLista pedidos={agrupacion.items} />
+					{/snippet}
 				</Grupo>
 			{:else}
 				<div class="no-results">

@@ -45,7 +45,6 @@
 		overflow: auto;
 		display: flex;
 		flex-direction: column;
-		gap: var(--y);
 		padding: var(--a) var(--a) var(--e);
 	}
 	.vista.grid {
@@ -93,5 +92,8 @@
 		height: 100%;
 		max-width: var(--k);
 		margin: auto;
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
 	}
 </style>
