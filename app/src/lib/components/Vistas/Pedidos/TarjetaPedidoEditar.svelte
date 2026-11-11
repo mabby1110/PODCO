@@ -5,6 +5,7 @@
 	import BindableSelect from '$lib/components/Formularios/BindableSelect.svelte';
 	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
 	import Select from '$lib/components/Formularios/Select.svelte';
+	import TarjetaLista from '$lib/components/Tarjetas/TarjetaLista.svelte';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
@@ -213,68 +214,89 @@
 		{#each pedidos as pedido (pedido.id)}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
-			<div class="pedido">
-				<div class="titulo">
+			<TarjetaLista>
+				{#snippet metaAcciones()}
 					<button class="jelly rojo" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
-					<div>
-						<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
-						<div class="row enlaces">
-							{#if pedido.id_oportunidad}
-								<a
-									href="/oportunidades/{pedido.id_oportunidad}"
-									onclick={(e) => e.stopPropagation()}
-								>
-									Op {pedido.oportunidades?.clientes?.razon_social ||
-										pedido.oportunidades?.clientes?.nombre_comercial}
-								</a>
-							{/if}
-						</div>
+				{/snippet}
+				{#snippet titulo()}
+					<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
+					<div class="enlaces">
+						{#if pedido.id_oportunidad}
+							<a href="/oportunidades/{pedido.id_oportunidad}" onclick={(e) => e.stopPropagation()}>
+								Op {pedido.oportunidades?.clientes?.razon_social ||
+									pedido.oportunidades?.clientes?.nombre_comercial}
+							</a>
+						{/if}
 					</div>
-					<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
-				</div>
-
-				<div class="inputs" class:text-danger={pedido.precio_unitario == null}>
+				{/snippet}
+				{#snippet input()}
 					<input
 						type="number"
 						min="0"
 						step="1"
-						class="input-s"
 						title="Cantidad"
-						placeholder="cuantos"
+						class="milk"
+						placeholder="Cantidad"
 						bind:value={pedido.cantidad}
 					/>
-
-					<select class="input-s" bind:value={pedido.moneda} title="Moneda">
-						<option value="MXN">MXN</option>
-						<option value="USD">USD</option>
-					</select>
-
-					<input
-						type="number"
-						min="0"
-						step="0.01"
-						class="input-s"
-						title="Precio Unitario"
-						placeholder="Precio Unitario"
-						bind:value={pedido.precio_unitario}
-					/>
-
-					<div class="input-l">
-						<BindableSelect
-							bind:value={pedido.ref}
-							list={['FASTRAQ']}
-							name="ref"
-							placeholder="De donde se obtiene precio"
-							defaultOption="REF"
+					<div class="input-moneda">
+						<span class="simbolo">$</span>
+						<input
+							id="pu"
+							type="number"
+							min="0"
+							step="1"
+							title="Precio Unitario"
+							class="milk"
+							placeholder="0.00"
+							bind:value={pedido.precio_unitario}
 						/>
 					</div>
-				</div>
-			</div>
+					<BindableSelect
+						bind:value={pedido.ref}
+						list={['FASTRAQ', 'Lista de precios']}
+						name="ref"
+						placeholder="De donde se obtiene precio"
+					/>
+				{/snippet}
+				{#snippet resumen()}
+					<div class="resumen-pedido">
+						<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
+					</div>
+				{/snippet}
+			</TarjetaLista>
 		{/each}
-		{#if pedidoACotizarInvalidoPorMoneda}
-			<p>no se pueden mezclar USD con MX</p>
-		{:else}
-			<h1 class="total"><b>{formatMoneda(total)}</b></h1>
+		<div class="resumen-grupo">
+			{#if pedidoACotizarInvalidoPorMoneda}
+				<p>no se pueden mezclar USD con MX</p>
+			{:else}
+				<select class="input-s" title="Moneda">
+					<option value="MXN">MXN</option>
+					<option value="USD">USD</option>
+				</select>
+				<h1 class="total"><b>{formatMoneda(total)}</b></h1>
+			{/if}
+		</div>
+	</div>
+	<div class="acciones-fijas">
+		<button
+			class="butter"
+			type="button"
+			aria-label="Limpiar"
+			title="Limpiar"
+			onclick={limpiarCarritoCompleto}
+		>
+			<img src="/clean.svg" alt="Elimininar relacion" />
+		</button>
+		{#if StorePedidoEditar.carrito.length > 0}
+			<button
+				class="butter accion rojo"
+				onclick={eliminarRelacion}
+				aria-label="Eliminar relación"
+				title="Eliminar relación"
+			>
+				<img src="/remove.svg" alt="Elimininar relacion" />
+			</button>
 		{/if}
 	</div>
 {/if}
@@ -296,52 +318,43 @@
 			<div class="acciones"></div>
 		</div>
 		{#each productos as producto}
-			<div class="producto">
-				<span class="codigo">{producto.producto.codigo}</span>
-				<div class="contador">
-					<button class="butter" onclick={() => StorePedidoNuevo.pop(producto.id)}>-</button>
-					<span class="valor-step">{producto.cantidad}</span>
-					<button class="butter" onclick={() => StorePedidoNuevo.push(producto.id)}>+</button>
-				</div>
-			</div>
+			<TarjetaLista>
+				{#snippet input()}
+					<div class="producto">
+						<div class="contador">
+							<input
+								type="number"
+								class="cantidad"
+								value={producto.cantidad}
+								onchange={(e) => StorePedidoNuevo.pop(producto.id, Number(e.target.value))}
+							/>
+						</div>
+					</div>
+				{/snippet}
+				{#snippet titulo()}
+					<span class="codigo">{producto.producto.descripcion}</span>
+					<span class="codigo">{producto.producto.codigo}</span>
+				{/snippet}
+			</TarjetaLista>
 		{/each}
 	</div>
 {/if}
 
 <!-- ACCIONES GLOBALES -->
 {#if StorePedidoEditar.carrito.length == 0 && page.url.pathname != '/pedidos'}
-	<button class="butter agregar-producto" onclick={() => goto('/pedidos')}
+	<button class="milk accion agregar-producto" onclick={() => goto('/pedidos')}
 		>+Seleccionar Pedido</button
 	>
 	<p class="estado-vacio">No hay pedidos seleccionados</p>
 {/if}
 {#if StorePedidoNuevo.carrito.length == 0 && page.url.pathname != '/catalogo'}
-	<button class="butter agregar-producto" onclick={() => goto('/catalogo')}
+	<button class="milk accion agregar-producto" onclick={() => goto('/catalogo')}
 		>+{StorePedidoEditar.carrito.length ? 'Agregar a Pedido' : 'Crear Pedido'}</button
 	>
 	<p class="estado-vacio">No hay productos seleccionados</p>
 {/if}
 {#if StorePedidoEditar.carrito.length > 0 || StorePedidoNuevo.carrito.length > 0}
 	<div class="acciones-fijas">
-		<button
-			class="butter"
-			type="button"
-			aria-label="Limpiar"
-			title="Limpiar"
-			onclick={limpiarCarritoCompleto}
-		>
-			<img src="/clean.svg" alt="Elimininar relacion" />
-		</button>
-		{#if StorePedidoEditar.carrito.length > 0}
-			<button
-				class="butter accion rojo"
-				onclick={eliminarRelacion}
-				aria-label="Eliminar relación"
-				title="Eliminar relación"
-			>
-				<img src="/remove.svg" alt="Elimininar relacion" />
-			</button>
-		{/if}
 		<button class="butter" onclick={actualizarPedido} disabled={actualizando}>
 			{actualizando ? 'Actualizando...' : 'Guardar Cambios'}
 		</button>
@@ -370,42 +383,16 @@
 		flex-direction: column;
 		gap: var(--a);
 	}
-	.pedido {
-		display: flex;
-		flex-direction: column;
-		gap: var(--a);
-		border-bottom: 2px dashed var(--color-muted);
-		padding: var(--a) 0;
-	}
-	.pedido .titulo {
-		grid-column: span 3;
-		display: flex;
-		align-items: baseline;
-		gap: var(--a);
-	}
-	.pedido .titulo div {
-		flex-grow: 1;
-	}
-	.pedido .inputs {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--f), 1fr));
-		grid-auto-rows: auto;
-		width: 100%;
-	}
-	.input-m {
-		grid-column: span 2;
-		display: flex;
-	}
-	.input-l {
-		grid-column: span 4;
-		display: flex;
-	}
-	.pedido .enlaces {
+
+	/* tarjeta pedido */
+
+	.enlaces {
 		font-size: small;
 	}
 	.total {
-		width: fit-content;
-		align-self: flex-end;
+		flex-grow: 1;
+		display: flex;
+		justify-content: flex-end;
 	}
 	.producto {
 		display: flex;
@@ -421,24 +408,42 @@
 		background-color: transparent;
 		align-self: center;
 	}
-	.text-danger {
-		color: #ef4444;
+	input {
+		max-width: var(--f);
+	}
+	/* inputs */
+	.input-moneda {
+		position: relative;
+		display: flex;
+		align-items: center;
+	}
+
+	.input-moneda .simbolo {
+		position: absolute;
+		left: 10px;
+		pointer-events: none; 
+		z-index: 1;
+	}
+
+	.input-moneda input {
+		padding-left: 24px;
+		width: 100%;
 	}
 
 	/* Acciones inferiores */
+	.resumen-grupo {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		margin: var(--b);
+	}
 	.acciones-fijas {
 		position: sticky;
 		bottom: var(--a);
-		right: 0;
-		width: fit-content;
-		flex-grow: 1;
 		display: flex;
 		align-self: flex-end;
-		align-items: flex-end;
 		gap: var(--y);
-		margin-top: var(--a);
 	}
-
 	.estado-vacio {
 		text-align: center;
 		color: #94a3b8;

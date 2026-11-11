@@ -52,17 +52,21 @@ function crearPedido() {
 		saveToCookie();
 	}
 
-	function pop(id: string) {
+	function pop(id: string, cantidad: number) {
 		const index = state.carrito.findIndex((item) => item.id === id);
 
 		if (index === -1) return;
 
 		const elemento = state.carrito[index];
 
-		if (elemento.cantidad > 1) {
-			elemento.cantidad -= 1;
+		if (cantidad) {
+			elemento.cantidad == cantidad;
 		} else {
-			state.carrito.splice(index, 1);
+			if (elemento.cantidad > 1) {
+				elemento.cantidad -= 1;
+			} else {
+				state.carrito.splice(index, 1);
+			}
 		}
 
 		saveToCookie();

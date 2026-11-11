@@ -15,7 +15,7 @@
 
 {#if $appState.ModalProducto}
 	<div
-		class="overlay"
+		class="overlay honey"
 		role="button"
 		tabindex="0"
 		onkeydown={(e) => e.key === 'Escape' && closeAndClear()}
@@ -24,7 +24,7 @@
 		<div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" tabindex="-1">
 			<div class="modal-header">
 				<h2>Nuevo Producto</h2>
-				<button class="close" onclick={closeAndClear}>✕</button>
+				<button class="jelly rojo accion" onclick={closeAndClear}>✕</button>
 			</div>
 			<form
 				method="POST"
@@ -44,49 +44,11 @@
 				<input type="hidden" name="id_tipo_producto" value={tipoId} />
 
 				<FormularioProductoNuevo bind:productoNuevo bind:canSubmit bind:tipoId />
-
-				<button class="butter matcha" type="submit" disabled={!canSubmit}>Agregar</button>
+				
+				<div class="acciones">
+					<button class="butter success" type="submit" disabled={!canSubmit}>Agregar</button>
+				</div>
 			</form>
 		</div>
 	</div>
 {/if}
-
-<style>
-	.overlay {
-		position: fixed;
-		inset: 0;
-		background: rgba(0, 0, 0, 0.5);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 9999;
-		padding: 1rem;
-	}
-
-	.close {
-		background: none;
-		border: none;
-		cursor: pointer;
-		width: 2rem;
-		height: 2rem;
-		border-radius: 4px;
-	}
-
-	.actions {
-		display: flex;
-		gap: 0.5rem;
-		justify-content: flex-end;
-		padding-top: 1rem;
-		border-top: 1px solid #e5e5e5;
-	}
-	.butter:hover:not(:disabled) {
-		transform: translateY(-2px);
-	}
-	.butter:active:not(:disabled) {
-		transform: translateY(0);
-	}
-	.butter:disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
-	}
-</style>

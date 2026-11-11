@@ -1,11 +1,11 @@
 <script>
 	import { appState } from '$lib/stores/appState.svelte';
-	import { fade } from 'svelte/transition';
+	import { profile } from '$lib/stores/profileStore.svelte';
 </script>
 
 {#if $appState.pageActions}
 	<form method="POST" action="/auth/logout">
-		<button type="submit" class="butter logout-button">Cerrar sesión</button>
+		<button type="submit" class="butter logout-button">{$profile?.nombre}</button>
 	</form>
 {/if}
 

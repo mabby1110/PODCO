@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import { onMount, type Snippet } from 'svelte';
 	import NavButton from '../Acciones/NavButton.svelte';
 	import { arrowScroll } from '$lib/actions/keyboardScroll';
 
@@ -16,6 +16,12 @@
 		grid?: boolean;
 		fullscreen?: boolean;
 	} = $props();
+
+	let mounted = $state(false);
+
+	onMount(() => {
+		mounted = true;
+	});
 </script>
 
 {#if portada}
@@ -24,10 +30,12 @@
 	</div>
 {/if}
 <div class="vista" class:grid class:fullscreen use:arrowScroll={{ step: 40, enabled: true }}>
-	{#if contenido}
+	{#if contenido && mounted}
 		<div class="contenido">
 			{@render contenido()}
 		</div>
+	{:else}
+		<div class="animate-pulse">Cargando vista...</div>
 	{/if}
 </div>
 <div class="controles">

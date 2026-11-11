@@ -198,7 +198,6 @@ button img {
 	padding: var(--a);
 	width: 80%;
 	max-width: 1200px;
-	overflow: auto;
 	height: 100%;
 }
 .modal-header {
@@ -206,8 +205,8 @@ button img {
 	justify-content: space-between;
 }
 .modal form {
-	margin: auto;
 	width: 100%;
+	overflow: auto;
 }
 .modal .acciones {
 	display: flex;

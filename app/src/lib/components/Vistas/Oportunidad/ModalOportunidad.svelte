@@ -20,7 +20,6 @@
 		role="button"
 		tabindex="0"
 		onkeydown={(e) => e.key === 'Escape' && closeAndClear()}
-		in:fade
 	>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" tabindex="-1">

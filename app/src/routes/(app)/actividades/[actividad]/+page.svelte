@@ -7,6 +7,7 @@
 	import EditableInput from '$lib/components/Formularios/EditableInput.svelte';
 	import Card from '$lib/components/Tarjetas/Card.svelte';
 	import ActivityActions from '$lib/components/Vistas/Actividad/ActivityActions.svelte';
+	import { formatDateToReadable } from '$lib/utils/util';
 
 	const actividad = $derived(page.data.actividad);
 
@@ -23,7 +24,7 @@
 					<h1>{actividad.motivo}</h1>
 				</div>
 				<div class="card-meta">
-					<p class="date">{actividad.inicio}</p>
+					<p class="date">{formatDateToReadable(actividad.inicio)}</p>
 					<p>|</p>
 					<p>{actividad?.agente?.nombre}</p>
 					<p>Fase: <strong>{fase.actual}</strong></p>
