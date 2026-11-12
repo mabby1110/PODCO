@@ -2,6 +2,8 @@
 	import { onMount, type Snippet } from 'svelte';
 	import NavButton from '../Acciones/NavButton.svelte';
 	import { arrowScroll } from '$lib/actions/keyboardScroll';
+	import { appState } from '$lib/stores/appState.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
 	let {
 		portada,
@@ -29,7 +31,12 @@
 		{@render portada()}
 	</div>
 {/if}
-<div class="vista" class:grid class:fullscreen use:arrowScroll={{ step: 40, enabled: true }}>
+<div
+	class="vista"
+	class:grid
+	class:fullscreen={!StoreAplicacion.value.controles}
+	use:arrowScroll={{ step: 40, enabled: true }}
+>
 	{#if contenido && mounted}
 		<div class="contenido">
 			{@render contenido()}
@@ -53,7 +60,10 @@
 		overflow: auto;
 		display: flex;
 		flex-direction: column;
-		padding: var(--a) var(--a) var(--e);
+		padding: var(--a) var(--a) var(--e); /* 1. Añadimos duración y un easing suave (cubic-bezier) */
+		transition:
+			padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+			max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 	.vista.grid {
 		display: grid;

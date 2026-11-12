@@ -50,56 +50,54 @@
 	});
 </script>
 
-<div class="form-content">
-	<FormSelectMotivo list={motivosOportunidad} />
-	<FormSelectAgente bind:selected={selectedAgent} />
+<FormSelectMotivo list={motivosOportunidad} />
+<FormSelectAgente bind:selected={selectedAgent} />
 
-	<Searchbar
-		data={clientesFiltrados}
-		keyColumns={['razon_social', 'nombre_comercial']}
-		bind:selectedItem={selectedClient}
-		bind:newCLient
-	/>
+<Searchbar
+	data={clientesFiltrados}
+	keyColumns={['razon_social', 'nombre_comercial']}
+	bind:selectedItem={selectedClient}
+	bind:newCLient
+/>
 
-	<FormInput
-		label="Objetivo"
-		name="objetivo"
-		bind:value={objetivo}
-		placeholder="Resultado concreto a conseguir"
-		type="textarea"
-		hint="ej. levantamiento técnico en sitio,  o presentar cotización"
-		required
-	/>
+<FormInput
+	label="Objetivo"
+	name="objetivo"
+	bind:value={objetivo}
+	placeholder="Resultado concreto a conseguir"
+	type="textarea"
+	hint="ej. levantamiento técnico en sitio,  o presentar cotización"
+	required
+/>
 
-	<DatePicker title="Fecha de seguimiento" />
+<DatePicker title="Fecha de seguimiento" />
 
-	<div class="form-group">
-		<FormOptionalInput title="+Observaciones" openByDefault={observaciones ? true : false}>
-			<FormInput
-				label="Observaciones"
-				name="observaciones"
-				bind:value={observaciones}
-				type="textarea"
-				required
-			/>
-		</FormOptionalInput>
-		<FormConditionalInput bind:isOpen titleOpen="+Necesidad detectada">
-			<FormInput
-				label="Necesidad"
-				name="necesidades"
-				bind:value={necesidades}
-				placeholder="Requerimiento técnico u operacional detectados"
-				type="textarea"
-				required
-			/>
-		</FormConditionalInput>
-	</div>
-
-	{#if selectedClient}
-		<input type="hidden" name="id_cliente" value={selectedClient?.id} required />
-	{/if}
-	{#if fase == 2}
-		<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
-	{/if}
-	<input type="hidden" name="fase" bind:value={fase} />
+<div class="form-group">
+	<FormOptionalInput title="+Observaciones" openByDefault={observaciones ? true : false}>
+		<FormInput
+			label="Observaciones"
+			name="observaciones"
+			bind:value={observaciones}
+			type="textarea"
+			required
+		/>
+	</FormOptionalInput>
+	<FormConditionalInput bind:isOpen titleOpen="+Necesidad detectada">
+		<FormInput
+			label="Necesidad"
+			name="necesidades"
+			bind:value={necesidades}
+			placeholder="Requerimiento técnico u operacional detectados"
+			type="textarea"
+			required
+		/>
+	</FormConditionalInput>
 </div>
+
+{#if selectedClient}
+	<input type="hidden" name="id_cliente" value={selectedClient?.id} required />
+{/if}
+{#if fase == 2}
+	<input type="hidden" name="fecha_analisis" value={new Date().toISOString()} />
+{/if}
+<input type="hidden" name="fase" bind:value={fase} />

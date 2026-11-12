@@ -37,11 +37,11 @@
 	{#snippet acciones()}
 		<Controles>
 			{#snippet header()}
+				<ExportarCSV lista_ordenada={lista_filtrada} />
 				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
 				<button onclick={() => appState.toggleMin()} class="butter"
 					>{$appState.min ? 'retraer' : 'expandir'}</button
 				>
-				<ExportarCSV lista_ordenada={lista_filtrada} />
 			{/snippet}
 			{#snippet acciones()}
 				<Searchbar

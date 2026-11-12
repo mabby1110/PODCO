@@ -52,8 +52,6 @@
         grid-template-columns: repeat(auto-fit, minmax(var(--f), 1fr));
 		align-items: baseline;
 	}
-	.titulo {
-	}
 	.input {
         grid-column: span 2;
 		display: flex;

@@ -94,6 +94,9 @@ select {
 	border-radius: var(--a);
 	height: var(--d);
 }
+select {
+	cursor: pointer;
+}
 textarea {
 	font-family: inherit;
 	resize: vertical;
@@ -147,6 +150,9 @@ button img {
 /* BOTONES */
 .activo {
 	background-color: var(--color-button-highlight);
+}
+.rojo {
+	backdrop-filter: none;
 }
 .rojo:hover {
 	background-color: var(--color-error);

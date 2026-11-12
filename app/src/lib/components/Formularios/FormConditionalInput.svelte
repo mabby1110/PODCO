@@ -35,7 +35,7 @@
 		{/if}
 	</div>
 {:else}
-	<button class="butter accion" type="button" onclick={open}>
+	<button class="milk accion" type="button" onclick={open}>
 		{titleOpen}
 	</button>
 {/if}

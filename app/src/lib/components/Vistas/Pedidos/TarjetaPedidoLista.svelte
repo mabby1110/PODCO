@@ -87,7 +87,8 @@
 </script>
 
 {#each pedidosAgrupados as grupo}
-	<div class="contenedor-lista milk">
+	<div class="contenedor-lista">
+	<div class="contenido-lista milk">
 		<div class="meta-lista">
 			{#if grupo.id_agrupacion !== 'sin_agrupar'}
 				<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
@@ -145,13 +146,15 @@
 				</h1>
 			</div>
 		</div>
+	</div>
+
 		{#if !disable}
-			<div class="acciones-panel">
+			<div class="acciones-lista">
 				<div class="occ-wrapper">
 					<!-- <div class="alerta-error">
 					nada
 					</div> -->
-
+	
 					<!-- {#if puedeSubirOcc}
 						<SubirOcc
 							tipo="docs_cotizaciones"
@@ -181,7 +184,7 @@
 {/each}
 
 <style>
-	.contenedor-lista {
+	.contenido-lista {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
@@ -261,7 +264,7 @@
 		color: #ef4444;
 	}
 
-	.acciones-panel {
+	.acciones-lista {
 		margin-top: 0.5rem;
 	}
 

@@ -216,7 +216,7 @@
 
 				{#if isEditing}
 					{#if showPersonForm}
-						<div class="form-persona butter">
+						<div class="form-persona milk">
 							<label class="field">
 								<span>Nombre</span>
 								<input bind:value={contact_name} />
@@ -278,7 +278,7 @@
 							<div class="form-actions">
 								<button
 									type="button"
-									class="butter"
+									class="jelly rojo accion"
 									onclick={() => {
 										showPersonForm = false;
 										resetPersonForm();

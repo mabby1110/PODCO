@@ -44,15 +44,14 @@
 </script>
 
 <div class="grupo" bind:this={listRef}>
-	<button class="titulo jelly" onclick={handleToggle}>
-		<h2> ({total}) {groupTitle}</h2>
+	<button class="titulo butter" onclick={handleToggle}>
+		<span>({total})</span>
+		<h2>{groupTitle}</h2>
 	</button>
 	{#if show}
 		<div class="group-list">
 			{#each itemsVisibles as elemento (elemento.id)}
-				<div class="item">
-					{@render children(elemento)}
-				</div>
+				{@render children(elemento)}
 			{/each}
 			{#if hayMas}
 				<div bind:this={sentinelRef} class="sentinel"></div>
@@ -62,25 +61,27 @@
 </div>
 
 <style>
+	.grupo {
+		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+	}
 	.titulo {
-		padding: var(--a);
+		padding: var(--b);
 		z-index: 9;
-		width: fit-content;
+		width: 100%;
 		min-height: fit-content;
 		position: sticky;
 		top: 0;
 		text-align: start;
+		display: flex;
+		gap: var(--a);
 	}
 	.group-list {
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
 		margin-bottom: var(--e);
-	}
-	.item {
-		flex-shrink: 0;
-		content-visibility: auto;
-		contain-intrinsic-size: auto 120px; /* ajusta a la altura aprox. de tu tarjeta */
 	}
 	.sentinel {
 		flex-shrink: 0;

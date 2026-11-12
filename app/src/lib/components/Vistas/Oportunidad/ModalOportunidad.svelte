@@ -45,11 +45,13 @@
 					<input type="hidden" name="id_actividad" value={StoreEntradas.origen.id} />
 					{StoreEntradas.origen?.tipo} > {StoreEntradas.destino} id: {StoreEntradas.origen?.id}
 				{/if}
-				
-				<FormOportunidad bind:isValid={canSubmit} />
+
+				<div class="contenido-formulario">
+					<FormOportunidad bind:isValid={canSubmit} />
+				</div>
 
 				<div class="acciones">
-					<button class="butter success" type="submit" disabled={!canSubmit}>Agregar</button>
+					<button class="milk success" type="submit" disabled={!canSubmit}>Agregar</button>
 				</div>
 			</form>
 		</div>

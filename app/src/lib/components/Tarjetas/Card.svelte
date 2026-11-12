@@ -15,7 +15,7 @@
 </script>
 
 <div class="tarjeta">
-	<div class="header honey" style={headerStyle}>
+	<div class="header jelly" style={headerStyle}>
 		{#if header}
 			{@render header()}
 		{/if}

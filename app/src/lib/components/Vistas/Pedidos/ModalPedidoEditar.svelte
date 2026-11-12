@@ -176,7 +176,7 @@
 	.panel-controls {
 		position: fixed;
 		top: var(--a);
-		right: var(--a);
+		right: 0;
 		width: 100%;
 		max-width: var(--i);
 		margin-inline: auto;

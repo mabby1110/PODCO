@@ -1,33 +1,22 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { Snippet } from 'svelte';
-	import { slide } from 'svelte/transition';
 
 	let {
-		header,
-		resume,
-		content,
-		meta,
+		titulo,
+		contenido,
+		metaDatos,
 		acciones,
-		href = '/',
-		style = '',
-		ocultarAcciones
+		style = ''
 	}: {
-		header?: Snippet;
-		resume?: Snippet;
-		content?: Snippet;
-		meta?: Snippet;
+		titulo: Snippet;
+		contenido: Snippet;
+		metaDatos?: Snippet;
 		acciones?: Snippet;
-		href?: string;
 		style?: string;
-		ocultarAcciones?: boolean;
 	} = $props();
 
 	let show = $state(false);
-	function handleNavigationClick(e: MouseEvent) {
-		e.stopPropagation();
-		goto(href);
-	}
 	function handleClick() {
 		show = !show;
 	}
@@ -46,86 +35,64 @@
 	onclick={handleClick}
 	onkeydown={handleKeydown}
 	{style}
-	class="list-card-preview butter"
+	class="jelly tarjeta-preview"
 >
-	<div class="list-card-header">
-		{#if header}
-			{@render header()}
-		{/if}
-		{#if resume}
-			<div class="resume">
-				{@render resume()}
-			</div>
+	<div class="titulo" class:show>
+		{#if titulo}
+			{@render titulo()}
 		{/if}
 	</div>
-
-	{#if content && show}
-		<div class="list-card-content" transition:slide>
-			{@render content()}
+	<div class="contenido" class:show>
+		{#if contenido}
+			{@render contenido()}
+		{/if}
+	</div>
+	{#if acciones && show}
+		<div class="acciones">
+			{@render acciones()}
 		</div>
 	{/if}
-
-	<div class="list-card-meta">
-		{#if meta}
-			<div class="data">
-				{@render meta()}
-			</div>
+	<div class="meta-datos">
+		{#if metaDatos}
+			{@render metaDatos()}
 		{/if}
-		<div class="actions">
-			{#if !ocultarAcciones}
-				<button class="milk" onclick={handleNavigationClick}>Ver</button>
-			{/if}
-			{#if acciones}
-				{@render acciones()}
-			{/if}
-		</div>
 	</div>
 </div>
 
 <style>
-	.list-card-preview {
-		display: flex;
-		flex-wrap: wrap;
-		cursor: pointer;
+	.tarjeta-preview {
+		position: relative;
 		width: 100%;
+		display: grid;
+		grid-template-columns: 3fr 5fr;
 		padding: var(--a);
 	}
-	.list-card-header {
-		flex-grow: 3;
+	.titulo {
+		margin-top: var(--a);
+	}
+	.contenido {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
-		gap: 0 var(--a);
+		grid-template-columns: repeat(auto-fit, minmax(var(--g), 1fr));
+		max-height: var(--f);
+		overflow: hidden;
 	}
-	:global(.list-card-header > *:nth-child(1)) {
-		grid-column: span 5;
+	.acciones {
+		grid-column: -1 / -2;
+		display: flex;
+		justify-content: flex-end;
 	}
-	:global(.list-card-header > *:nth-child(2)) {
+	.show {
+		padding: var(--a);
 		grid-column: span 2;
+		max-height: 70vh;
 	}
-	.list-card-content {
-		width: 100%;
-		padding: var(--b) 0;
-	}
-	.list-card-meta {
-		width: 100%;
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: 0 var(--a);
-	}
-	.list-card-meta .data {
+	.meta-datos {
+		position: absolute;
+		top: 0;
+		left: var(--a);
 		font-size: smaller;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0 var(--a);
-	}
-	.list-card-meta .actions {
-		font-size: smaller;
+		width: 100%;
 		display: flex;
 		gap: var(--a);
-		flex-direction: row-reverse;
-		flex-wrap: wrap-reverse;
-		align-items: baseline;
-		z-index: 1;
 	}
 </style>

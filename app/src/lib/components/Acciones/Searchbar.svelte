@@ -120,6 +120,8 @@
 	.searchbar-container {
 		display: flex;
 		flex-direction: column;
+		position: sticky;
+		top: 0;
 	}
 
 	.reset-button {

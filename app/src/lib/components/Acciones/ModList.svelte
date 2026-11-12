@@ -215,7 +215,7 @@
 		/* Borde y espaciado interior del contenedor */
 		border: 1px solid var(--color-muted, #ccc); /* Ajusta a tu variable de color */
 		border-radius: 8px; /* Opcional, para bordes redondeados */
-		margin: 0;
+		margin: var(--a) 0;
 		padding: var(--a);
 	}
 
