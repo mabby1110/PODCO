@@ -13,7 +13,7 @@
 	} = $props();
 
 	let { clientes } = $derived(page.data);
-	console.log(clientes)
+	console.log(clientes);
 	const sectores = [...new Set(clientes.map((item) => item.sector))];
 
 	// --- Único picker para la búsqueda ---
@@ -46,13 +46,14 @@
 	$effect(() => {
 		isDuplicate = nombre_comercial.trim() === '' || matches.length > 0;
 	});
-	$effect(()=>console.log(matches));
+	$effect(() => console.log(matches));
 </script>
 
-<div class="form-content milk">
+<fieldset class="form-content">
+	<legend>Nuevo Cliente</legend>
 	<section>
 		<div class="section-header">
-			<h3>Cliente</h3>
+			<h3>Nombre Comercial</h3>
 		</div>
 		<div class="section-block">
 			<input
@@ -150,7 +151,7 @@
 			/>
 		</FormOptionalInput>
 	</div>
-</div>
+</fieldset>
 
 <style>
 	.matches li.exact {
@@ -164,7 +165,7 @@
 		flex-direction: column;
 		gap: var(--b);
 		border-radius: 12px;
-		padding: var(--a);
+		padding: var(--a) var(--b);
 	}
 	.matches {
 		list-style: none;

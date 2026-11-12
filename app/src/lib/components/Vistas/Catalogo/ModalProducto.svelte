@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import FormInput from '$lib/components/Formularios/FormInput.svelte';
 	import FormularioProductoNuevo from '$lib/components/Formularios/FormularioProductoNuevo.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
+	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let productoNuevo = $state<Record<string, any>>({});
 	let canSubmit = $state(false);
-	let tipoId = $state(0);
+	let tipoId = $state('');
 
 	function closeAndClear() {
 		appState.toggleModalProducto();
@@ -33,6 +35,7 @@
 					return async ({ result, update }) => {
 						if (result.type === 'success') {
 							invalidateAll();
+							appState.toggleModalProducto();
 							await update({ reset: true });
 							// cerrar modal
 						}
@@ -40,13 +43,28 @@
 				}}
 			>
 				<input type="hidden" name="caracteristicas" value={JSON.stringify(productoNuevo)} />
-				<input type="hidden" name="codigo" value="LOGICA_DEL_CODIGO" />
-				<input type="hidden" name="id_tipo_producto" value={tipoId} />
+				<input type="hidden" name="creado_por" value={$profile?.id} />
 
-				<FormularioProductoNuevo bind:productoNuevo bind:canSubmit bind:tipoId />
-				
+				<div class="contenido-formulario">
+					<FormularioProductoNuevo bind:productoNuevo bind:canSubmit bind:tipoId />
+					<FormInput
+						name="codigo"
+						label="codigo"
+						placeholder="Descripción resumida y publica del producto"
+						type="text"
+						required
+					/>
+					<FormInput
+						name="descripcion"
+						label="descripcion"
+						placeholder="Descripción resumida y publica del producto"
+						type="text"
+						required
+					/>
+				</div>
+
 				<div class="acciones">
-					<button class="butter success" type="submit" disabled={!canSubmit}>Agregar</button>
+					<button class="butter success" type="submit">Agregar</button>
 				</div>
 			</form>
 		</div>

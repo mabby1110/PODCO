@@ -51,7 +51,7 @@
 	</select>
 	<input bind:value={contact_value} placeholder="3322558174, correo@empresa.com" />
 </div>
-<button class="butter accion" type="button" onclick={addContacto}>Agregar Contacto</button>
+<button class="milk accion" type="button" onclick={addContacto}>*Agregar Contacto</button>
 
 {#if contactos.length}
 	<div class="contact-list">

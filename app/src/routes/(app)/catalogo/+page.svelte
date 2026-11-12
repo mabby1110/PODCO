@@ -43,7 +43,7 @@
             {/snippet}
             {#snippet acciones()}
                 <ModList {columnasDinamicas} route={currentRoute} agrupar ordenar />
-                <Searchbar data={catalogo} keyColumns={['codigo']} bind:lista />
+                <Searchbar data={catalogo} keyColumns={['codigo', 'descripcion']} bind:lista />
             {/snippet}
         </Controles>
     {/snippet}

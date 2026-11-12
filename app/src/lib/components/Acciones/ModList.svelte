@@ -120,9 +120,11 @@
 	}
 </script>
 
-<div class="mod-list">
+<fieldset class="mod-list">
+	<legend>Filtros</legend>
+
 	{#if agrupar}
-		<div>
+		<div class="mod-accion">
 			<select
 				value={estado.groupBy ?? ''}
 				onchange={(e) => actualizarAgrupacion(e.currentTarget.value || null)}
@@ -134,11 +136,12 @@
 			</select>
 		</div>
 	{/if}
+
 	{#if ordenar}
 		<div class="mod-accion">
-			<button class="jelly" onclick={agregarOrden}>+ Orden</button>
+			<button class="milk" onclick={agregarOrden}>+ Orden</button>
 			{#each estado.sorts as orden, i}
-				<div class="mod">
+				<div class="filtro">
 					<button class="jelly rojo accion" onclick={() => eliminarOrden(i)}>✕</button>
 					<div class="condicion">
 						<select
@@ -167,12 +170,12 @@
 	{/if}
 
 	<div class="mod-accion">
-		<button class="jelly" onclick={agregarFiltro}>+ Filtro</button>
+		<button class="milk" onclick={agregarFiltro}>+ Filtro</button>
 		{#each estado.filters as filtro, i}
 			{@const campoDef = getCampoDef(filtro.field)}
 			<div class="filtro">
 				<button class="jelly rojo accion" onclick={() => eliminarFiltro(i)}>✕</button>
-				<div class="categoria">
+				<div class="mod">
 					<select
 						value={filtro.field}
 						onchange={(e) => cambiarCampoFiltro(i, e.currentTarget.value)}
@@ -181,53 +184,59 @@
 							<option value={campo.key}>{campo.label}</option>
 						{/each}
 					</select>
-					<div class="mod">
-						<select
-							value={filtro.operator}
-							onchange={(e) =>
-								actualizarFiltro(i, { ...filtro, operator: e.currentTarget.value as Operator })}
-						>
-							{#each operadoresMap[campoDef.type] as op}
-								<option value={op.valor}>{op.label}</option>
-							{/each}
-						</select>
-						<input
-							type={inputTypeMap[campoDef.type]}
-							value={filtro.value}
-							oninput={(e) => actualizarFiltro(i, { ...filtro, value: e.currentTarget.value })}
-						/>
-					</div>
+					<select
+						value={filtro.operator}
+						onchange={(e) =>
+							actualizarFiltro(i, { ...filtro, operator: e.currentTarget.value as Operator })}
+					>
+						{#each operadoresMap[campoDef.type] as op}
+							<option value={op.valor}>{op.label}</option>
+						{/each}
+					</select>
+					<input
+						type={inputTypeMap[campoDef.type]}
+						value={filtro.value}
+						oninput={(e) => actualizarFiltro(i, { ...filtro, value: e.currentTarget.value })}
+					/>
 				</div>
 			</div>
 		{/each}
 	</div>
-</div>
+</fieldset>
 
 <style>
+	/* Estilos para el fieldset y legend */
 	.mod-list {
 		display: flex;
-		flex-direction: column;
+		align-items: flex-start;
+		flex-wrap: wrap;
 		gap: var(--a);
+
+		/* Borde y espaciado interior del contenedor */
+		border: 1px solid var(--color-muted, #ccc); /* Ajusta a tu variable de color */
+		border-radius: 8px; /* Opcional, para bordes redondeados */
+		margin: 0;
+		padding: var(--a);
 	}
+
+	.mod-list legend {
+		/* Margen a los lados del texto para que no pegue con la línea */
+		padding: 0 var(--y);
+		font-weight: bold;
+	}
+
+	/* Resto de tus estilos convertidos a divs */
 	.mod-accion {
 		display: flex;
 		flex-wrap: wrap;
-		flex-direction: column;
 		gap: var(--a);
 	}
 	.filtro {
+		width: 100%;
 		display: flex;
-		align-items: flex-start;
-		gap: var(--y);
-	}
-	.categoria {
-		display: flex;
-		flex-wrap: wrap;
 	}
 	.mod {
 		display: flex;
-	}
-	.mod input {
-		max-width: 50%;
+		flex-wrap: wrap;
 	}
 </style>

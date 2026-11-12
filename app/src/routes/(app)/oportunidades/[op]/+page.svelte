@@ -26,7 +26,6 @@
 
 	// ESTADO
 	const oportunidad = $derived(page.data.oportunidad);
-	console.log(oportunidad);
 	const potencial_venta = $derived(oportunidad.pedidos.some((p) => p.fase == 2));
 	const cotizaciones = $derived(oportunidad.pedidos.some((p) => p.fase == 3));
 	const ventas = $derived(oportunidad.pedidos.filter((p) => p.fase == 4) || []);

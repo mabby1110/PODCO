@@ -30,8 +30,11 @@
 	{#snippet acciones()}
 		<Controles>
 			{#snippet header()}
-				<!-- <ExportarCSV {lista_ordenada} /> -->
+				<ExportarCSV lista_ordenada={lista_filtrada} />
 				<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
+				<button onclick={() => appState.toggleMin()} class="butter"
+					>{$appState.min ? 'retraer' : 'expandir'}</button
+				>
 			{/snippet}
 			{#snippet acciones()}
 				<ModList {columnasDinamicas} route={currentRoute} ordenar agrupar />

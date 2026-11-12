@@ -53,6 +53,7 @@
 	margin: 0;
 	padding: 0;
 	font-family: Arial, Helvetica, sans-serif;
+	color: var(--color-text-ow);
 }
 html {
 	width: 100%;
@@ -73,10 +74,10 @@ body {
 	background-size: auto;
 }
 h1 {
-	font-size: 2rem;
+	font-size: 2.2rem;
 }
 h2 {
-	font-size: 1.5rem;
+	font-size: 1.8rem;
 }
 h3 {
 	font-size: 1.2rem;
@@ -85,16 +86,18 @@ input,
 textarea,
 select {
 	display: flex;
-	padding: var(--a) var(--b);
+	padding: 0 var(--b);
 	border-radius: var(--br-b);
 	background-color: var(--color-primary);
 	backdrop-filter: blur(8px);
 	border: 1px solid var(--color-muted);
 	border-radius: var(--a);
+	height: var(--d);
 }
 textarea {
 	font-family: inherit;
 	resize: vertical;
+	height: var(--e);
 }
 button {
 	margin: 0;
@@ -216,11 +219,12 @@ button img {
 }
 
 /* FORMULARIOS */
-.form-content {
+.contenido-formulario {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	gap: var(--c);
+	gap: var(--a);
+	margin: var(--b) 0;
 }
 .form-group {
 	display: flex;

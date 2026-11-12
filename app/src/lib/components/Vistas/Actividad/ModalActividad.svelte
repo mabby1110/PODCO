@@ -51,7 +51,7 @@
 					<input type="hidden" name="id_oportunidad" value={StoreEntradas.origen.id} />
 					{StoreEntradas.origen?.tipo} > {StoreEntradas.destino} id: {StoreEntradas.origen?.id}
 				{/if}
-				<div class="form-content">
+				<div class="contenido-formulario">
 					<!-- si es admin queda el input oculto -->
 					<FormSelectAgente bind:selected={agenteSeleccionado} />
 

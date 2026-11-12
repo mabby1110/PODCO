@@ -38,6 +38,9 @@
 		<Controles>
 			{#snippet header()}
 				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
+				<button onclick={() => appState.toggleMin()} class="butter"
+					>{$appState.min ? 'retraer' : 'expandir'}</button
+				>
 				<ExportarCSV lista_ordenada={lista_filtrada} />
 			{/snippet}
 			{#snippet acciones()}
@@ -62,7 +65,7 @@
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion}>
+				<Grupo {agrupacion} showByDefault={$appState.min}>
 					{#snippet children(elemento: any)}
 						<TarjetaListaOportunidades oportunidad={elemento} />
 					{/snippet}

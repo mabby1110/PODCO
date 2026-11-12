@@ -44,6 +44,7 @@
 			value = value.trim();
 		}
 	}
+	$effect(()=>console.log(value));
 </script>
 
 <section>

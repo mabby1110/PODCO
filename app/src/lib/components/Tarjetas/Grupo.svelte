@@ -44,8 +44,8 @@
 </script>
 
 <div class="grupo" bind:this={listRef}>
-	<button class="titulo milk" onclick={handleToggle}>
-		<h2>{groupTitle} ({total})</h2>
+	<button class="titulo jelly" onclick={handleToggle}>
+		<h2> ({total}) {groupTitle}</h2>
 	</button>
 	{#if show}
 		<div class="group-list">
@@ -69,7 +69,7 @@
 		min-height: fit-content;
 		position: sticky;
 		top: 0;
-		margin-bottom: var(--a);
+		text-align: start;
 	}
 	.group-list {
 		display: flex;
