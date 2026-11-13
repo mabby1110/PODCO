@@ -7,6 +7,7 @@
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
 	import CardClienteListPreview from '$lib/components/Vistas/Cliente/CardClienteListPreview.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
@@ -31,8 +32,8 @@
 		<Controles>
 			{#snippet header()}
 				<ExportarCSV lista_ordenada={lista_filtrada} />
-				<button onclick={() => appState.toggleModalClient()} class="butter">+Cliente</button>
-				<button onclick={() => appState.toggleMin()} class="butter"
+				<button onclick={() => appState.toggleModalClient()} class="link">+Cliente</button>
+				<button onclick={() => StoreAplicacion.toggle('retraer')} class="link"
 					>{$appState.min ? 'retraer' : 'expandir'}</button
 				>
 			{/snippet}

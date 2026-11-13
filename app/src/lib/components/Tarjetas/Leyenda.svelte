@@ -1,33 +1,25 @@
-<script>
-	// Definimos los pasos por defecto usando las variables y colores que proporcionaste.
-	// Al usar $props(), permitimos que este array sea sobreescrito si lo necesitas en el futuro.
-	let {
-		steps = [
-			{ label: 'Prospecto (1)', color: 'var(--color-secondary)' },
-			{ label: 'Oportunidad (2)', color: '#5ca8ff99' },
-			{ label: 'Negociación (3)', color: '#ffd70099' },
-			{ label: 'Ganada (4)', color: '#34d76a99' }
-			// { label: 'Enviar (5)', color: '#6575ff99' },
-			// { label: 'Finalizar (6)', color: '#000000ee' }
-		]
-	} = $props();
-	let show = $state(false);
+<script lang="ts">
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
+
+	let { steps = [] } = $props();
 </script>
 
-<div class="leyenda">
-	<div class="funnel-legend panel">
-		{#each steps as step, index}
-			<div class="legend-item">
-				<span class="color-box" style="background-color: {step.color};"></span>
-				<span class="label">{step.label}</span>
-			</div>
+{#if StoreAplicacion.value.leyenda}
+	<div class="leyenda">
+		<div class="funnel-legend panel">
+			{#each steps as step, index}
+				<div class="legend-item">
+					<span class="color-box " style={step.estilo}>{index}</span>
+					<span class="label">{step.actual}</span>
+				</div>
 
-			{#if index < steps.length - 1}
-				<span class="separator">&gt;</span>
-			{/if}
-		{/each}
+				{#if index < steps.length - 1}
+					<span class="separator">&gt;</span>
+				{/if}
+			{/each}
+		</div>
 	</div>
-</div>
+{/if}
 
 <style>
 	.funnel-legend {
@@ -40,7 +32,8 @@
 		gap: var(--a);
 		color: #333;
 		max-width: 80vw;
-		font-size: small;
+		font-size: smaller;
+		margin: var(--b);
 	}
 
 	.legend-item {
@@ -51,11 +44,9 @@
 	}
 
 	.color-box {
-		display: inline-block;
-		width: 10px;
-		height: 10px;
-		border-radius: 2px;
-		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: var(--y);
+		padding: 0 var(--y);
+		font-size: smaller;
 	}
 
 	.separator {

@@ -34,7 +34,8 @@
 <div
 	class="vista"
 	class:grid
-	class:fullscreen={!StoreAplicacion.value.controles}
+	class:auto-layout={!StoreAplicacion.value.controles}
+	class:fullscreen
 	use:arrowScroll={{ step: 40, enabled: true }}
 >
 	{#if contenido && mounted}
@@ -60,9 +61,7 @@
 		overflow: auto;
 		display: flex;
 		flex-direction: column;
-		padding: var(--a) var(--a) var(--e); /* 1. Añadimos duración y un easing suave (cubic-bezier) */
 		transition:
-			padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
 			max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 	.vista.grid {
@@ -104,6 +103,9 @@
 		max-width: 100%;
 		padding: 0;
 	}
+	.vista.auto-layout > :global(*){
+		max-width: 100%;
+	}
 	.contenido {
 		width: 100%;
 		height: 100%;
@@ -111,5 +113,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
+		padding: var(--a);
 	}
 </style>

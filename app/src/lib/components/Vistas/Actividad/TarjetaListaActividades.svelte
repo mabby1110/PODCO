@@ -10,11 +10,11 @@
 	let fase = $derived(fasesActividad[actividad.fase]);
 </script>
 
-<ListPreview href="/actividades/{actividad.id}" style={fase?.estilo}>
-	{#snippet header()}
+<ListPreview style={fase?.estilo}>
+	{#snippet titulo()}
 		<h3>{actividad?.motivo}</h3>
 	{/snippet}
-	{#snippet content()}
+	{#snippet contenido()}
 		{#if actividad?.objetivo}
 			<div class="brief">
 				<b>Objetivo</b>
@@ -23,7 +23,7 @@
 		{/if}
 		{#if actividad?.historia}
 			<div class="brief">
-				<h3>Historia</h3>
+				<b>Historia</b>
 				<div class="entradas">
 					{#each actividad?.historia as item}
 						<div class="entrada">
@@ -41,7 +41,7 @@
 		{/if}
 	{/snippet}
 
-	{#snippet meta()}
+	{#snippet metaDatos()}
 		<p>{actividad?.agentes?.nombre}</p>
 		<p>{formatDateToReadable(actividad?.inicio)}</p>
 	{/snippet}

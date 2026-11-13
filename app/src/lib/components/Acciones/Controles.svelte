@@ -75,6 +75,7 @@
 		setTimeout(calculateQuadrant, 0);
 	}
 	let show = $derived(StoreAplicacion.value.controles);
+
 	$effect(() => {
 		if (show) {
 			setTimeout(calculateQuadrant, 0);
@@ -89,12 +90,12 @@
 			key: 'q',
 			label: 'Abrir/cerrar panel de opciones',
 			action: () => {
-				show = !show;
+				 StoreAplicacion.toggle('controles')
 			}
 		});
 
 		const unregisterEscape = StoreHotkeys.registerEscape('panel-controls', () => {
-			if (show) show = false;
+			if (StoreAplicacion.value.controles) StoreAplicacion.toggle('controles');
 		});
 
 		return () => {
@@ -125,7 +126,7 @@
 			{/if}
 			<div class="default">
 				<button class="jelly" type="button" onclick={resetPosition}>◥</button>
-				<button class="jelly rojo accion" type="button" onclick={() => (show = false)}>✕</button>
+				<button class="jelly rojo accion" type="button" onclick={()=>StoreAplicacion.toggle('controles')}>✕</button>
 			</div>
 		</div>
 		<div class="contenido">
@@ -136,7 +137,7 @@
 	</div>
 {/if}
 
-<button class="control honey" class:activo={show} onclick={() => (StoreAplicacion.toggleModal('controles'))}>
+<button class="control honey" class:activo={show} onclick={() => (StoreAplicacion.toggle('controles'))}>
 	<img src="/options.svg" alt="options" />
 	{#if StoreHotkeys.active && StoreHotkeys.get('q')}
 		<span class="hotkey-badge">
@@ -170,18 +171,16 @@
 		width: 100%;
 		display: flex;
 		flex-wrap: wrap;
-		align-items: center;
+		align-items: flex-start;
 		flex-flow: row;
 		gap: var(--a);
 		padding: var(--a) var(--a) 4px;
-		/* Se removieron los cursores y el user-select de aquí, ya que el header ya no dispara esto solo */
 	}
 
 	.header-actions .custom {
 		flex-grow: 1;
 		display: flex;
 		gap: var(--a);
-		max-height: var(--d);
 	}
 
 	.header-actions .default {
@@ -210,7 +209,10 @@
 		padding: var(--y);
 		height: var(--d);
 	}
-
+	.custom {
+		display: flex;
+		flex-wrap: wrap;
+	}
 	.panel-controls-local {
 		position: sticky;
 		top: 0;

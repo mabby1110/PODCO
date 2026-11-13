@@ -1,5 +1,6 @@
 <!-- Grupo.svelte -->
 <script>
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import { tick } from 'svelte';
 
 	const LOTE = 20;
@@ -21,7 +22,7 @@
 		show = !show;
 		if (!show) visibles = LOTE;
 		await tick();
-		listRef?.scrollIntoView({ block: 'start' });
+		listRef?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 	}
 
 	$effect(() => {
@@ -44,7 +45,7 @@
 </script>
 
 <div class="grupo" bind:this={listRef}>
-	<button class="titulo butter" onclick={handleToggle}>
+	<button class="titulo milk" onclick={handleToggle}>
 		<span>({total})</span>
 		<h2>{groupTitle}</h2>
 	</button>
@@ -76,6 +77,7 @@
 		text-align: start;
 		display: flex;
 		gap: var(--a);
+		scroll-margin-top: 30px;
 	}
 	.group-list {
 		display: flex;

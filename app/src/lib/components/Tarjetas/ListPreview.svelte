@@ -35,7 +35,7 @@
 	onclick={handleClick}
 	onkeydown={handleKeydown}
 	{style}
-	class="jelly tarjeta-preview"
+	class="milk tarjeta-preview"
 >
 	<div class="titulo" class:show>
 		{#if titulo}
@@ -64,7 +64,7 @@
 		position: relative;
 		width: 100%;
 		display: grid;
-		grid-template-columns: 3fr 5fr;
+		grid-template-columns: repeat(auto-fit, minmax(var(--h), 1fr));
 		padding: var(--a);
 	}
 	.titulo {
@@ -73,6 +73,7 @@
 	.contenido {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(var(--g), 1fr));
+		grid-column: span 2;
 		max-height: var(--f);
 		overflow: hidden;
 	}

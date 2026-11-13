@@ -138,13 +138,22 @@ button img {
 	background-color: var(--color-milk);
 	border: 1px solid var(--color-muted);
 	border-radius: var(--br-b);
-	backdrop-filter: blur(8px);
+	backdrop-filter: blur(16px);
 }
 .jelly {
 	border: none;
 	background-color: transparent;
 	border-radius: var(--br-b);
 	backdrop-filter: blur(16px);
+}
+.link {
+	all: unset;
+	text-decoration: underline;
+	font-size: smaller;
+	cursor: pointer;
+}
+.link:hover {
+	background-color: transparent;
 }
 
 /* BOTONES */
@@ -301,6 +310,12 @@ section .section-block {
 	gap: var(--a);
 	align-self: flex-end;
 	justify-self: flex-end;
+}
+.brief {
+	display: flex;
+	flex-direction: column;
+	gap: var(--y);
+	margin-top: var(--a);
 }
 
 /* DROP ZONE */

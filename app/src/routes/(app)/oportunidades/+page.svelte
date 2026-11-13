@@ -6,13 +6,15 @@
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
 	import TarjetaListaOportunidades from '$lib/components/Vistas/Oportunidad/TarjetaListaOportunidades.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
-	import { categoriasOportunidad } from '$lib';
+	import { categoriasOportunidad, fasesOportunidad } from '$lib';
 	import { sortData, filterData, groupData, extraerColumnas } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
 	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import Controles from '$lib/components/Acciones/Controles.svelte';
+	import Leyenda from '$lib/components/Tarjetas/Leyenda.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let show = $derived($appState.min);
@@ -20,7 +22,6 @@
 
 	// Convertido a $state para soportar bind:lista
 	let lista = $state(oportunidades);
-	console.log(oportunidades);
 	let columnasDinamicas = $derived(extraerColumnas(oportunidades));
 
 	$effect(() => {
@@ -38,12 +39,12 @@
 		<Controles>
 			{#snippet header()}
 				<ExportarCSV lista_ordenada={lista_filtrada} />
-				<button onclick={() => appState.toggleModalOp()} class="butter">+Oportunidad</button>
-				<button onclick={() => appState.toggleMin()} class="butter"
-					>{$appState.min ? 'retraer' : 'expandir'}</button
-				>
+				<button class="link" onclick={() => appState.toggleModalOp()}>+Oportunidad</button>
+				<button class="link" onclick={() => StoreAplicacion.toggle('retraer')}>{StoreAplicacion.value.retraer?'retraer':'expandir'}</button>
+				<button class="link" onclick={() => StoreAplicacion.toggle('leyenda')}>leyenda</button>
 			{/snippet}
 			{#snippet acciones()}
+				<Leyenda steps={fasesOportunidad} />
 				<Searchbar
 					data={oportunidades}
 					keyColumns={categoriasOportunidad.map((c) => c.key).concat(['clientes'])}
@@ -65,7 +66,7 @@
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion} showByDefault={$appState.min}>
+				<Grupo {agrupacion} showByDefault={StoreAplicacion.value.retraer}>
 					{#snippet children(elemento: any)}
 						<TarjetaListaOportunidades oportunidad={elemento} />
 					{/snippet}

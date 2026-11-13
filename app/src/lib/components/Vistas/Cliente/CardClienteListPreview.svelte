@@ -4,18 +4,14 @@
 	let { client } = $props();
 </script>
 
-<ListPreview href="./clientes/{client.id}">
-	{#snippet header()}
+<ListPreview>
+	{#snippet titulo()}
 		<h3>{client.nombre_comercial || client.razon_social}</h3>
 		{#if client.razon_social}
 			<p class="tiny">R.S: {client.razon_social}</p>
 		{/if}
 	{/snippet}
-	{#snippet content()}
-		<div class="brief">
-			<h3>Gíro comercial:</h3>
-			<p>{client?.giro_comercial}</p>
-		</div>
+	{#snippet contenido()}
 		<div class="brief">
 			<h3>Contactos:</h3>
 			<div class="brief-content">
@@ -27,7 +23,7 @@
 			</div>
 		</div>
 	{/snippet}
-	{#snippet meta()}
+	{#snippet metaDatos()}
 		<p>{client.agentes.nombre}</p>
 		<p>oportunidades: {client.oportunidades.length || 0}</p>
 	{/snippet}

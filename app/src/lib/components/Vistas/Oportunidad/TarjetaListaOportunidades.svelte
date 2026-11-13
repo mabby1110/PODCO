@@ -41,7 +41,7 @@
 		{/if}
 	{/snippet}
 	{#snippet acciones()}
-		<button class="butter" onclick={()=>goto(`/oportunidades/${oportunidad.id}`)}>ver</button>
+		<button class="butter accion" onclick={()=>goto(`/oportunidades/${oportunidad.id}`)}>ver</button>
 	{/snippet}
 	{#snippet metaDatos()}
 		<p>{oportunidad?.agentes?.nombre}</p>

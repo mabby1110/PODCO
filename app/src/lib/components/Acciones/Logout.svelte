@@ -13,7 +13,7 @@
 	.logout-button {
 		position: fixed;
 		top: var(--a);
-		left: var(--a);
+		right: var(--a);
 		z-index: 9999;
 		background-color: var(--color-error);
 		color: white;
