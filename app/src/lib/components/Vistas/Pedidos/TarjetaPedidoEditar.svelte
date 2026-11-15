@@ -4,9 +4,7 @@
 	import { page } from '$app/state';
 	import { fasesPedido } from '$lib';
 	import BindableSelect from '$lib/components/Formularios/BindableSelect.svelte';
-	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
-	import Select from '$lib/components/Formularios/Select.svelte';
-	import TarjetaLista from '$lib/components/Tarjetas/TarjetaLista.svelte';
+	import ItemLista from '$lib/components/Tarjetas/ItemLista.svelte';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
@@ -218,15 +216,14 @@
 		{#each pedidos as pedido (pedido.id)}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
-			<TarjetaLista>
-				{#snippet metaAcciones()}
+			<ItemLista>
+				{#snippet acciones()}
 					<button class="jelly rojo" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
-				{/snippet}
-				{#snippet titulo()}
 					<div class="badge" style={fasesPedido[pedido.fase]?.estilo}>
 						<span>{fasesPedido[pedido.fase]?.actual}</span>
 					</div>
-					<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
+				{/snippet}
+				{#snippet meta()}
 					<div class="enlaces">
 						{#if pedido.id_oportunidad}
 							<a href="/oportunidades/{pedido.id_oportunidad}" onclick={(e) => e.stopPropagation()}>
@@ -236,42 +233,53 @@
 						{/if}
 					</div>
 				{/snippet}
-				{#snippet input()}
-					<input
-						type="number"
-						min="0"
-						step="1"
-						title="Cantidad"
-						class="milk"
-						placeholder="Cantidad"
-						bind:value={pedido.cantidad}
-					/>
-					<div class="input-moneda">
-						<span class="simbolo">$</span>
+				{#snippet titulo()}
+					<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
+				{/snippet}
+				{#snippet contenido()}
+					{#if pedido.fase <= 2}
 						<input
-							id="pu"
 							type="number"
 							min="0"
 							step="1"
-							title="Precio Unitario"
+							title="Cantidad"
 							class="milk"
-							placeholder="0.00"
-							bind:value={pedido.precio_unitario}
+							placeholder="Cantidad"
+							bind:value={pedido.cantidad}
 						/>
-					</div>
-					<BindableSelect
-						bind:value={pedido.ref}
-						list={['FASTRAQ', 'Lista de precios']}
-						name="ref"
-						placeholder="De donde se obtiene precio"
-					/>
+						<div class="input-moneda">
+							<span class="simbolo">$</span>
+							<input
+								id="pu"
+								type="number"
+								min="0"
+								step="1"
+								title="Precio Unitario"
+								class="milk"
+								placeholder="0.00"
+								bind:value={pedido.precio_unitario}
+							/>
+						</div>
+						<BindableSelect
+							bind:value={pedido.ref}
+							list={['FASTRAQ', 'Lista de precios']}
+							name="ref"
+							placeholder="De donde se obtiene precio"
+						/>
+						<div class="resumen-pedido">
+							<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
+						</div>
+					{:else}
+						<span class="precio" class:text-danger={pedido.precio_unitario == null}>
+							{pedido.cantidad} x
+							{formatMoneda(pedido.precio_unitario, pedido.moneda)}
+						</span>
+						<b class="subtotal">
+							{formatMoneda((pedido.precio_unitario || 0) * (pedido.cantidad || 0), pedido.moneda)}
+						</b>
+					{/if}
 				{/snippet}
-				{#snippet resumen()}
-					<div class="resumen-pedido">
-						<b class="subtotal">${pedido.precio_unitario * pedido.cantidad}</b>
-					</div>
-				{/snippet}
-			</TarjetaLista>
+			</ItemLista>
 		{/each}
 		<div class="resumen-grupo">
 			{#if pedidoACotizarInvalidoPorMoneda}
@@ -325,24 +333,23 @@
 			<div class="acciones"></div>
 		</div>
 		{#each productos as producto}
-			<TarjetaLista>
-				{#snippet input()}
-					<div class="producto">
-						<div class="contador">
-							<input
-								type="number"
-								class="cantidad"
-								value={producto.cantidad}
-								onchange={(e) => StorePedidoNuevo.pop(producto.id, Number(e.target.value))}
-							/>
-						</div>
-					</div>
-				{/snippet}
+			<ItemLista>
 				{#snippet titulo()}
 					<span class="codigo">{producto.producto.descripcion}</span>
 					<span class="codigo">{producto.producto.codigo}</span>
 				{/snippet}
-			</TarjetaLista>
+
+				{#snippet contenido()}
+					<div class="contador">
+						<input
+							type="number"
+							class="cantidad"
+							value={producto.cantidad}
+							onchange={(e) => StorePedidoNuevo.pop(producto.id, Number(e.target.value))}
+						/>
+					</div>
+				{/snippet}
+			</ItemLista>
 		{/each}
 	</div>
 {/if}
@@ -354,7 +361,7 @@
 	>
 	<p class="estado-vacio">No hay pedidos seleccionados</p>
 {/if}
-{#if StorePedidoNuevo.carrito.length == 0 && page.url.pathname != '/catalogo'}
+{#if StorePedidoNuevo.carrito.length == 0 && page.url.pathname != '/catalogo' && pedidosNoEditables.length == 0}
 	<button class="milk accion agregar-producto" onclick={() => goto('/catalogo')}
 		>+{StorePedidoEditar.carrito.length ? 'Agregar a Pedido' : 'Crear Pedido'}</button
 	>
@@ -362,7 +369,7 @@
 {/if}
 {#if StorePedidoEditar.carrito.length > 0 || StorePedidoNuevo.carrito.length > 0}
 	{#if existePedidoNoEditable}
-		<p>El pedido se edita en la oportunidad</p>
+		<p class="estado-vacio">El pedido se edita en la oportunidad</p>
 	{/if}
 	<div class="acciones-fijas">
 		<button

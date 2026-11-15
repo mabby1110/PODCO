@@ -21,6 +21,7 @@
 	let currentRoute = $derived(page.url.pathname);
 
 	// Convertido a $state para soportar bind:lista
+	// svelte-ignore state_referenced_locally
 	let lista = $state(pedidos);
 	let columnasDinamicas = $derived(extraerColumnas(pedidos));
 

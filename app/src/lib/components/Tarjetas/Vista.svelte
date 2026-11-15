@@ -23,7 +23,6 @@
 
 	onMount(() => {
 		mounted = true;
-		console.log(StoreAplicacion.value);
 	});
 
 	let autolayout = $derived(

@@ -73,7 +73,7 @@
 	}
 
 	onMount(() => {
-		console.log(oportunidad.pedidos.filter((p) => p.id_cotizacion));
+		console.log("Tarjeta potencial de ventra", oportunidad.pedidos.filter((p) => p.id_cotizacion));
 		StoreCotizado.limpiar();
 	});
 </script>

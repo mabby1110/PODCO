@@ -86,20 +86,35 @@
 	.item-lista {
 		flex-grow: 1;
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--h), 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(var(--f), 1fr));
+		gap: 0 var(--a);
+	}
+	.acciones {
+		display: flex;
+		align-items: baseline;
+		gap: var(--a);
 	}
 	.meta {
-		grid-column: span 3;
+		grid-column: 1 / -1;
 		font-size: var(--b);
-		padding: var(--y) 0;
+		display: flex;
+		gap: var(--a);
+		align-items: center;
 	}
 	.titulo {
 		grid-column: span 2;
 	}
 	.contenido {
 		grid-column: -3 / -1;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--g), 1fr));
-		justify-items: flex-end;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--a);
+		justify-content: flex-end;
+	}
+	.contenido > :global(:last-child) {
+		flex-grow: 1;
+		display: flex;
+		justify-content: flex-end;
+		min-width: var(--f);
 	}
 </style>

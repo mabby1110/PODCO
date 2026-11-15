@@ -57,6 +57,7 @@
 		if (disable) return;
 		StorePedidoEditar.push(id);
 		StorePedidoEditar.toggleModal(true);
+		StoreAplicacion.set('modal_editar_pedido', true);
 		if (id_oportunidad) {
 			StoreContextoRelacion.setOportunidad(id_oportunidad);
 		}
@@ -84,8 +85,6 @@
 			currencyDisplay: 'narrowSymbol'
 		}).format(val);
 	};
-
-	$effect(() => console.log(pedidosAgrupados));
 </script>
 
 {#each pedidosAgrupados as grupo}
