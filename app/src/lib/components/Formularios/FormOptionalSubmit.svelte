@@ -1,13 +1,15 @@
 <script lang="ts">
-	import { fasesOportunidad } from "$lib";
+	import { fasesOportunidad } from '$lib';
 
 	let {
-		siguienteFase = $bindable(),
+		fase = $bindable(),
+		listaFases = [],
 		isOpen = $bindable(),
 		submit = $bindable(),
 		submitCancel = $bindable()
 	}: {
-		siguienteFase: any;
+		fase: any;
+		listaFases: any;
 		isOpen: boolean;
 		submit: boolean;
 		submitCancel?: boolean;
@@ -35,13 +37,15 @@
 			close();
 		}
 	});
+
+	let siguienteFase = $derived(listaFases[fase.id_fase + 1]);
 </script>
 
 {#if !isOpen}
-	{#if submitCancel}
-		<button class="honey accion" type="button" onclick={toggleCancel}> Descartar </button>
-	{/if}
-	<button class="honey accion" style={siguienteFase.estilo} type="button" onclick={toggleSubmit}> {siguienteFase.actual} </button>
+	<button class="honey accion" type="button" onclick={toggleCancel}> Descartar </button>
+	<button class="honey rojo accion" style={siguienteFase.estilo} type="button" onclick={toggleSubmit}>
+		{fase.accion}
+	</button>
 {:else}
 	<button class="honey accion rojo" type="button" onclick={close}>✕</button>
 {/if}

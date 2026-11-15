@@ -11,6 +11,7 @@
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import Controles from '$lib/components/Acciones/Controles.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
 	let { actividades } = $derived(page.data);
 	let lista = $state(actividades);
@@ -32,8 +33,11 @@
 	{#snippet acciones()}
 		<Controles>
 			{#snippet header()}
-				<button onclick={() => appState.toggleModalActivity()} class="butter">+Actividad</button>
 				<ExportarCSV {lista_ordenada} />
+				<button onclick={() => appState.toggleModalActivity()} class="link">+Actividad</button>
+				<button onclick={() => StoreAplicacion.toggle('retraer')} class="link"
+					>{StoreAplicacion.value.retraer ? 'retraer' : 'expandir'}</button
+				>
 			{/snippet}
 			{#snippet acciones()}
 				<ModList {columnasDinamicas} route={currentRoute} ordenar agrupar />
@@ -48,7 +52,7 @@
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion}>
+				<Grupo {agrupacion} showByDefault={StoreAplicacion.value.retraer}>
 					{#snippet children(elemento: any)}
 						<TarjetaListaActividades actividad={elemento} />
 					{/snippet}

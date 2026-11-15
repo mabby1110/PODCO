@@ -2,6 +2,7 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
+	import { fasesPedido } from '$lib';
 	import BindableSelect from '$lib/components/Formularios/BindableSelect.svelte';
 	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
 	import Select from '$lib/components/Formularios/Select.svelte';
@@ -11,9 +12,9 @@
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 
 	// DATOS DERIVADOS
-	let pedidosAEditar = $state(page.data.pedidos);
+	let listaPedidos = $state(page.data.pedidos);
 	let pedidos = $derived(
-		pedidosAEditar.filter((p) => StorePedidoEditar.carrito.some((item) => item.id === p.id))
+		listaPedidos.filter((p) => StorePedidoEditar.carrito.some((item) => item.id === p.id))
 	);
 	let productos = $derived(
 		StorePedidoNuevo.carrito.map((item) => ({
@@ -43,6 +44,9 @@
 	let pedidoACotizarInvalidoPorMoneda = $derived(
 		pedidos.some((p) => p.moneda == 'USD') && pedidos.some((p) => p.moneda == 'MX')
 	);
+	// fase 1 = borrador, fase 2 = potencial de venta (editables). fase > 2 se edita en la oportunidad
+	let pedidosNoEditables = $derived(pedidos.filter((p) => Number(p.fase) > 2));
+	let existePedidoNoEditable = $derived(pedidosNoEditables.length > 0);
 
 	// ACCIONES
 	async function limpiarCarritoCompleto() {
@@ -51,6 +55,7 @@
 		StoreContextoRelacion.limpiar();
 	}
 	async function actualizarPedido() {
+		if (existePedidoNoEditable) return;
 		actualizando = true;
 		mensaje = '';
 		if (StorePedidoEditar.carrito.length == 0) {
@@ -205,7 +210,6 @@
 			currencyDisplay: 'narrowSymbol'
 		}).format(val);
 	};
-	console.log(oportunidades);
 </script>
 
 <!-- pedidos a editar -->
@@ -219,6 +223,9 @@
 					<button class="jelly rojo" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
 				{/snippet}
 				{#snippet titulo()}
+					<div class="badge" style={fasesPedido[pedido.fase]?.estilo}>
+						<span>{fasesPedido[pedido.fase]?.actual}</span>
+					</div>
 					<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
 					<div class="enlaces">
 						{#if pedido.id_oportunidad}
@@ -270,11 +277,11 @@
 			{#if pedidoACotizarInvalidoPorMoneda}
 				<p>no se pueden mezclar USD con MX</p>
 			{:else}
+				<h1 class="total"><b>{formatMoneda(total)}</b></h1>
 				<select class="input-s" title="Moneda">
 					<option value="MXN">MXN</option>
 					<option value="USD">USD</option>
 				</select>
-				<h1 class="total"><b>{formatMoneda(total)}</b></h1>
 			{/if}
 		</div>
 	</div>
@@ -286,9 +293,9 @@
 			title="Limpiar"
 			onclick={limpiarCarritoCompleto}
 		>
-			<img src="/clean.svg" alt="Elimininar relacion" />
+			<img src="/clean.svg" alt="Limpiar carrito" />
 		</button>
-		{#if StorePedidoEditar.carrito.length > 0}
+		{#if StorePedidoEditar.carrito.length > 0 && pedidosNoEditables.length == 0}
 			<button
 				class="butter accion rojo"
 				onclick={eliminarRelacion}
@@ -354,8 +361,15 @@
 	<p class="estado-vacio">No hay productos seleccionados</p>
 {/if}
 {#if StorePedidoEditar.carrito.length > 0 || StorePedidoNuevo.carrito.length > 0}
+	{#if existePedidoNoEditable}
+		<p>El pedido se edita en la oportunidad</p>
+	{/if}
 	<div class="acciones-fijas">
-		<button class="butter" onclick={actualizarPedido} disabled={actualizando}>
+		<button
+			class="butter"
+			onclick={actualizarPedido}
+			disabled={actualizando || existePedidoNoEditable}
+		>
 			{actualizando ? 'Actualizando...' : 'Guardar Cambios'}
 		</button>
 	</div>
@@ -390,7 +404,6 @@
 		font-size: small;
 	}
 	.total {
-		flex-grow: 1;
 		display: flex;
 		justify-content: flex-end;
 	}
@@ -421,7 +434,7 @@
 	.input-moneda .simbolo {
 		position: absolute;
 		left: 10px;
-		pointer-events: none; 
+		pointer-events: none;
 		z-index: 1;
 	}
 
@@ -433,9 +446,11 @@
 	/* Acciones inferiores */
 	.resumen-grupo {
 		display: flex;
-		justify-content: space-between;
 		flex-wrap: wrap;
-		margin: var(--b);
+		justify-content: flex-end;
+		align-items: center;
+		gap: var(--a);
+		margin: var(--b) 0;
 	}
 	.acciones-fijas {
 		position: sticky;
@@ -449,5 +464,14 @@
 		color: #94a3b8;
 		font-style: italic;
 		margin-bottom: 1rem;
+	}
+	.badge {
+		border-radius: 99px;
+		background: #f1f5f9;
+		height: fit-content;
+		padding: 4px 8px;
+		text-align: center;
+		width: fit-content;
+		font-size: small;
 	}
 </style>

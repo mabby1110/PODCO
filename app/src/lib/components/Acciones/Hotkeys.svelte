@@ -2,7 +2,8 @@
 
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { StoreHotkeys } from '$lib/stores/StoreHotkeys.svelte';
+	import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
 	let active = $state(false);
 	let timeout: ReturnType<typeof setTimeout>;
@@ -44,6 +45,7 @@
 			active = true;
 			StoreHotkeys.setActive(true);
 
+			StoreAplicacion.set('modal_editar_pedido', false);
 			clearTimeout(timeout);
 			timeout = setTimeout(cancel, 4000);
 			return;

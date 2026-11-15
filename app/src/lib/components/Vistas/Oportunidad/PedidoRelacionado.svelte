@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TarjetaPedido from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
+	import TarjetaGrupoPedidos from '$lib/components/Vistas/Pedidos/TarjetaGrupoPedidos.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { goto } from '$app/navigation';
 	import SubirCotizacion from '../Documentos/SubirCotizacion.svelte';
@@ -24,7 +24,7 @@
 	{#if pedidos.some((p) => p.estatus === 2)}
 		<div class="panel grupo">
 			{#each pedidos.filter((i) => i.estatus === 2) as item}
-				<TarjetaPedido {item} cold={editando} />
+				<TarjetaGrupoPedidos {item} cold={editando} />
 			{/each}
 
 			<div class="acciones">

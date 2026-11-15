@@ -17,10 +17,11 @@
 	import SubirAdjunto from '$lib/components/Vistas/Documentos/SubirAdjunto.svelte';
 	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
 	import Entradas from '$lib/components/Acciones/Entradas.svelte';
-	import TarjetaPedidoPotencial from '$lib/components/Vistas/Pedidos/TarjetaPedidoPotencial.svelte';
+	import TarjetaPotencialDeVenta from '$lib/components/Vistas/Pedidos/TarjetaPotencialDeVenta.svelte';
 	import TarjetaPedidoCotizado from '$lib/components/Vistas/Pedidos/TarjetaPedidoCotizado.svelte';
 	import TarjetaPedidoVenta from '$lib/components/Vistas/Pedidos/TarjetaPedidoVenta.svelte';
 	import { formatDateToReadable } from '$lib/utils/util';
+	import RequisitoDeGastos from '$lib/components/Formularios/RequisitoDeGastos.svelte';
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 
@@ -107,17 +108,6 @@
 			placeholder="Necesidades"
 		/>
 
-		<EditableInput
-			{editando}
-			id={oportunidad?.id}
-			label="Requisitos"
-			name="requisitos"
-			type="text"
-			value={oportunidad?.requisitos}
-			action="/oportunidades?/update"
-			placeholder="Requisitos"
-		/>
-
 		<!-- <EditableInput
 			{editando}
 			id={oportunidad?.id}
@@ -129,6 +119,10 @@
 			placeholder="Observaciones"
 		/> -->
 
+		<CustomInput label="Requisito de gasto" action="/oportunidades?/update" id={oportunidad?.id} {editando}>
+			<RequisitoDeGastos />
+		</CustomInput>
+		
 		<CustomInput label="Postergar" action="/oportunidades?/update" id={oportunidad?.id} {editando}>
 			<DatePicker />
 		</CustomInput>
@@ -142,7 +136,7 @@
 
 				<div class="section-content">
 					{#if potencial_venta}
-						<TarjetaPedidoPotencial {oportunidad} {editando} />
+						<TarjetaPotencialDeVenta {oportunidad} {editando} />
 					{:else}
 						<button class="butter" onclick={relacionarPedido}>+Potencial de venta</button>
 					{/if}
@@ -172,7 +166,7 @@
 
 				<div class="section-content">
 					{#if potencial_venta}
-						<TarjetaPedidoPotencial {oportunidad} {editando} />
+						<TarjetaPotencialDeVenta {oportunidad} {editando} />
 					{:else}
 						<button class="butter" onclick={relacionarPedido}>+Potencial de venta</button>
 					{/if}

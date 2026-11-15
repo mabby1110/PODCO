@@ -6,6 +6,7 @@ export interface AppState {
 	controles: boolean;
 	retraer: boolean;
 	leyenda: boolean;
+	modal_editar_pedido: boolean;
 }
 
 const COOKIE_NAME = 'appState';
@@ -14,7 +15,8 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 año
 const defaultState: AppState = {
 	controles: false,
 	retraer: false,
-	leyenda: false
+	leyenda: false,
+	modal_editar_pedido: false
 };
 
 function getInitialState(): AppState {

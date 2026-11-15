@@ -1,11 +1,11 @@
 <script lang="ts">
 	let {
-		nextFase = $bindable(),
+		siguinteFase = $bindable(),
 		isOpen = $bindable(),
 		submit = $bindable(),
 		submitCancel = $bindable()
 	}: {
-		nextFase: string;
+		siguinteFase: string;
 		isOpen: boolean;
 		submit: boolean;
 		submitCancel: boolean;
@@ -41,7 +41,7 @@
 
 {#if !isOpen}
 	<button class="honey accion" type="button" onclick={toggleCancel}>Descartar</button>
-	<button class="honey accion" type="button" onclick={toggleSubmit}> {nextFase} </button>
+	<button class="honey accion" type="button" onclick={toggleSubmit}> {siguinteFase} </button>
 {:else}
 	<button class="close-btn" type="button" onclick={close}>✕</button>
 {/if}

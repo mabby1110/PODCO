@@ -51,7 +51,7 @@
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion}>
+				<Grupo {agrupacion} showByDefault={StoreAplicacion.value.retraer}>
 					{#snippet children(elemento: any)}
 						<CardClienteListPreview client={elemento} />
 					{/snippet}

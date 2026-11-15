@@ -1,30 +1,34 @@
-import { construirDatosActividad } from '$lib/server/supabase/util';
+import { generateId } from '$lib/server/google/sheets';
 import { fail, type Actions } from '@sveltejs/kit';
-import crypto from 'crypto';
-function generateId(prefix = 'BMS') {
-	const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-	const hash = crypto.randomBytes(4).toString('hex');
-	return `${prefix}-${date}-${hash}`;
-}
 export const actions: Actions = {
 	add: async ({ request, locals: { supabase, user } }) => {
 		console.log('\nCrear actividad:\n');
 		if (!user) return fail(401, { error: 'No autorizado' });
+
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
-		console.log('\nformData:\n', data);
+		data.id = generateId('BMS-ACT');
+		if (typeof data.requisito_gasto === 'string') {
+			try {
+				data.requisito_gasto = JSON.parse(data.requisito_gasto);
+				console.log('\ndata.requisito_gasto:\n', data.requisito_gasto);
+			} catch (e) {
+				console.error('Error al parsear la requisito_gasto', e);
+			}
+		}
 
-		const actividad = construirDatosActividad(data);
+		console.log('\ndata:\n', data);
+
 		const { data: result, error } = await supabase
 			.from('actividades')
-			.insert([actividad])
+			.insert(data)
 			.select('id')
 			.single();
 
+		console.log('\nObjeto creado:\n', result, error);
 		if (error) {
 			return fail(500, { error: error.message });
 		}
-		console.log('\nObjeto creado:\n', result);
 
 		// Insertamos en el Historial
 		const { data: historial, error: errorHistorial } = await supabase
@@ -69,11 +73,17 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData.entries());
 		console.log(data);
-
-		const actividad = Object.fromEntries(formData.entries());
-		if (typeof actividad.historia === 'string') {
+		if (typeof data.requisito_gasto === 'string') {
 			try {
-				actividad.historia = JSON.parse(actividad.historia);
+				data.requisito_gasto = JSON.parse(data.requisito_gasto);
+				console.log('\ndata.requisito_gasto:\n', data.requisito_gasto);
+			} catch (e) {
+				console.error('Error al parsear la requisito_gasto', e);
+			}
+		}
+		if (typeof data.historia === 'string') {
+			try {
+				data.historia = JSON.parse(data.historia);
 			} catch (e) {
 				console.error('Error al parsear la historia', e);
 			}
@@ -84,7 +94,7 @@ export const actions: Actions = {
 
 		const { data: result, error: err } = await supabase
 			.from('actividades')
-			.update(actividad)
+			.update(data)
 			.eq('id', id)
 			.select()
 			.single();

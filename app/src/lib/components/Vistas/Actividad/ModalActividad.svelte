@@ -2,11 +2,13 @@
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { motivosActividades } from '$lib';
+	import ConstructorJson from '$lib/components/Acciones/ConstructorJson.svelte';
 	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
 	import FormInput from '$lib/components/Formularios/FormInput.svelte';
 	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
 	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
 	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
+	import RequisitoDeGastos from '$lib/components/Formularios/RequisitoDeGastos.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { StoreEntradas } from '$lib/stores/StoreEntradas.svelte';
 
@@ -55,7 +57,7 @@
 					<!-- si es admin queda el input oculto -->
 					<FormSelectAgente bind:selected={agenteSeleccionado} />
 
-					<FormSelectMotivo list={motivosActividades} disableCustom />
+					<FormSelectMotivo list={motivosActividades} />
 
 					<FormInput
 						label="Objetivo"
@@ -68,14 +70,7 @@
 					<DatePicker />
 					<div class="form-group">
 						<FormOptionalInput title="+Requisitos">
-							<FormInput
-								label="Requisitos"
-								name="requisitos"
-								bind:value={requisitos}
-								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-								type="textarea"
-								required
-							/>
+							<RequisitoDeGastos llaves={['hospedaje', 'alimentos', 'casetas', 'gasolina', 'otro']} name="requisito_gasto" />
 						</FormOptionalInput>
 						<FormOptionalInput title="+Observaciones">
 							<FormInput

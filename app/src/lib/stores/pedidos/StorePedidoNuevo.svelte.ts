@@ -7,7 +7,6 @@ interface ElementoCarrito {
 }
 
 interface PedidoNuevo {
-	modal: boolean;
 	carrito: ElementoCarrito[];
 	id_agrupacion?: string;
 }
@@ -16,7 +15,6 @@ const COOKIE_NAME = 'PedidoNuevo';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 const defaultState: PedidoNuevo = {
-	modal: false,
 	carrito: []
 };
 
@@ -75,23 +73,14 @@ function crearPedido() {
 		state.carrito = [];
 		saveToCookie();
 	}
-	function toggleModal() {
-		state.modal = !state.modal;
-		saveToCookie();
-	}
 
 	function reset() {
-		state.modal = false;
 		state.carrito = [];
 
 		saveToCookie();
 	}
 
 	return {
-		get modal() {
-			return state.modal;
-		},
-
 		get carrito() {
 			return state.carrito;
 		},
@@ -99,7 +88,6 @@ function crearPedido() {
 		push,
 		pop,
 		limpiar,
-		toggleModal,
 		reset
 	};
 }

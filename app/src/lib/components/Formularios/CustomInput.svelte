@@ -7,7 +7,7 @@
 		id,
 		action = '/clientes?/updateClient',
 		editando = false,
-		label = 'Custom',
+		label,
 		children
 	}: {
 		id: string;
@@ -34,11 +34,11 @@
 	<form method="POST" {action} use:enhance={handleSubmit}>
 		<input type="hidden" name="id" value={id} />
 		<section>
-			<div class="section-header">
-				{#if label}
+			{#if label}
+				<div class="section-header">
 					<h3>{label}:</h3>
-				{/if}
-			</div>
+				</div>
+			{/if}
 			<div class="section-content">
 				{#if children}
 					{@render children()}

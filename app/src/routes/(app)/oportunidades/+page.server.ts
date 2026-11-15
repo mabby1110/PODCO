@@ -159,7 +159,7 @@ export const actions: Actions = {
 
 		const { data, error } = await supabase
 			.from('oportunidades')
-			.update(oportunidad) // Ahora historia es un Array válido
+			.update(oportunidad)
 			.eq('id', oportunidad.id)
 			.select()
 			.single();

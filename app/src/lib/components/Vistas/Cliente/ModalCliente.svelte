@@ -6,7 +6,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import FormSelectAgente from '$lib/components/Formularios/FormSelectAgente.svelte';
 	import { onMount } from 'svelte';
-	import { StoreHotkeys } from '$lib/stores/StoreHotkeys.svelte';
+	import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
 
 	let clientes = $derived(page.data.clientes ?? []);
 

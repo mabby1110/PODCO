@@ -23,7 +23,12 @@
 
 	onMount(() => {
 		mounted = true;
+		console.log(StoreAplicacion.value);
 	});
+
+	let autolayout = $derived(
+		!StoreAplicacion.value.controles && !StoreAplicacion.value.modal_editar_pedido
+	);
 </script>
 
 {#if portada}
@@ -34,7 +39,7 @@
 <div
 	class="vista"
 	class:grid
-	class:auto-layout={!StoreAplicacion.value.controles}
+	class:autolayout
 	class:fullscreen
 	use:arrowScroll={{ step: 40, enabled: true }}
 >
@@ -61,8 +66,7 @@
 		overflow: auto;
 		display: flex;
 		flex-direction: column;
-		transition:
-			max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+		transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 	.vista.grid {
 		display: grid;
@@ -103,13 +107,13 @@
 		max-width: 100%;
 		padding: 0;
 	}
-	.vista.auto-layout > :global(*){
+	.vista.autolayout > :global(*) {
 		max-width: 100%;
 	}
 	.contenido {
 		width: 100%;
 		height: 100%;
-		max-width: var(--k);
+		max-width: max(60vw, var(--k));
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);

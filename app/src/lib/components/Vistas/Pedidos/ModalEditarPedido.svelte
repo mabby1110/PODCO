@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import TarjetaPedidoEditar from './TarjetaPedidoEditar.svelte';
 	import TarjetaContextoOportunidad from './TarjetaContextoOportunidad.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
 	let isMaximized = $state(false);
 
@@ -34,7 +35,7 @@
 					(w ? ` width: ${w}px; max-width: none;` : '') +
 					(h ? ` height: ${h}px; max-height: none;` : '')
 	);
-	
+
 	function calculateQuadrant() {
 		if (!panel) return;
 		const rect = panel.getBoundingClientRect();
@@ -122,7 +123,7 @@
 <svelte:window onkeydown={handleKeyDown} onmousemove={onMouseMove} onmouseup={onMouseUp} />
 <svelte:body class:resizing={isResizing} class:dragging={isDragging} />
 
-{#if StorePedidoEditar.modal}
+{#if StoreAplicacion.value.modal_editar_pedido}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		bind:this={panel}
@@ -141,7 +142,11 @@
 			>
 				<img src="/max-win.svg" alt="max-win" />
 			</button>
-			<button class="jelly rojo" type="button" onclick={() => StorePedidoEditar.toggleModal()}>
+			<button
+				class="jelly rojo"
+				type="button"
+				onclick={() => StoreAplicacion.toggle('modal_editar_pedido')}
+			>
 				✕
 			</button>
 		</div>
@@ -175,10 +180,9 @@
 
 	.panel-controls {
 		position: fixed;
-		top: var(--a);
+		top: 0;
 		right: 0;
-		width: 100%;
-		max-width: var(--i);
+		width: max(38vw, var(--i));
 		margin-inline: auto;
 		height: fit-content;
 		max-height: 80%;

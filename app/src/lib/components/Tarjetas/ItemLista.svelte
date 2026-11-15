@@ -13,7 +13,7 @@
 		ocultarAcciones,
 		onclick // <-- Nuevo prop añadido
 	}: {
-		titulo?: Snippet;
+		titulo: Snippet;
 		contenido?: Snippet;
 		meta?: Snippet;
 		acciones?: Snippet;
@@ -46,72 +46,60 @@
 	}
 </script>
 
-<div
-	role="button"
-	tabindex="0"
-	onclick={handleClick}
-	onkeydown={handleKeydown}
-	{style}
-	class="item butter"
->
-	<div class="principal">
-		{#if titulo}
-		<div class="titulo">
-			{@render titulo()}
-
+<div class="contenedor-item">
+	{#if acciones}
+		<div class="acciones">
+			{@render acciones()}
 		</div>
-		{/if}
-		{#if acciones}
-			<div class="acciones">
-				{@render acciones()}
+	{/if}
+	<div
+		role="button"
+		tabindex="0"
+		onclick={handleClick}
+		onkeydown={handleKeydown}
+		{style}
+		class="item-lista"
+	>
+		{#if meta}
+			<div class="meta">
+				{@render meta()}
 			</div>
 		{/if}
+		<div class="titulo">
+			{#if titulo}
+				{@render titulo()}
+			{/if}
+		</div>
+		<div class="contenido">
+			{#if contenido}
+				{@render contenido()}
+			{/if}
+		</div>
 	</div>
-	{#if contenido && show}
-		<div class="contenido" transition:slide>
-			{@render contenido()}
-		</div>
-	{/if}
-	{#if meta}
-		<div class="meta">
-			{@render meta()}
-		</div>
-	{/if}
 </div>
 
 <style>
-	.item {
+	.contenedor-item {
 		display: flex;
-		flex-direction: column;
-		cursor: pointer;
-		padding: var(--a) var(--a) var(--y);
-	}
-	.principal {
-		width: 100%;
-		display: grid;
-		grid-template-columns: 3fr auto;
-		align-items: baseline;
-	}
-	.titulo {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--h), 1fr));
-		grid-auto-rows: auto;
 		gap: var(--a);
 	}
-	.acciones {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: flex-end;
-		flex-wrap: wrap;
-	}
-	.contenido {
-		width: 100%;
+	.item-lista {
+		flex-grow: 1;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(var(--h), 1fr));
 	}
 	.meta {
-		font-size: small;
-		font-weight: lighter;
-		width: 100%;
-		display: flex;
-		gap: var(--y);
+		grid-column: span 3;
+		font-size: var(--b);
+		padding: var(--y) 0;
+	}
+	.titulo {
+		grid-column: span 2;
+	}
+	.contenido {
+		grid-column: -3 / -1;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(var(--g), 1fr));
+		justify-items: flex-end;
 	}
 </style>

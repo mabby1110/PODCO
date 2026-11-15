@@ -64,7 +64,7 @@
 		lenght = results.length;
 		unique = term.length > 0 && lenght === 0;
 	});
-
+	
 	$effect(() => {
 		searchInput?.focus();
 	});

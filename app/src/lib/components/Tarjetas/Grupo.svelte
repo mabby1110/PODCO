@@ -22,7 +22,7 @@
 		show = !show;
 		if (!show) visibles = LOTE;
 		await tick();
-		listRef?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		listRef?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	}
 
 	$effect(() => {
@@ -45,7 +45,7 @@
 </script>
 
 <div class="grupo" bind:this={listRef}>
-	<button class="titulo milk" onclick={handleToggle}>
+	<button class="honey titulo" onclick={handleToggle}>
 		<span>({total})</span>
 		<h2>{groupTitle}</h2>
 	</button>
@@ -78,6 +78,7 @@
 		display: flex;
 		gap: var(--a);
 		scroll-margin-top: 30px;
+		margin-bottom: var(--a);
 	}
 	.group-list {
 		display: flex;

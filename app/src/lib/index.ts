@@ -443,10 +443,10 @@ export const fasesActividad = [
 		actual: 'Programada',
 		accion: 'Finalizar',
 		placeholder: 'Actividad agendada',
-		estilo: 'background-color: none;'
+		estilo: 'background-color: var(--color-1);'
 	},
 	{
-		id_fase: 6,
+		id_fase: 2,
 		actual: 'Finalizada',
 		accion: '',
 		placeholder: 'Actividad finalizada y registrada en el historial',

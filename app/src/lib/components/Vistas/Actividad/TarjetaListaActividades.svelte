@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { fasesActividad } from '$lib';
 	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
@@ -10,7 +11,7 @@
 	let fase = $derived(fasesActividad[actividad.fase]);
 </script>
 
-<ListPreview style={fase?.estilo}>
+<ListPreview style={fase.estilo}>
 	{#snippet titulo()}
 		<h3>{actividad?.motivo}</h3>
 	{/snippet}
@@ -41,6 +42,15 @@
 		{/if}
 	{/snippet}
 
+	{#snippet acciones()}
+		<button
+			class="butter accion"
+			onclick={(e) => {
+				e.stopPropagation();
+				goto(`/actividades/${actividad.id}`);
+			}}>ver</button
+		>
+	{/snippet}
 	{#snippet metaDatos()}
 		<p>{actividad?.agentes?.nombre}</p>
 		<p>{formatDateToReadable(actividad?.inicio)}</p>

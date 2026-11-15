@@ -3,6 +3,8 @@
 	import { goto } from '$app/navigation';
 	import { fasesPedido } from '$lib';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
+	import ItemLista from '$lib/components/Tarjetas/ItemLista.svelte';
 
 	let { pedidos, disable }: { pedidos: any; disable?: boolean } = $props();
 
@@ -62,7 +64,7 @@
 	function editarPedidoCompleto(pedidos: any) {
 		goto('/pedidos');
 		StorePedidoEditar.pushLista(pedidos);
-		StorePedidoEditar.toggleModal(true);
+		StoreAplicacion.set('modal_editar_pedido', true);
 		console.log(oportunidades);
 		if (oportunidades.length === 1) {
 			StoreContextoRelacion.setOportunidad(oportunidades[0]);
@@ -88,65 +90,67 @@
 
 {#each pedidosAgrupados as grupo}
 	<div class="contenedor-lista">
-	<div class="contenido-lista milk">
-		<div class="meta-lista">
-			{#if grupo.id_agrupacion !== 'sin_agrupar'}
-				<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
-			{/if}
-		</div>
-		<div class="lista">
-			{#each grupo.pedidos as pedido (pedido.id)}
-				<div class="contenedor-pedido">
-					<div class="meta-tarjeta">
-						<span>
-							{pedido.oportunidades?.id}
-						</span>
-						<span>
-							{pedido.oportunidades?.clientes?.nombre_comercial ||
-								pedido.oportunidades?.clientes?.razon_social}
-						</span>
-						<span>
-							{pedido.oportunidades?.motivo}
-						</span>
-					</div>
-					<!-- svelte-ignore a11y_click_events_have_key_events -->
-					<!-- svelte-ignore a11y_no_static_element_interactions -->
-					<div class="pedido" onclick={() => editarPedido(pedido.id, pedido.id_oportunidad)}>
-						<div class="titulo">
-							<div class="badge" style={fasesPedido[pedido.fase]?.estilo}>
+		<div class="contenido-lista milk">
+			<div class="meta-lista">
+				{#if grupo.id_agrupacion !== 'sin_agrupar'}
+					<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
+				{/if}
+			</div>
+			<div class="lista">
+				{#each grupo.pedidos as pedido (pedido.id)}
+					<ItemLista>
+						{#snippet acciones()}
+							<button
+								class="badge"
+								style={fasesPedido[pedido.fase]?.estilo}
+								onclick={() => editarPedido(pedido.id, pedido.id_oportunidad)}
+							>
 								<span>{fasesPedido[pedido.fase]?.actual}</span>
+							</button>
+						{/snippet}
+						{#snippet meta()}
+							<div class="meta-tarjeta">
+								<span>
+									{pedido.oportunidades?.id}
+								</span>
+								<span>
+									{pedido.oportunidades?.clientes?.nombre_comercial ||
+										pedido.oportunidades?.clientes?.razon_social}
+								</span>
+								<span>
+									{pedido.oportunidades?.motivo}
+								</span>
 							</div>
-							<strong>
-								{pedido.catalogo.codigo || 'Sin código'}
-							</strong>
-						</div>
-
-						<div class="contenido">
+						{/snippet}
+						{#snippet titulo()}
+							<div class="titulo">
+								<strong>
+									{pedido.catalogo.codigo || 'Sin código'}
+								</strong>
+							</div>
+						{/snippet}
+						{#snippet contenido()}
 							<span class="precio" class:text-danger={pedido.precio_unitario == null}>
 								{pedido.cantidad} x
 								{formatMoneda(pedido.precio_unitario, pedido.moneda)}
 							</span>
-						</div>
-
-						<div class="resumen">
 							<b class="subtotal">
 								{formatMoneda(
 									(pedido.precio_unitario || 0) * (pedido.cantidad || 0),
 									pedido.moneda
 								)}
 							</b>
-						</div>
-					</div>
-				</div>
-			{/each}
+						{/snippet}
+					</ItemLista>
+				{/each}
 
-			<div class="total">
-				<h1>
-					<b>{formatMoneda(grupo.totalGrupo)}</b>
-				</h1>
+				<div class="total">
+					<h1>
+						<b>{formatMoneda(grupo.totalGrupo)}</b>
+					</h1>
+				</div>
 			</div>
 		</div>
-	</div>
 
 		{#if !disable}
 			<div class="acciones-lista">
@@ -154,7 +158,7 @@
 					<!-- <div class="alerta-error">
 					nada
 					</div> -->
-	
+
 					<!-- {#if puedeSubirOcc}
 						<SubirOcc
 							tipo="docs_cotizaciones"
@@ -203,61 +207,12 @@
 		align-items: baseline;
 		font-size: small;
 	}
-	.pedido {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--e), 1fr));
-		align-items: baseline;
-		border: none;
-	}
-	.contenedor-pedido {
-		height: fit-content;
-	}
-
-	.meta-tarjeta {
-		display: flex;
-		gap: var(--a);
-		flex-wrap: wrap;
-		align-items: baseline;
-		font-size: small;
-		margin: 0 0 var(--a) var(--a);
-	}
-
-	.titulo {
-		grid-column: span 4;
-		display: flex;
-		gap: var(--a);
-		align-items: baseline;
-	}
-
-	.contenido {
-		grid-column: span 6;
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-		align-items: baseline;
-	}
-
-	.resumen {
-		grid-column: -1 / -2;
-		display: flex;
-		justify-content: flex-end;
-	}
 
 	.total {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-end;
-	}
-
-	.badge {
-		border-radius: 99px;
-		background: #f1f5f9;
-		height: fit-content;
-		padding: 4px 8px;
-		text-align: center;
-		width: fit-content;
-		font-size: small;
 	}
 
 	.text-danger {

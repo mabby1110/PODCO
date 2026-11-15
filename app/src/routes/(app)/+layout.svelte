@@ -7,7 +7,7 @@
 	import ModalCliente from '$lib/components/Vistas/Cliente/ModalCliente.svelte';
 	import ModalInventario from '$lib/components/Vistas/Inventario/ModalInventario.svelte';
 	import ModalProducto from '$lib/components/Vistas/Catalogo/ModalProducto.svelte';
-	import ModalPedidoEditar from '$lib/components/Vistas/Pedidos/ModalPedidoEditar.svelte';
+	import ModalEditarPedido from '$lib/components/Vistas/Pedidos/ModalEditarPedido.svelte';
 	import Hotkeys from '$lib/components/Acciones/Hotkeys.svelte';
 	import Logout from '$lib/components/Acciones/Logout.svelte';
 	import ModalTipoProductoNuevo from '$lib/components/Vistas/Catalogo/ModalTipoProductoNuevo.svelte';
@@ -40,7 +40,7 @@
 </div>
 
 <ModalOportunidad />
-<ModalPedidoEditar />
+<ModalEditarPedido />
 <ModalActividad />
 <ModalCliente />
 <ModalInventario />

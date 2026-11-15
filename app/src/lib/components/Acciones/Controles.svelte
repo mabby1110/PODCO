@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
-	import { StoreHotkeys } from '$lib/stores/StoreHotkeys.svelte';
+	import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
 	import { onMount } from 'svelte';
 	import type { Snippet } from 'svelte';
 	let {
@@ -11,7 +11,6 @@
 		acciones?: Snippet;
 		header?: Snippet;
 		absolute?: boolean;
-		show?: boolean;
 	} = $props();
 
 	let isMaximized = $state(false);

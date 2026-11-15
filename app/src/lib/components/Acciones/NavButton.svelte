@@ -4,7 +4,8 @@
 	import { slide } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { StoreHotkeys } from '$lib/stores/StoreHotkeys.svelte';
+	import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
 	let expanded = $derived($appState.pageActions);
 
@@ -58,11 +59,11 @@
 
 <div class="nav-container">
 	{#if expanded || StoreHotkeys.active}
-		<div class="nav-links honey" in:slide>
+		<div class="nav-links honey">
 			{#each routes as route (route.key)}
 				<button
 					onclick={() => navigate(route.path)}
-					class="jelly"
+					class="link"
 					type="button"
 				>
 					<span>{route.label} {route.icon}</span>
@@ -88,7 +89,7 @@
 <style>
 	.nav-container {
 		position: relative;
-		z-index: 1000;
+		z-index: 9999;
 		display: flex;
 		flex-direction: column;
 		max-width: 100vw;
@@ -122,7 +123,7 @@
 		padding: var(--y);
 		height: var(--d);
 	}
-	.jelly {
+	.link {
 		position: relative;
 	}
 </style>

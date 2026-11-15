@@ -17,11 +17,12 @@
 	// ESTADO COMPONENTE
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
 	let siguienteFase = $derived(fasesOportunidad[oportunidad.fase + 1]);
-	let canSubmit = $state(true);
+
+	let tieneOCC = $derived(!(fase.id_fase == 3 || oportunidad.occ!=null))
+	let canSubmit = $derived(tieneOCC);
 
 	let isOpen = $state(false);
 	let submit = $state(false);
-
 	let submitCancel = $state(false);
 </script>
 
@@ -31,6 +32,7 @@
 	{/snippet}
 
 	{#snippet inputs()}
+	{canSubmit}
 		{#if submit}
 			{#if fase.id_fase == 1}
 				<h1>{fase.accion}:</h1>
@@ -110,11 +112,17 @@
 				</div>
 				<DatePicker title="Fecha seguimiento o Expiración" />
 			{:else if fase.id_fase == 3}
-				<FormInput label={oportunidad.fase.actual} name="nuevaHistoria" type="textarea" required />
+				<FormInput
+					label={fase.actual}
+					name="nuevaHistoria"
+					placeholder={fase.placeholder_actual}
+					type="textarea"
+					required
+				/>
 				<div class="opcional">
 					<h3>Orden de compra</h3>
 					<div class="opciones">
-						{#if oportunidad.occ.length > 0}
+						{#if oportunidad.occ}
 							{#each oportunidad.occ as documento}
 								<p>{documento.titulo}</p>
 							{/each}
@@ -179,33 +187,33 @@
 	{/snippet}
 
 	{#snippet submitContent(isSubmitting: boolean)}
-		{#if fase.id_fase <= 3 && fase.id_fase != 0}
-			{#if submit}
-				<input type="hidden" name="fase" value={siguienteFase.id_fase} />
-				<button
-					type="submit"
-					class="honey accion"
-					style={siguienteFase.estilo}
-					disabled={isSubmitting || !canSubmit}
-				>
-					{isSubmitting ? 'Procesando...' : fase.accion}
-				</button>
-			{:else if submitCancel}
-				<input type="hidden" name="fase" value={0} />
-				<button type="submit" class="honey accion" disabled={isSubmitting || !canSubmit}
-					>Descartar</button
-				>
-			{:else}
-				<button
-					type="button"
-					class="honey accion {editando}"
-					onclick={() => (editando = !editando)}
-				>
-					~Editar
-				</button>
-			{/if}
+		<FormOptionalSubmit
+			{fase}
+			listaFases={fasesOportunidad}
+			bind:submit
+			bind:submitCancel
+			bind:isOpen
+		/>
+		{#if submit}
+			<input type="hidden" name="fase" value={siguienteFase.id_fase} />
+			<button
+				type="submit"
+				class="honey accion"
+				style={siguienteFase.estilo}
+				disabled={isSubmitting || !canSubmit}
+			>
+				{isSubmitting ? 'Procesando...' : fase.accion}
+			</button>
+		{:else if submitCancel}
+			<input type="hidden" name="fase" value={0} />
+			<button type="submit" class="honey accion" disabled={isSubmitting || !canSubmit}
+				>Descartar</button
+			>
+		{:else}
+			<button type="button" class="honey accion {editando}" onclick={() => (editando = !editando)}>
+				~Editar
+			</button>
 		{/if}
-		<FormOptionalSubmit {siguienteFase} bind:submit bind:submitCancel bind:isOpen />
 	{/snippet}
 </FormActions>
 

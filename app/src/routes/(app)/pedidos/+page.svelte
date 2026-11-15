@@ -11,8 +11,9 @@
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	import TarjetaPedidoLista from '$lib/components/Vistas/Pedidos/TarjetaPedidoLista.svelte';
+	import TarjetaGrupoPedidos from '$lib/components/Vistas/Pedidos/TarjetaGrupoPedidos.svelte';
 	import Controles from '$lib/components/Acciones/Controles.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
 	let pedidos = $derived(page.data.pedidos.filter((p) => $profile?.isAdmin ?? p.fase <= 2));
 
@@ -38,17 +39,22 @@
 
 <Vista>
 	{#snippet acciones()}
-		<button onclick={() => StorePedidoEditar.toggleModal()} class="honey accion">~Pedido</button>
+		<button
+			class:activo={StoreAplicacion.value.modal_editar_pedido}
+			class="honey accion"
+			onclick={() => StoreAplicacion.toggle('modal_editar_pedido')}>~Pedido</button
+		>
 		<Controles>
 			{#snippet header()}
-				<button onclick={() => appState.toggleModalInventario()} class="jelly">+Producto</button>
 				<ExportarCSV {lista_ordenada} />
+				<button class="link" onclick={() => StoreAplicacion.toggle('retraer')}>{StoreAplicacion.value.retraer?'retraer':'expandir'}</button>
+				<button class="link" onclick={() => StoreAplicacion.toggle('leyenda')}>leyenda</button>
 			{/snippet}
 			{#snippet acciones()}
 				<ModList {columnasDinamicas} route={currentRoute} agrupar ordenar />
 				<Searchbar
 					data={pedidos}
-					keyColumns={['serie', 'codigo', 'descripcion', 'categorias', 'id_agrupacion']}
+					keyColumns={['serie', 'codigo', 'descripcion', 'catalogo', 'id_agrupacion']}
 					bind:lista
 				/>
 			{/snippet}
@@ -56,12 +62,12 @@
 	{/snippet}
 	{#snippet contenido()}
 		{#if !isGrouped}
-			<TarjetaPedidoLista {pedidos} />
+			<TarjetaGrupoPedidos pedidos={lista_filtrada} />
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion}>
+				<Grupo {agrupacion} showByDefault={StoreAplicacion.value.retraer}>
 					{#snippet children(elemento: any)}
-						<TarjetaPedidoLista pedidos={agrupacion.items} />
+						<TarjetaGrupoPedidos pedidos={[elemento]} />
 					{/snippet}
 				</Grupo>
 			{:else}
