@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
 	import { fasesActividad } from '$lib';
-	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
+	import TarjetaPrevista from '$lib/components/Tarjetas/TarjetaPrevista.svelte';
 	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
 	import { formatDateToReadable, getStyleForPhase } from '$lib/utils/util';
 
@@ -11,7 +9,7 @@
 	let fase = $derived(fasesActividad[actividad.fase]);
 </script>
 
-<ListPreview style={fase.estilo}>
+<TarjetaPrevista style={fase.estilo}>
 	{#snippet titulo()}
 		<h3>{actividad?.motivo}</h3>
 	{/snippet}
@@ -22,6 +20,8 @@
 				<p>{actividad?.objetivo}</p>
 			</div>
 		{/if}
+	{/snippet}
+	{#snippet mas()}
 		{#if actividad?.historia}
 			<div class="brief">
 				<b>Historia</b>
@@ -37,8 +37,6 @@
 					{/each}
 				</div>
 			</div>
-		{:else}
-			<p>no hay entradas</p>
 		{/if}
 	{/snippet}
 
@@ -51,8 +49,8 @@
 			}}>ver</button
 		>
 	{/snippet}
-	{#snippet metaDatos()}
+	{#snippet meta()}
 		<p>{actividad?.agentes?.nombre}</p>
 		<p>{formatDateToReadable(actividad?.inicio)}</p>
 	{/snippet}
-</ListPreview>
+</TarjetaPrevista>

@@ -4,6 +4,7 @@
 	import TarjetaPedidoEditar from './TarjetaPedidoEditar.svelte';
 	import TarjetaContextoOportunidad from './TarjetaContextoOportunidad.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
+	import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
 
 	let isMaximized = $state(false);
 
@@ -113,10 +114,27 @@
 			setTimeout(calculateQuadrant, 0);
 		}
 	});
-
 	onMount(() => {
 		window.addEventListener('resize', calculateQuadrant);
-		return () => window.removeEventListener('resize', calculateQuadrant);
+
+		const unregisterHotkey = StoreHotkeys.register({
+			id: 'modal_editar_pedido',
+			key: 'w',
+			label: 'Abrir/cerrar panel de opciones',
+			action: () => {
+				 StoreAplicacion.set('modal_editar_pedido', true)
+			}
+		});
+
+		const unregisterEscape = StoreHotkeys.registerEscape('modal_editar_pedido', () => {
+			if (StoreAplicacion.value.modal_editar_pedido) StoreAplicacion.toggle('modal_editar_pedido');
+		});
+
+		return () => {
+			window.removeEventListener('resize', calculateQuadrant);
+			unregisterHotkey();
+			unregisterEscape();
+		};
 	});
 </script>
 

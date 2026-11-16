@@ -1,18 +1,21 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import type { Snippet } from 'svelte';
 
 	let {
 		titulo,
 		contenido,
-		metaDatos,
+		meta,
 		acciones,
+		metaAcciones,
+		mas,
 		style = ''
 	}: {
 		titulo: Snippet;
 		contenido: Snippet;
-		metaDatos?: Snippet;
+		meta?: Snippet;
 		acciones?: Snippet;
+		metaAcciones?: Snippet;
+		mas?: Snippet;
 		style?: string;
 	} = $props();
 
@@ -29,50 +32,63 @@
 	}
 </script>
 
-<div
-	role="button"
-	tabindex="0"
-	onclick={handleClick}
-	onkeydown={handleKeydown}
-	{style}
-	class="butter tarjeta-preview"
->
-	<div class="titulo" class:show>
-		{#if titulo}
-			{@render titulo()}
-		{/if}
-	</div>
-	<div class="contenido" class:show>
-		{#if contenido}
-			{@render contenido()}
-		{/if}
-	</div>
-	{#if acciones && show}
-		<div class="acciones">
-			{@render acciones()}
+<div class="contenedor">
+	{#if metaAcciones}
+		<div class="meta-acciones">
+			{@render metaAcciones()}
 		</div>
 	{/if}
-	<div class="meta-datos">
-		{#if metaDatos}
-			{@render metaDatos()}
+	<div
+		role="button"
+		tabindex="0"
+		onclick={handleClick}
+		onkeydown={handleKeydown}
+		{style}
+		class="butter tarjeta-prevista"
+	>
+		<div class="meta">
+			{#if meta}
+				{@render meta()}
+			{/if}
+		</div>
+		<div class="titulo" class:show>
+			{#if titulo}
+				{@render titulo()}
+			{/if}
+		</div>
+		<div class="contenido" class:show>
+			{#if contenido}
+				{@render contenido()}
+			{/if}
+			{#if mas && show}
+				{@render mas()}
+			{/if}
+		</div>
+		{#if acciones && show}
+			<div class="acciones">
+				{@render acciones()}
+			</div>
 		{/if}
 	</div>
 </div>
 
 <style>
-	.tarjeta-preview {
+	.contenedor {
+		display: flex;
+		gap: var(--a);
+	}
+	.tarjeta-prevista {
 		position: relative;
 		width: 100%;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(var(--h), 1fr));
 		padding: var(--a);
-		gap: var(--a);
-	}
-	.titulo {
-		margin-top: var(--a);
+		gap: 0 var(--a);
 	}
 	.contenido {
+		grid-column: span 2;
 		display: grid;
+		gap: 0 var(--a);
 		grid-template-columns: repeat(auto-fit, minmax(var(--g), 1fr));
 		grid-column: span 2;
 		max-height: var(--f);
@@ -88,13 +104,11 @@
 		grid-column: 1 / -1;
 		max-height: 70vh;
 	}
-	.meta-datos {
-		position: absolute;
-		top: 0;
-		left: var(--a);
-		font-size: smaller;
-		width: 100%;
+	.meta {
+		grid-column: 1 / -1;
+		font-size: var(--b);
 		display: flex;
 		gap: var(--a);
+		align-items: center;
 	}
 </style>

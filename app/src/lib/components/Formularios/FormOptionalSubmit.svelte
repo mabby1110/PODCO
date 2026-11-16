@@ -42,10 +42,15 @@
 </script>
 
 {#if !isOpen}
-	<button class="honey accion" type="button" onclick={toggleCancel}> Descartar </button>
-	<button class="honey rojo accion" style={siguienteFase.estilo} type="button" onclick={toggleSubmit}>
+	<button class="honey rojo accion" type="button" onclick={toggleCancel}> Descartar </button>
+	<button
+		class="honey rojo accion"
+		style={siguienteFase.estilo}
+		type="button"
+		onclick={toggleSubmit}
+	>
 		{fase.accion}
 	</button>
 {:else}
-	<button class="honey accion rojo" type="button" onclick={close}>✕</button>
+	<button class="honey rojo accion" type="button" onclick={close}>✕</button>
 {/if}

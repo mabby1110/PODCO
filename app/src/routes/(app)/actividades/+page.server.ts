@@ -102,7 +102,7 @@ export const actions: Actions = {
 		if (err) {
 			return fail(500, { error: err.message });
 		}
-		console.log('result', result);
+		console.log('result', result, 'error', err);
 
 		// Insertamos en el Historial
 		const { data: historial, error: errorHistorial } = await supabase

@@ -54,12 +54,20 @@
 
 <Vista fullscreen>
 	{#snippet portada()}
-		<div class="calendar-header">
-			<h1>
-				{getMonth(monthDate)}
-			</h1>
-			<p class="month">Hoy: {formatDateToReadable(new Date())}</p>
-		</div>
+		<p>
+			<span>
+				{#if $appState.calendarView == 'gant'}
+					{añoVista}
+				{:else if $appState.calendarView == 'mensual'}
+					{getMonth(monthDate)}
+				{:else}
+					{weekRangeText}
+				{/if}
+			</span>
+			<span>
+				, Hoy: {formatDateToReadable(new Date())}
+			</span>
+		</p>
 	{/snippet}
 	{#snippet acciones()}
 		{#if $appState.calendarView == 'gant'}

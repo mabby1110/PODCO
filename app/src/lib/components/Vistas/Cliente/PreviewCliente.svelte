@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
+	import TarjetaPrevista from '$lib/components/Tarjetas/TarjetaPrevista.svelte';
 
 	let { client } = $props();
 </script>
 
-<ListPreview>
+<TarjetaPrevista>
 	{#snippet titulo()}
 		<h3>{client.nombre_comercial || client.razon_social}</h3>
 		{#if client.razon_social}
@@ -24,7 +24,7 @@
 			</div>
 		</div>
 	{/snippet}
-	{#snippet metaDatos()}
+	{#snippet meta()}
 		<p>{client.agentes.nombre}</p>
 		<p>oportunidades: {client.oportunidades.length || 0}</p>
 	{/snippet}
@@ -34,8 +34,8 @@
 			class="butter accion"
 			onclick={(e) => {
 				e.stopPropagation();
-				goto(`/actividades/${client.id}`);
+				goto(`/clientes/${client.id}`);
 			}}>ver</button
 		>
 	{/snippet}
-</ListPreview>
+</TarjetaPrevista>

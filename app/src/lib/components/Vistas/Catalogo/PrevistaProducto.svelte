@@ -1,8 +1,7 @@
 <script lang="ts">
-	import ItemLista from '$lib/components/Tarjetas/ItemLista.svelte';
-	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
-	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
-
+	import { goto } from '$app/navigation';
+	import Contador from '$lib/components/Acciones/Contador.svelte';
+	import TarjetaPrevista from '$lib/components/Tarjetas/TarjetaPrevista.svelte';
 	let { elemento } = $props();
 
 	// Inventario general (sin serie) del producto
@@ -17,12 +16,10 @@
 	let cantidadTotal = $derived((inventario?.cantidad ?? 0) + serializados.length);
 </script>
 
-<ItemLista
-	onclick={() => {
-		if (!StorePedidoEditar.modal) return false;
-		StorePedidoNuevo.push(elemento.id);
-	}}
->
+<TarjetaPrevista>
+	{#snippet meta()}
+		<p>{elemento.tipo_producto.nombre}</p>
+	{/snippet}
 	{#snippet titulo()}
 		<h3>
 			{elemento.codigo}
@@ -31,25 +28,34 @@
 	{/snippet}
 	{#snippet contenido()}
 		{#if elemento.tipo_producto.es_serializado}
-			{#each serializados as unico}
-				<div class="producto-meta">
-					<p>{unico.serie}</p>
-					<p>{unico.estado}</p>
-				</div>
-			{/each}
+			<p>cantidad: {cantidadTotal}</p>
 		{/if}
 	{/snippet}
+	{#snippet mas()}
+		<div class="producto-meta">
+			{#each serializados as unico}
+				<p>{unico.serie}-{unico.estado}</p>
+			{/each}
+		</div>
+	{/snippet}
 	{#snippet acciones()}
-		<p><span>cantidad: </span> {cantidadTotal}</p>
+		<button
+			class="butter accion"
+			onclick={(e) => {
+				e.stopPropagation();
+				goto(`/catalogo/${elemento.id}`);
+			}}>ver</button
+		>
 	{/snippet}
-	{#snippet meta()}
-		<p>{elemento.tipo_producto.nombre}</p>
+	{#snippet metaAcciones()}
+		<Contador id={elemento.id} />
 	{/snippet}
-</ItemLista>
+</TarjetaPrevista>
 
 <style>
 	.producto-meta {
 		display: flex;
+		flex-direction: column;
 		gap: var(--a);
 	}
 </style>

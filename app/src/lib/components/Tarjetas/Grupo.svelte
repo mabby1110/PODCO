@@ -5,8 +5,8 @@
 
 	const LOTE = 20;
 
-	let { agrupacion, showByDefault = false, children } = $props();
-	let show = $derived(showByDefault);
+	let { agrupacion, children } = $props();
+	let show = $derived(StoreAplicacion.value.retraer);
 
 	let groupTitle = $derived.by(() => agrupacion.columna);
 
@@ -84,7 +84,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
-		margin-bottom: var(--e);
+		margin: 0 var(--b) var(--e);
 	}
 	.sentinel {
 		flex-shrink: 0;

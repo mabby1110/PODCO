@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
+	import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
+	import { onMount } from 'svelte';
+
 	type Props = {
 		label?: string;
 		data: Record<string, any>[];
@@ -50,7 +54,6 @@
 	function resetColumns() {
 		visibleColumns = [...keyColumns];
 	}
-
 	$effect(() => {
 		if (selectedItem) {
 			term = '';
@@ -64,9 +67,17 @@
 		lenght = results.length;
 		unique = term.length > 0 && lenght === 0;
 	});
-	
-	$effect(() => {
+
+	onMount(() => {
 		searchInput?.focus();
+
+		const unregisterEscape = StoreHotkeys.registerEscape('controles', () => {
+			if (StoreAplicacion.value.controles) StoreAplicacion.toggle('controles');
+		});
+
+		return () => {
+			unregisterEscape();
+		};
 	});
 </script>
 

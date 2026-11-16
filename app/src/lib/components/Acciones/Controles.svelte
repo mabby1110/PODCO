@@ -84,22 +84,31 @@
 	onMount(() => {
 		window.addEventListener('resize', calculateQuadrant);
 
-		const unregisterHotkey = StoreHotkeys.register({
-			id: 'panel-controls',
+		const unregisterControles = StoreHotkeys.register({
+			id: 'controles',
 			key: 'q',
 			label: 'Abrir/cerrar panel de opciones',
 			action: () => {
-				 StoreAplicacion.toggle('controles')
+				StoreAplicacion.toggle('controles');
+			}
+		});
+		const unregisterRetraer = StoreHotkeys.register({
+			id: 'retraer',
+			key: 'e',
+			label: 'retraer/expandir grupos',
+			action: () => {
+				StoreAplicacion.toggle('retraer');
 			}
 		});
 
-		const unregisterEscape = StoreHotkeys.registerEscape('panel-controls', () => {
-			if (StoreAplicacion.value.controles) StoreAplicacion.toggle('controles');
+		const unregisterEscape = StoreHotkeys.registerEscape('escape', () => {
+			StoreAplicacion.reset()
 		});
 
 		return () => {
 			window.removeEventListener('resize', calculateQuadrant);
-			unregisterHotkey();
+			unregisterControles();
+			unregisterRetraer();
 			unregisterEscape();
 		};
 	});
@@ -125,7 +134,11 @@
 			{/if}
 			<div class="default">
 				<button class="jelly" type="button" onclick={resetPosition}>◥</button>
-				<button class="jelly rojo accion" type="button" onclick={()=>StoreAplicacion.toggle('controles')}>✕</button>
+				<button
+					class="jelly rojo accion"
+					type="button"
+					onclick={() => StoreAplicacion.toggle('controles')}>✕</button
+				>
 			</div>
 		</div>
 		<div class="contenido">
@@ -136,7 +149,11 @@
 	</div>
 {/if}
 
-<button class="control honey" class:activo={show} onclick={() => (StoreAplicacion.toggle('controles'))}>
+<button
+	class="control honey"
+	class:activo={show}
+	onclick={() => StoreAplicacion.toggle('controles')}
+>
 	<img src="/options.svg" alt="options" />
 	{#if StoreHotkeys.active && StoreHotkeys.get('q')}
 		<span class="hotkey-badge">

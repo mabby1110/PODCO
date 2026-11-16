@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { Snippet } from 'svelte';
-	import { slide } from 'svelte/transition';
 
 	let {
 		titulo,
@@ -11,7 +10,7 @@
 		href = '/',
 		style = '',
 		ocultarAcciones,
-		onclick // <-- Nuevo prop añadido
+		onclick
 	}: {
 		titulo: Snippet;
 		contenido?: Snippet;

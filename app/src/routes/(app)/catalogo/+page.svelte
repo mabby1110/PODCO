@@ -10,12 +10,13 @@
     import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
     import { StoreModList } from '$lib/stores/StoreModList.svelte';
     import ModList from '$lib/components/Acciones/ModList.svelte';
-    import TarjetaProducto from '$lib/components/Vistas/Catalogo/TarjetaProducto.svelte';
+    import PrevistaProducto from '$lib/components/Vistas/Catalogo/PrevistaProducto.svelte';
     import Controles from '$lib/components/Acciones/Controles.svelte';
     import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
+	import HotButton from '$lib/components/Acciones/HotButton.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
     let { catalogo } = $derived(page.data);
-    let show = $derived($appState.min);
     let currentRoute = $derived(page.url.pathname);
     let lista = $state(catalogo);
     let columnasDinamicas = $derived(extraerColumnas(catalogo));
@@ -33,7 +34,6 @@
 
 <Vista>
     {#snippet acciones()}
-        <button onclick={() => StorePedidoEditar.toggleModal()} class="honey accion">~Pedido</button>
         <Controles>
             {#snippet header()}
                 <ExportarCSV lista_ordenada={lista_filtrada} />
@@ -46,17 +46,24 @@
                 <Searchbar data={catalogo} keyColumns={['codigo', 'descripcion']} bind:lista />
             {/snippet}
         </Controles>
+		<HotButton
+			id_store="modal_editar_pedido"
+			key="w"
+			onclick={() => StoreAplicacion.toggle('modal_editar_pedido')}
+		>
+			Pedido
+		</HotButton>
     {/snippet}
     {#snippet contenido()}
             {#if !isGrouped}
                 {#each lista_ordenada as elemento}
-                    <TarjetaProducto {elemento} />
+                    <PrevistaProducto {elemento} />
                 {/each}
             {:else}
                 {#each lista_agrupada as agrupacion (agrupacion.columna)}
                     <Grupo {agrupacion}>
                         {#snippet children(elemento: any)}
-                            <TarjetaProducto {elemento} />
+                            <PrevistaProducto {elemento} />
                         {/snippet}
                     </Grupo>
                 {:else}

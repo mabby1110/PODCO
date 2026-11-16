@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { fasesOportunidad } from '$lib';
-	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
-	import { formatDateFull, parseDateTimeLocal } from '$lib/utils/agenda';
+	import TarjetaPrevista from '$lib/components/Tarjetas/TarjetaPrevista.svelte';
 	import { formatDateToReadable } from '$lib/utils/util';
 
 	let { oportunidad } = $props();
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
 </script>
 
-<ListPreview style={fase.estilo}>
+<TarjetaPrevista style={fase.estilo}>
 	{#snippet titulo()}
 		<h3>{oportunidad?.clientes.razon_social || oportunidad?.clientes.nombre_comercial}</h3>
 		<p>{oportunidad?.motivo}</p>
@@ -41,10 +40,12 @@
 		{/if}
 	{/snippet}
 	{#snippet acciones()}
-		<button class="butter accion" onclick={()=>goto(`/oportunidades/${oportunidad.id}`)}>ver</button>
+		<button class="butter accion" onclick={() => goto(`/oportunidades/${oportunidad.id}`)}
+			>ver</button
+		>
 	{/snippet}
-	{#snippet metaDatos()}
+	{#snippet meta()}
 		<p>{oportunidad?.agentes?.nombre}</p>
 		<p>{formatDateToReadable(oportunidad?.inicio)}</p>
 	{/snippet}
-</ListPreview>
+</TarjetaPrevista>

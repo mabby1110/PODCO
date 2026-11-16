@@ -13,7 +13,7 @@
 		oportunidad,
 		editando,
 		disable
-	}: { oportunidad: undefined; editando?: boolean; disable?: boolean } = $props();
+	}: { oportunidad: any; editando?: boolean; disable?: boolean } = $props();
 
 	// DATOS DERIVADOS
 	let potencial_venta = $derived(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));

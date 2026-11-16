@@ -7,6 +7,7 @@ export interface AppState {
 	retraer: boolean;
 	leyenda: boolean;
 	modal_editar_pedido: boolean;
+	nuevo_cliente: boolean;
 }
 
 const COOKIE_NAME = 'appState';
@@ -16,7 +17,8 @@ const defaultState: AppState = {
 	controles: false,
 	retraer: false,
 	leyenda: false,
-	modal_editar_pedido: false
+	modal_editar_pedido: false,
+	nuevo_cliente: false
 };
 
 function getInitialState(): AppState {

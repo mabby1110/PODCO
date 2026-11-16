@@ -10,12 +10,11 @@
 	let expanded = $derived($appState.pageActions);
 
 	const routes = [
-		{ path: '/clientes', label: 'Clientes', icon: '👨‍💼', key: '1' },
-		{ path: '/oportunidades', label: 'Oportunidades', icon: '📋', key: '2' },
-		{ path: '/actividades', label: 'Actividades', icon: '⚡', key: '3' },
-		{ path: '/calendario', label: 'Calendario', icon: '📆', key: '4' },
+		{ path: '/calendario', label: 'Calendario', icon: '📆', key: '1' },
+		{ path: '/clientes', label: 'Clientes', icon: '👨‍💼', key: '2' },
+		{ path: '/oportunidades', label: 'Oportunidades', icon: '📋', key: '3' },
+		{ path: '/actividades', label: 'Actividades', icon: '⚡', key: '4' },
 		{ path: '/pedidos', label: 'Pedidos', icon: '📦', key: '5' },
-		// { path: '/inventario', label: 'Inventario', icon: '🗄', key: '6' },
 		{ path: '/catalogo', label: 'Catálogo', icon: '📑', key: '6' }
 	];
 

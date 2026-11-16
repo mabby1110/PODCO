@@ -6,14 +6,12 @@
 	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
-	import CardClienteListPreview from '$lib/components/Vistas/Cliente/CardClienteListPreview.svelte';
+	import PreviewCliente from '$lib/components/Vistas/Cliente/PreviewCliente.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
-	import { appState } from '$lib/stores/appState.svelte';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 
 	let { cartera } = $derived(page.data);
-	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
 	let lista = $state(cartera);
 	let columnasDinamicas = $derived(extraerColumnas(cartera));
@@ -28,13 +26,16 @@
 </script>
 
 <Vista>
+
 	{#snippet acciones()}
 		<Controles>
 			{#snippet header()}
 				<ExportarCSV lista_ordenada={lista_filtrada} />
-				<button onclick={() => appState.toggleModalClient()} class="link">+Cliente</button>
+				<button onclick={() => StoreAplicacion.toggle('nuevo_cliente')} class="link"
+					>+Cliente</button
+				>
 				<button onclick={() => StoreAplicacion.toggle('retraer')} class="link"
-					>{$appState.min ? 'retraer' : 'expandir'}</button
+					>{StoreAplicacion.value.retraer ? 'retraer' : 'expandir'}</button
 				>
 			{/snippet}
 			{#snippet acciones()}
@@ -47,13 +48,13 @@
 	{#snippet contenido()}
 		{#if !isGrouped}
 			{#each lista_ordenada as elemento}
-				<CardClienteListPreview client={elemento} />
+				<PreviewCliente client={elemento} />
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
 				<Grupo {agrupacion} showByDefault={StoreAplicacion.value.retraer}>
 					{#snippet children(elemento: any)}
-						<CardClienteListPreview client={elemento} />
+						<PreviewCliente client={elemento} />
 					{/snippet}
 				</Grupo>
 			{:else}

@@ -7,6 +7,7 @@
 	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
 	import UploadFile from '$lib/components/Formularios/UploadFile.svelte';
 	import { fasesOportunidad, motivosOportunidad } from '$lib';
+	import NavButton from '$lib/components/Acciones/NavButton.svelte';
 
 	let { oportunidad, editando = $bindable(false) }: { oportunidad: any; editando?: boolean } =
 		$props();
@@ -18,7 +19,7 @@
 	let fase = $derived(fasesOportunidad[oportunidad.fase]);
 	let siguienteFase = $derived(fasesOportunidad[oportunidad.fase + 1]);
 
-	let tieneOCC = $derived(!(fase.id_fase == 3 || oportunidad.occ!=null))
+	let tieneOCC = $derived(!(fase.id_fase == 3 || oportunidad.occ != null));
 	let canSubmit = $derived(tieneOCC);
 
 	let isOpen = $state(false);
@@ -32,7 +33,6 @@
 	{/snippet}
 
 	{#snippet inputs()}
-	{canSubmit}
 		{#if submit}
 			{#if fase.id_fase == 1}
 				<h1>{fase.accion}:</h1>
@@ -214,6 +214,8 @@
 				~Editar
 			</button>
 		{/if}
+
+		<NavButton />
 	{/snippet}
 </FormActions>
 

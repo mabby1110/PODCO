@@ -14,6 +14,7 @@
 	import TarjetaGrupoPedidos from '$lib/components/Vistas/Pedidos/TarjetaGrupoPedidos.svelte';
 	import Controles from '$lib/components/Acciones/Controles.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
+	import HotButton from '$lib/components/Acciones/HotButton.svelte';
 
 	let pedidos = $derived(page.data.pedidos.filter((p) => $profile?.isAdmin ?? p.fase <= 2));
 
@@ -40,15 +41,12 @@
 
 <Vista>
 	{#snippet acciones()}
-		<button
-			class:activo={StoreAplicacion.value.modal_editar_pedido}
-			class="honey accion"
-			onclick={() => StoreAplicacion.toggle('modal_editar_pedido')}>~Pedido</button
-		>
 		<Controles>
 			{#snippet header()}
 				<ExportarCSV {lista_ordenada} />
-				<button class="link" onclick={() => StoreAplicacion.toggle('retraer')}>{StoreAplicacion.value.retraer?'retraer':'expandir'}</button>
+				<button class="link" onclick={() => StoreAplicacion.toggle('retraer')}
+					>{StoreAplicacion.value.retraer ? 'retraer' : 'expandir'}</button
+				>
 				<button class="link" onclick={() => StoreAplicacion.toggle('leyenda')}>leyenda</button>
 			{/snippet}
 			{#snippet acciones()}
@@ -60,6 +58,13 @@
 				/>
 			{/snippet}
 		</Controles>
+		<HotButton
+			id_store="modal_editar_pedido"
+			key="w"
+			onclick={() => StoreAplicacion.toggle('modal_editar_pedido')}
+		>
+			Pedido
+		</HotButton>
 	{/snippet}
 	{#snippet contenido()}
 		{#if !isGrouped}

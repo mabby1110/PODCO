@@ -5,7 +5,7 @@
 	import Card from '$lib/components/Tarjetas/Card.svelte';
 	import EditableSelect from '$lib/components/Vistas/Cliente/EditableSelect.svelte';
 	import FormEditableContact from '$lib/components/Vistas/Cliente/FormEditableContact.svelte';
-	import TarjetaListaOportunidades from '$lib/components/Vistas/Oportunidad/TarjetaListaOportunidades.svelte';
+	import PrevistaOportunidad from '$lib/components/Vistas/Oportunidad/PrevistaOportunidad.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
@@ -185,7 +185,7 @@
 		<div class="op-list">
 			{#if cliente.oportunidades.length > 0}
 				{#each cliente.oportunidades as oportunidad}
-					<TarjetaListaOportunidades {oportunidad} />
+					<PrevistaOportunidad {oportunidad} />
 				{/each}
 			{/if}
 		</div>

@@ -331,7 +331,6 @@ section .section-block {
 	display: flex;
 	flex-direction: column;
 	gap: var(--y);
-	margin-top: var(--a);
 }
 
 /* DROP ZONE */

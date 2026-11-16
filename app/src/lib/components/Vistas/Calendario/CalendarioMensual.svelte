@@ -137,7 +137,7 @@
 					class:outside={date.getMonth() !== monthDate.getMonth()}
 					class:con-scroll={eventosDia.length > 0}
 				>
-					<div class="date-label">
+					<div class="date-label" class:today={isSameDay(date, new Date())}>
 						{formatDate(date)}
 					</div>
 					<div class="event-stack">

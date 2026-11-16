@@ -50,7 +50,7 @@ function crearPedido() {
 		saveToCookie();
 	}
 
-	function pop(id: string, cantidad: number) {
+	function pop(id: string, cantidad?: number) {
 		const index = state.carrito.findIndex((item) => item.id === id);
 
 		if (index === -1) return;

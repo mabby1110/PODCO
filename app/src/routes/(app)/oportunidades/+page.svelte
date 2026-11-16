@@ -4,7 +4,7 @@
 	import ExportarCSV from '$lib/components/Acciones/ExportarCSV.svelte';
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
-	import TarjetaListaOportunidades from '$lib/components/Vistas/Oportunidad/TarjetaListaOportunidades.svelte';
+	import TarjetaListaOportunidades from '$lib/components/Vistas/Oportunidad/PrevistaOportunidad.svelte';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { categoriasOportunidad, fasesOportunidad } from '$lib';
 	import { sortData, filterData, groupData, extraerColumnas } from '$lib/utils/ModList';

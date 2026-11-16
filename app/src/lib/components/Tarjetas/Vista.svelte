@@ -4,6 +4,7 @@
 	import { arrowScroll } from '$lib/actions/keyboardScroll';
 	import { appState } from '$lib/stores/appState.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
+	import { page } from '$app/state';
 
 	let {
 		portada,
@@ -30,11 +31,12 @@
 	);
 </script>
 
-{#if portada}
-	<div class="portada">
+<div class="portada">
+	<h1>{page.url.pathname.toLocaleUpperCase()}</h1>
+	{#if portada}
 		{@render portada()}
-	</div>
-{/if}
+	{/if}
+</div>
 <div
 	class="vista"
 	class:grid
@@ -58,6 +60,13 @@
 </div>
 
 <style>
+	.portada {
+		display: flex;
+		flex-wrap: wrap;
+		padding: var(--b);
+		align-items: baseline;
+		gap: var(--a);
+	}
 	.vista {
 		position: relative;
 		width: 100%;

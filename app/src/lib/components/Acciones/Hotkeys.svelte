@@ -30,7 +30,7 @@
 			}
 
 			StoreHotkeys.escape();
-			return; 
+			return;
 		}
 
 		if (
@@ -93,7 +93,7 @@
 
 {#if active}
 	<div class="hotkey-hint" role="status">
-		Comando… <kbd>Q</kbd> Buscar · <kbd>A</kbd> Navegador ·
+		<kbd>Q</kbd> Buscar
 		<kbd>Esc</kbd> Cancelar
 	</div>
 {/if}

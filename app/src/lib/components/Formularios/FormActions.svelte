@@ -61,7 +61,6 @@
 		{#if submitContent}
 			<div class="submit">
 				{@render submitContent(isSubmitting)}
-				<NavButton />
 			</div>
 		{/if}
 	</form>
