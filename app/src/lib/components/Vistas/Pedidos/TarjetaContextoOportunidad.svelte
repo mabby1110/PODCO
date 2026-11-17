@@ -10,7 +10,6 @@
 		page.data.oportunidades.find((p) => StoreContextoRelacion.id_oportunidad === p.id)
 	);
 	function nav() {
-		StoreAplicacion.reset();
 		goto(`/oportunidades/${oportunidad.id}`);
 	}
 </script>

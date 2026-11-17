@@ -66,7 +66,7 @@
 			{/each}
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion} showByDefault={StoreAplicacion.value.retraer}>
+				<Grupo {agrupacion}>
 					{#snippet children(elemento: any)}
 						<TarjetaListaOportunidades oportunidad={elemento} />
 					{/snippet}
