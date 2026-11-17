@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onNavigate } from '$app/navigation';
-	import { selectedGroupStore } from '$lib/stores/groupFilter.svelte.js';
 	import { profile } from '$lib/stores/profileStore.svelte.js';
 	import ModalActividad from '$lib/components/Vistas/Actividad/ModalActividad.svelte';
 	import ModalOportunidad from '$lib/components/Vistas/Oportunidad/ModalOportunidad.svelte';
@@ -11,13 +10,14 @@
 	import Hotkeys from '$lib/components/Acciones/Hotkeys.svelte';
 	import Logout from '$lib/components/Acciones/Logout.svelte';
 	import ModalTipoProductoNuevo from '$lib/components/Vistas/Catalogo/ModalTipoProductoNuevo.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte.js';
 
 	let { children, data } = $props();
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
 
-		selectedGroupStore.clearAll();
+		StoreAplicacion.reset();
 
 		return new Promise((resolve) => {
 			document.startViewTransition(async () => {

@@ -2,12 +2,17 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { fasesOportunidad } from '$lib';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 
 	// DATOS DERIVADOS
 	let oportunidad = $derived(
 		page.data.oportunidades.find((p) => StoreContextoRelacion.id_oportunidad === p.id)
 	);
+	function nav() {
+		StoreAplicacion.reset();
+		goto(`/oportunidades/${oportunidad.id}`);
+	}
 </script>
 
 {#if StoreContextoRelacion.id_oportunidad}
@@ -20,9 +25,7 @@
 					<p>{oportunidad?.agentes?.nombre}: {oportunidad?.motivo}</p>
 				</div>
 			</div>
-			<button class="butter" onclick={() => goto(`/oportunidades/${oportunidad.id}`)}
-				>ver</button
-			>
+			<button class="butter" onclick={nav}>ver</button>
 		</div>
 	</div>
 {/if}

@@ -71,7 +71,7 @@
 			<TarjetaGrupoPedidos pedidos={lista_filtrada} />
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion} showByDefault={StoreAplicacion.value.retraer}>
+				<Grupo {agrupacion}>
 					{#snippet children(elemento: any)}
 						<TarjetaGrupoPedidos pedidos={[elemento]} />
 					{/snippet}

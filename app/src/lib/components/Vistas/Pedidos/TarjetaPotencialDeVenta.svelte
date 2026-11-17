@@ -8,6 +8,7 @@
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { goto } from '$app/navigation';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
 	let {
 		oportunidad,
@@ -69,11 +70,14 @@
 		StorePedidoEditar.pushLista(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
 		StoreContextoRelacion.setOportunidad(oportunidad.id);
 		await goto('/pedidos');
-		StorePedidoEditar.toggleModal(true);
+		StoreAplicacion.set('modal_editar_pedido', true);
 	}
 
 	onMount(() => {
-		console.log("Tarjeta potencial de ventra", oportunidad.pedidos.filter((p) => p.id_cotizacion));
+		console.log(
+			'Tarjeta potencial de ventra',
+			oportunidad.pedidos.filter((p) => p.id_cotizacion)
+		);
 		StoreCotizado.limpiar();
 	});
 </script>

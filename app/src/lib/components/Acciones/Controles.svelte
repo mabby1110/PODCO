@@ -81,6 +81,14 @@
 		}
 	});
 
+	$effect(() => {
+		if (!show) return;
+		return StoreHotkeys.registerEscape('controles', () => StoreAplicacion.set('controles', false));
+	});
+
+	$effect(() => {
+		return StoreHotkeys.registerEscape('retraer', () => StoreAplicacion.set('retraer', false));
+	});
 	onMount(() => {
 		window.addEventListener('resize', calculateQuadrant);
 
@@ -101,15 +109,10 @@
 			}
 		});
 
-		const unregisterEscape = StoreHotkeys.registerEscape('escape', () => {
-			StoreAplicacion.reset()
-		});
-
 		return () => {
 			window.removeEventListener('resize', calculateQuadrant);
 			unregisterControles();
 			unregisterRetraer();
-			unregisterEscape();
 		};
 	});
 </script>
@@ -216,7 +219,6 @@
 		height: 100% !important;
 		max-height: 88dvh !important;
 		max-width: 100dvw !important;
-		z-index: 9999;
 		min-height: var(--g);
 	}
 

@@ -15,7 +15,6 @@
 	import AgentActions from '$lib/components/Vistas/Oportunidad/AgentActions.svelte';
 	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
 	import SubirAdjunto from '$lib/components/Vistas/Documentos/SubirAdjunto.svelte';
-	import TarjetaListaDocumentos from '$lib/components/Vistas/Documentos/TarjetaListaDocumentos.svelte';
 	import Entradas from '$lib/components/Acciones/Entradas.svelte';
 	import TarjetaPotencialDeVenta from '$lib/components/Vistas/Pedidos/TarjetaPotencialDeVenta.svelte';
 	import TarjetaPedidoCotizado from '$lib/components/Vistas/Pedidos/TarjetaPedidoCotizado.svelte';

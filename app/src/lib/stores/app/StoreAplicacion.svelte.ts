@@ -3,6 +3,7 @@ import { browser } from '$app/environment';
 import { getCookieJSON, setCookieJSON } from '$lib/utils/cookies';
 
 export interface AppState {
+	nav: boolean;
 	controles: boolean;
 	retraer: boolean;
 	leyenda: boolean;
@@ -14,6 +15,7 @@ const COOKIE_NAME = 'appState';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 año
 
 const defaultState: AppState = {
+	nav: false,
 	controles: false,
 	retraer: false,
 	leyenda: false,

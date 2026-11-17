@@ -5,9 +5,11 @@
 	import { fasesPedido } from '$lib';
 	import BindableSelect from '$lib/components/Formularios/BindableSelect.svelte';
 	import ItemLista from '$lib/components/Tarjetas/ItemLista.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
+	import { obtenerUnicos } from '$lib/utils/util';
 
 	// DATOS DERIVADOS
 	let listaPedidos = $state(page.data.pedidos);
@@ -31,20 +33,22 @@
 			new Set(pedidos.map((p) => p.id_oportunidad).filter((id): id is string => id != null))
 		)
 	);
-	let idAgrupaciones = $derived([
-		...new Set(pedidos.map((pedido) => pedido.id_agrupacion).filter(Boolean))
-	]);
 
 	// ESTADOS
 	let actualizando = $state(false);
-	let mensaje = $state('');
-	let expandidos = $state<Record<string, boolean>>({});
+
+	// CONDICIONES PARA EDITAR
+	// recuento agrupaciones
+	let recuentoAgrupaciones = $derived(obtenerUnicos(pedidos, 'id_agrupacion'));
+	let recuentoOportunidades = $derived(obtenerUnicos(pedidos, 'id_oportunidad'));
+	console.log('pedidos, recuentos:\n', recuentoAgrupaciones, recuentoOportunidades);
+	// no se combina tipo de moneda
 	let pedidoACotizarInvalidoPorMoneda = $derived(
 		pedidos.some((p) => p.moneda == 'USD') && pedidos.some((p) => p.moneda == 'MX')
 	);
-	// fase 1 = borrador, fase 2 = potencial de venta (editables). fase > 2 se edita en la oportunidad
+	// no se puede editar un pedido fase > 2
 	let pedidosNoEditables = $derived(pedidos.filter((p) => Number(p.fase) > 2));
-	let existePedidoNoEditable = $derived(pedidosNoEditables.length > 0);
+	let puedeEditar = $derived(pedidosNoEditables.length == 0);
 
 	// ACCIONES
 	async function limpiarCarritoCompleto() {
@@ -53,9 +57,8 @@
 		StoreContextoRelacion.limpiar();
 	}
 	async function actualizarPedido() {
-		if (existePedidoNoEditable) return;
+		if (!puedeEditar) return;
 		actualizando = true;
-		mensaje = '';
 		if (StorePedidoEditar.carrito.length == 0) {
 			try {
 				const formData = new FormData();
@@ -77,7 +80,6 @@
 					throw new Error(result?.data?.error || result?.error || 'Error al crear pedido');
 				}
 
-				mensaje = 'Pedido actualizado correctamente';
 				const idOportunidad = StoreContextoRelacion.id_oportunidad;
 
 				if (idOportunidad) {
@@ -89,7 +91,6 @@
 				invalidateAll();
 			} catch (error) {
 				console.error('Error al crear pedido:', error);
-				mensaje = error instanceof Error ? error.message : 'Error al crear pedido';
 			} finally {
 				actualizando = false;
 				await goto(`/pedidos`);
@@ -115,7 +116,7 @@
 				const formData = new FormData();
 				formData.append('pedidosAActualizar', JSON.stringify(pedidos));
 
-				if (idAgrupaciones.length == 1) {
+				if (recuentoAgrupaciones.length == 1) {
 					formData.append('pedidosACrear', JSON.stringify(productos));
 				}
 
@@ -133,17 +134,16 @@
 					throw new Error(result?.data?.error || result?.error || 'Error al actualizar el pedido');
 				}
 
-				mensaje = 'Pedido actualizado correctamente';
 				const idOportunidad = StoreContextoRelacion.id_oportunidad;
 
 				if (idOportunidad) {
 					await goto(`/oportunidades/${idOportunidad}`);
 				}
 				limpiarCarritoCompleto();
+				StoreAplicacion.reset();
 				invalidateAll();
 			} catch (error) {
 				console.error('Error al actualizar pedido:', error);
-				mensaje = error instanceof Error ? error.message : 'Error al actualizar el pedido';
 			} finally {
 				actualizando = false;
 				await goto(`/pedidos`);
@@ -170,18 +170,22 @@
 				throw new Error(result?.data?.error || result?.error || 'Error al actualizar el pedido');
 			}
 
-			mensaje = 'Relación eliminada correctamente';
 			StoreContextoRelacion.limpiar();
+			StoreAplicacion.reset();
 			invalidateAll();
 		} catch (error) {
 			console.error('Error al eliminar relación:', error);
-			mensaje = error instanceof Error ? error.message : 'Error al eliminar relación';
 		}
 	}
-	async function eliminarPedido(id_pedido: string) {
+	async function eliminarPedido() {
+		const confirmar = window.confirm(
+			'¿Estás seguro de que deseas continuar? Esto va a eliminar definitivamente'
+		);
+		if (!confirmar) return;
+
 		try {
 			const formData = new FormData();
-			formData.append('id_pedido', id_pedido);
+			formData.append('pedidosAEliminar', JSON.stringify(pedidos));
 
 			const response = await fetch('/pedidos?/eliminar', { method: 'POST', body: formData });
 			const result = await response.json();
@@ -190,12 +194,10 @@
 				throw new Error(result?.data?.error || result?.error || 'Error al eliminar el pedido');
 			}
 
-			StorePedidoEditar.pop(id_pedido);
+			StorePedidoEditar.limpiar();
 			invalidateAll();
-			mensaje = 'Pedido eliminado correctamente';
 		} catch (error) {
 			console.error('Error al eliminar pedido:', error);
-			mensaje = error instanceof Error ? error.message : 'Error al eliminar el pedido';
 		}
 	}
 
@@ -303,14 +305,25 @@
 		>
 			<img src="/clean.svg" alt="Limpiar carrito" />
 		</button>
-		{#if StorePedidoEditar.carrito.length > 0 && pedidosNoEditables.length == 0}
+		{#if StorePedidoEditar.carrito.length > 0 && puedeEditar}
 			<button
 				class="butter accion rojo"
 				onclick={eliminarRelacion}
 				aria-label="Eliminar relación"
 				title="Eliminar relación"
 			>
-				<img src="/remove.svg" alt="Elimininar relacion" />
+				<img src="/eliminar-relacion.svg" alt="Elimininar relacion" />
+			</button>
+		{/if}
+		{#if puedeEditar}
+			<button
+				class="butter accion rojo"
+				type="button"
+				aria-label="Eliminar"
+				title="Eliminar"
+				onclick={eliminarPedido}
+			>
+				<img src="/remove.svg" alt="Eliminar carrito" />
 			</button>
 		{/if}
 	</div>
@@ -368,15 +381,12 @@
 	<p class="estado-vacio">No hay productos seleccionados</p>
 {/if}
 {#if StorePedidoEditar.carrito.length > 0 || StorePedidoNuevo.carrito.length > 0}
-	{#if existePedidoNoEditable}
+	{#if puedeEditar}
 		<p class="estado-vacio">El pedido se edita en la oportunidad</p>
 	{/if}
 	<div class="acciones-fijas">
-		<button
-			class="butter"
-			onclick={actualizarPedido}
-			disabled={actualizando || existePedidoNoEditable}
-		>
+		{puedeEditar}
+		<button class="butter" onclick={actualizarPedido} disabled={actualizando || !puedeEditar}>
 			{actualizando ? 'Actualizando...' : 'Guardar Cambios'}
 		</button>
 	</div>

@@ -1,13 +1,9 @@
-
 <script lang="ts">
-	import { appState } from '$lib/stores/appState.svelte';
-	import { slide } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
-
-	let expanded = $derived($appState.pageActions);
+	import { page } from '$app/state';
 
 	const routes = [
 		{ path: '/calendario', label: 'Calendario', icon: '📆', key: '1' },
@@ -21,24 +17,17 @@
 	function togglePanel(event: MouseEvent) {
 		event.stopPropagation();
 		event.preventDefault();
-		appState.togglePageActions();
+		StoreAplicacion.toggle('nav');
 	}
 
 	function navigate(path: string) {
-		if (expanded) appState.togglePageActions();
 		goto(path);
 	}
+	$effect(() => {
+		if (!StoreAplicacion.value.nav) return;
 
-	function handleKeyDown(event: KeyboardEvent) {
-		if (event.altKey && event.key === '1' && !event.repeat) {
-			event.preventDefault();
-			appState.togglePageActions();
-		}
-
-		if (event.key === 'Escape' && expanded) {
-			appState.togglePageActions();
-		}
-	}
+		return StoreHotkeys.registerEscape('nav', () => StoreAplicacion.set('nav', false));
+	});
 
 	onMount(() => {
 		const unregister = routes.map((route) =>
@@ -49,20 +38,20 @@
 				action: () => navigate(route.path)
 			})
 		);
-
-		return () => unregister.forEach((dispose) => dispose());
+		return () => {
+			unregister.forEach((dispose) => dispose());
+		};
 	});
 </script>
 
-<svelte:window onkeydown={handleKeyDown} />
-
 <div class="nav-container">
-	{#if expanded || StoreHotkeys.active}
+	{#if StoreHotkeys.active || StoreAplicacion.value.nav}
 		<div class="nav-links honey">
 			{#each routes as route (route.key)}
 				<button
 					onclick={() => navigate(route.path)}
 					class="link"
+					class:activo={route.path == page.url.pathname}
 					type="button"
 				>
 					<span>{route.label} {route.icon}</span>
@@ -78,7 +67,7 @@
 	<button
 		onclick={togglePanel}
 		class="home honey"
-		class:activo={expanded}
+		class:activo={StoreAplicacion.value.nav}
 		type="button"
 	>
 		<img src="/bms-logo.svg" alt="BMS" />

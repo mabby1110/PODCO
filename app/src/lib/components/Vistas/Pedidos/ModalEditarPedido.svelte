@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { onMount } from 'svelte';
-	import TarjetaPedidoEditar from './TarjetaPedidoEditar.svelte';
+	import TarjetaPedidoEditar from './TarjetaEditarPedidos.svelte';
 	import TarjetaContextoOportunidad from './TarjetaContextoOportunidad.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
@@ -114,28 +114,6 @@
 			setTimeout(calculateQuadrant, 0);
 		}
 	});
-	onMount(() => {
-		window.addEventListener('resize', calculateQuadrant);
-
-		const unregisterHotkey = StoreHotkeys.register({
-			id: 'modal_editar_pedido',
-			key: 'w',
-			label: 'Abrir/cerrar panel de opciones',
-			action: () => {
-				 StoreAplicacion.set('modal_editar_pedido', true)
-			}
-		});
-
-		const unregisterEscape = StoreHotkeys.registerEscape('modal_editar_pedido', () => {
-			if (StoreAplicacion.value.modal_editar_pedido) StoreAplicacion.toggle('modal_editar_pedido');
-		});
-
-		return () => {
-			window.removeEventListener('resize', calculateQuadrant);
-			unregisterHotkey();
-			unregisterEscape();
-		};
-	});
 </script>
 
 <svelte:window onkeydown={handleKeyDown} onmousemove={onMouseMove} onmouseup={onMouseUp} />
@@ -163,7 +141,7 @@
 			<button
 				class="jelly rojo"
 				type="button"
-				onclick={() => StoreAplicacion.toggle('modal_editar_pedido')}
+				onclick={() => StoreAplicacion.set('modal_editar_pedido', false)}
 			>
 				✕
 			</button>
@@ -200,7 +178,7 @@
 		position: fixed;
 		top: 0;
 		right: 0;
-		width: max(38vw, var(--i));
+		width: max(36vw, var(--i));
 		margin-inline: auto;
 		height: fit-content;
 		max-height: 80%;
@@ -209,7 +187,7 @@
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;
-		z-index: 99;
+		z-index: 9;
 	}
 
 	.header-actions:active {

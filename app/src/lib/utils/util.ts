@@ -48,3 +48,8 @@ export function obtenerIniciales(nombre: string): string {
     .map(palabra => palabra[0].toUpperCase())
     .join("");
 }
+
+// LISTAS
+export function obtenerUnicos<T, K extends keyof T>(lista: T[], llave: K): T[K][] {
+	return [...new Set(lista.map((item) => item[llave]).filter(Boolean))];
+}

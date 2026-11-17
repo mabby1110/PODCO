@@ -45,7 +45,6 @@
 			active = true;
 			StoreHotkeys.setActive(true);
 
-			StoreAplicacion.set('modal_editar_pedido', false);
 			clearTimeout(timeout);
 			timeout = setTimeout(cancel, 4000);
 			return;
@@ -70,21 +69,21 @@
 	}
 
 	onMount(() => {
-		// const onMouseMove = () => cancel();
+		const onMouseClick = () => cancel();
 		const onBlur = () => cancel();
 		const onFocusIn = (event: FocusEvent) => {
 			if (isTyping(event.target)) cancel();
 		};
 
 		window.addEventListener('keydown', handleKeyDown);
-		// window.addEventListener('mousemove', onMouseMove);
+		window.addEventListener('click', onMouseClick);
 		window.addEventListener('blur', onBlur);
 		window.addEventListener('focusin', onFocusIn);
 
 		return () => {
 			clearTimeout(timeout);
 			window.removeEventListener('keydown', handleKeyDown);
-			// window.removeEventListener('mousemove', onMouseMove);
+			window.removeEventListener('mousedown', onMouseClick);
 			window.removeEventListener('blur', onBlur);
 			window.removeEventListener('focusin', onFocusIn);
 		};
@@ -94,6 +93,8 @@
 {#if active}
 	<div class="hotkey-hint" role="status">
 		<kbd>Q</kbd> Buscar
+		<kbd>E</kbd>
+		{StoreAplicacion.value.retraer ? 'Retraer' : 'Mostrar'} Lista
 		<kbd>Esc</kbd> Cancelar
 	</div>
 {/if}
