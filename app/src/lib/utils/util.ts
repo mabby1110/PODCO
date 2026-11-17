@@ -22,34 +22,45 @@ export function filtrarPorAgente(lista: [], agenteId: string) {
 }
 
 export const formatCurrency = (value: string, currency: string) => {
-  // Ajustamos la región según la moneda para un formato más natural
-  const locale = currency === 'MXN' ? 'es-MX' : 'en-US';
-  const ammount = Number(value);
+	// Ajustamos la región según la moneda para un formato más natural
+	const locale = currency === 'MXN' ? 'es-MX' : 'en-US';
+	const ammount = Number(value);
 
-  if(ammount > 0) {
-	  return new Intl.NumberFormat(locale, {
-		style: 'currency',
-		currency: currency,
-	  }).format(ammount);
-  } else {
-	return null
-  }
+	if (ammount > 0) {
+		return new Intl.NumberFormat(locale, {
+			style: 'currency',
+			currency: currency
+		}).format(ammount);
+	} else {
+		return null;
+	}
 };
 
 export function formatDateToReadable(date: string | number | Date): string {
-    if (!date) return '';
-    return new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(new Date(date));
+	if (!date) return '';
+	return new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(new Date(date));
 }
 
 export function obtenerIniciales(nombre: string): string {
-  return nombre
-    .trim()
-    .split(/\s+/)
-    .map(palabra => palabra[0].toUpperCase())
-    .join("");
+	return nombre
+		.trim()
+		.split(/\s+/)
+		.map((palabra) => palabra[0].toUpperCase())
+		.join('');
 }
 
 // LISTAS
 export function obtenerUnicos<T, K extends keyof T>(lista: T[], llave: K): T[K][] {
 	return [...new Set(lista.map((item) => item[llave]).filter(Boolean))];
 }
+
+// PEDIDOS
+export const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
+	if (val == null || moneda == null) return 'Sin precio';
+
+	return new Intl.NumberFormat('es-MX', {
+		style: 'currency',
+		currency: moneda,
+		currencyDisplay: 'narrowSymbol'
+	}).format(val);
+};

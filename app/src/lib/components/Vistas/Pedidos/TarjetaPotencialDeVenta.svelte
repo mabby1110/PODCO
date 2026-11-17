@@ -56,7 +56,7 @@
 
 	// HELPERS
 	const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
-		if (val == null) return 'Sin precio';
+		if (val == null || moneda == null) return 'Sin precio';
 		return new Intl.NumberFormat('es-MX', {
 			style: 'currency',
 			currency: moneda,

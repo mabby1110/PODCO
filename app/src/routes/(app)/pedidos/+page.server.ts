@@ -10,6 +10,7 @@ export const actions: Actions = {
 
 		// RELACIONES
 		const idOportunidad = (formData.get('idOportunidad') as string) || null;
+		const moneda = (formData.get('moneda') as string) || null;
 		console.log(idOportunidad);
 
 		let resultActualizacion: any[] = [];
@@ -21,7 +22,7 @@ export const actions: Actions = {
 			const pedidosParaActualizar = pedidosAActualizar.map((pedido: any) => ({
 				id: pedido.id,
 				cantidad: pedido.cantidad,
-				moneda: pedido.moneda,
+				moneda,
 				precio_unitario: pedido.precio_unitario,
 				id_oportunidad: idOportunidad,
 				fase: idOportunidad ? 2 : 1,
@@ -74,6 +75,51 @@ export const actions: Actions = {
 			if (errorCreacion) {
 				console.log(errorCreacion);
 				return fail(500, { error: errorCreacion.message });
+			}
+		}
+
+		return {
+			success: true
+		};
+	},
+	agruparPedido: async ({ request, locals: { supabase, user } }) => {
+		const formData = await request.formData();
+		const pedidosAActualizar = JSON.parse((formData.get('pedidosAActualizar') as string) || '[]');
+
+		// RELACIONES
+		let resultActualizacion: any[] = [];
+
+		// PEDIDOS A ACTUALIZAR
+		const id_agrupacion = generateId('BMS-P');
+		if (pedidosAActualizar.length > 0) {
+			console.log('pedidos a actualizar: ', pedidosAActualizar);
+
+			const pedidosParaActualizar = pedidosAActualizar.map((pedido: any) => ({
+				id: pedido.id,
+				id_agrupacion
+			}));
+
+			const updatePromises = pedidosParaActualizar.map(async (pedido) => {
+				const { id, ...camposActualizar } = pedido;
+
+				const { data, error } = await supabase
+					.from('pedidos')
+					.update(camposActualizar)
+					.eq('id', id)
+					.select()
+					.single();
+
+				if (error) {
+					throw new Error(error.message);
+				}
+
+				return data;
+			});
+
+			try {
+				resultActualizacion = await Promise.all(updatePromises);
+			} catch (error: any) {
+				return fail(500, { error: error.message });
 			}
 		}
 

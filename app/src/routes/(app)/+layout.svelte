@@ -17,8 +17,6 @@
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
 
-		StoreAplicacion.reset();
-
 		return new Promise((resolve) => {
 			document.startViewTransition(async () => {
 				resolve();

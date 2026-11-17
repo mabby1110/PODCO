@@ -5,6 +5,7 @@
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import ItemLista from '$lib/components/Tarjetas/ItemLista.svelte';
+	import { formatMoneda } from '$lib/utils/util';
 
 	let { pedidos, disable }: { pedidos: any; disable?: boolean } = $props();
 
@@ -62,11 +63,9 @@
 			StoreContextoRelacion.setOportunidad(id_oportunidad);
 		}
 	}
-	function editarPedidoCompleto(pedidos: any) {
-		goto('/pedidos');
-		StorePedidoEditar.pushLista(pedidos);
+	function editarPedidoCompleto(grupo: any) {
 		StoreAplicacion.set('modal_editar_pedido', true);
-		console.log(oportunidades);
+		StorePedidoEditar.pushLista(grupo);
 		if (oportunidades.length === 1) {
 			StoreContextoRelacion.setOportunidad(oportunidades[0]);
 		}
@@ -74,17 +73,6 @@
 
 	// estados del componente
 	let actualizando = $state(false);
-
-	// helpers
-	const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
-		if (val == null) return 'Sin precio';
-
-		return new Intl.NumberFormat('es-MX', {
-			style: 'currency',
-			currency: moneda,
-			currencyDisplay: 'narrowSymbol'
-		}).format(val);
-	};
 </script>
 
 {#each pedidosAgrupados as grupo}

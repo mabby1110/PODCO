@@ -9,7 +9,7 @@
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
-	import { obtenerUnicos } from '$lib/utils/util';
+	import { formatMoneda, obtenerUnicos } from '$lib/utils/util';
 
 	// DATOS DERIVADOS
 	let listaPedidos = $state(page.data.pedidos);
@@ -28,11 +28,8 @@
 			0
 		)
 	);
-	let oportunidades = $derived(
-		Array.from(
-			new Set(pedidos.map((p) => p.id_oportunidad).filter((id): id is string => id != null))
-		)
-	);
+	let moneda = $state(pedidos.find((p) => p.moneda != null)?.moneda);
+	console.log('moneda', moneda);
 
 	// ESTADOS
 	let actualizando = $state(false);
@@ -43,8 +40,8 @@
 	let recuentoOportunidades = $derived(obtenerUnicos(pedidos, 'id_oportunidad'));
 	console.log('pedidos, recuentos:\n', recuentoAgrupaciones, recuentoOportunidades);
 	// no se combina tipo de moneda
-	let pedidoACotizarInvalidoPorMoneda = $derived(
-		pedidos.some((p) => p.moneda == 'USD') && pedidos.some((p) => p.moneda == 'MX')
+	let invalidoPorMoneda = $derived(
+		pedidos.some((p) => p.moneda == 'USD') && pedidos.some((p) => p.moneda == 'MXN')
 	);
 	// no se puede editar un pedido fase > 2
 	let pedidosNoEditables = $derived(pedidos.filter((p) => Number(p.fase) > 2));
@@ -124,6 +121,10 @@
 					formData.append('idOportunidad', StoreContextoRelacion.id_oportunidad);
 				}
 
+				if (!invalidoPorMoneda) {
+					formData.append('moneda', moneda);
+				}
+
 				const response = await fetch('/pedidos?/actualizarPedido', {
 					method: 'POST',
 					body: formData
@@ -148,6 +149,50 @@
 				actualizando = false;
 				await goto(`/pedidos`);
 			}
+		}
+	}
+	async function agruparPedidos() {
+		if (!puedeEditar) return;
+		actualizando = true;
+
+		try {
+			const tieneOportunidadRelacionada = pedidos.some(
+				(pedido) =>
+					pedido.id_oportunidad !== null &&
+					pedido.id_oportunidad !== StoreContextoRelacion.id_oportunidad
+			);
+
+			if (tieneOportunidadRelacionada) {
+				const confirmar = window.confirm(
+					'Uno o más pedidos tienen una oportunidad relacionada. ¿Estás seguro de que deseas continuar? Esto podría eliminar o modificar las relaciones con oportunidades.'
+				);
+				if (!confirmar) {
+					actualizando = false;
+					return;
+				}
+			}
+
+			const formData = new FormData();
+			formData.append('pedidosAActualizar', JSON.stringify(pedidos));
+
+			const response = await fetch('/pedidos?/agruparPedido', {
+				method: 'POST',
+				body: formData
+			});
+			const result = await response.json();
+
+			if (!response.ok || result?.type === 'failure') {
+				throw new Error(result?.data?.error || result?.error || 'Error al agrupar el pedido');
+			}
+
+			limpiarCarritoCompleto();
+			StoreAplicacion.reset();
+			invalidateAll();
+		} catch (error) {
+			console.error('Error al actualizar pedido:', error);
+		} finally {
+			actualizando = false;
+			await goto(`/pedidos`);
 		}
 	}
 	async function eliminarRelacion() {
@@ -200,16 +245,6 @@
 			console.error('Error al eliminar pedido:', error);
 		}
 	}
-
-	// HELPERS
-	const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
-		if (val == null) return 'Sin precio';
-		return new Intl.NumberFormat('es-MX', {
-			style: 'currency',
-			currency: moneda,
-			currencyDisplay: 'narrowSymbol'
-		}).format(val);
-	};
 </script>
 
 <!-- pedidos a editar -->
@@ -262,6 +297,9 @@
 								bind:value={pedido.precio_unitario}
 							/>
 						</div>
+						<span class="input-moneda">
+							{pedido.moneda}
+						</span>
 						<BindableSelect
 							bind:value={pedido.ref}
 							list={['FASTRAQ', 'Lista de precios']}
@@ -284,47 +322,50 @@
 			</ItemLista>
 		{/each}
 		<div class="resumen-grupo">
-			{#if pedidoACotizarInvalidoPorMoneda}
+			{#if invalidoPorMoneda}
 				<p>no se pueden mezclar USD con MX</p>
 			{:else}
 				<h1 class="total"><b>{formatMoneda(total)}</b></h1>
-				<select class="input-s" title="Moneda">
-					<option value="MXN">MXN</option>
+				<select class="input-s" title="Moneda" bind:value={moneda}>
 					<option value="USD">USD</option>
+					<option value="MXN">MXN</option>
 				</select>
 			{/if}
 		</div>
 	</div>
 	<div class="acciones-fijas">
-		<button
-			class="butter"
-			type="button"
-			aria-label="Limpiar"
-			title="Limpiar"
-			onclick={limpiarCarritoCompleto}
-		>
-			<img src="/clean.svg" alt="Limpiar carrito" />
-		</button>
-		{#if StorePedidoEditar.carrito.length > 0 && puedeEditar}
-			<button
-				class="butter accion rojo"
-				onclick={eliminarRelacion}
-				aria-label="Eliminar relación"
-				title="Eliminar relación"
-			>
-				<img src="/eliminar-relacion.svg" alt="Elimininar relacion" />
-			</button>
-		{/if}
 		{#if puedeEditar}
 			<button
-				class="butter accion rojo"
+				class="butter"
 				type="button"
-				aria-label="Eliminar"
-				title="Eliminar"
-				onclick={eliminarPedido}
+				aria-label="Limpiar"
+				title="Limpiar"
+				onclick={limpiarCarritoCompleto}
 			>
-				<img src="/remove.svg" alt="Eliminar carrito" />
+				<img src="/clean.svg" alt="Limpiar carrito" />
 			</button>
+			{#if StorePedidoEditar.carrito.length > 0 && StorePedidoNuevo.carrito.length == 0}
+				<button
+					class="butter accion rojo"
+					onclick={eliminarRelacion}
+					aria-label="Eliminar relación"
+					title="Eliminar relación"
+				>
+					<img src="/eliminar-relacion.svg" alt="Elimininar relacion" />
+				</button>
+				<button class="butter accion" onclick={agruparPedidos} aria-label="Agrupar" title="Agrupar">
+					<img src="/merge.svg" alt="Agrupar" />
+				</button>
+				<button
+					class="butter accion rojo"
+					type="button"
+					aria-label="Eliminar"
+					title="Eliminar"
+					onclick={eliminarPedido}
+				>
+					<img src="/remove.svg" alt="Eliminar carrito" />
+				</button>
+			{/if}
 		{/if}
 	</div>
 {/if}
@@ -385,8 +426,11 @@
 		<p class="estado-vacio">El pedido se edita en la oportunidad</p>
 	{/if}
 	<div class="acciones-fijas">
-		{puedeEditar}
-		<button class="butter" onclick={actualizarPedido} disabled={actualizando || !puedeEditar}>
+		<button
+			class="butter"
+			onclick={actualizarPedido}
+			disabled={actualizando || !puedeEditar || invalidoPorMoneda}
+		>
 			{actualizando ? 'Actualizando...' : 'Guardar Cambios'}
 		</button>
 	</div>

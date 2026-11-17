@@ -21,6 +21,7 @@
 	import TarjetaPedidoVenta from '$lib/components/Vistas/Pedidos/TarjetaPedidoVenta.svelte';
 	import { formatDateToReadable } from '$lib/utils/util';
 	import RequisitoDeGastos from '$lib/components/Formularios/RequisitoDeGastos.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 
@@ -39,7 +40,7 @@
 		StoreContextoRelacion.setOportunidad(oportunidad.id);
 		StorePedidoEditar.pushLista(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
 		await goto('/pedidos');
-		StorePedidoEditar.toggleModal(true);
+		StoreAplicacion.set('modal_editar_pedido', true);
 	}
 	async function editarPedido() {
 		StorePedidoEditar.limpiar();
@@ -47,7 +48,7 @@
 		StorePedidoEditar.pushLista(oportunidad.pedidos.filter((p) => p.id_cotizacion == null));
 		StoreContextoRelacion.setOportunidad(oportunidad.id);
 		await goto('/pedidos');
-		StorePedidoEditar.toggleModal(true);
+		StoreAplicacion.set('modal_editar_pedido', true);
 	}
 </script>
 
@@ -118,14 +119,19 @@
 			placeholder="Observaciones"
 		/> -->
 
-		<CustomInput label="Requisito de gasto" action="/oportunidades?/update" id={oportunidad?.id} {editando}>
+		<CustomInput
+			label="Requisito de gasto"
+			action="/oportunidades?/update"
+			id={oportunidad?.id}
+			{editando}
+		>
 			<RequisitoDeGastos />
 		</CustomInput>
-		
+
 		<CustomInput label="Postergar" action="/oportunidades?/update" id={oportunidad?.id} {editando}>
 			<DatePicker />
 		</CustomInput>
-		
+
 		<!-- Potencia de venta & cotizado -->
 		{#if fase.id_fase == 2}
 			<section>

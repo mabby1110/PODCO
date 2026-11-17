@@ -9,7 +9,6 @@
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
-	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 	import TarjetaGrupoPedidos from '$lib/components/Vistas/Pedidos/TarjetaGrupoPedidos.svelte';
 	import Controles from '$lib/components/Acciones/Controles.svelte';
