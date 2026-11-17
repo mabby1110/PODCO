@@ -15,7 +15,7 @@
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import HotButton from '$lib/components/Acciones/HotButton.svelte';
 
-	let pedidos = $derived(page.data.pedidos.filter((p) => $profile?.isAdmin ?? p.fase <= 2));
+	let pedidos = $derived(page.data.pedidos.filter((p) => p.fase <= 2));
 	let currentRoute = $derived(page.url.pathname);
 
 	// Convertido a $state para soportar bind:lista

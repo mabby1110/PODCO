@@ -11,7 +11,8 @@
 		{ path: '/oportunidades', label: 'Oportunidades', icon: '📋', key: '3' },
 		{ path: '/actividades', label: 'Actividades', icon: '⚡', key: '4' },
 		{ path: '/pedidos', label: 'Pedidos', icon: '📦', key: '5' },
-		{ path: '/catalogo', label: 'Catálogo', icon: '📑', key: '6' }
+		{ path: '/catalogo', label: 'Catálogo', icon: '📑', key: '6' },
+		{ path: '/documentos', label: 'Documentos', icon: '📑', key: '0' },
 	];
 
 	function togglePanel(event: MouseEvent) {
@@ -19,16 +20,15 @@
 		event.preventDefault();
 		StoreAplicacion.toggle('nav');
 	}
-
 	function navigate(path: string) {
 		goto(path);
 	}
+
 	$effect(() => {
 		if (!StoreAplicacion.value.nav) return;
 
 		return StoreHotkeys.registerEscape('nav', () => StoreAplicacion.set('nav', false));
 	});
-
 	onMount(() => {
 		const unregister = routes.map((route) =>
 			StoreHotkeys.register({

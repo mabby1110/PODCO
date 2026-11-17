@@ -1,9 +1,9 @@
 <script>
-	import { appState } from '$lib/stores/appState.svelte';
+	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 </script>
 
-{#if $appState.pageActions}
+{#if StoreAplicacion.value.nav}
 	<form method="POST" action="/auth/logout">
 		<button type="submit" class="butter logout-button">{$profile?.nombre}</button>
 	</form>

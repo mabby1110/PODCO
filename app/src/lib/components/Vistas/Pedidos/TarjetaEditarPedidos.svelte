@@ -67,7 +67,7 @@
 					formData.append('carrito', JSON.stringify(StorePedidoNuevo.carrito));
 				}
 
-				const response = await fetch('/pedidos?/nuevo', {
+				const response = await fetch('/pedidos?/nuevoPedido', {
 					method: 'POST',
 					body: formData
 				});

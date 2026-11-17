@@ -127,8 +127,8 @@ export const actions: Actions = {
 			success: true
 		};
 	},
-	nuevo: async ({ request, locals: { supabase, user } }) => {
-		console.log('\nnuevo\n');
+	nuevoPedido: async ({ request, locals: { supabase, user } }) => {
+		console.log('\nnuevo Pedido\n');
 		const formData = await request.formData();
 		const carritoRaw = formData.get('carrito') as string;
 
@@ -150,6 +150,7 @@ export const actions: Actions = {
 		// Transformación al formato de la tabla
 		const id_agrupacion = generateId('BMS-P');
 		const payload = carrito.map((item) => ({
+			id_agente: user?.id,
 			id_producto: item.id,
 			cantidad: item.cantidad,
 			fase: idOportunidad ? 2 : 1,
