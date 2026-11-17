@@ -21,7 +21,7 @@
 	} = $props();
 
 	let estado = $derived(StoreModList.get(route));
-
+	
 	const operadoresMap: Record<FieldType, { valor: Operator; label: string }[]> = {
 		string: [
 			{ valor: 'eq', label: '=' },
@@ -116,7 +116,9 @@
 	}
 
 	function actualizarAgrupacion(field: string | null) {
+		console.time('Agrupación');
 		StoreModList.update(route, { groupBy: field });
+		console.timeEnd('Agrupación');
 	}
 </script>
 

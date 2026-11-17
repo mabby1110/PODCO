@@ -1,4 +1,9 @@
 import { StoreModList } from '$lib/stores/StoreModList.svelte';
+
+const dateFormatter = new Intl.DateTimeFormat('es-MX', {
+    dateStyle: 'full'
+});
+
 export const extraerColumnas = (datos: any[]): { key: string; label: string; type: 'string' | 'number' | 'date' | 'object' }[] => {
     if (!datos?.length) return [];
     

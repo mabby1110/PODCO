@@ -4,16 +4,8 @@
 	import TarjetaPrevista from '$lib/components/Tarjetas/TarjetaPrevista.svelte';
 	let { elemento } = $props();
 
-	// Inventario general (sin serie) del producto
-	let inventario = $derived(
-		elemento.inventario?.find((i) => i.id_producto === elemento.id) ?? elemento.inventario?.[0]
-	);
-
 	// Unidades con número de serie
 	let serializados = $derived(elemento?.serializados ?? []);
-
-	// Total = cantidad en inventario + unidades serializadas
-	let cantidadTotal = $derived((inventario?.cantidad ?? 0) + serializados.length);
 </script>
 
 <TarjetaPrevista>
@@ -25,11 +17,6 @@
 			{elemento.codigo}
 		</h3>
 		<p>{elemento.descripcion}</p>
-	{/snippet}
-	{#snippet contenido()}
-		{#if elemento.tipo_producto.es_serializado}
-			<p>cantidad: {cantidadTotal}</p>
-		{/if}
 	{/snippet}
 	{#snippet mas()}
 		<div class="producto-meta">

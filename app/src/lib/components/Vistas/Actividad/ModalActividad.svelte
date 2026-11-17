@@ -2,7 +2,6 @@
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { motivosActividades } from '$lib';
-	import ConstructorJson from '$lib/components/Acciones/ConstructorJson.svelte';
 	import DatePicker from '$lib/components/Formularios/DatePicker.svelte';
 	import FormInput from '$lib/components/Formularios/FormInput.svelte';
 	import FormOptionalInput from '$lib/components/Formularios/FormOptionalInput.svelte';
@@ -14,10 +13,10 @@
 
 	let objetivo = $state('');
 	let observaciones = $state('');
-	let requisitos = $state('');
 	let agenteSeleccionado = $state<string>('');
+
 	function closeAndClear() {
-		appState.toggleModalOp();
+		appState.toggleModalActivity();
 		StoreEntradas.clearStore();
 	}
 </script>
@@ -70,7 +69,10 @@
 					<DatePicker />
 					<div class="form-group">
 						<FormOptionalInput title="+Requisitos">
-							<RequisitoDeGastos llaves={['hospedaje', 'alimentos', 'casetas', 'gasolina', 'otro']} name="requisito_gasto" />
+							<RequisitoDeGastos
+								llaves={['hospedaje', 'alimentos', 'casetas', 'gasolina', 'otro']}
+								name="requisito_gasto"
+							/>
 						</FormOptionalInput>
 						<FormOptionalInput title="+Observaciones">
 							<FormInput

@@ -2,7 +2,6 @@
 	import { onMount, type Snippet } from 'svelte';
 	import NavButton from '../Acciones/NavButton.svelte';
 	import { arrowScroll } from '$lib/actions/keyboardScroll';
-	import { appState } from '$lib/stores/appState.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import { page } from '$app/state';
 

@@ -11,7 +11,7 @@
 		style = ''
 	}: {
 		titulo: Snippet;
-		contenido: Snippet;
+		contenido?: Snippet;
 		meta?: Snippet;
 		acciones?: Snippet;
 		metaAcciones?: Snippet;
