@@ -81,6 +81,7 @@
 	.contenedor-item {
 		display: flex;
 		gap: var(--a);
+		cursor: pointer;
 	}
 	.item-lista {
 		flex-grow: 1;

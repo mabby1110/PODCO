@@ -16,8 +16,6 @@
 	import HotButton from '$lib/components/Acciones/HotButton.svelte';
 
 	let pedidos = $derived(page.data.pedidos.filter((p) => $profile?.isAdmin ?? p.fase <= 2));
-
-	let show = $derived($appState.min);
 	let currentRoute = $derived(page.url.pathname);
 
 	// Convertido a $state para soportar bind:lista
@@ -34,8 +32,6 @@
 	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
 
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
-
-	// HELPERS
 </script>
 
 <Vista>

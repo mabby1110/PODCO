@@ -2,7 +2,7 @@
 <script lang="ts">
     import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
     import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
 
     let {
         key = 'q',
