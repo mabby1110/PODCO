@@ -1,17 +1,17 @@
 <script lang="ts">
-	import ListPreview from '$lib/components/Tarjetas/ListPreview.svelte';
+	import TarjetaPrevista from '$lib/components/Tarjetas/TarjetaPrevista.svelte';
 
 	let { documento } = $props();
 	console.log(documento);
 </script>
 
-<ListPreview href="/oportunidades/{documento.id}" ocultarAcciones>
-	{#snippet header()}
+<TarjetaPrevista>
+	{#snippet titulo()}
 		<b>
 			{documento?.titulo}
 		</b>
 	{/snippet}
-	{#snippet content()}
+	{#snippet contenido()}
 		{#if documento?.id_actividad}
 			<div class="brief">
 				<a href="/actividades/{documento.id_actividad}">
@@ -50,7 +50,7 @@
 			</div>
 		{/if}
 	{/snippet}
-</ListPreview>
+</TarjetaPrevista>
 
 <style>
 	.panel {
