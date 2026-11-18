@@ -176,14 +176,14 @@
 
 	.panel-controls {
 		position: fixed;
-		top: 0;
-		right: 0;
+		top: max(7vh, 1px);
+		right: max(2vw, 1px);
 		width: max(36vw, var(--i));
+		max-width: 96vw;
 		margin-inline: auto;
 		height: fit-content;
 		max-height: 80%;
 		min-height: var(--g);
-		height: var(--k);
 		display: flex;
 		gap: var(--a);
 		flex-direction: column;

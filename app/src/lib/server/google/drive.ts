@@ -106,11 +106,21 @@ export async function uploadToFolder(
 		},
 		supportsAllDrives: true
 	});
-
+	const { data } = await drive.files.get({
+		fileId,
+		fields: 'id,permissions(id,type,role),driveId,mimeType,capabilities/canShare',
+		supportsAllDrives: true
+	});
+	console.log(JSON.stringify(data, null, 2));
 	return response.data;
 }
 
-export async function subirAGoogleDrive(files: File[], agenteNombre: string, opFolder: string, clientFolder: string) {
+export async function subirAGoogleDrive(
+	files: File[],
+	agenteNombre: string,
+	opFolder: string,
+	clientFolder: string
+) {
 	const docs: any[] = [];
 
 	for (const file of files) {
@@ -119,7 +129,14 @@ export async function subirAGoogleDrive(files: File[], agenteNombre: string, opF
 		const buffer = Buffer.from(await file.arrayBuffer());
 		const stream = Readable.from(buffer);
 
-		const uploaded = await uploadToFolder(file.name, file.type, stream, agenteNombre, opFolder, clientFolder);
+		const uploaded = await uploadToFolder(
+			file.name,
+			file.type,
+			stream,
+			agenteNombre,
+			opFolder,
+			clientFolder
+		);
 
 		if (uploaded?.webViewLink) {
 			docs.push({

@@ -16,6 +16,8 @@
 		<h3>
 			{elemento.codigo}
 		</h3>
+	{/snippet}
+	{#snippet contenido()}
 		<p>{elemento.descripcion}</p>
 	{/snippet}
 	{#snippet mas()}

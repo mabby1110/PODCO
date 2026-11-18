@@ -30,7 +30,7 @@ export const actions: Actions = {
 			return fail(500, { error: 'Fallo al procesar la subida de documentos' });
 		}
 	},
-	subirCotizacion: async ({ request, locals: { supabase } }) => {
+	subirCotizacion: async ({ request, locals: { supabase, user } }) => {
 		const formData = await request.formData();
 		const tipo = formData.get('tipo') as string;
 		const cliente_final = formData.get('cliente_final') as string;
@@ -70,7 +70,8 @@ export const actions: Actions = {
 					fase: 3,
 					id_agrupacion,
 					id_cotizacion: doc_cotizacion.id,
-					cliente_final: cliente_final || ''
+					cliente_final: cliente_final || '',
+					id_agente: user.id
 				}));
 
 				const { data: resultCreacion, error: errorCreacion } = await supabase
@@ -116,7 +117,6 @@ export const actions: Actions = {
 			let resultActualizacion: any[] = [];
 			// PEDIDOS A CREAR
 			if (pedidosACrear.length > 0) {
-
 				const id_agrupacion = generateId('BMS-P');
 				const pedidosParaCrear = pedidosACrear.map((pedido: any) => ({
 					id_producto: pedido.id_producto,

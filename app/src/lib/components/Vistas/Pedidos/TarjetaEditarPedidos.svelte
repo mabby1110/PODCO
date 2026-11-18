@@ -85,6 +85,7 @@
 					await goto(`/pedidos`);
 				}
 				limpiarCarritoCompleto();
+				StoreAplicacion.reset();
 				invalidateAll();
 			} catch (error) {
 				console.error('Error al crear pedido:', error);
@@ -249,16 +250,13 @@
 
 <!-- pedidos a editar -->
 {#if StorePedidoEditar.carrito.length > 0}
-	<div class="contenedor-grupo milk">
+	<div class="contenedor-grupo">
 		{#each pedidos as pedido (pedido.id)}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<ItemLista>
 				{#snippet acciones()}
 					<button class="jelly rojo" onclick={() => StorePedidoEditar.pop(pedido.id)}>✕</button>
-					<div class="badge" style={fasesPedido[pedido.fase]?.estilo}>
-						<span>{fasesPedido[pedido.fase]?.actual}</span>
-					</div>
 				{/snippet}
 				{#snippet meta()}
 					<div class="enlaces">
@@ -271,7 +269,11 @@
 					</div>
 				{/snippet}
 				{#snippet titulo()}
+					<div class="badge" style={fasesPedido[pedido.fase]?.estilo}>
+						<span>{fasesPedido[pedido.fase]?.actual}</span>
+					</div>
 					<strong class="codigo">{pedido.catalogo?.codigo || 'Sin código'}</strong>
+					<strong class="codigo">{pedido.catalogo?.descripcion || 'Sin descripción'}</strong>
 				{/snippet}
 				{#snippet contenido()}
 					{#if pedido.fase <= 2}
@@ -332,41 +334,46 @@
 				</select>
 			{/if}
 		</div>
-	</div>
-	<div class="acciones-fijas">
-		{#if puedeEditar}
-			<button
-				class="butter"
-				type="button"
-				aria-label="Limpiar"
-				title="Limpiar"
-				onclick={limpiarCarritoCompleto}
-			>
-				<img src="/clean.svg" alt="Limpiar carrito" />
-			</button>
-			{#if StorePedidoEditar.carrito.length > 0 && StorePedidoNuevo.carrito.length == 0}
+		<div class="acciones-fijas">
+			{#if puedeEditar}
 				<button
-					class="butter accion rojo"
-					onclick={eliminarRelacion}
-					aria-label="Eliminar relación"
-					title="Eliminar relación"
-				>
-					<img src="/eliminar-relacion.svg" alt="Elimininar relacion" />
-				</button>
-				<button class="butter accion" onclick={agruparPedidos} aria-label="Agrupar" title="Agrupar">
-					<img src="/merge.svg" alt="Agrupar" />
-				</button>
-				<button
-					class="butter accion rojo"
+					class="butter accion"
 					type="button"
-					aria-label="Eliminar"
-					title="Eliminar"
-					onclick={eliminarPedido}
+					aria-label="Limpiar"
+					title="Limpiar"
+					onclick={limpiarCarritoCompleto}
 				>
-					<img src="/remove.svg" alt="Eliminar carrito" />
+					<img src="/clean.svg" alt="Limpiar carrito" />
 				</button>
+				{#if StorePedidoEditar.carrito.length > 0 && StorePedidoNuevo.carrito.length == 0}
+					<button
+						class="butter accion rojo"
+						onclick={eliminarRelacion}
+						aria-label="Eliminar relación"
+						title="Eliminar relación"
+					>
+						<img src="/eliminar-relacion.svg" alt="Elimininar relacion" />
+					</button>
+					<button
+						class="butter accion"
+						onclick={agruparPedidos}
+						aria-label="Agrupar"
+						title="Agrupar"
+					>
+						<img src="/merge.svg" alt="Agrupar" />
+					</button>
+					<button
+						class="butter accion rojo"
+						type="button"
+						aria-label="Eliminar"
+						title="Eliminar"
+						onclick={eliminarPedido}
+					>
+						<img src="/remove.svg" alt="Eliminar carrito" />
+					</button>
+				{/if}
 			{/if}
-		{/if}
+		</div>
 	</div>
 {/if}
 
@@ -383,7 +390,9 @@
 			>
 				✕
 			</button>
-			<h4 class="titulo">Crear pedido:</h4>
+			<h4 class="titulo">
+				{recuentoAgrupaciones.length == 0 ? 'Crear pedido' : 'Agregar a Pedido'}
+			</h4>
 			<div class="acciones"></div>
 		</div>
 		{#each productos as producto}
@@ -421,11 +430,11 @@
 	>
 	<p class="estado-vacio">No hay productos seleccionados</p>
 {/if}
+{#if pedidosNoEditables.length > 0}
+	<p class="estado-vacio">El pedido se edita en la oportunidad</p>
+{/if}
 {#if StorePedidoEditar.carrito.length > 0 || StorePedidoNuevo.carrito.length > 0}
-	{#if puedeEditar}
-		<p class="estado-vacio">El pedido se edita en la oportunidad</p>
-	{/if}
-	<div class="acciones-fijas">
+	<div class="acciones-fijas submit">
 		<button
 			class="butter"
 			onclick={actualizarPedido}
@@ -503,7 +512,9 @@
 		padding-left: 24px;
 		width: 100%;
 	}
-
+	.submit {
+		margin-top: var(--b);
+	}
 	/* Acciones inferiores */
 	.resumen-grupo {
 		display: flex;

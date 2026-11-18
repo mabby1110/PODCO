@@ -33,11 +33,14 @@
 </script>
 
 <div class="contenedor">
-	{#if metaAcciones}
-		<div class="meta-acciones">
+	<div class="meta-acciones">
+		{#if metaAcciones}
 			{@render metaAcciones()}
-		</div>
-	{/if}
+		{/if}
+		{#if acciones && show}
+			{@render acciones()}
+		{/if}
+	</div>
 	<div
 		role="button"
 		tabindex="0"
@@ -64,11 +67,6 @@
 				{@render mas()}
 			{/if}
 		</div>
-		{#if acciones && show}
-			<div class="acciones">
-				{@render acciones()}
-			</div>
-		{/if}
 	</div>
 </div>
 
@@ -94,10 +92,11 @@
 		max-height: var(--f);
 		overflow: hidden;
 	}
-	.acciones {
+	.meta-acciones {
 		grid-column: -1 / -2;
 		display: flex;
-		justify-content: flex-end;
+		flex-direction: column;
+		gap: var(--a);
 	}
 	.show {
 		padding: var(--a);

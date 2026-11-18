@@ -19,13 +19,14 @@
 	async function handleToggle() {
 		show = !show;
 
-		if (!show) visibles = LOTE;
-
-		await tick();
-		listRef?.scrollIntoView({
-			behavior: 'smooth',
-			block: 'start'
-		});
+		if (show) {
+			visibles = LOTE;
+			await tick();
+			listRef?.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start'
+			});
+		}
 	}
 
 	function cargarMas() {

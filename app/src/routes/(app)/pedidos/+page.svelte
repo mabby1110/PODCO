@@ -14,6 +14,7 @@
 	import Controles from '$lib/components/Acciones/Controles.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import HotButton from '$lib/components/Acciones/HotButton.svelte';
+	import { onDestroy } from 'svelte';
 
 	let pedidos = $derived(page.data.pedidos.filter((p) => p.fase <= 2));
 	let currentRoute = $derived(page.url.pathname);
@@ -32,6 +33,9 @@
 	let lista_agrupada = $derived(groupData(lista_filtrada, currentRoute));
 
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
+	onDestroy(() => {
+		StoreAplicacion.set('modal_editar_pedido', false);
+	});
 </script>
 
 <Vista>

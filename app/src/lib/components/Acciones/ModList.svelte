@@ -21,7 +21,7 @@
 	} = $props();
 
 	let estado = $derived(StoreModList.get(route));
-	
+
 	const operadoresMap: Record<FieldType, { valor: Operator; label: string }[]> = {
 		string: [
 			{ valor: 'eq', label: '=' },
@@ -175,33 +175,35 @@
 		<button class="milk" onclick={agregarFiltro}>+ Filtro</button>
 		{#each estado.filters as filtro, i}
 			{@const campoDef = getCampoDef(filtro.field)}
-			<div class="filtro">
-				<button class="jelly rojo accion" onclick={() => eliminarFiltro(i)}>✕</button>
-				<div class="mod">
-					<select
-						value={filtro.field}
-						onchange={(e) => cambiarCampoFiltro(i, e.currentTarget.value)}
-					>
-						{#each columnasDinamicas as campo}
-							<option value={campo.key}>{campo.label}</option>
-						{/each}
-					</select>
-					<select
-						value={filtro.operator}
-						onchange={(e) =>
-							actualizarFiltro(i, { ...filtro, operator: e.currentTarget.value as Operator })}
-					>
-						{#each operadoresMap[campoDef.type] as op}
-							<option value={op.valor}>{op.label}</option>
-						{/each}
-					</select>
-					<input
-						type={inputTypeMap[campoDef.type]}
-						value={filtro.value}
-						oninput={(e) => actualizarFiltro(i, { ...filtro, value: e.currentTarget.value })}
-					/>
+			{#if campoDef}
+				<div class="filtro">
+					<button class="jelly rojo accion" onclick={() => eliminarFiltro(i)}>✕</button>
+					<div class="mod">
+						<select
+							value={filtro.field}
+							onchange={(e) => cambiarCampoFiltro(i, e.currentTarget.value)}
+						>
+							{#each columnasDinamicas as campo}
+								<option value={campo.key}>{campo.label}</option>
+							{/each}
+						</select>
+						<select
+							value={filtro.operator}
+							onchange={(e) =>
+								actualizarFiltro(i, { ...filtro, operator: e.currentTarget.value as Operator })}
+						>
+							{#each operadoresMap[campoDef.type] as op}
+								<option value={op.valor}>{op.label}</option>
+							{/each}
+						</select>
+						<input
+							type={inputTypeMap[campoDef.type]}
+							value={filtro.value}
+							oninput={(e) => actualizarFiltro(i, { ...filtro, value: e.currentTarget.value })}
+						/>
+					</div>
 				</div>
-			</div>
+			{/if}
 		{/each}
 	</div>
 </fieldset>

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
+	import FormSelectMotivo from '$lib/components/Formularios/FormSelectMotivo.svelte';
+	import Select from '$lib/components/Formularios/Select.svelte';
 	import { StoreCotizado } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
@@ -113,14 +115,7 @@
 	<input type="hidden" name="nombre_agente" value={$profile?.nombre} />
 	<input type="hidden" name="nombre_cliente" value={oportunidad.cliente} />
 	<div class="upload-container">
-		<input
-			type="text" 
-			title="Ingresa nombre o razón social del cliente final"
-			name="cliente_final"
-			value=""
-			placeholder="Cliente final"
-			required
-		/>
+		<FormSelectMotivo list={['Es cliente final']} placeholder="Cliente Final"/>
 
 		<div class="drop-zone milk" class:dragging={isDragging}>
 			<span class="drop-text">subir cotizacion</span>

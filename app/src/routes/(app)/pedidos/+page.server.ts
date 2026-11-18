@@ -55,8 +55,6 @@ export const actions: Actions = {
 
 		// PEDIDOS A CREAR
 		if (pedidosACrear.length > 0) {
-			console.log('pedidos a crear: ', pedidosACrear);
-
 			const pedidosParaCrear = pedidosACrear.map((pedido: any) => ({
 				id_producto: pedido.producto.id,
 				cantidad: pedido.cantidad,
@@ -64,16 +62,17 @@ export const actions: Actions = {
 				precio_unitario: pedido.precio_unitario ?? 0,
 				id_agrupacion: pedidosAActualizar[0].id_agrupacion,
 				id_oportunidad: idOportunidad,
-				fase: idOportunidad ? 2 : 0
+				fase: idOportunidad ? 2 : 1,
+				id_agente: user.id
 			}));
 
+			console.log('pedidos a crear: ', pedidosParaCrear);
 			const { data: resultCreacion, error: errorCreacion } = await supabase
 				.from('pedidos')
 				.insert(pedidosParaCrear)
 				.select();
-
 			if (errorCreacion) {
-				console.log(errorCreacion);
+				console.log(resultCreacion, errorCreacion);
 				return fail(500, { error: errorCreacion.message });
 			}
 		}

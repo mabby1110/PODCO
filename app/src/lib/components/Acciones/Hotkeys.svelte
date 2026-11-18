@@ -21,6 +21,14 @@
 		);
 	}
 
+	function activate() {
+		active = true;
+		StoreHotkeys.setActive(true);
+
+		clearTimeout(timeout);
+		timeout = setTimeout(cancel, 8000);
+	}
+
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
 			if (active) {
@@ -33,20 +41,9 @@
 			return;
 		}
 
-		if (
-			event.shiftKey &&
-			event.code === 'Space' &&
-			!event.ctrlKey &&
-			!event.altKey &&
-			!event.metaKey &&
-			!isTyping(event.target)
-		) {
+		if (event.shiftKey && event.code === 'Space') {
 			event.preventDefault();
-			active = true;
-			StoreHotkeys.setActive(true);
-
-			clearTimeout(timeout);
-			timeout = setTimeout(cancel, 4000);
+			activate();
 			return;
 		}
 
@@ -68,6 +65,19 @@
 		}
 	}
 
+	function handleMouseDown(event: MouseEvent) {
+		if (
+			event.button === 1 &&
+			!event.ctrlKey &&
+			!event.altKey &&
+			!event.metaKey &&
+			!isTyping(event.target)
+		) {
+			event.preventDefault();
+			activate();
+		}
+	}
+
 	onMount(() => {
 		const onMouseClick = () => cancel();
 		const onBlur = () => cancel();
@@ -76,6 +86,7 @@
 		};
 
 		window.addEventListener('keydown', handleKeyDown);
+		window.addEventListener('mousedown', handleMouseDown);
 		window.addEventListener('click', onMouseClick);
 		window.addEventListener('blur', onBlur);
 		window.addEventListener('focusin', onFocusIn);
@@ -83,7 +94,8 @@
 		return () => {
 			clearTimeout(timeout);
 			window.removeEventListener('keydown', handleKeyDown);
-			window.removeEventListener('mousedown', onMouseClick);
+			window.removeEventListener('mousedown', handleMouseDown);
+			window.removeEventListener('click', onMouseClick);
 			window.removeEventListener('blur', onBlur);
 			window.removeEventListener('focusin', onFocusIn);
 		};

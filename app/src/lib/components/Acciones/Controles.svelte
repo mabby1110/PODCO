@@ -153,7 +153,7 @@
 {/if}
 
 <button
-	class="control honey"
+	class="control accion honey"
 	class:activo={show}
 	onclick={() => StoreAplicacion.toggle('controles')}
 >
@@ -224,8 +224,6 @@
 
 	.control {
 		position: relative;
-		padding: var(--y);
-		height: var(--d);
 	}
 	.custom {
 		display: flex;

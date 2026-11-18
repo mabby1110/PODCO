@@ -50,6 +50,7 @@
 		await goto('/pedidos');
 		StoreAplicacion.set('modal_editar_pedido', true);
 	}
+
 </script>
 
 <Card headerStyle={fase.estilo}>

@@ -1,159 +1,138 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { untrack } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
+	import { deserialize } from '$app/forms';
 
 	import SubirOcc from '../Documentos/SubirOcc.svelte';
+	import TarjetaDoc from '../Documentos/TarjetaDoc.svelte';
 	import { fasesPedido } from '$lib';
 	import { StoreVenta } from '$lib/stores/pedidos/StorePedidoOportunidad.svelte';
-	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
-	import { StorePedidoNuevo } from '$lib/stores/pedidos/StorePedidoNuevo.svelte';
-	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 
-	// ─── Datos y derivados ───
-	let { oportunidad, disable }: { oportunidad: undefined; disable?: boolean } = $props();
+	interface Pedido {
+		id: string;
+		fase: number;
+		id_agrupacion: string | null;
+		precio_unitario: number | null;
+		cantidad: number | null;
+		moneda: string | null;
+		catalogo?: {
+			codigo?: string | null;
+			descripcion?: string | null;
+			caracteristicas?: unknown;
+			tipo_producto?: { es_serializado?: boolean | null } | null;
+		} | null;
+		oportunidades?: { necesidades?: string | null } | null;
+		docs_cotizaciones?: any | null;
+	}
+
+	interface Grupo {
+		id_agrupacion: string;
+		pedidos: Pedido[];
+	}
+
+	interface Oportunidad {
+		id: string;
+		pedidos: Pedido[];
+		clientes?: {
+			nombre_comercial?: string | null;
+			razon_social?: string | null;
+		} | null;
+	}
+
+	let { oportunidad, disable = false }: { oportunidad: Oportunidad; disable?: boolean } = $props();
 
 	let expandidos = $state<Record<string, boolean>>({});
 	let actualizando = $state(false);
 	let mensaje = $state('');
 
-	let carrito = $derived(StoreVenta.carrito);
+	const carrito = $derived(StoreVenta.carrito);
+	const itemsPorId = $derived(new Map(carrito.map((item) => [item.id, item])));
 
-	let pedidosCotizados = $derived(oportunidad.pedidos.filter((pedido) => pedido.fase === 3));
-	console.log(pedidosCotizados);
-	let pedidosAgrupados = $derived.by(() => {
-		const grupos = pedidosCotizados.reduce(
-			(acc, pedido) => {
-				const clave = pedido.id_agrupacion || 'sin_agrupar';
+	const pedidosCotizados = $derived(oportunidad.pedidos.filter((p) => p.fase === 3));
 
-				if (!acc[clave]) {
-					acc[clave] = {
-						id_agrupacion: clave,
-						pedidos: [],
-						totalGrupo: 0
-					};
-				}
-
-				acc[clave].pedidos.push(pedido);
-
-				const seleccionado = carrito.some((item) => item.id === pedido.id);
-
-				if (seleccionado) {
-					acc[clave].totalGrupo += (pedido.precio_unitario || 0) * (pedido.cantidad || 0);
-				}
-
-				return acc;
-			},
-			{} as Record<
-				string,
-				{
-					id_agrupacion: string;
-					pedidos: typeof pedidosCotizados;
-					totalGrupo: number;
-				}
-			>
-		);
-
-		return Object.values(grupos);
+	const grupos = $derived.by<Grupo[]>(() => {
+		const mapa = new Map<string, Grupo>();
+		for (const pedido of pedidosCotizados) {
+			const clave = pedido.id_agrupacion || 'sin_agrupar';
+			const existente = mapa.get(clave);
+			if (existente) existente.pedidos.push(pedido);
+			else mapa.set(clave, { id_agrupacion: clave, pedidos: [pedido] });
+		}
+		return [...mapa.values()];
 	});
 
-	// ─── Helpers ───
-	const formatMoneda = (val: number | null | undefined, moneda: string = 'USD') => {
-		if (val == null) return 'Sin precio';
+	const gruposConSeleccion = $derived(
+		grupos.filter((g) => g.pedidos.some((p) => itemsPorId.has(p.id))).length
+	);
 
-		return new Intl.NumberFormat('es-MX', {
-			style: 'currency',
-			currency: moneda,
-			currencyDisplay: 'narrowSymbol'
-		}).format(val);
-	};
+	$effect(() => {
+		oportunidad.id;
+		untrack(() => StoreVenta.limpiar());
+	});
 
-	function obtenerItem(id: string) {
-		return carrito.find((item) => item.id === id);
+	$effect(() => {
+		const vigentes = new Set(pedidosCotizados.map((p) => p.id));
+		untrack(() => {
+			StoreVenta.carrito
+				.filter((item) => !vigentes.has(item.id))
+				.forEach((item) => StoreVenta.pop(item.id));
+		});
+	});
+
+	function normalizarMoneda(moneda: string | null | undefined): string {
+		if (!moneda) return 'USD';
+		const m = moneda.toUpperCase();
+		return m === 'MX' ? 'MXN' : m;
 	}
 
-	// ─── Acciones ───
+	function formatMoneda(val: number | null | undefined, moneda: string | null = 'USD') {
+		if (val == null) return 'Sin precio';
+		return new Intl.NumberFormat('es-MX', {
+			style: 'currency',
+			currency: normalizarMoneda(moneda),
+			currencyDisplay: 'narrowSymbol'
+		}).format(val);
+	}
+
+	function subtotal(pedido: Pedido): number | null {
+		if (pedido.precio_unitario == null) return null;
+		return pedido.precio_unitario * (pedido.cantidad ?? 0);
+	}
+
+	function esSerializado(pedido: Pedido): boolean {
+		return pedido.catalogo?.tipo_producto?.es_serializado === true;
+	}
+
+	function serialFaltante(pedido: Pedido): boolean {
+		const item = itemsPorId.get(pedido.id);
+		return !!item && item.stock === true && esSerializado(pedido) && !item.serial?.trim();
+	}
+
+	function sinPrecio(pedido: Pedido): boolean {
+		return itemsPorId.has(pedido.id) && pedido.precio_unitario == null;
+	}
+
+	function tieneDetalles(pedido: Pedido): boolean {
+		return !!(
+			pedido.catalogo?.descripcion ||
+			pedido.catalogo?.caracteristicas ||
+			pedido.oportunidades?.necesidades
+		);
+	}
+
 	function cambiarEstadoPedido(id: string, nuevoEstado: string) {
-		switch (nuevoEstado) {
-			case 'descartar':
-				StoreVenta.pop(id);
-				break;
-
-			case 'pedido':
-				StoreVenta.pop(id);
-				StoreVenta.push(id, false);
-				break;
-
-			case 'stock':
-				StoreVenta.pop(id);
-				StoreVenta.push(id, true);
-				break;
-
-			default:
-				break;
-		}
+		StoreVenta.pop(id);
+		if (nuevoEstado === 'pedido') StoreVenta.push(id, false);
+		else if (nuevoEstado === 'stock') StoreVenta.push(id, true);
 	}
 
 	function ingresarSerial(id: string, serial: string) {
 		const valor = serial.trim();
 		const index = StoreVenta.carrito.findIndex((item) => item.id === id);
-
 		if (index === -1) {
-			StoreVenta.carrito.push({
-				id,
-				stock: true,
-				serial: valor
-			});
+			StoreVenta.carrito.push({ id, stock: true, serial: valor });
 		} else {
-			StoreVenta.carrito[index] = {
-				...StoreVenta.carrito[index],
-				stock: true,
-				serial: valor
-			};
-		}
-	}
-
-	async function descartarGrupo(pedidos: typeof pedidosCotizados) {
-		if (actualizando || !pedidos.length) return;
-
-		const confirmar = window.confirm('¿Estás seguro de que deseas descartar estos pedidos?');
-
-		if (!confirmar) return;
-
-		actualizando = true;
-		mensaje = '';
-
-		try {
-			const formData = new FormData();
-
-			formData.append(
-				'pedidosAActualizar',
-				JSON.stringify(
-					pedidos.map((pedido) => ({
-						id: pedido.id
-					}))
-				)
-			);
-
-			const response = await fetch('/pedidos?/descartar', {
-				method: 'POST',
-				body: formData
-			});
-
-			const result = await response.json();
-
-			if (!response.ok || result?.type === 'failure') {
-				throw new Error(result?.data?.error || result?.error || 'Error al descartar los pedidos');
-			}
-
-			StoreVenta.limpiar();
-
-			await invalidateAll();
-		} catch (error) {
-			console.error('Error al descartar pedidos:', error);
-
-			mensaje = error instanceof Error ? error.message : 'Error al descartar los pedidos';
-		} finally {
-			actualizando = false;
+			StoreVenta.carrito[index] = { ...StoreVenta.carrito[index], stock: true, serial: valor };
 		}
 	}
 
@@ -161,45 +140,57 @@
 		expandidos[id] = !expandidos[id];
 	}
 
-	onMount(() => {
-		StoreVenta.limpiar();
-	});
+	async function descartarGrupo(pedidos: Pedido[]) {
+		if (actualizando || pedidos.length === 0) return;
+		if (!window.confirm('¿Estás seguro de que deseas descartar estos pedidos?')) return;
 
-	// ─── Condiciones ───
-	let pedidosInvalidos = $derived.by(() => {
-		return oportunidad.pedidos
-			.filter((pedido) => carrito.some((item) => item.id === pedido.id))
-			.some((pedido) => {
-				const item = carrito.find((item) => item.id === pedido.id);
+		actualizando = true;
+		mensaje = '';
 
-				if (!item) return false;
+		try {
+			const formData = new FormData();
+			formData.append('pedidosAActualizar', JSON.stringify(pedidos.map((p) => ({ id: p.id }))));
 
-				if (pedido.precio_unitario == null) {
-					return true;
-				}
-
-				if (
-					item.stock === true &&
-					pedido.catalogo?.tipo_producto?.es_serializado === true &&
-					!item.serial?.trim()
-				) {
-					return true;
-				}
-
-				return false;
+			const response = await fetch('/pedidos?/descartar', {
+				method: 'POST',
+				headers: { 'x-sveltekit-action': 'true' },
+				body: formData
 			});
-	});
 
-	let tieneSeleccion = $derived(carrito.length > 0);
+			const result = deserialize(await response.text());
 
-	let puedeSubirOcc = $derived(tieneSeleccion && !pedidosInvalidos);
+			if (result.type === 'failure') {
+				throw new Error((result.data?.error as string) || 'Error al descartar los pedidos');
+			}
+			if (result.type === 'error') {
+				throw new Error(result.error?.message || 'Error al descartar los pedidos');
+			}
+
+			StoreVenta.limpiar();
+			await invalidateAll();
+		} catch (error) {
+			mensaje = error instanceof Error ? error.message : 'Error al descartar los pedidos';
+		} finally {
+			actualizando = false;
+		}
+	}
+	console.log(grupos[0].pedidos[0])
 </script>
 
 <div class="cotizaciones">
-	{#each pedidosAgrupados as grupo}
-		{@const existeSeleccion = grupo.pedidos.some((pedido) =>
-			carrito.some((item) => item.id === pedido.id)
-		)}
+	{#each grupos as grupo (grupo.id_agrupacion)}
+		{@const seleccionados = grupo.pedidos.filter((p) => itemsPorId.has(p.id))}
+		{@const existeSeleccion = seleccionados.length > 0}
+		{@const monedas = new Set(seleccionados.map((p) => normalizarMoneda(p.moneda)))}
+		{@const monedaMixta = monedas.size > 1}
+		{@const monedaGrupo = [...monedas][0] ?? normalizarMoneda(grupo.pedidos[0]?.moneda)}
+		{@const totalGrupo = seleccionados.reduce((acc, p) => acc + (subtotal(p) ?? 0), 0)}
+		{@const hayInvalidos = seleccionados.some((p) => sinPrecio(p) || serialFaltante(p))}
+		{@const hayFaltaSerial = seleccionados.some(serialFaltante)}
+		{@const bloqueadoPorOtroGrupo = existeSeleccion && gruposConSeleccion > 1}
+		{@const puedeSubirOcc =
+			existeSeleccion && !hayInvalidos && !monedaMixta && !bloqueadoPorOtroGrupo}
+		{@const documento = grupo.pedidos[0].docs_cotizaciones}
 
 		<div class="pedido">
 			<div class="lista-tarjetas honey">
@@ -214,18 +205,15 @@
 				</div>
 
 				{#each grupo.pedidos as pedido (pedido.id)}
-					{@const itemStore = obtenerItem(pedido.id)}
-					{@const esSerializado = pedido.catalogo?.tipo_producto?.es_serializado === true}
-					{@const serialInvalido =
-						itemStore?.stock === true && esSerializado && !itemStore?.serial?.trim()}
-					{@const pedidoInvalido = itemStore && pedido.precio_unitario == null}
+					{@const itemStore = itemsPorId.get(pedido.id)}
+					{@const serializado = esSerializado(pedido)}
+					{@const serialInvalido = serialFaltante(pedido)}
+					{@const precioInvalido = sinPrecio(pedido)}
 
-					<!-- svelte-ignore a11y_click_events_have_key_events -->
-					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<div
 						class="tarjeta"
 						class:selected={!!itemStore}
-						class:invalid={!!pedidoInvalido || serialInvalido}
+						class:invalid={precioInvalido || serialInvalido}
 					>
 						<strong class="titulo">
 							{pedido.catalogo?.codigo || 'Sin código'}
@@ -237,12 +225,9 @@
 									class="select-estado"
 									class:stock={itemStore?.stock === true}
 									class:pedido={itemStore?.stock === false}
+									aria-label="Estado de {pedido.catalogo?.codigo || 'pedido'}"
 									value={!itemStore ? '' : itemStore.stock ? 'stock' : 'pedido'}
-									onchange={(e) => {
-										e.stopPropagation();
-										cambiarEstadoPedido(pedido.id, e.currentTarget.value);
-									}}
-									onclick={(e) => e.stopPropagation()}
+									onchange={(e) => cambiarEstadoPedido(pedido.id, e.currentTarget.value)}
 								>
 									<option value="" disabled>Selecciona una opción</option>
 									<option value="pedido">Sobre pedido</option>
@@ -250,46 +235,40 @@
 									<option value="descartar">Descartar</option>
 								</select>
 							{/if}
-							{#if esSerializado && itemStore?.stock}
+
+							{#if serializado && itemStore?.stock}
 								<input
 									type="text"
 									placeholder="Número de serie"
+									aria-label="Número de serie de {pedido.catalogo?.codigo || 'pedido'}"
+									aria-invalid={serialInvalido}
 									value={itemStore.serial ?? ''}
 									class:input-error={serialInvalido}
-									oninput={(e) => {
-										e.stopPropagation();
-										ingresarSerial(pedido.id, e.currentTarget.value);
-									}}
-									onclick={(e) => e.stopPropagation()}
+									oninput={(e) => ingresarSerial(pedido.id, e.currentTarget.value)}
 								/>
 
 								{#if serialInvalido}
-									<small class="error-text"> El número de serie es obligatorio. </small>
+									<small class="error-text">El número de serie es obligatorio.</small>
 								{/if}
 							{/if}
 
 							<span class="precio" class:text-danger={pedido.precio_unitario == null}>
-								{pedido.cantidad} x
+								{pedido.cantidad ?? 0} x
 								{formatMoneda(pedido.precio_unitario, pedido.moneda)}
 							</span>
 						</div>
 
 						<div class="resumen">
 							<b class="subtotal">
-								{formatMoneda(
-									(pedido.precio_unitario || 0) * (pedido.cantidad || 0),
-									pedido.moneda
-								)}
+								{formatMoneda(subtotal(pedido), pedido.moneda)}
 							</b>
 						</div>
 					</div>
 
-					<div class="detalles">
-						{#if pedido.catalogo?.descripcion || pedido.catalogo?.caracteristicas || pedido.oportunidades?.necesidades}
+					{#if tieneDetalles(pedido)}
+						<div class="detalles">
 							{#if expandidos[pedido.id]}
-								<!-- svelte-ignore a11y_click_events_have_key_events -->
-								<!-- svelte-ignore a11y_no_static_element_interactions -->
-								<div class="contenido-expandido" onclick={(e) => e.stopPropagation()}>
+								<div class="contenido-expandido">
 									{#if pedido.catalogo?.descripcion}
 										<p class="desc">
 											<strong>Desc:</strong>
@@ -311,63 +290,58 @@
 										</p>
 									{/if}
 								</div>
-
-								<button
-									class="link-btn"
-									onclick={(e) => {
-										e.stopPropagation();
-										toggleDetalles(pedido.id);
-									}}
-								>
-									Ocultar detalles
-								</button>
-							{:else}
-								<button
-									class="link-btn"
-									onclick={(e) => {
-										e.stopPropagation();
-										toggleDetalles(pedido.id);
-									}}
-								>
-									Leer más detalles...
-								</button>
 							{/if}
-						{/if}
-					</div>
+
+							<button
+								class="link-btn"
+								type="button"
+								aria-expanded={!!expandidos[pedido.id]}
+								onclick={() => toggleDetalles(pedido.id)}
+							>
+								{expandidos[pedido.id] ? 'Ocultar detalles' : 'Leer más detalles...'}
+							</button>
+						</div>
+					{/if}
 				{/each}
 
-				<div class="total">
-					<h1>
-						<b>{formatMoneda(grupo.totalGrupo)}</b>
-					</h1>
-				</div>
-
-				{#if grupo.pedidos.length === 0}
-					<p class="estado-vacio">No hay pedidos pendientes por cotizar en este grupo.</p>
+				{#if monedaMixta}
+					<p class="text-danger">No se pueden mezclar monedas en un mismo grupo.</p>
+				{:else}
+					<div class="total">
+						<h1>
+							<b>{formatMoneda(totalGrupo, monedaGrupo)}</b>
+						</h1>
+					</div>
+				{/if}
+				{#if documento?.preview}
+					<TarjetaDoc src={documento.preview} title={documento.nombre ?? 'Cotización'} />
 				{/if}
 
-				<div class="acciones-panel">
-					{#if !disable}
+				{#if !disable}
+					<div class="acciones-panel">
 						{#if existeSeleccion}
 							<div class="occ-wrapper">
-								{#if pedidosInvalidos}
+								{#if bloqueadoPorOtroGrupo}
+									<div class="alerta-error">Solo se puede procesar un grupo a la vez.</div>
+								{:else if hayFaltaSerial}
 									<div class="alerta-error">
-										{#if carrito.some((item) => item.stock === true && !item.serial?.trim() && oportunidad.pedidos.some((p) => p.id === item.id && p.catalogo?.tipo_producto?.es_serializado === true))}
-											Completa el número de serie de los productos en stock antes de subir el OCC.
-										{:else}
-											Revisa los productos seleccionados antes de subir el OCC.
-										{/if}
+										Completa el número de serie de los productos en stock antes de subir el OCC.
+									</div>
+								{:else if hayInvalidos}
+									<div class="alerta-error">
+										Revisa los productos seleccionados antes de subir el OCC.
 									</div>
 								{/if}
-	
+
 								{#if puedeSubirOcc}
 									<SubirOcc
 										tipo="docs_cotizaciones"
 										action="/documentos?/subirOcc"
 										oportunidad={{
-											id: oportunidad?.id,
+											id: oportunidad.id,
 											cliente:
-												oportunidad?.clientes?.nombre_comercial || oportunidad?.clientes?.razon_social
+												oportunidad.clientes?.nombre_comercial ||
+												oportunidad.clientes?.razon_social
 										}}
 										required
 									/>
@@ -385,11 +359,17 @@
 								</button>
 							</div>
 						{/if}
-					{/if}
-				</div>
+					</div>
+				{/if}
 			</div>
 		</div>
+	{:else}
+		<p class="estado-vacio">No hay pedidos cotizados en esta oportunidad.</p>
 	{/each}
+
+	{#if mensaje}
+		<p class="error-text" role="alert">{mensaje}</p>
+	{/if}
 </div>
 
 <style>

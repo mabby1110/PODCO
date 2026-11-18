@@ -47,7 +47,7 @@
 
 <div class="contenedor-item">
 	{#if acciones}
-		<div class="acciones">
+		<div class="meta-acciones">
 			{@render acciones()}
 		</div>
 	{/if}
@@ -59,16 +59,16 @@
 		{style}
 		class="item-lista"
 	>
-		{#if meta}
-			<div class="meta">
-				{@render meta()}
-			</div>
-		{/if}
 		<div class="titulo">
 			{#if titulo}
 				{@render titulo()}
 			{/if}
 		</div>
+		{#if meta}
+			<div class="meta">
+				{@render meta()}
+			</div>
+		{/if}
 		<div class="contenido">
 			{#if contenido}
 				{@render contenido()}
@@ -85,36 +85,25 @@
 	}
 	.item-lista {
 		flex-grow: 1;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--f), 1fr));
-		gap: 0 var(--a);
 	}
-	.acciones {
+	.meta-acciones {
 		display: flex;
+		flex-direction: column;
+		gap: var(--a);
+	}
+	.titulo {
+		display: flex;
+		align-items: center;
+		gap: var(--a);
+	}
+	.contenido {
+		display: flex;
+		flex-wrap: wrap;
 		align-items: baseline;
 		gap: var(--a);
 	}
-	.meta {
-		grid-column: 1 / -1;
-		font-size: var(--b);
-		display: flex;
-		gap: var(--a);
-		align-items: center;
-	}
-	.titulo {
-		grid-column: span 2;
-	}
-	.contenido {
-		grid-column: -3 / -1;
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--a);
-		justify-content: flex-end;
-	}
 	.contenido > :global(:last-child) {
 		flex-grow: 1;
-		display: flex;
-		justify-content: flex-end;
-		min-width: var(--f);
+		text-align: end;
 	}
 </style>

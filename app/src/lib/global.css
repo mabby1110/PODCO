@@ -67,7 +67,7 @@ body {
 	right: 0;
 	background-color: var(--color-background);
 
-	/* background-image: url('/bombas.svg'); */
+	background-image: url('/bombas.svg');
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: auto;
@@ -162,16 +162,18 @@ button img {
 	display: flex;
 	flex-direction: column;
 	gap: var(--a);
+	width: max(100%, var(--h));
 }
 .badge {
-	border: none;
+	all: unset;
 	border-radius: 99px;
 	background: #f1f5f9;
 	height: fit-content;
-	padding: 4px 8px;
+	padding: 2px var(--y);
 	text-align: center;
 	width: fit-content;
-	font-size: var(--b);
+	font-size: smaller;
+	cursor: pointer;
 }
 .activo {
 	background-color: var(--color-button-highlight);
