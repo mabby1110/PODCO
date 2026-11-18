@@ -16,7 +16,7 @@
 	import HotButton from '$lib/components/Acciones/HotButton.svelte';
 	import { onDestroy } from 'svelte';
 
-	let pedidos = $derived(page.data.pedidos.filter((p) => p.fase <= 2));
+	let pedidos = $derived(page.data.pedidos);
 	let currentRoute = $derived(page.url.pathname);
 
 	// Convertido a $state para soportar bind:lista
