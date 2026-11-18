@@ -185,6 +185,7 @@ button img {
 .accion {
 	height: var(--d);
 	width: fit-content;
+	min-width: var(--d);
 	align-items: center;
 	justify-content: center;
 	padding: 0 var(--y);
