@@ -168,8 +168,8 @@
 <style>
 	.panel-controls {
 		position: fixed;
-		top: var(--a);
-		right: var(--a);
+		top: max(7vh, 1px);
+		right: max(var(--d), 1px);
 		max-width: var(--i);
 		width: 96vw;
 		height: fit-content;

@@ -120,7 +120,7 @@
 	.contenido {
 		width: 100%;
 		height: 100%;
-		max-width: max(60vw, var(--k));
+		max-width: max(60vw, var(--i));
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);

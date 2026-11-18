@@ -99,7 +99,13 @@
 			calculateQuadrant();
 		}
 	}
-
+	function resetPosition(event: MouseEvent) {
+		event.stopPropagation();
+		x = 0;
+		y = 0;
+		isMaximized = false;
+		setTimeout(calculateQuadrant, 0);
+	}
 	$effect(() => {
 		if (StorePedidoEditar.modal) {
 			// Resetea las medidas originales al abrir
@@ -138,6 +144,7 @@
 			>
 				<img src="/max-win.svg" alt="max-win" />
 			</button>
+			<button class="jelly" type="button" onclick={resetPosition}>◥</button>
 			<button
 				class="jelly rojo"
 				type="button"
@@ -217,18 +224,17 @@
 		gap: var(--a);
 		padding: 0 var(--a);
 	}
-	.max-window {
-		padding: 0;
-	}
 	.maximized {
 		position: fixed !important;
 		top: 0 !important;
+		right: 0 !important;
 		width: 100% !important;
 		height: 100% !important;
 		max-height: 100dvh !important;
 		max-width: 100dvw !important;
 		z-index: 9999;
 		min-height: var(--g);
+		padding: 0;
 	}
 	.maximized .header-actions {
 		cursor: default;

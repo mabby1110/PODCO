@@ -98,6 +98,8 @@
 		flex-direction: column;
 		gap: var(--a);
 		margin: 0 var(--b) var(--e);
+		max-height: var(--j);
+		overflow: auto;
 	}
 
 	.sentinel {
