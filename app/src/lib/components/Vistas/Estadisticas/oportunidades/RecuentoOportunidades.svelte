@@ -1,72 +1,65 @@
-
 <script lang="ts">
 	import * as echarts from 'echarts';
+	import { fasesOportunidad } from '$lib';
 
 	interface Oportunidad {
-		id: string;
+		id?: string;
 		fase: number;
-		createdAt: string | Date;
 		agentes?: {
-			nombre: string;
-			isAdmin?: boolean;
+			nombre?: string;
 		};
 	}
 
 	interface Props {
 		oportunidades?: Oportunidad[];
 	}
+
 	let { oportunidades = [] }: Props = $props();
-	console.log(oportunidades);
 
 	let chartContainer = $state<HTMLDivElement>();
 	let chart = $state<echarts.ECharts>();
-	let vista = $state<'total' | 'mensual'>('total');
+
+	const COLORES_FASE: Record<number, string> = {
+		0: '#ff4444',
+		1: '#c7d2fe',
+		2: '#6699ff',
+		3: '#eab308',
+		4: '#34d76a',
+		5: '#5ca8ff',
+		6: '#eab308',
+		7: '#34d76a',
+		8: '#111827'
+	};
 
 	let oportunidadesValidas = $derived(
-		oportunidades.filter(
-			(op) => op.agentes?.nombre?.toLowerCase() !== 'pruebas'
-		)
+		oportunidades.filter((op) => op.agentes?.nombre?.toLowerCase() !== 'pruebas')
 	);
 
 	let total = $derived(oportunidadesValidas.length);
 
 	let chartData = $derived.by(() => {
-		if (vista === 'total') {
-			return {
-				categorias: ['Total de oportunidades'],
-				valores: [total]
-			};
-		}
-
-		const stats = new Map<string, number>();
+		const conteo = new Map<number, number>();
 
 		oportunidadesValidas.forEach((op) => {
-			const fecha = new Date(op.createdAt);
-
-			if (isNaN(fecha.getTime())) return;
-
-			const clave = `${fecha.getFullYear()}-${String(
-				fecha.getMonth() + 1
-			).padStart(2, '0')}`;
-
-			stats.set(clave, (stats.get(clave) || 0) + 1);
+			const fase = Number(op.fase);
+			if (!Number.isFinite(fase)) return;
+			conteo.set(fase, (conteo.get(fase) || 0) + 1);
 		});
 
-		const meses = Array.from(stats.keys()).sort();
+		const pipeline = fasesOportunidad
+			.filter((fase) => fase.id_fase >= 1)
+			.map((fase) => ({
+				value: conteo.get(fase.id_fase) || 0,
+				name: `${fase.id_fase}. ${fase.actual}`,
+				itemStyle: { color: COLORES_FASE[fase.id_fase] ?? '#94a3b8' },
+				label: {
+					color: fase.id_fase === 8 ? '#f8fafc' : '#0f172a'
+				}
+			}));
 
 		return {
-			categorias: meses.map((mes) => {
-				const [anio, numeroMes] = mes.split('-');
-				return new Date(
-					Number(anio),
-					Number(numeroMes) - 1,
-					1
-				).toLocaleDateString('es-MX', {
-					month: 'short',
-					year: 'numeric'
-				});
-			}),
-			valores: meses.map((mes) => stats.get(mes) || 0)
+			pipeline,
+			perdidas: conteo.get(0) || 0
 		};
 	});
 
@@ -87,54 +80,54 @@
 	$effect(() => {
 		if (!chart) return;
 
+		const maxValue = Math.max(...chartData.pipeline.map((d) => d.value), 1);
+
 		const option: echarts.EChartsCoreOption = {
 			title: {
-				text: 'Oportunidades',
-				subtext: vista === 'total'
-					? 'Total de oportunidades registradas'
-					: 'Oportunidades registradas por mes',
+				text: 'Embudo de ventas',
+				subtext: 'Oportunidades por fase',
 				left: 'center'
 			},
 			tooltip: {
-				trigger: 'axis',
-				axisPointer: { type: 'shadow' }
+				trigger: 'item',
+				formatter: '{b}<br/><b>{c}</b> ({d}%)'
 			},
-			grid: {
-				left: '3%',
-				right: '4%',
-				bottom: '8%',
-				top: '25%',
-				containLabel: true
-			},
-			xAxis: {
-				type: 'category',
-				data: chartData.categorias,
-				axisLabel: {
-					interval: 0
-				}
-			},
-			yAxis: {
-				type: 'value',
-				name: 'Oportunidades',
-				minInterval: 1
+			legend: {
+				type: 'scroll',
+				bottom: 0,
+				data: chartData.pipeline.map((d) => d.name)
 			},
 			series: [
 				{
 					name: 'Oportunidades',
-					type: 'bar',
-					barMaxWidth: 55,
-					data: chartData.valores,
+					type: 'funnel',
+					left: '8%',
+					top: 70,
+					bottom: 56,
+					width: '84%',
+					min: 0,
+					max: maxValue,
+					minSize: '8%',
+					maxSize: '100%',
+					sort: 'none',
+					gap: 2,
 					label: {
 						show: true,
-						position: 'top'
+						position: 'inside',
+						formatter: '{c}',
+						fontSize: 14,
+						fontWeight: 'bold'
 					},
 					itemStyle: {
-						color: '#8b5cf6',
-						borderRadius: [6, 6, 0, 0]
+						borderColor: '#fff',
+						borderWidth: 2
 					},
 					emphasis: {
-						focus: 'series'
-					}
+						label: {
+							fontSize: 18
+						}
+					},
+					data: chartData.pipeline
 				}
 			]
 		};
@@ -143,47 +136,25 @@
 	});
 </script>
 
-<div class="card admin-border">
+<div class="pan honey grafica admin-border">
 	<div class="header">
 		<div class="total-container">
 			<span class="total-label">Total de oportunidades</span>
 			<strong class="total-number">{total}</strong>
 		</div>
 
-		<div class="controls">
-			<button
-				class:active={vista === 'total'}
-				onclick={() => (vista = 'total')}
-			>
-				Total
-			</button>
-
-			<button
-				class:active={vista === 'mensual'}
-				onclick={() => (vista = 'mensual')}
-			>
-				Mensual
-			</button>
-		</div>
+		{#if chartData.perdidas > 0}
+			<div class="total-container perdidas">
+				<span class="total-label">Perdidas</span>
+				<strong class="total-number">{chartData.perdidas}</strong>
+			</div>
+		{/if}
 	</div>
 
-	<div bind:this={chartContainer} style="width: 100%; height: 350px;"></div>
+	<div bind:this={chartContainer} style="width: 100%; height: 420px;"></div>
 </div>
 
 <style>
-	.card {
-		background: #ffffff;
-		border-radius: 12px;
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-		padding: 16px;
-		width: 100%;
-		box-sizing: border-box;
-	}
-
-	.admin-border {
-		border-top: 4px solid #8b5cf6;
-	}
-
 	.header {
 		display: flex;
 		justify-content: space-between;
@@ -210,28 +181,7 @@
 		color: #1e293b;
 	}
 
-	.controls {
-		display: flex;
-		gap: 4px;
-		padding: 4px;
-		background: #f1f5f9;
-		border-radius: 8px;
-	}
-
-	.controls button {
-		border: none;
-		padding: 8px 16px;
-		border-radius: 6px;
-		cursor: pointer;
-		background: transparent;
-		color: #64748b;
-		font-weight: 600;
-		transition: all 0.2s;
-	}
-
-	.controls button.active {
-		background: #8b5cf6;
-		color: white;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	.perdidas .total-number {
+		color: #dc2626;
 	}
 </style>

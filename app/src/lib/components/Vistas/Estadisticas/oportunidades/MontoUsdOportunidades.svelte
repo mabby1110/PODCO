@@ -45,7 +45,7 @@
 	type Vista = 'total' | 'agente' | 'producto';
 
 	let { oportunidades = [] }: Props = $props();
-
+	console.log(oportunidades)
 	let chartContainer = $state<HTMLDivElement>();
 	let chart = $state<echarts.ECharts>();
 	let tasas = $state<Record<string, number>>({});
@@ -391,7 +391,7 @@
 	});
 </script>
 
-<div class="card admin-border">
+<div class="pan honey grafica admin-border">
 	<div class="header">
 		<div class="total-container">
 			<span class="total-label">Total USD</span>
@@ -421,19 +421,6 @@
 </div>
 
 <style>
-	.card {
-		background: #ffffff;
-		border-radius: 12px;
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-		padding: 16px;
-		width: 100%;
-		box-sizing: border-box;
-	}
-
-	.admin-border {
-		border-top: 4px solid #0ea5e9;
-	}
-
 	.header {
 		display: flex;
 		justify-content: space-between;

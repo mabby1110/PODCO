@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import ExportarCSV from '$lib/components/Acciones/ExportarCSV.svelte';
-	import PanelFiltros from '$lib/components/Acciones/PanelFiltros.svelte';
 	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
-	import { appState } from '$lib/stores/appState.svelte';
 	import { extraerColumnas, filterData, groupData, sortData } from '$lib/utils/ModList';
 	import { StoreModList } from '$lib/stores/StoreModList.svelte';
 	import ModList from '$lib/components/Acciones/ModList.svelte';
-	import { profile } from '$lib/stores/profileStore.svelte';
 	import TarjetaGrupoPedidos from '$lib/components/Vistas/Pedidos/TarjetaGrupoPedidos.svelte';
 	import Controles from '$lib/components/Acciones/Controles.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';

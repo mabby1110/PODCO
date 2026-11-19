@@ -6,15 +6,17 @@
 	import { page } from '$app/state';
 
 	let {
-		portada,
 		acciones,
 		contenido,
+		portada,
+		estadisticas,
 		grid = false,
 		fullscreen = false
 	}: {
-		portada?: Snippet;
 		acciones: Snippet;
 		contenido: Snippet;
+		portada?: Snippet;
+		estadisticas?: Snippet;
 		grid?: boolean;
 		fullscreen?: boolean;
 	} = $props();
@@ -43,6 +45,11 @@
 	class:fullscreen
 	use:arrowScroll={{ step: 40, enabled: true }}
 >
+	{#if estadisticas}
+		<div class="estadisticas">
+			{@render estadisticas()}
+		</div>
+	{/if}
 	{#if contenido && mounted}
 		<div class="contenido">
 			{@render contenido()}
@@ -65,6 +72,15 @@
 		padding: var(--b);
 		align-items: baseline;
 		gap: var(--a);
+	}
+	.estadisticas {
+		width: 100%;
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		gap: var(--a);
+		padding: var(--b);
+		min-height: max(80vh, var(--h));
 	}
 	.vista {
 		position: relative;

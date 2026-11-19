@@ -16,6 +16,7 @@
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import RecuentoOportunidades from '$lib/components/Vistas/Estadisticas/oportunidades/RecuentoOportunidades.svelte';
 	import MontoUsdOportunidades from '$lib/components/Vistas/Estadisticas/oportunidades/MontoUsdOportunidades.svelte';
+	import Lista from '$lib/components/Tarjetas/Lista.svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -48,9 +49,9 @@
 </script>
 
 <Vista>
-	{#snippet portada()}
-		<!-- <RecuentoOportunidades {oportunidades} /> -->
-		 <MontoUsdOportunidades {oportunidades}/>
+	{#snippet estadisticas()}
+		<RecuentoOportunidades oportunidades={lista_filtrada} />
+		<MontoUsdOportunidades oportunidades={lista_filtrada} />
 	{/snippet}
 	{#snippet acciones()}
 		<Controles>
@@ -88,13 +89,11 @@
 				</div>
 			{/each}
 		{:else}
-			{#each lista_filtrada as oportunidad (oportunidad.id)}
-				<TarjetaListaOportunidades {oportunidad} />
-			{:else}
-				<div class="no-results">
-					<p>No se encontraron datos.</p>
-				</div>
-			{/each}
+			<Lista items={lista_ordenada}>
+				{#snippet children(elemento)}
+					<TarjetaListaOportunidades oportunidad={elemento} />
+				{/snippet}
+			</Lista>
 		{/if}
 	{/snippet}
 </Vista>

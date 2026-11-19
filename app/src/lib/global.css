@@ -312,6 +312,9 @@ section .section-block {
 	flex-direction: column;
 	gap: var(--y);
 }
+.grafica {
+	min-width: max(40vw, var(--h));
+}
 
 /* DROP ZONE */
 .drop-zone {
