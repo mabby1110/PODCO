@@ -1,22 +1,30 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
-	let submit = $state(false);
-	function handleSubmit(event: SubmitEvent) {
-		submit = true;
-		event.preventDefault();
-	}
 </script>
 
-{#if StoreAplicacion.value.nav || submit}
-	<form onsubmit={handleSubmit}>
-		<button type="submit" class="butter logout-button">
-			{$profile?.nombre}
-		</button>
-	</form>
-{/if}
+<form
+	class="logout"
+	class:visible={StoreAplicacion.value.nav}
+	method="POST"
+	action="/auth/logout"
+	use:enhance
+>
+	<button type="submit" class="butter logout-button">
+		{$profile?.nombre}
+	</button>
+</form>
 
 <style>
+	.logout {
+		display: none;
+	}
+
+	.logout.visible {
+		display: block;
+	}
+
 	.logout-button {
 		position: fixed;
 		top: var(--a);

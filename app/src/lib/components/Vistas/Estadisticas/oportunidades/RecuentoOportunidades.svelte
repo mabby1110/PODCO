@@ -15,12 +15,12 @@
 	interface Props {
 		oportunidades?: Oportunidad[];
 	}
-
 	let { oportunidades = [] }: Props = $props();
+	console.log(oportunidades);
 
 	let chartContainer = $state<HTMLDivElement>();
 	let chart = $state<echarts.ECharts>();
-	let vista = $state<'total' | 'mensual'>('mensual');
+	let vista = $state<'total' | 'mensual'>('total');
 
 	let oportunidadesValidas = $derived(
 		oportunidades.filter(

@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
@@ -19,14 +21,12 @@
 		StoreHotkeys.setActive(false);
 		clearTimeout(timeout);
 	}
-
 	function isTyping(target: EventTarget | null): boolean {
 		return (
 			target instanceof HTMLElement &&
 			(target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))
 		);
 	}
-
 	function isVisible(element: HTMLElement): boolean {
 		const style = getComputedStyle(element);
 		const rect = element.getBoundingClientRect();
@@ -45,7 +45,6 @@
 			element.getAttribute('aria-disabled') !== 'true'
 		);
 	}
-
 	function generateLabels(count: number): string[] {
 		const labels: string[] = [];
 
@@ -57,7 +56,6 @@
 
 		return labels;
 	}
-
 	function scanDOM() {
 		const container = document.querySelector('.vista .contenido');
 
@@ -79,7 +77,6 @@
 			rect: element.getBoundingClientRect()
 		}));
 	}
-
 	async function activate() {
 		active = true;
 		typed = '';
@@ -95,7 +92,27 @@
 
 		scanDOM();
 	}
+	function parentPath(pathname: string): string | null {
+		const parts = pathname.split('/').filter(Boolean);
 
+		if (parts.length <= 1) return null;
+
+		parts.pop();
+
+		return '/' + parts.join('/');
+	}
+	async function goUp() {
+		const parent = parentPath(page.url.pathname);
+
+		if (!parent) return;
+
+		typed = '';
+		hints = [];
+
+		await goto(parent);
+		await tick();
+		await refreshHints();
+	}
 	async function executeHint(label: string) {
 		const hint = hints.find((item) => item.label === label);
 
@@ -143,6 +160,24 @@
 		}
 
 		if (!active || event.repeat || isTyping(event.target)) return;
+
+		if (event.key === 'Backspace') {
+			event.preventDefault();
+
+			if (typed) {
+				typed = typed.slice(0, -1);
+				scanDOM();
+
+				if (typed) {
+					hints = hints.filter((hint) => hint.label.startsWith(typed));
+				}
+
+				return;
+			}
+
+			goUp();
+			return;
+		}
 
 		if (['Shift', 'Control', 'Alt', 'Meta'].includes(event.key)) return;
 

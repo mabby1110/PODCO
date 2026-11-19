@@ -15,6 +15,7 @@
 	import Leyenda from '$lib/components/Tarjetas/Leyenda.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import RecuentoOportunidades from '$lib/components/Vistas/Estadisticas/oportunidades/RecuentoOportunidades.svelte';
+	import MontoUsdOportunidades from '$lib/components/Vistas/Estadisticas/oportunidades/MontoUsdOportunidades.svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -26,31 +27,18 @@
 
 	console.log('Oportunidades', lista.length);
 	let lista_ordenada = $derived.by(() => {
-		console.time('1. Ordenamiento');
-
 		const result = sortData(lista, currentRoute);
-
-		console.timeEnd('1. Ordenamiento');
 		return result;
 	});
 
 	let lista_filtrada = $derived.by(() => {
-		console.time('2. Filtrado');
-
 		const result = filterData(lista_ordenada, currentRoute);
-
-		console.timeEnd('2. Filtrado');
 		return result;
 	});
 
 	let lista_agrupada = $derived.by(() => {
 		if (!isGrouped) return [];
-
-		console.time('3. Agrupación');
-
 		const result = groupData(lista_filtrada, currentRoute);
-
-		console.timeEnd('3. Agrupación');
 		return result;
 	});
 
@@ -61,7 +49,8 @@
 
 <Vista>
 	{#snippet portada()}
-		<RecuentoOportunidades {oportunidades} />
+		<!-- <RecuentoOportunidades {oportunidades} /> -->
+		 <MontoUsdOportunidades {oportunidades}/>
 	{/snippet}
 	{#snippet acciones()}
 		<Controles>
