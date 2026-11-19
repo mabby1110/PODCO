@@ -1,15 +1,21 @@
-<!-- $lib/components/Hotkeys.svelte -->
-
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { StoreHotkeys } from '$lib/stores/app/StoreHotkeys.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 
 	let active = $state(false);
+	let hints = $state<{ element: HTMLElement; label: string; rect: DOMRect }[]>([]);
+	let typed = $state('');
+
 	let timeout: ReturnType<typeof setTimeout>;
+	let observer: MutationObserver;
+
+	const alphabet = 'ASDFGHJKLQWERTYUIOPZXCVBNM';
 
 	function cancel() {
 		active = false;
+		typed = '';
+		hints = [];
 		StoreHotkeys.setActive(false);
 		clearTimeout(timeout);
 	}
@@ -21,12 +27,95 @@
 		);
 	}
 
-	function activate() {
+	function isVisible(element: HTMLElement): boolean {
+		const style = getComputedStyle(element);
+		const rect = element.getBoundingClientRect();
+
+		return (
+			style.display !== 'none' &&
+			style.visibility !== 'hidden' &&
+			Number(style.opacity) > 0 &&
+			rect.width > 0 &&
+			rect.height > 0 &&
+			rect.bottom > 0 &&
+			rect.right > 0 &&
+			rect.top < window.innerHeight &&
+			rect.left < window.innerWidth &&
+			!element.hasAttribute('disabled') &&
+			element.getAttribute('aria-disabled') !== 'true'
+		);
+	}
+
+	function generateLabels(count: number): string[] {
+		const labels: string[] = [];
+
+		for (let i = 0; i < alphabet.length && labels.length < count; i++) {
+			for (let j = 0; j < alphabet.length && labels.length < count; j++) {
+				labels.push(alphabet[i] + alphabet[j]);
+			}
+		}
+
+		return labels;
+	}
+
+	function scanDOM() {
+		const container = document.querySelector('.vista .contenido');
+
+		if (!container) {
+			hints = [];
+			return;
+		}
+
+		const elements = Array.from(
+			container.querySelectorAll<HTMLElement>(
+				'a[href], button, [role="button"], input[type="button"], input[type="submit"], summary, [onclick], [tabindex]:not([tabindex="-1"])'
+			)
+		).filter((element) => isVisible(element));
+		const labels = generateLabels(elements.length);
+
+		hints = elements.map((element, index) => ({
+			element,
+			label: labels[index],
+			rect: element.getBoundingClientRect()
+		}));
+	}
+
+	async function activate() {
 		active = true;
+		typed = '';
 		StoreHotkeys.setActive(true);
 
-		clearTimeout(timeout);
-		timeout = setTimeout(cancel, 8000);
+		await tick();
+		scanDOM();
+	}
+	async function refreshHints() {
+		if (!active) return;
+
+		await tick();
+
+		scanDOM();
+	}
+
+	async function executeHint(label: string) {
+		const hint = hints.find((item) => item.label === label);
+
+		if (!hint || !hint.element.isConnected) {
+			await refreshHints();
+			return;
+		}
+
+		const element = hint.element;
+
+		// Limpiar las etiquetas anteriores sin desactivar el modo.
+		typed = '';
+		hints = [];
+
+		element.focus({ preventScroll: true });
+		element.click();
+
+		// Esperar a que Svelte actualice el DOM.
+		await tick();
+		await refreshHints();
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
@@ -43,26 +132,41 @@
 
 		if (event.shiftKey && event.code === 'Space') {
 			event.preventDefault();
-			activate();
+
+			if (active) {
+				cancel();
+			} else {
+				activate();
+			}
+
 			return;
 		}
 
-		if (!active || event.repeat) return;
+		if (!active || event.repeat || isTyping(event.target)) return;
 
-		// Ignorar teclas modificadoras.
-		if (['Shift', 'Control', 'Alt', 'Meta'].includes(event.key)) {
+		if (['Shift', 'Control', 'Alt', 'Meta'].includes(event.key)) return;
+
+		const key = event.key.toUpperCase();
+
+		if (!alphabet.includes(key) || key.length !== 1) return;
+
+		event.preventDefault();
+
+		typed += key;
+
+		const matches = hints.filter((hint) => hint.label.startsWith(typed));
+
+		if (matches.length === 1 && matches[0].label === typed) {
+			executeHint(typed);
 			return;
 		}
 
-		const key = event.key.toLowerCase();
-		cancel();
-
-		// Solo consumir la tecla si hay un comando registrado.
-		if (StoreHotkeys.get(key)) {
-			event.preventDefault();
-			event.stopPropagation();
-			StoreHotkeys.execute(key);
+		if (matches.length === 0) {
+			typed = '';
+			return;
 		}
+
+		hints = matches;
 	}
 
 	function handleMouseDown(event: MouseEvent) {
@@ -74,63 +178,128 @@
 			!isTyping(event.target)
 		) {
 			event.preventDefault();
-			activate();
+
+			if (active) {
+				cancel();
+			} else {
+				activate();
+			}
 		}
 	}
 
+	function handleClick() {
+		// if (active) cancel();
+	}
+
 	onMount(() => {
-		const onMouseClick = () => cancel();
-		const onBlur = () => cancel();
-		const onFocusIn = (event: FocusEvent) => {
-			if (isTyping(event.target)) cancel();
-		};
+		observer = new MutationObserver(() => {
+			if (active) scanDOM();
+		});
+
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true,
+			attributes: true,
+			attributeFilter: ['class', 'style', 'hidden', 'disabled']
+		});
 
 		window.addEventListener('keydown', handleKeyDown);
 		window.addEventListener('mousedown', handleMouseDown);
-		window.addEventListener('click', onMouseClick);
-		window.addEventListener('blur', onBlur);
-		window.addEventListener('focusin', onFocusIn);
+		window.addEventListener('click', handleClick);
+
+		const handleResize = () => {
+			if (active) scanDOM();
+		};
+
+		window.addEventListener('resize', handleResize);
+		window.addEventListener('scroll', handleResize, true);
 
 		return () => {
 			clearTimeout(timeout);
+			observer.disconnect();
+
 			window.removeEventListener('keydown', handleKeyDown);
 			window.removeEventListener('mousedown', handleMouseDown);
-			window.removeEventListener('click', onMouseClick);
-			window.removeEventListener('blur', onBlur);
-			window.removeEventListener('focusin', onFocusIn);
+			window.removeEventListener('click', handleClick);
+			window.removeEventListener('resize', handleResize);
+			window.removeEventListener('scroll', handleResize, true);
 		};
 	});
 </script>
 
 {#if active}
-	<div class="hotkey-hint" role="status">
-		<kbd>Q</kbd> Buscar
-		<kbd>E</kbd>
-		{StoreAplicacion.value.retraer ? 'Retraer' : 'Mostrar'} Lista
-		<kbd>Esc</kbd> Cancelar
+	<div class="hint-container">
+		{#each hints as hint (hint.label)}
+			<div
+				class="hint"
+				class:matched={typed.length > 0 && hint.label.startsWith(typed)}
+				style:left="{hint.rect.left + hint.rect.width / 2}px"
+				style:top="{hint.rect.top + hint.rect.height / 2}px"
+			>
+				{hint.label}
+			</div>
+		{/each}
+	</div>
+
+	<div class="hotkey-status">
+		<span>{typed || 'Navegar'}</span>
+		<span>{hints.length} elementos</span>
+		<kbd>Esc</kbd>
 	</div>
 {/if}
 
 <style>
-	.hotkey-hint {
+	.hint-container {
+		position: fixed;
+		inset: 0;
+		z-index: 999999;
+		pointer-events: none;
+	}
+
+	.hint {
+		position: absolute;
+		transform: translate(-50%, -50%);
+		background: #facc15;
+		color: #111827;
+		border: 1px solid #ca8a04;
+		border-radius: 4px;
+		padding: 2px 5px;
+		font-size: 12px;
+		font-weight: 900;
+		font-family: monospace;
+		line-height: 1.3;
+		box-shadow: 0 2px 5px #0005;
+		pointer-events: none;
+	}
+
+	.hint.matched {
+		background: #22c55e;
+		color: white;
+		border-color: #15803d;
+	}
+
+	.hotkey-status {
 		position: fixed;
 		bottom: 1rem;
 		left: 50%;
 		transform: translateX(-50%);
-		z-index: 9999;
-		padding: 0.65rem 1rem;
-		border: 1px solid var(--color-border, #888);
-		border-radius: 0.5rem;
-		background: var(--color-background, Canvas);
-		color: var(--color-foreground, CanvasText);
-		box-shadow: 0 4px 16px #0002;
+		z-index: 1000000;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 10px 14px;
+		background: #18181b;
+		color: white;
+		border-radius: 8px;
+		font-size: 13px;
+		box-shadow: 0 4px 16px #0005;
 		pointer-events: none;
 	}
 
-	kbd {
-		padding: 0.1rem 0.3rem;
-		border: 1px solid #8888;
-		border-radius: 0.25rem;
+	.hotkey-status kbd {
+		padding: 2px 6px;
+		border: 1px solid #71717a;
+		border-radius: 4px;
 		font-family: monospace;
 	}
 </style>

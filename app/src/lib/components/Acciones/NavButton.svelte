@@ -12,7 +12,7 @@
 		{ path: '/actividades', label: 'Actividades', icon: '⚡', key: '4' },
 		{ path: '/pedidos', label: 'Pedidos', icon: '📦', key: '5' },
 		{ path: '/catalogo', label: 'Catálogo', icon: '📑', key: '6' },
-		{ path: '/documentos', label: 'Documentos', icon: '📑', key: '0' },
+		{ path: '/documentos', label: 'Documentos', icon: '📑', key: '0' }
 	];
 
 	function togglePanel(event: MouseEvent) {
@@ -38,8 +38,11 @@
 				action: () => navigate(route.path)
 			})
 		);
+		const onMouseClick = () => StoreAplicacion.set('nav', false);
+		window.addEventListener('click', onMouseClick);
 		return () => {
 			unregister.forEach((dispose) => dispose());
+			window.removeEventListener('click', onMouseClick);
 		};
 	});
 </script>

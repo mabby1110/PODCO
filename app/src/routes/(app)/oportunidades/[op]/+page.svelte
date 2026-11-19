@@ -50,7 +50,6 @@
 		await goto('/pedidos');
 		StoreAplicacion.set('modal_editar_pedido', true);
 	}
-
 </script>
 
 <Card headerStyle={fase.estilo}>
@@ -89,7 +88,6 @@
 				<input type="hidden" name="id" value={oportunidad?.id} />
 			{/snippet}
 		</EditableInput>
-
 		<FormEditableContact
 			lista={oportunidad?.clientes.contactos}
 			id={oportunidad?.clientes.id}
@@ -97,7 +95,6 @@
 			action="/clientes?/update"
 			{editando}
 		/>
-
 		<EditableInput
 			{editando}
 			id={oportunidad?.id}
@@ -107,6 +104,16 @@
 			value={oportunidad?.necesidades}
 			action="/oportunidades?/update"
 			placeholder="Necesidades"
+		/>
+		<EditableInput
+			{editando}
+			id={oportunidad?.id}
+			label="Análisis"
+			name="analisis"
+			type="text"
+			value={oportunidad?.analisis}
+			action="/oportunidades?/update"
+			placeholder="[contexto][analisis][accion][seleccion][siguiente(s) accion(es)]"
 		/>
 
 		<!-- <EditableInput

@@ -13,6 +13,7 @@
 	import HotButton from '$lib/components/Acciones/HotButton.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
 	import Lista from '$lib/components/Tarjetas/Lista.svelte';
+	import { onDestroy } from 'svelte';
 
 	let { catalogo } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -51,9 +52,12 @@
 		console.timeEnd('3. Agrupación');
 		return result;
 	});
-    
+
 	$effect(() => {
 		lista = catalogo;
+	});
+	onDestroy(() => {
+		StoreAplicacion.set('modal_editar_pedido', false);
 	});
 </script>
 

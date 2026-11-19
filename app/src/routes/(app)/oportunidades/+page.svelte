@@ -14,6 +14,7 @@
 	import Controles from '$lib/components/Acciones/Controles.svelte';
 	import Leyenda from '$lib/components/Tarjetas/Leyenda.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
+	import RecuentoOportunidades from '$lib/components/Vistas/Estadisticas/oportunidades/RecuentoOportunidades.svelte';
 
 	let { oportunidades } = $derived(page.data);
 	let currentRoute = $derived(page.url.pathname);
@@ -23,7 +24,7 @@
 	let columnasDinamicas = $derived(extraerColumnas(oportunidades));
 	let isGrouped = $derived(StoreModList.get(currentRoute).groupBy !== null);
 
-	console.log("Oportunidades", lista.length);
+	console.log('Oportunidades', lista.length);
 	let lista_ordenada = $derived.by(() => {
 		console.time('1. Ordenamiento');
 
@@ -59,6 +60,9 @@
 </script>
 
 <Vista>
+	{#snippet portada()}
+		<RecuentoOportunidades {oportunidades} />
+	{/snippet}
 	{#snippet acciones()}
 		<Controles>
 			{#snippet header()}

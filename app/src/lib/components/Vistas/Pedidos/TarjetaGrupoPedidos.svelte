@@ -114,6 +114,9 @@
 								<strong>
 									{pedido.catalogo.codigo || 'Sin código'}
 								</strong>
+								<p>
+									{pedido.catalogo.descripcion || 'Sin descripción'}
+								</p>
 							</div>
 						{/snippet}
 						{#snippet contenido()}

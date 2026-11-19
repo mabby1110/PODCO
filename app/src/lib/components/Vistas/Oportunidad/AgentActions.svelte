@@ -87,29 +87,6 @@
 						{/if}
 					</div>
 				</div> -->
-				<div class="opcional">
-					<h3>Informacion adicional</h3>
-					<div class="opciones">
-						<FormOptionalInput title="+Observaciones">
-							<FormInput
-								label="Observaciones"
-								name="observaciones"
-								placeholder="Detalles importantes y pautas a seguir"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-						<FormOptionalInput title="+Agregar requisitos">
-							<FormInput
-								label="Requisitos"
-								name="nuevosRequisitos"
-								placeholder="Viáticos, hospedaje, transporte, permisos de acceso, equipo de seguridad, herramientas especiales u otros requerimientos operativos"
-								type="textarea"
-								required
-							/>
-						</FormOptionalInput>
-					</div>
-				</div>
 				<DatePicker title="Fecha seguimiento o Expiración" />
 			{:else if fase.id_fase == 3}
 				<FormInput

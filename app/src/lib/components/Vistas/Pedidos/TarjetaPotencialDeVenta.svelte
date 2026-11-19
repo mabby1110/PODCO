@@ -119,6 +119,8 @@
 	{@const monedaMixta = monedas.size > 1}
 	{@const monedaGrupo = [...monedas][0] ?? 'USD'}
 	{@const sinPrecio = seleccionadosGrupo.some((p) => !p.precio_unitario)}
+	{@const sinRef = seleccionadosGrupo.some((p) => !p.ref)}
+	{@const sinMoneda = seleccionadosGrupo.some((p) => !p.moneda)}
 	{@const totalGrupo = agrupacion.grupo.reduce((acc, p) => acc + (subtotal(p) ?? 0), 0)}
 	{@const otroGrupoSeleccionado = algunSeleccionado ? gruposConSeleccion > 1 : gruposConSeleccion > 0}
 
@@ -179,10 +181,10 @@
 			{#if algunSeleccionado && !monedaMixta}
 				{#if gruposConSeleccion > 1}
 					<p class="text-danger">Solo se puede cotizar un grupo a la vez.</p>
-				{:else if sinPrecio}
+				{:else if sinPrecio || sinRef}
 					<button class="alerta-error" type="button" onclick={() => editarPedido(agrupacion.grupo)}>
 						<strong>Atención:</strong>
-						<u>Uno o más pedidos seleccionados no tienen precio unitario. Presiona para editar.</u>
+						<u>Uno o más pedidos seleccionados necesitan más información. Presiona para editar.</u>
 					</button>
 				{:else}
 					<SubirCotizacion

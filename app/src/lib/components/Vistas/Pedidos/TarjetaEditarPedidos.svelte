@@ -335,16 +335,16 @@
 			{/if}
 		</div>
 		<div class="acciones-fijas">
+			<button
+				class="butter accion"
+				type="button"
+				aria-label="Limpiar"
+				title="Limpiar"
+				onclick={limpiarCarritoCompleto}
+			>
+				<img src="/clean.svg" alt="Limpiar carrito" />
+			</button>
 			{#if puedeEditar}
-				<button
-					class="butter accion"
-					type="button"
-					aria-label="Limpiar"
-					title="Limpiar"
-					onclick={limpiarCarritoCompleto}
-				>
-					<img src="/clean.svg" alt="Limpiar carrito" />
-				</button>
 				{#if StorePedidoEditar.carrito.length > 0 && StorePedidoNuevo.carrito.length == 0}
 					<button
 						class="butter accion rojo"

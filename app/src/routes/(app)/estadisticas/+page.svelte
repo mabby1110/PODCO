@@ -6,7 +6,7 @@
 	import GraficaEmbudoCotizaciones from '$lib/components/Vistas/Estadisticas/GraficaEmbudoCotizaciones.svelte';
 	import GraficaIngresoPedidos from '$lib/components/Vistas/Estadisticas/GraficaIngresoPedidos.svelte';
 	import GraficaOportunidadesXSector from '$lib/components/Vistas/Estadisticas/GraficaOportunidadesXSector.svelte';
-	import GraficaRendimientoAgentesOportunidades from '$lib/components/Vistas/Estadisticas/GraficaRendimientoAgentesOportunidades.svelte';
+	import GraficaRendimientoAgentesOportunidades from '$lib/components/Vistas/Estadisticas/oportunidades/RecuentoOportunidades.svelte';
 	import { profile } from '$lib/stores/profileStore.svelte';
 
 	let { oportunidades } = $derived(page.data);
