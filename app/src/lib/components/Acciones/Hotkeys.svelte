@@ -146,13 +146,28 @@
 
 		if (['Shift', 'Control', 'Alt', 'Meta'].includes(event.key)) return;
 
-		const key = event.key.toUpperCase();
+		const key = event.key.toLowerCase();
 
-		if (!alphabet.includes(key) || key.length !== 1) return;
+		// Prioridad a comandos fijos registrados.
+		if (StoreHotkeys.get(key)) {
+			event.preventDefault();
+			event.stopPropagation();
+
+			typed = '';
+			StoreHotkeys.execute(key);
+
+			refreshHints();
+			return;
+		}
+
+		// Navegación mediante etiquetas de dos letras.
+		const letter = event.key.toUpperCase();
+
+		if (!alphabet.includes(letter)) return;
 
 		event.preventDefault();
 
-		typed += key;
+		typed += letter;
 
 		const matches = hints.filter((hint) => hint.label.startsWith(typed));
 
