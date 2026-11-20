@@ -22,6 +22,7 @@
 	import { formatDateToReadable } from '$lib/utils/util';
 	import RequisitoDeGastos from '$lib/components/Formularios/RequisitoDeGastos.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
+	import Cotizacion from '$lib/components/Tarjetas/Cotizacion.svelte';
 
 	onMount(() => StorePedidoEditar.toggleModal(false));
 
@@ -162,9 +163,14 @@
 					</div>
 
 					<div class="section-content">
-						{#if oportunidad.pedidos.length > 0}
+					<Cotizacion
+						partidas={oportunidad.pedidos.filter((p) => p.fase == 3)}
+						cliente="Constructora del Norte"
+						folio="BMS-2026-001"
+					/>
+						<!-- {#if oportunidad.pedidos.length > 0}
 							<TarjetaPedidoCotizado {oportunidad} disable />
-						{/if}
+						{/if} -->
 					</div>
 				</section>
 			{/if}
@@ -191,9 +197,10 @@
 				</div>
 
 				<div class="section-content">
-					{#if oportunidad.pedidos.length > 0}
+
+					<!-- {#if oportunidad.pedidos.length > 0}
 						<TarjetaPedidoCotizado {oportunidad} />
-					{/if}
+					{/if} -->
 				</div>
 			</section>
 			<section class="occ">

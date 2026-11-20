@@ -28,6 +28,7 @@
 		"@supabase/ssr": "^0.8.0",
 		"@supabase/supabase-js": "^2.90.1",
 		"echarts": "^6.1.0",
-		"googleapis": "^167.0.0"
+		"googleapis": "^167.0.0",
+		"puppeteer": "^25.18.1"
 	}
 }
