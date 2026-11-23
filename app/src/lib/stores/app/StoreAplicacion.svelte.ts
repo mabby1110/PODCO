@@ -8,6 +8,7 @@ export interface AppState {
 	retraer: boolean;
 	leyenda: boolean;
 	modal_editar_pedido: boolean;
+	modal_nuevo_cliente: boolean;
 	nuevo_cliente: boolean;
 }
 
@@ -20,6 +21,7 @@ const defaultState: AppState = {
 	retraer: false,
 	leyenda: false,
 	modal_editar_pedido: false,
+	modal_nuevo_cliente: false,
 	nuevo_cliente: false
 };
 

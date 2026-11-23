@@ -5,6 +5,7 @@
 	import ModList from '$lib/components/Acciones/ModList.svelte';
 	import Searchbar from '$lib/components/Acciones/Searchbar.svelte';
 	import Grupo from '$lib/components/Tarjetas/Grupo.svelte';
+	import Lista from '$lib/components/Tarjetas/Lista.svelte';
 	import Vista from '$lib/components/Tarjetas/Vista.svelte';
 	import PreviewCliente from '$lib/components/Vistas/Cliente/PreviewCliente.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
@@ -26,12 +27,11 @@
 </script>
 
 <Vista>
-
 	{#snippet acciones()}
 		<Controles>
 			{#snippet header()}
 				<ExportarCSV lista_ordenada={lista_filtrada} />
-				<button onclick={() => StoreAplicacion.toggle('nuevo_cliente')} class="link"
+				<button onclick={() => StoreAplicacion.toggle('modal_nuevo_cliente')} class="link"
 					>+Cliente</button
 				>
 				<button onclick={() => StoreAplicacion.toggle('retraer')} class="link"
@@ -47,12 +47,14 @@
 
 	{#snippet contenido()}
 		{#if !isGrouped}
-			{#each lista_ordenada as elemento}
-				<PreviewCliente client={elemento} />
-			{/each}
+			<Lista items={lista_ordenada}>
+				{#snippet children(elemento)}
+					<PreviewCliente client={elemento} />
+				{/snippet}
+			</Lista>
 		{:else}
 			{#each lista_agrupada as agrupacion (agrupacion.columna)}
-				<Grupo {agrupacion} showByDefault={StoreAplicacion.value.retraer}>
+				<Grupo {agrupacion}>
 					{#snippet children(elemento: any)}
 						<PreviewCliente client={elemento} />
 					{/snippet}
