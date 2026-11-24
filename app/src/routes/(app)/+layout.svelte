@@ -3,14 +3,13 @@
 	import { profile } from '$lib/stores/profileStore.svelte.js';
 	import ModalActividad from '$lib/components/Vistas/Actividad/ModalActividad.svelte';
 	import ModalOportunidad from '$lib/components/Vistas/Oportunidad/ModalOportunidad.svelte';
-	import ModalCliente from '$lib/components/Vistas/Cliente/ModalCliente.svelte';
+	import ModalNuevoCliente from '$lib/components/Vistas/Cliente/ModalNuevoCliente.svelte';
 	import ModalInventario from '$lib/components/Vistas/Inventario/ModalInventario.svelte';
 	import ModalProducto from '$lib/components/Vistas/Catalogo/ModalProducto.svelte';
 	import ModalEditarPedido from '$lib/components/Vistas/Pedidos/ModalEditarPedido.svelte';
 	import Hotkeys from '$lib/components/Acciones/Hotkeys.svelte';
 	import Logout from '$lib/components/Acciones/Logout.svelte';
 	import ModalTipoProductoNuevo from '$lib/components/Vistas/Catalogo/ModalTipoProductoNuevo.svelte';
-	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte.js';
 
 	let { children, data } = $props();
 
@@ -40,7 +39,7 @@
 <ModalOportunidad />
 <ModalEditarPedido />
 <ModalActividad />
-<ModalCliente />
+<ModalNuevoCliente />
 <ModalInventario />
 <ModalProducto />
 <ModalTipoProductoNuevo />

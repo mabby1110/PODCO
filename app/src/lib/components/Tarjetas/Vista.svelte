@@ -80,7 +80,7 @@
 		overflow-x: auto;
 		gap: var(--a);
 		padding: var(--b);
-		min-height: max(80vh, var(--h));
+		min-height: max(40vh, var(--i));
 	}
 	.vista {
 		position: relative;

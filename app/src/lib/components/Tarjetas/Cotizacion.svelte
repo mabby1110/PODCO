@@ -5,17 +5,31 @@
 		precio_unitario: number;
 	};
 
+	type Cliente = {
+		nombre_comercial?: string | null;
+		razon_social?: string | null;
+		ubicacion?: string | null;
+	};
+
+	type Pedido = Partida & { fase: number };
+
+	type Oportunidad = {
+		id: string;
+		pedidos: Pedido[];
+		clientes: Cliente;
+		necesidades: string;
+		motivo: string;
+	};
+
 	type Props = {
-		partidas?: Partida[];
+		oportunidad: Oportunidad;
 		empresa?: string;
-		cliente?: string;
 		contacto?: string;
 		direccion?: string;
 		folio?: string;
 		lugar?: string;
 		fecha?: string;
 		atencion?: string;
-		referencia?: string;
 		tiempoEntrega?: string;
 		formaEmbarque?: string;
 		vigencia?: string;
@@ -23,20 +37,27 @@
 	};
 
 	let {
-		partidas = [],
-		cliente = 'IMASA - OLEOFINOS',
-		contacto = 'TEL: 33 1903 5769',
-		direccion = 'LIMÓN 1139, DEL FRESNO, 44900 GUADALAJARA, JAL.',
-		folio = 'CGG-0870-2026',
-		lugar = 'Guadalajara, Jalisco',
-		fecha = '25, septiembre 2026',
-		atencion = 'ING. IGNACIO RICO',
-		referencia = 'BOMBA DE ENGRANES',
-		tiempoEntrega = '24 – 38',
-		formaEmbarque = 'LAB',
-		vigencia = '29-06-2026',
-		condicionesPago = '30'
+		oportunidad,
+		empresa,
+		contacto,
+		lugar,
+		fecha,
+		atencion,
+		tiempoEntrega,
+		formaEmbarque,
+		vigencia,
+		condicionesPago
 	}: Props = $props();
+
+	// Desglose de la oportunidad
+	const partidas = $derived(oportunidad.pedidos.filter((p) => p.fase == 3));
+	const cliente = $derived(
+		oportunidad.clientes.nombre_comercial || oportunidad.clientes.razon_social
+	);
+	const direccion = $derived(oportunidad.clientes.ubicacion)
+	const necesidades = $derived(oportunidad.necesidades);
+	const folio = $derived(oportunidad.id);
+	const referencia = $derived(oportunidad.motivo);
 
 	const IVA = 0.16;
 	const MIN_FILAS_PARTIDAS = 5;
@@ -80,10 +101,11 @@
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
+					folio,
 					cliente,
 					contacto,
 					direccion,
-					folio,
+					necesidades,
 					lugar,
 					fecha,
 					atencion,
@@ -151,10 +173,6 @@
 	</div>
 
 	<div class="documento-contenedor">
-		<div class="marca-agua">
-			<img src="/bms-logo.svg" alt="bms-marca-agua" />
-		</div>
-
 		<table class="tabla-maestra">
 			<thead>
 				<tr>

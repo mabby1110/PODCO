@@ -151,7 +151,7 @@
 		{/if}
 	</div>
 
-	<div bind:this={chartContainer} style="width: 100%; height: 420px;"></div>
+	<div bind:this={chartContainer} style="width: 100%; height: 100%;"></div>
 </div>
 
 <style>

@@ -163,11 +163,7 @@
 					</div>
 
 					<div class="section-content">
-					<Cotizacion
-						partidas={oportunidad.pedidos.filter((p) => p.fase == 3)}
-						cliente="Constructora del Norte"
-						folio="BMS-2026-001"
-					/>
+						<Cotizacion {oportunidad} />
 						<!-- {#if oportunidad.pedidos.length > 0}
 							<TarjetaPedidoCotizado {oportunidad} disable />
 						{/if} -->
@@ -197,7 +193,6 @@
 				</div>
 
 				<div class="section-content">
-
 					<!-- {#if oportunidad.pedidos.length > 0}
 						<TarjetaPedidoCotizado {oportunidad} />
 					{/if} -->
