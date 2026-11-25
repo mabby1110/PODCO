@@ -62,13 +62,13 @@
 		<div class="titulo">
 			{#if titulo}
 				{@render titulo()}
+				{#if meta}
+					<div class="meta">
+						{@render meta()}
+					</div>
+				{/if}
 			{/if}
 		</div>
-		{#if meta}
-			<div class="meta">
-				{@render meta()}
-			</div>
-		{/if}
 		<div class="contenido">
 			{#if contenido}
 				{@render contenido()}
@@ -92,8 +92,8 @@
 		gap: var(--a);
 	}
 	.titulo {
-		display: flex;
-		align-items: center;
+		display: grid;
+		grid-template-columns: 1fr 3fr;
 		gap: var(--a);
 	}
 	.contenido {

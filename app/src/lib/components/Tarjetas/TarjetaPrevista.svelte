@@ -79,7 +79,7 @@
 		position: relative;
 		width: 100%;
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(var(--h), 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(var(--g), 1fr));
 		padding: var(--a);
 		gap: 0 var(--a);
 	}
@@ -87,7 +87,7 @@
 		grid-column: span 2;
 		display: grid;
 		gap: 0 var(--a);
-		grid-template-columns: repeat(auto-fit, minmax(var(--g), 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(var(--f), 1fr));
 		grid-column: span 2;
 		max-height: var(--f);
 		overflow: hidden;
@@ -104,7 +104,7 @@
 		max-height: 70vh;
 	}
 	.meta {
-		grid-column: 1 / -1;
+		grid-column: span 2;
 		font-size: var(--b);
 		display: flex;
 		gap: var(--a);

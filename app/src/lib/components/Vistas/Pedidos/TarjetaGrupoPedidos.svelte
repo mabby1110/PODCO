@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { StorePedidoEditar } from '$lib/stores/pedidos/StorePedidoEditar.svelte';
-	import { goto } from '$app/navigation';
 	import { fasesPedido } from '$lib';
 	import { StoreContextoRelacion } from '$lib/stores/pedidos/StoreContextoRelacion.svelte';
 	import { StoreAplicacion } from '$lib/stores/app/StoreAplicacion.svelte';
@@ -17,10 +16,22 @@
 
 				if (!acc[clave]) {
 					acc[clave] = {
-						id_agrupacion: clave,
+						clave,
+						id_agrupacion: new Set<string>(),
+						oportunidades: new Map<string, any>(),
 						pedidos: [],
 						totalGrupo: 0
 					};
+				}
+
+				// Agregar id_agrupacion solo si existe
+				if (pedido.id_agrupacion) {
+					acc[clave].id_agrupacion.add(pedido.id_agrupacion);
+				}
+
+				// Agregar objeto oportunidad sin duplicados (usando su id como llave)
+				if (pedido.oportunidades?.id) {
+					acc[clave].oportunidades.set(pedido.oportunidades.id, pedido.oportunidades);
 				}
 
 				acc[clave].pedidos.push(pedido);
@@ -31,14 +42,21 @@
 			{} as Record<
 				string,
 				{
-					id_agrupacion: string;
-					pedidos: [];
+					clave: string;
+					id_agrupacion: Set<string>;
+					oportunidades: Map<string, any>;
+					pedidos: any[];
 					totalGrupo: number;
 				}
 			>
 		);
 
-		return Object.values(grupos);
+		// Convertir Set y Map a Arrays para usarlos fácil en el template
+		return Object.values(grupos).map((grupo) => ({
+			...grupo,
+			id_agrupacion: Array.from(grupo.id_agrupacion),
+			oportunidad: Array.from(grupo.oportunidades.values())
+		}));
 	});
 	let oportunidades = $derived(
 		Array.from(
@@ -50,8 +68,6 @@
 			)
 		)
 	);
-
-	console.log('oportunidades', oportunidades);
 
 	// ACCIONES
 	function editarPedido(id: string, id_oportunidad: string) {
@@ -79,8 +95,20 @@
 	<div class="contenedor-lista">
 		<div class="contenido-lista milk">
 			<div class="meta-lista">
-				{#if grupo.id_agrupacion !== 'sin_agrupar'}
-					<p class="agrupacion-titulo">Grupo: {grupo.id_agrupacion}</p>
+				{#if grupo.id_agrupacion.length > 0}
+					<p class="agrupacion-titulo">
+						Grupo: {grupo.id_agrupacion.join(', ')}
+					</p>
+				{/if}
+
+				{#if grupo.oportunidad.length > 0}
+					<div class="oportunidades-lista">
+						{#each grupo.oportunidad as op (op.id)}
+							<span>
+								{op.id} - {op.clientes?.nombre_comercial || op.clientes?.razon_social}
+							</span>
+						{/each}
+					</div>
 				{/if}
 			</div>
 			<div class="lista">
@@ -96,27 +124,15 @@
 							</button>
 						{/snippet}
 						{#snippet meta()}
-							<div class="meta-tarjeta">
-								<span>
-									{pedido.oportunidades?.id}
-								</span>
-								<span>
-									{pedido.oportunidades?.clientes?.nombre_comercial ||
-										pedido.oportunidades?.clientes?.razon_social}
-								</span>
-								<span>
-									{pedido.oportunidades?.motivo}
-								</span>
-							</div>
+							<p>
+								{pedido.catalogo.descripcion || 'Sin descripción'}
+							</p>
 						{/snippet}
 						{#snippet titulo()}
 							<div class="titulo">
 								<strong>
 									{pedido.catalogo.codigo || 'Sin código'}
 								</strong>
-								<p>
-									{pedido.catalogo.descripcion || 'Sin descripción'}
-								</p>
 							</div>
 						{/snippet}
 						{#snippet contenido()}
@@ -133,7 +149,6 @@
 						{/snippet}
 					</ItemLista>
 				{/each}
-
 				<div class="total">
 					<h1>
 						<b>{formatMoneda(grupo.totalGrupo)}</b>
@@ -144,24 +159,6 @@
 
 		{#if !disable}
 			<div class="acciones-lista">
-				<div class="occ-wrapper">
-					<!-- <div class="alerta-error">
-					nada
-					</div> -->
-
-					<!-- {#if puedeSubirOcc}
-						<SubirOcc
-							tipo="docs_cotizaciones"
-							action="/documentos?/subirOcc"
-							oportunidad={{
-								id: oportunidad?.id,
-								cliente:
-									oportunidad?.clientes?.nombre_comercial || oportunidad?.clientes?.razon_social
-							}}
-							required
-						/>
-					{/if} -->
-				</div>
 				<div class="acciones-fijas">
 					<button
 						class="butter"
