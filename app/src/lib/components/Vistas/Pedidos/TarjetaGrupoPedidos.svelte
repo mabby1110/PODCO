@@ -89,9 +89,19 @@
 
 	// estados del componente
 	let actualizando = $state(false);
+
+	// para pedidos grandes
+	const LIMITE = 7;
+	let expandidos = $state<Record<string, boolean>>({});
+
+	function toggleExpandir(clave: string) {
+		expandidos[clave] = !expandidos[clave];
+	}
 </script>
 
-{#each pedidosAgrupados as grupo}
+{#each pedidosAgrupados as grupo}{@const estaExpandido = !!expandidos[grupo.clave]}
+	{@const pedidosVisibles = estaExpandido ? grupo.pedidos : grupo.pedidos.slice(0, LIMITE)}
+	{@const restantes = grupo.pedidos.length - LIMITE}
 	<div class="contenedor-lista">
 		<div class="contenido-lista milk">
 			<div class="meta-lista">
@@ -112,7 +122,7 @@
 				{/if}
 			</div>
 			<div class="lista">
-				{#each grupo.pedidos as pedido (pedido.id)}
+				{#each pedidosVisibles as pedido (pedido.id)}
 					<ItemLista>
 						{#snippet acciones()}
 							<button
@@ -149,6 +159,12 @@
 						{/snippet}
 					</ItemLista>
 				{/each}
+
+				{#if restantes > 0}
+					<button type="button" class="link" onclick={() => toggleExpandir(grupo.clave)}>
+						{estaExpandido ? 'Ver menos' : `Ver más (${restantes})`}
+					</button>
+				{/if}
 				<div class="total">
 					<h1>
 						<b>{formatMoneda(grupo.totalGrupo)}</b>
