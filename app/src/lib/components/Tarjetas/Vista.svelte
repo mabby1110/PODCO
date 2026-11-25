@@ -125,6 +125,7 @@
 	}
 	.vista.fullscreen > :global(*) {
 		max-width: 100%;
+		height: 100%;
 	}
 	.vista.fullscreen {
 		max-width: 100%;
@@ -135,12 +136,11 @@
 	}
 	.contenido {
 		width: 100%;
-		height: 100%;
+		height: fit-content;
 		max-width: max(60vw, var(--i));
 		display: flex;
 		flex-direction: column;
 		gap: var(--a);
 		padding: var(--a);
-		padding-bottom: var(--f);
 	}
 </style>
